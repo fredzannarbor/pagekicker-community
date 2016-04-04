@@ -1,0 +1,17 @@
+DarkBlue
+DarkCyan
+DarkGoldenrod
+DarkGreen
+DarkKhaki
+DarkMagenta
+DarkOliveGreen
+DarkOrange
+DarkOrchid
+DarkRed
+DarkSalmon
+DarkSeaGreen
+DarkSlateBlue
+DarkSlateGray
+DarkSlateGrey
+DarkTurquoise
+DarkViolet

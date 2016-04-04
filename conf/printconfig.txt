@@ -1,0 +1,24 @@
+booktype="traditional"
+simpleseed="none"
+coverfont="Arial"
+newcovercolor="NavyBlue"
+covercolorfont="white"
+coverRGB="none"
+imagefilename="photo.JPG" 
+printcreate="yes"
+pagecount=166
+trimsize=55x85pb
+printbookprice="16.32"
+copyinbackend="no"
+aliastobackendcopy="no"
+userprovidedprintISBN="978-1-60888-138-3"
+escapeseed="Re-reading HARRY POTTER AND THE DEATHLY HALLOWS"
+subtitle=""
+spinewidth="0.355"
+sku="9781608881383"
+#testsku=`echo $userprovidedprintISBN | sed -e s/-//'g`
+coverlayout="2"
+author="Dr. Graeme Davis"
+# path
+#userdescription > $scriptpath"bin/xform-includes/userdescription.txt" 
+

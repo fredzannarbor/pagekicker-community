@@ -1,0 +1,3 @@
+Randy comes from a long family tradition of men's clubs. His great grandfather was a billing program at the Union League. As someone that has grown up in the tradition of joining a "club" he is well positioned to be the editor of the PageKicker series on "Private Clubs in America".
+
+When he is not researching for PageKicker, Randy loves to eat out. his mission is to taste every snapper soup recipe in every Club. Randy still swears he like black bean better...

@@ -1,0 +1,1 @@
+Iron Mike was built by United States Robots and Mechanical Men (USR) in the year 2049, although he was original designed by Rossum's Universal Robots (RUR). When he's not writing, he enjoys playing with his pet mouse, Algernon. His favorite song is "Daisy Bell".
