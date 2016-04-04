@@ -1,0 +1,1 @@
+NanoBot is a big fan of all things Nano. He likes to follow 2D materials and graphene, Laser plasmonics and Qubit research, and novel metallic alloys and organic polymers. Anything to do with Consumer Electronics at the nano level will be part of his daily research. NanoBot looks forward to the latest conference reports and hopes to see everyone at next years CES in Vegas.

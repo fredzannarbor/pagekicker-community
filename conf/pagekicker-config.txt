@@ -1,0 +1,54 @@
+#!/bin/bash
+
+# configuration file
+
+SFB_HOME="/opt/bitnami/apache2/htdocs/pk-main/development/"
+SFB_MAGENTO_HOME="/opt/bitnami/apache2/htdocs/pk-main/development/magento-output/"
+LOCAL_DATA="/opt/bitnami/apache2/htdocs/pk-main/development/local-data/"
+SFB_PHP_BIN="/opt/bitnami/php/bin/php"
+JAVA_BIN="/opt/bitnami/java/bin/java"
+SFB_VERSION=`bzr revno`
+USER_HOME="/home/bitnami/"
+LOCAL_USER="bitnami"
+WEBFORMSXML_HOME="/opt/bitnami/apache2/htdocs/pk-main/development/magento-output/"
+WEB_HOST="http://www.PageKicker.com/"
+WEB_ROOT=$SFB_HOME"pk-html/"
+WEB_SCRIPTPATH="scripts/"
+APACHE_ROOT="$SFB_HOME"
+LOCAL_MYSQL_PATH="/opt/bitnami/mysql/bin/mysql"
+LOCAL_MYSQL_USER="root"
+LOCAL_MYSQL_PASSWORD="Balssa41"
+epubcheckjarpath=$scriptpath"lib/epubcheck-3.0/epubcheck-3.0.jar"
+
+metadatatargetpath=$SFB_MAGENTO_HOME"var/import/"
+mediatargetpath=$SFB_MAGENTO_HOME"media/import/"
+mediaarchivetxt=$SFB_MAGENTO_HOME"media/archive/txt/"
+ebooksdelivery=$SFB_MAGENTO_HOME"ebooks/"
+scriptpath=$SFB_HOME"scripts/"
+textpath=$SFB_HOME"txt/"
+imagedir="images/"
+logdir=$LOCAL_DATA"logs/uuid/"
+sfb_log=$logdir"sfb_log.txt"
+xformlog=$logdir$uuid"/xformlog.txt"
+todaysarchivefolder=$(date +"%Y%m%d")
+tiphys_log=$SFB_HOME"local-data/logs/tiphys_log.txt"
+sfb_log_archive=$LOCAL_DATA"archives/sfb_log_archive.txt"
+lsi_log=$LOCAL_data"logs/lsi_log.txt"
+ebooksdelivery=$SFB_MAGENTO_HOME"media/ebooks/"
+
+
+googlecollectioncode="HNXTBK0" # for dedicated google book upload
+google_nonISBN_import="no"
+google_upload_queue_user_hostname="bitnami@www.pagekicker.com"
+public_key_to_google_upload_queue_host="/home/fred/Documents/certificates/restorepk.pem"
+google_upload_queue_path="/home/bitnami"
+#"/opt/bitnami/apache2/htdocs/ebooks-nonISBN/HNXTBK0"
+google_queue_host_login="bitnami"
+
+
+
+
+
+
+
+

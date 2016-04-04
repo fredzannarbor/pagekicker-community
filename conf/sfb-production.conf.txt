@@ -1,0 +1,62 @@
+#!/bin/bash
+
+# configuration file
+
+SFB_HOME="/opt/bitnami/apache2/htdocs/sfb-production/"
+SFB_MAGENTO_HOME="/opt/bitnami/apps/magento/htdocs/"
+LOCAL_DATA=$SFB_HOME"local-data/"
+SFB_PHP_BIN="/opt/bitnami/php/bin/php"
+JAVA_BIN="/opt/bitnami/java/bin/java"
+SFB_VERSION="-production.sh"
+USER_HOME="/home/bitnami/"
+LOCAL_USER="bitnami"
+WEBFORMSXML_HOME="/opt/bitnami/apps/magento/htdocs/sfb-production/magento-output/"
+WEB_HOST="http://www.PageKicker.com/"
+WEB_ROOT=$SFB_HOME"pk-html/"
+WEB_SCRIPTPATH="scripts/"
+APACHE_ROOT="$SFB_HOME"
+LOCAL_MYSQL_PATH="/opt/bitnami/mysql/bin/mysql"
+LOCAL_MYSQL_USER="root"
+LOCAL_MYSQL_PASSWORD="Balssa41"
+
+metadatatargetpath=$SFB_MAGENTO_HOME"var/import/"
+mediatargetpath=$SFB_MAGENTO_HOME"media/import/"
+mediaarchivetxt=$SFB_MAGENTO_HOME"media/archive/txt/"
+scriptpath=$SFB_HOME"scripts/"
+textpath=$SFB_HOME"txt/"
+imagedir="images/"
+logdir=$LOCAL_DATA"logs/"
+sfb_log=$logdir"sfb_log.txt"
+sfb_log_archive=$LOCAL_DATA"archives/sfb_log_archive.txt"
+xform_log=$logdir"xform_log.txt"
+todaysarchivefolder=$(date +"%Y%m%d")
+tiphys_log=$SFB_HOME"local-data/logs/tiphys_log.txt"
+sfb_log_archive=$LOCAL_DATA"archives/sfb_log_archive.txt"
+lsi_log=$LOCAL_data"logs/lsi_log.txt"
+wikilocale="en"
+specialstoreid="0"
+googlecollectioncode="HNXTBK0" # for dedicated google book upload
+google_nonONIX_import="no"
+
+
+#imagemagick setup
+
+cover_image_extension=".png"
+txtformatname=".txt"
+txtwildcard="*.txt"
+epub=".epub"xmlstarletwebformstart="xmlstarlet sel -t -v"
+subtitle=""
+epubcheckjarpath=$scriptpath"lib/epubcheck-3.0/epubcheck-3.0.jar"
+# cover builder setup
+
+printconfigfile="yes"
+
+#xmlstarlet setup
+
+xmlstarletwebformstart="xmlstarlet sel -t -v"
+xpathwebformid='"/item/webform_id"'
+booktypewebformid='"/item/booktype"'
+singleseedwebformid='"/item/singleseed"'
+customeridwebformid='"/item/customerid"'
+
+

@@ -1,0 +1,4 @@
+echo "Nimble imprint"
+imprintlogo="nimblelogo.png"
+imprintname="Nimble Books LLC"
+imprintcopyrightpage="nimblecopyrightpage.md"
