@@ -1,0 +1,23 @@
+        --) # End of all options
+            shift
+            break
+            ;;
+        -*)
+            echo "WARN: Unknown option (ignored): $1" >&2
+            shift
+            ;;
+        *)  # no more options. Stop while loop
+            break
+            ;;
+
+esac
+done
+
+# Suppose some options are required. Check that we got them.
+
+#if [ ! "$userprovidedprintISBN" ]; then
+#   echo "ERROR: option '--ISBN [isbnvalue]' not given. See --help" >&2
+#    exit 1
+#fi
+
+
