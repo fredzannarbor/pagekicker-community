@@ -1,0 +1,4 @@
+This directory holds documentation including install instructions and (in the development environment) notes to the team.
+
+To make things easier for ourselves, let's make all notes to the team (that should be removed if this version is published) be prefixed by dev., as in dev.how_to_add_cli.txt
+

@@ -1,0 +1,12 @@
+YYYY=`date +'%Y'`
+echo "<dc:language>en</dc:language>" >> tmp/$uuid/$sku.dc-metadata
+echo "<dc:title>$booktitle</dc:title>" >> tmp/$uuid/$sku.dc-metadata
+echo "<dc:creator>$editedby</dc:creator>" >> tmp/$uuid/$sku.dc-metadata
+echo "<dc:identifier id="BookId">$sku</dc:identifier>" >> tmp/$uuid/$sku.dc-metadata
+echo -n "<dc:description>" >> tmp/$uuid/$sku.dc-metadata
+cat tmp/$uuid/lsi-longdescription.txt >> tmp/$uuid/$sku.dc-metadata
+echo "</dc:description>" >> tmp/$uuid/$sku.dc-metadata
+echo "<dc:publisher>PageKicker™</dc:publisher>" >> tmp/$uuid/$sku.dc-metadata
+echo -n "<dc:date>" >> tmp/$uuid/$sku.dc-metadata
+echo -n $YYYY >> tmp/$uuid/$sku.dc-metadata
+echo "</dc:date>" >> tmp/$uuid/$sku.dc-metadata
