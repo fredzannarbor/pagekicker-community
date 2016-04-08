@@ -1,0 +1,11 @@
+<SalesRights>
+    <SalesRightsType>01</SalesRightsType>
+    <RightsCountry>IE US
+    </RightsCountry> 
+    <-- insert ISO 3166-1 country code(s); if multiple countries, use spaces between them
+    <RightsTerritory>WORLD</RightsTerritory>
+</SalesRights>
+<SalesRights>
+    <SalesRightsType>02</SalesRightsType>
+    <RightsCountry>GB</RightsCountry>
+</SalesRights>

@@ -1,0 +1,11 @@
+<SupplyDetail>
+  <SupplierName>PageKicker</SupplierName>
+  <ProductAvailability>20</ProductAvailability>
+  <AvailabilityCode>IP</AvailabilityCode>
+  <OnSaleDate>20090209</OnSaleDate>
+    <Price>
+       <PriceTypeCode>01</PriceTypeCode>
+       <PriceAmount>$price</PriceAmount>
+       <CurrencyCode>USD</CurrencyCode>
+    </Price>
+</SupplyDetail>
