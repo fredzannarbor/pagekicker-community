@@ -46,7 +46,7 @@ plos_API_key="XMIciRBsScpd2NT"
 
 # needs to check if already logged in elsewise it will be throttled
 
-curl --silent -c cookies.txt -d "lgname="$WikipediaAPIuserID"&lgpassword="$WikipediaAPIuserPW"&action=login&format=xml" https://en.wikipedia.org/w/api.php -o output.xml
+curl --silent -c cookies.txt -d "lgname="$WikipediaAPIuserID"&lgpassword="$WikipediaAPIuserPW"&action=login&format=xml" http://en.wikipedia.org/w/api.php -o output.xml
 
 TOKEN=$(xmlstarlet sel -t -m '//login' -v '//@token' output.xml)
 
@@ -54,7 +54,7 @@ if [ $WikipediaAPIinUse = "1" ] ; then
 
 	echo "running API manager for logging into Wikipedia API"
 
-	curl --silent -b cookies.txt -d "action=login&lgname="$WikipediaAPIuserID"&lgpassword="$WikipediaAPIuserPW"&format=xml&lgtoken="$TOKEN https://en.wikipedia.org/w/api.php 
+	curl --silent -b cookies.txt -d "action=login&lgname="$WikipediaAPIuserID"&lgpassword="$WikipediaAPIuserPW"&format=xml&lgtoken="$TOKEN http://en.wikipedia.org/w/api.php 
 	echo " "
 else
 
