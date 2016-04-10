@@ -1,0 +1,16 @@
+Dependencies
+
+python 2.7
+java
+imagemagick
+sendemail # note middle "e", this is lightweight version that is very portable
+pandoc
+IBM word cloud (IBMcloud)
+Wikimedia API key 
+
+Optional:
+
+xmlstarlet # only needed if you are parsing xml input
+Magento 1.9.2.4 bitnami stack # if you want to export metadata to Magento store
+Flickr API key
+t command line twitter client with Twitter API key # any other twitter search client can be plugged in
