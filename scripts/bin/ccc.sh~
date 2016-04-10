@@ -8,8 +8,8 @@ echo $"hello, world, I am speaking" $LANG
 . ../conf/config.txt
 
 # get bzr revision
-bazaar_revision=`cat /home/bitnami/bzr_dev_rev`
-echo "bazaar revision number is" $bazaar_revision
+#bazaar_revision=`cat /home/bitnami/bzr_dev_rev`
+echo "software version number is" $SFB_VERSION
 
 echo "sfb_log is" $sfb_log
 
@@ -351,6 +351,14 @@ shift 2
 seedphrases=${1#*=}
 shift
 ;;
+--import)
+import=$2
+shift 2
+;;
+--import=*)
+import=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -372,7 +380,7 @@ done
 
 if [ ! "$passuuid" ] ; then
 	echo "creating uuid"
-	uuid=$(python  -c 'import uuid; print uuid.uuid1()')
+	uuid=$("$PYTHON_BIN"  -c 'import uuid; print uuid.uuid1()')
 	echo "uuid is" $uuid | tee --append $xform_log
 
 else
@@ -382,9 +390,7 @@ else
 fi
 
 # test values
-summary="false"
-import="yes"
-imprintdir="pagekicker"
+
 
 # create directories I will need
 
@@ -501,18 +507,18 @@ echo "$tldr" > $TMPDIR$uuid/tldr.txt
 
 echo "checking for naughty words"
 
-# [[ $(PK_ERR_CODE="disallowed") ]] && bin/screen-naughty-seeds.sh $TMPDIR$uuid/seeds/seedphrases || echo "failed due to naughty words" exit 1
+ [[ $(PK_ERR_CODE="disallowed") ]] && bin/screen-naughty-seeds.sh $TMPDIR$uuid/seeds/seedphrases || echo "failed due to naughty words" exit 1
 
 
 if bin/screen-naughty-seeds.sh $TMPDIR$uuid/seeds/seedphrases  ; then
 
-	echo "Exited with zero value"
+	echo "Passed check for naughty seeds"
 else
 	echo "Exited with problem in screen-naughty-seeds.sh"
   	exit 0
 fi
 
-echo "checking for human error on form submission"
+# echo "checking for human error on form submission"
 
 #if bin/screen-human-error.sh $TMPDIR$uuid/seeds/seedphrases  ; then
 #   echo "Exited with zero value"
@@ -542,13 +548,14 @@ cp $confdir"jobprofiles"/imprints/$imprintdir/$imprintlogo  $TMPDIR$uuid/cover
 # fetch data I will need based on seedfile
 
 echo "summary is" $summary
-
-
+wikilocale="en" # hard code for testing
+echo $wikilocale "is wikilocale"
+# echo "PYTHON_BIN is $PYTHON_BIN" troubleshooting if needed
 
 if [ "$summary" = "true" ] ; then
-	/opt/bitnami/python/bin/python  $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR$uuid/seeds/seedphrases" --outfile "$TMPDIR$uuid/wiki/wikiraw.md" --lang "$wikilocale" --summary 1> /dev/null
+	"$PYTHON_BIN"  $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR$uuid/seeds/seedphrases" --outfile "$TMPDIR$uuid/wiki/wikiraw.md" --lang "$wikilocale" --summary 1> /dev/null
 else
-	/opt/bitnami/python/bin/python  $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR$uuid/seeds/seedphrases" --outfile "$TMPDIR$uuid/wiki/wikiraw.md" --lang "$wikilocale" 1> /dev/null
+	"$PYTHON_BIN" $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR$uuid/seeds/seedphrases" --outfile "$TMPDIR$uuid/wiki/wikiraw.md" --lang "$wikilocale" 1> /dev/null
 fi
 
 ## video test code
@@ -597,7 +604,7 @@ echo "lastname prior to 1st cover build is" $lastname
 
 
 
-	/opt/bitnami/java/bin/java -jar $scriptpath"lib/IBMcloud/ibm-word-cloud.jar" -c $scriptpath"lib/IBMcloud/examples/configuration.txt" -w "1800" -h "1800" < $TMPDIR$uuid/wiki/wikiraw.md > $TMPDIR$uuid/cover/wordcloudcover.png
+	"$JAVA_BIN" -jar $scriptpath"lib/IBMcloud/ibm-word-cloud.jar" -c $scriptpath"lib/IBMcloud/examples/configuration.txt" -w "1800" -h "1800" < $TMPDIR$uuid/wiki/wikiraw.md > $TMPDIR$uuid/cover/wordcloudcover.png
 
 #copying old stopfile backup  to overwrite rotated stopfile
 cp $scriptpath"/lib/IBMcloud/examples/restore-pk-stopwords.txt"  $scriptpath"/lib/IBMcloud/examples/pk-stopwords.txt" 
@@ -697,18 +704,18 @@ echo "writing Dublin Core metadata for use by pandoc"
 		echo $sku >> "$LOCAL_DATA""SKUs/sku_list"
 		echo "incremented SKU by 1 to" $sku " and updated SKUs/sku_list" 
 
+# 
 if [ "$import" = "yes" ] ; then 
 
 	echo "adding import job to the manifest" 
 
 	echo $uuid >> import_status/manifest.csv
 
-
-$scriptpath"bin/receiving_dock.sh"
+	$scriptpath"bin/receiving_dock.sh"
 
 else
 
-	echo -n "not importing this job" 
+	echo "not importing this job" 
 
 fi
 
@@ -724,14 +731,13 @@ fi
 #		-o tls=yes
 
 ##verbose logging for sendemail
-mkdir -m 755 $TMPDIR"seeds"
 # cp $TMPDIR$uuid/seeds/seedphrases "$TMPDIR"$uuid/seeds/"$sku"seeds.txt
-builder="yes"
+
 if [ "$builder" = "yes" ] ; then
 
 	echo "seedfile was" "$TMPDIR"seeds/seedphrases
 
-	$scriptpath"bin/builder-relative.sh" --seedfile $TMPDIR$uuid"/seeds/seedphrases" --booktype "$booktype" --jobprofilename "$jobprofilename" --jobprofile "$jobprofilename.jobprofile" --booktitle  "$booktitle" --ebook_format "epub" --sample_tweets "yes" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername"
+	$scriptpath"bin/builder.sh" --seedfile $TMPDIR$uuid"/seeds/seedphrases" --booktype "$booktype" --jobprofilename "$jobprofilename" --jobprofile "$jobprofilename.jobprofile" --booktitle  "$booktitle" --ebook_format "epub" --sample_tweets "yes" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername"
 
 else
 

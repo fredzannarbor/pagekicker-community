@@ -23,7 +23,7 @@ if grep -qw "$line" "seeds/disallowed-seeds.txt" ; then
 		disallowed_seed="yes"
 else
 	echo "$line is not a naughty word -- your momma raised you right!"
-	echo "$line" >> $TMPDIR$uuid/seeds/allowed_seeds.txt
+	echo "$line" >> $TMPDIR$UUID/seeds/allowed_seeds.txt
 fi
 
 echo "I checked your seeds to be sure there were no naughty words -- your momma raised you right!" >> $TMPDIR$uuid/seeds/process.md

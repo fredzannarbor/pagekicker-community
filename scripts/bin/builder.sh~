@@ -1,29 +1,32 @@
 #!/bin/bash
 
 # accepts book topic and book type definition, then builds book
-# must be run from apache2/htdocs/pk-new/development/scripts or same for prod
 
 echo "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
 
-CANON=$(cd -P -- "$(dirname -- "$0")" && printf '%s\n' "$(pwd -P)/$(basename -- "$0")")
+# I forget why I needed to do this -- it decides on environment based on where script is running rather than looking at config file.
+# probably can be deleted from master
 
-if [ "$CANON" = "/opt/bitnami/apache2/htdocs/pk-new/development/scripts/bin/builder-relative.sh" ] ; then
-	scriptpath="/opt/bitnami/apache2/htdocs/pk-new/development/scripts/"
-	echo "my startup scriptpath is" $scriptpath
-else
-	scriptpath="/opt/bitnami/apache2/htdocs/pk-production/scripts/"
-	echo "my startup scriptpath is" $scriptpath
-fi
+#CANON=$(cd -P -- "$(dirname -- "$0")" && printf '%s\n' "$(pwd -P)/$(basename -- "$0")")
 
-cd $scriptpath
+#if [ "$CANON" = "/opt/bitnami/apache2/htdocs/pk-new/development/scripts/bin/builder-relative.sh" ] ; then
+	#scriptpath="/opt/bitnami/apache2/htdocs/pk-new/development/scripts/"
+#	echo "my startup scriptpath is" $scriptpath
+#else
+#	scriptpath="/opt/bitnami/apache2/htdocs/pk-production/scripts/"
+#	echo "my startup scriptpath is" $scriptpath
+#fi
+
 . ../conf/config.txt
+cd $scriptpath
+
 
 . includes/set-variables.sh
 #echo "set variables, now echoing them"
 # . includes/echo-variables.sh
 
-bazaar_revision=`cat /home/bitnami/bzr_dev_rev`
-echo "bazaar revision number is" $bazaar_revision
+
+"revision number is" $SFB_VERSION
 
 echo "sfb_log is" $sfb_log
 
@@ -33,7 +36,7 @@ jobprofile="default"
 jobprofilename="default"
 buildtarget=$TMPDIR"test"
 singleseed="none"
-sample_tweets="yes"
+sample_tweets="no"
 todaysdate=`date`
 wikilang="en"
 summary="false"
@@ -449,7 +452,7 @@ cp "$stopfile" "$scriptpath""lib/IBMcloud/examples/pk-stopwords.txt"
 echo "running stopfile $stopfile"
 #more "lib/IBMcloud/examples/pk-stopwords.txt"
 
-	/opt/bitnami/java/bin/java -jar $scriptpath"lib/IBMcloud/ibm-word-cloud.jar" -c $scriptpath"lib/IBMcloud/examples/configuration.txt" -w "1800" -h "1800" < $TMPDIR$uuid/wiki/wikiraw.md > $TMPDIR$uuid/cover/wordcloudcover.png
+	"$JAVA_BIN" -jar $scriptpath"lib/IBMcloud/ibm-word-cloud.jar" -c $scriptpath"lib/IBMcloud/examples/configuration.txt" -w "1800" -h "1800" < $TMPDIR$uuid/wiki/wikiraw.md > $TMPDIR$uuid/cover/wordcloudcover.png
 cat "$TMPDIR$uuid/seeds/seedphrases" | uniq | sort  > "$TMPDIR$uuid/seeds/sorted.seedfile"
 
 # set font & color
@@ -544,7 +547,7 @@ if [ "$shortform" = "no" ]; then
 	cp $confdir"jobprofiles/signatures/"$sigfile $TMPDIR$uuid/$sigfile
 	echo "  " >> $TMPDIR$uuid/acknowledgements.md
 	echo "  " >> $TMPDIR$uuid/acknowledgements.md
-	echo "This book was created with revision "$bazaar_revision "of the PageKicker software running on the "$environment "server." >> $TMPDIR$uuid/acknowledgements.md
+	echo "This book was created with revision "$SFB_VERSION "of the PageKicker software running on the "$environment "server." >> $TMPDIR$uuid/acknowledgements.md
 	echo "  " >> $TMPDIR$uuid/acknowledgements.md
 	echo "  " >> $TMPDIR$uuid/acknowledgements.md
 	echo '<i>'$lastname'</i>  ' >> $TMPDIR$uuid/acknowledgements.md
