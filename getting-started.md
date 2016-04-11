@@ -10,3 +10,5 @@ GETTING STARTED
  bin/create-catalog-entry.sh --builder "yes" --booktitle "Test" --yourname "Fred" --jobprofilename "Default" --sample_tweets "no" --import "no"  
 
 It should create epub, mobi, and docx files and deposit them in $TMPDIR/pagekicker/$uuid.  that same folder contains all the interim work products.
+
+7.  You can run against any collection of seeds by creating a text file with one seed per line and adding the parameter --seedfile "/path/to/seedfile" to the command line above.
