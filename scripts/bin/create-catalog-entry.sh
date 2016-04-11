@@ -2,13 +2,11 @@
 
 echo "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
 
-TEXTDOMAIN=SFB
+TEXTDOMAIN=SFB # required for bash language awareness
 echo $"hello, world, I am speaking" $LANG
 
 . ../conf/config.txt
 
-# get bzr revision
-#bazaar_revision=`cat /home/bitnami/bzr_dev_rev`
 echo "software version number is" $SFB_VERSION
 
 echo "sfb_log is" $sfb_log
@@ -394,6 +392,8 @@ fi
 
 # create directories I will need
 
+# TO DOS check to see if these exist before issuing all these mkdirs, since they generate irritating error messages
+
 mkdir -m 777 $TMPDIR$uuid
 mkdir -m 777 $TMPDIR$uuid/wiki
 mkdir -m 777 $TMPDIR$uuid/user
@@ -747,11 +747,11 @@ fi
 
 safe_product_name=$(echo "$booktitle" | sed -e 's/[^A-Za-z0-9._-]/_/g')
 echo "safe_product_name is" "$safe_product_name"
-google_form="http://goo.gl/forms/ur1Otr1G2q"
 
 	sendemail -t "$customer_email" \
 		-u "test  build of [ "$booktitle" ] is attached" \
-		-m "Attached you will find a free test version of the book that you asked us to add to the catalog.  To add this book to your personal account so that you can request free updates in future, you will need to order it via the PageKicker catalog at this URI:"\ "$WEB_HOST"index.php/"$prevsku"".html."'\n\n'"As an additional gesture of appreciation, here is a coupon code for 3 free books: THANKS54.  It is early days for us and we very much appreciate your feedback.Please take a moment to share your thoughts via this Google Form: "$google_form"." \
+	-m "Thanks for trying out PageKicker. What did you think? Attached you will find a free test version of the book that you asked us to add to the catalog.  To add this book to your personal account so that you can request free updates in future, you will need to order it via the PageKicker catalog at this URI:"\ "$WEB_HOST"index.php/"$prevsku"".html."'\n\n'"As an additional gesture of appreciation, here is a coupon code for 3 free books: THANKS54 at the PageKicker demo site:"\ ""$WEB_HOST"index.php/catalog.html.  It is early days for us and we very much appreciate your feedback. Please take a moment to share your thoughts via this Google Form: "$google_form". You may be interested to know that PageKicker has recently open sourced its core technology: $COMMUNITY_GITHUB_REPO .  
+We'd love for you to participate in this amazing project!" \
 		-f "$GMAIL_ID" \
 		-cc "$GMAIL_ID" \
 		-xu "$GMAIL_ID" \
