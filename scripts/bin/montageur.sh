@@ -2,22 +2,15 @@
 
 # extracts, analyzes, and summarizes images from permissioned PDF documents
 
-# requires pdfimages, imagemagick, fdupes
-
-# confpath is hard-coded to /opt/bitnami ...
+# requires pdfimages, imagemagick, fdupes, pdftk
 
 # input: PDF file
 # output: unique jpgs, zip, montage
 
 starttime=$(( `date +%s` ))
 
-# parse the command-line very stupidly
-
 echo "-M-M-M-M-M-M-M-M-M-M-M-M-M-M" | tee --append $xform_log
 echo "starting montageur"| tee --append $xform_log
-
-
-
 
 while :
 do
@@ -126,20 +119,17 @@ fi
 
 if [ "$environment" = "Production" ] ; then
 
-	confpath="/opt/bitnami/apache2/htdocs/pk-production/production/"
-        . $confpath"conf/config.txt"
+        . $confpath"config.txt"
         echo "running prod config" | tee --append $xform_log
 
 
 if [ "$environment" = "Staging" ] ; then
 
-	confpath="/opt/bitnami/apache2/htdocs/pk-staging/development/"
-        . $confpath"conf/config.txt"
+	. $confpath"config.txt"
         echo "running prod config" | tee --append $xform_log
 
 else
-	confpath="/opt/bitnami/apache2/htdocs/pk-new/development/"
-        . "$confpath"conf/config.txt
+	. $confpath"config.txt"
         echo "running dev config"  | tee --append $xform_log
 
 fi
