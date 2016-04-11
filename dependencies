@@ -1,17 +1,20 @@
-Dependencies
+Dependencies (so everything in repository will run)
 
-python 2.7
-java
+Cmdflesh.jar
+ebook-convert
+fdupes
+IBMcloud
 imagemagick
-sendemail # note middle "e", this is lightweight version that is very portable
+java
 pandoc
-IBM word cloud (IBMcloud)
+pdfimages, pdftk, pdftotext
+python 2.7
+sendemail # note middle "e", this is lightweight version that is very portable
 Wikimedia API key
-pdftk, fdupes, pdfimages # for montageur.sh
 
 Optional:
 
-xmlstarlet # only needed if you are parsing xml input
+xmlstarlet # only needed if you are parsing xml input from webforms
 Magento 1.9.2.4 bitnami stack # if you want to export metadata to Magento store
 Flickr API key
 t command line twitter client with Twitter API key # any other twitter search client can be plugged in
