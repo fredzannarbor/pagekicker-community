@@ -1,4 +1,11 @@
 GETTING STARTED
 
-1.  Copy conf/config_template.txt to conf/config.txt and customize all values.
-2.  Run scripts/bin/setup.sh to create various directories that are needed.
+1.  Make sure all dependencies are installed.
+2.  Copy conf/config_template.txt to conf/config.txt and customize all values.
+3. Run scripts/bin/setup.sh to create various directories that are needed.
+4. Make sure that all API keys are stored in scripts/install/api-manager.sh. The Wikipedia key currently resides in scripts/. This should be changed in future.
+5.  Modify the file scripts/seeds/current-seed to include several search terms that correspond to Wikipedia article titles.
+6.  cd to $scriptpath and run the following test command:
+ bin/create-catalog-entry.sh --builder "yes" --booktitle "Test" --yourname "Fred" --jobprofilename "Default" --sample_tweets "no" --import "no"
+# create far superior test scripts
+It should create epub, mobi, and docx files and deposit them in $TMPDIR/pagekicker/$uuid.  that same folder contains all the interim work products.
