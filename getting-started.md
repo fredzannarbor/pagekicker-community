@@ -6,6 +6,7 @@ GETTING STARTED
 4. Make sure that all API keys are stored in scripts/install/api-manager.sh. The Wikipedia key currently resides in scripts/. This should be changed in future.
 5.  Modify the file scripts/seeds/current-seed to include several search terms that correspond to Wikipedia article titles.
 6.  cd to $scriptpath and run the following test command:
- bin/create-catalog-entry.sh --builder "yes" --booktitle "Test" --yourname "Fred" --jobprofilename "Default" --sample_tweets "no" --import "no"
-# create far superior test scripts
+
+ bin/create-catalog-entry.sh --builder "yes" --booktitle "Test" --yourname "Fred" --jobprofilename "Default" --sample_tweets "no" --import "no"  
+
 It should create epub, mobi, and docx files and deposit them in $TMPDIR/pagekicker/$uuid.  that same folder contains all the interim work products.
