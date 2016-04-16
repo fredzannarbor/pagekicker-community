@@ -2,6 +2,8 @@
 
 # renames files per PDF file name
 
+# this script has not been heavily tested but is nondestructive, i.e. it only makes changes on copied files
+
 # input: path to directory containing PDF files
 # output: directory containing same files renamed with document title from PDF metadata
 
