@@ -14,7 +14,8 @@ echo "software version number is" $SFB_VERSION
 echo "sfb_log is" $sfb_log
 
 echo "completed reading config file and  beginning logging at" `date +'%m/%d/%y%n %H:%M:%S'` 
-
+#echo $PATH
+# echo "I am" $(whoami)
 starttime=$(( `date +%s` ))
 
 sku=`tail -1 < "$LOCAL_DATA""SKUs/sku_list"`
@@ -441,7 +442,7 @@ xml)
 	echo "jobprofilename is" $jobprofilename  | tee --append $xform_log
 	echo "exemplar_file is" $exemplar_file | tee --append $xform_log
 	
-	echo -n "$seedphrases" > $TMPDIR$uuid/seeds/seedphrases
+	echo -n "$seedphrases" > $TMPDIR$uuid/seeds/seedphrases 
 
 	cp $WEBFORMSHOME$submissionid/$exemplar_filedir_code/*/$exemplar_file $TMPDIR$uuid/$exemplar_file
 ;;
