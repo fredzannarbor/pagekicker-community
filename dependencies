@@ -13,6 +13,7 @@ Optional:
 
 xmlstarlet # only needed if you are parsing xml input
 Magento 1.9.2.4 bitnami stack # if you want to export metadata to Magento store
+incron and inotify are used in store to trigger actions when xml forms is submitted and xml result is created
 Flickr API key
 t command line twitter client with Twitter API key # any other twitter search client can be plugged in
 
