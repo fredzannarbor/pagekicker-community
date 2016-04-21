@@ -737,7 +737,7 @@ if [ "$builder" = "yes" ] ; then
 
 	echo "seedfile was" "$TMPDIR"seeds/seedphrases
 
-	$scriptpath"bin/builder.sh" --seedfile $TMPDIR$uuid"/seeds/seedphrases" --booktype "$booktype" --jobprofilename "$jobprofilename" --jobprofile "$jobprofilename.jobprofile" --booktitle  "$booktitle" --ebook_format "epub" --sample_tweets "yes" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername"
+	$scriptpath"bin/builder.sh" --seedfile $TMPDIR$uuid"/seeds/seedphrases" --booktype "$booktype" --jobprofilename "$jobprofilename" --jobprofile "$jobprofilename.jobprofile" --booktitle  "$booktitle" --ebook_format "epub" --sample_tweets "no" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername"
 
 else
 
