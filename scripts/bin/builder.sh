@@ -677,7 +677,7 @@ esac
 
 # housecleaning
 dontcleanupseeds="yes"
-cp "$buildtarget" "/tmp/pagekicker/actual_builds/"
+cp -u "$buildtarget" "/tmp/pagekicker/actual_builds/$sku.$safe_product_name"
 
 if [ "$dontcleanupseeds" = "yes" ]; then
 	echo "leaving seed file in place $seedfile"
