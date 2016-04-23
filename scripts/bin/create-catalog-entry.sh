@@ -395,18 +395,19 @@ fi
 
 # create directories I will need
 
-mkdir -m 777 $TMPDIR$uuid
-mkdir -m 777 $TMPDIR$uuid/wiki
-mkdir -m 777 $TMPDIR$uuid/user
-mkdir -m 777 $TMPDIR$uuid/flickr
-mkdir -m 777 $TMPDIR$uuid/fetch
-mkdir -m 777 $TMPDIR$uuid/seeds
-mkdir -m 777 $TMPDIR$uuid/images
-mkdir -m 777 $TMPDIR$uuid/mail
-mkdir -m 755 $TMPDIR$uuid/cover
-mkdir -m 755 $TMPDIR$uuid/twitter
-mkdir -m 777 $metadatatargetpath$uuid
-mkdir -m 777 $mediatargetpath$uuid
+mkdir -p -m 777 $TMPDIR
+mkdir -p -m 777 $TMPDIR$uuid
+mkdir -p -m 777 $TMPDIR$uuid/wiki
+mkdir -p -m 777 $TMPDIR$uuid/user
+mkdir -p -m 777 $TMPDIR$uuid/flickr
+mkdir -p -m 777 $TMPDIR$uuid/fetch
+mkdir -p -m 777 $TMPDIR$uuid/seeds
+mkdir -p -m 777 $TMPDIR$uuid/images
+mkdir -p -m 777 $TMPDIR$uuid/mail
+mkdir -p -m 755 $TMPDIR$uuid/cover
+mkdir -p -m 755 $TMPDIR$uuid/twitter
+mkdir -p -m 777 $metadatatargetpath$uuid
+mkdir -p -m 777 $mediatargetpath$uuid
 
 case "$format" in 
 xml)

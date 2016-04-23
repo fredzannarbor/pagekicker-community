@@ -21,9 +21,9 @@ row_no=1
 while read -r line ;
 do
 	uuid=$(python  -c 'import uuid; print uuid.uuid1()')
-	mkdir -m 777 /tmp/pagekicker/$uuid
-	mkdir -m 777 /tmp/pagekicker/$uuid/seeds
-	mkdir -m 777 /tmp/pagekicker/$uuid/csv
+	mkdir -p -m 777 /tmp/pagekicker/$uuid
+	mkdir -p -m 777 /tmp/pagekicker/$uuid/seeds
+	mkdir -p -m 777 /tmp/pagekicker/$uuid/csv
 	current_row_location="/tmp/pagekicker/$uuid/csv/current_row"
 	tail -n$row_no "$1" | head -n1 > "$current_row_location"
 
