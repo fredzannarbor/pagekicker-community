@@ -18,18 +18,17 @@ environment=$(xmlstarlet sel -t -v "/item/environment" "$xmlfilename")
 
 if [ "$environment" = "Production" ] ; then
 
-        . /opt/bitnami/apache2/htdocs/pk-production/conf/config.txt
-        echo "loaded prod config file at " $datenow | tee --append ~/how_I_started
+        . $confpath"config.txt"
+        echo "loaded $environment config file at " $datenow 
 
 elif [ "$environment" = "Staging" ] ; then
-        . /opt/bitnami/apache2/htdocs/pk-staging/development/conf/config.txt
-        echo "loaded Staging config file at " $datenow | tee --append ~/how_I_started
+        . $confpath"config.txt"
+        echo "loaded $environment config file at " $datenow 
 
 else
 
-        . /opt/bitnami/apache2/htdocs/pk-new/development/conf/config.txt
-        echo "loaded dev config file at " $datenow | tee --append ~/how_I_started
-
+        . $confpath"config.txt"
+        echo "loaded $environment config file at " $datenow 
 fi
 
 uuid=$(python  -c 'import uuid; print uuid.uuid1()')
@@ -44,9 +43,7 @@ echo "started xform at " $starttime " details in" $xform_log "at" $xform_log | t
 sku=`tail -1 < "$LOCAL_DATA""SKUs/sku_list"`
 echo "sku" $sku | tee --append $xform_log
 
-# get bzr revision
-bazaar_revision=`bzr revno`
-echo "bazaar revision number in" "$environment" "is" $bazaar_revision | tee --append $xform_log
+echo "$0 version in $environment" "is" $SFB_VERSION | tee --append $xform_log
 
 cd $scriptpath
 echo "scriptpath is" $scriptpath 
@@ -82,7 +79,7 @@ case $webform_id in
 
 bin/ccc.sh --xmlfilename "$xmlbasefile" --passuuid "$uuid" --format "xml" --builder "no"
 
-echo "launched ccc from" $environment 
+echo "launched $0 from" $environment 
 ;;
 
 21) 
