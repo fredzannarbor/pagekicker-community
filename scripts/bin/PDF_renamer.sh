@@ -64,7 +64,7 @@ else
 	echo "proceeding"
 fi
 
-mkdir -m 755 "$renamed_files_dir"
+mkdir -p -m 755 "$renamed_files_dir"
 
 cd "$pdfdir"
 i=1

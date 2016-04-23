@@ -143,7 +143,7 @@ if [ ! "$passuuid" ] ; then
 	echo "creating uuid"
 	uuid=$(python  -c 'import uuid; print uuid.uuid1()')
 	echo "uuid is" $uuid | tee --append $xform_log
-	mkdir -m 755 tmp/$uuid
+	mkdir -p -m 755 tmp/$uuid
 else
 	uuid=$passuuid
 	echo "received uuid " $uuid

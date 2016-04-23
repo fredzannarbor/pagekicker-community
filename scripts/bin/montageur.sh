@@ -109,8 +109,8 @@ if [ ! "$passuuid" ] ; then
 	echo "creating uuid"
 	uuid=$(python  -c 'import uuid; print uuid.uuid1()')
 	echo "uuid is" $uuid | tee --append $xform_log
-	mkdir -m 755 $TMPDIR$uuid
-	mkdir -m 755 $TMPDIR$uuid/montageur
+	mkdir -p  -m 755 $TMPDIR$uuid
+	mkdir -p -m 755 $TMPDIR$uuid/montageur
 else
 	uuid=$passuuid
 	echo "received uuid " $uuid
@@ -252,7 +252,7 @@ cp -R $TMPDIR$uuid/"$montageurdir"/portrait* tmp/$uuid
 if [ "$maximages" != "no" ] ; then
 
 	echo "building additional image from top N"
-	mkdir -m 755 $TMPDIR$uuid/montageurtopn
+	mkdir -p -m 755 $TMPDIR$uuid/montageurtopn
 
 	# put N files in tmp directory
 	cd $TMPDIR$uuid/"$montageurdir"
