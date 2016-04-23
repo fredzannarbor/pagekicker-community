@@ -123,7 +123,7 @@ if [ ! "$passuuid" ] ; then
 	echo "creating uuid"
 	uuid=$(python  -c 'import uuid; print uuid.uuid1()')
 	echo "uuid is" $uuid | tee --append $xform_log
-	mkdir -m 755 tmp/$uuid
+	mkdir -p -m 755 tmp/$uuid
 else
 	uuid=$passuuid
 	echo "received uuid " $uuid
@@ -223,7 +223,7 @@ convert -units pixelsperinch -density 300 -background blue -fill Yellow -gravity
 
 # sample image
 
-mkdir -m 755 tmp/$uuid/pdf
+mkdir -p -m 755 tmp/$uuid/pdf
 convert -units pixelsperinch -density 300 tmp/$uuid/downloaded.pdf[0] tmp/$uuid/dl-0.jpg
 convert tmp/$uuid/dl-0.jpg -bordercolor linen -border 8x8 \
           -background Linen  -gravity SouthEast -splice 10x10+0+0 \
