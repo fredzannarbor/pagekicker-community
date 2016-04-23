@@ -275,7 +275,7 @@ echo "accordingly uuid for this instance is now" $uuid
 # echo making directories as needed
 
 if [ ! $(ls -A images/$uuid) ] ; then
-	mkdir images/$uuid ; mkdir images/$uuid/print
+	mkdir -p images/$uuid ; mkdir -p images/$uuid/print
 else
 	echo "uuid directories were already made by xform"
 fi

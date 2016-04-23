@@ -128,7 +128,7 @@ if [ ! "$passuuid" ] ; then
 	echo "creating uuid"
 	uuid=$(python  -c 'import uuid; print uuid.uuid1()')
 	echo "uuid is" $uuid | tee --append $xform_log
-	mkdir -m 755 tmp/$uuid
+	mkdir -p -m 755 tmp/$uuid
 else
 	uuid=$passuuid
 	echo "received uuid " $uuid
@@ -168,7 +168,7 @@ else
 	echo "going on to post decimator files"
 fi
 
-mkdir -m 755 $scriptpath"../pk-html/"$uuid
+mkdir -p -m 755 $scriptpath"../pk-html/"$uuid
 cp tmp/$uuid/home.png $scriptpath/../pk-html/$uuid/home.png
 cp tmp/$uuid/wordcloudslide.png $scriptpath/../pk-html/$uuid/wordcloudslide.png
 cp tmp/$uuid/montage.png $scriptpath/../pk-html/$uuid/montage.png

@@ -10,14 +10,14 @@
 
 # subdirectories in Magento that do not exist in core Magento without plugins
 
-mkdir -m 755 $SFB_MAGENTO_HOME"var/import" 
-mkdir -m 755 $SFB_MAGENTO_HOME"var/export"
-mkdir -m 755 $SFB_MAGENTO_HOME"media/webforms"
-mkdir -m 755 $SFB_MAGENTO_HOME"media/webforms/xml"
+mkdir -p -m 755 $SFB_MAGENTO_HOME"var/import" 
+mkdir -p -m 755 $SFB_MAGENTO_HOME"var/export"
+mkdir -p -m 755 $SFB_MAGENTO_HOME"media/webforms"
+mkdir -p -m 755 $SFB_MAGENTO_HOME"media/webforms/xml"
 
 # subdirectories in TMPDIR
 
-mkdir -m 755 $TMPDIR"pagekicker"
-mkdir -m 755 $TMPDIR"actual_builds"
-mkdir -m 755 $TMPDIR"seeds"
+mkdir -p -m 755 $TMPDIR"pagekicker"
+mkdir -p -m 755 $TMPDIR"actual_builds"
+mkdir -p -m 755 $TMPDIR"seeds"
 
