@@ -610,7 +610,7 @@ echo "lastname prior to 1st cover build is" $lastname
 	"$JAVA_BIN" -jar $scriptpath"lib/IBMcloud/ibm-word-cloud.jar" -c $scriptpath"lib/IBMcloud/examples/configuration.txt" -w "1800" -h "1800" < $TMPDIR$uuid/wiki/wikiraw.md > $TMPDIR$uuid/cover/wordcloudcover.png
 
 #copying old stopfile backup  to overwrite rotated stopfile
-cp $scriptpath"/lib/IBMcloud/examples/restore-pk-stopwords.txt"  $scriptpath"/lib/IBMcloud/examples/pk-stopwords.txt" 
+cp -u $scriptpath"/lib/IBMcloud/examples/restore-pk-stopwords.txt"  $scriptpath"/lib/IBMcloud/examples/pk-stopwords.txt" 
 
 
 # set font & color
