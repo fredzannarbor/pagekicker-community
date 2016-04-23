@@ -272,11 +272,11 @@ if [ ! "$passuuid" ] ; then
 	echo "creating uuid"
 	uuid=$("$PYTHON_BIN"  -c 'import uuid; print uuid.uuid1()')
 	echo "uuid is" $uuid | tee --append $xform_log
-	mkdir -m 777 $TMPDIR$uuid
+	mkdir -p -p -m 777 $TMPDIR$uuid
 else
 	uuid=$passuuid
 	echo "received uuid " $uuid
-	mkdir -m 777 $TMPDIR$uuid
+	mkdir -p -p -m 777 $TMPDIR$uuid
 fi
 
 if [ -z "$covercolor" ]; then
@@ -337,15 +337,15 @@ echo "test $covercolor" "$coverfont"
 
 # create directories I will need
 
-mkdir -m 777 $TMPDIR$uuid/wiki
-mkdir -m 777 $TMPDIR$uuid/user
-mkdir -m 777 $TMPDIR$uuid/flickr
-mkdir -m 777 $TMPDIR$uuid/fetch
-mkdir -m 777 $TMPDIR$uuid/seeds
-mkdir -m 777 $TMPDIR$uuid/images
-mkdir -m 777 $TMPDIR$uuid/mail
-mkdir -m 755 $TMPDIR$uuid/cover
-mkdir -m 755 $TMPDIR$uuid/twitter
+mkdir -p -m 777 $TMPDIR$uuid/wiki
+mkdir -p -m 777 $TMPDIR$uuid/user
+mkdir -p -m 777 $TMPDIR$uuid/flickr
+mkdir -p -m 777 $TMPDIR$uuid/fetch
+mkdir -p -m 777 $TMPDIR$uuid/seeds
+mkdir -p -m 777 $TMPDIR$uuid/images
+mkdir -p -m 777 $TMPDIR$uuid/mail
+mkdir -p -m 755 $TMPDIR$uuid/cover
+mkdir -p -m 755 $TMPDIR$uuid/twitter
 
 #move assets into position
 
@@ -406,7 +406,7 @@ fi
 
 if [ "$flickr" = "on" ] ; then
 
-	mkdir -m 755 $TMPDIR$uuid/flickr
+	mkdir -p -m 755 $TMPDIR$uuid/flickr
 
 	
 	echo "about to run flickr fetchers"
@@ -423,7 +423,7 @@ fi
 video_search="no"
 if [ "$video_search" = "yes" ] ; then
 	echo "searching for video"
-	mkdir $TMPDIR$uuid/video
+	mkdir -p $TMPDIR$uuid/video
 	#videofetcher.py --flags123
 else
 	echo "no video search" >> $sfb_log
