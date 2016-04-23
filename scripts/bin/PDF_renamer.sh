@@ -1,11 +1,12 @@
 #!/bin/bash
 
-# renames files per PDF file name
+# renames files per PDF title metadata
 
 # this script has not been heavily tested but is nondestructive, i.e. it only makes changes on copied files
 
 # input: path to directory containing PDF files
 # output: directory containing same files renamed with document title from PDF metadata
+# requires pdftk
 
 # relative path to PageKicker config file here (run from $scriptpath)
 
