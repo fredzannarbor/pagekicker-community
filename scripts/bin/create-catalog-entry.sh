@@ -507,16 +507,18 @@ echo "$tldr" > $TMPDIR$uuid/tldr.txt
 
 echo "checking for naughty words"
 
- [[ $(PK_ERR_CODE="disallowed") ]] && bin/screen-naughty-seeds.sh $TMPDIR$uuid/seeds/seedphrases || echo "failed due to naughty words" exit 1
+#export uuid
+
+# [[ $(PK_ERR_CODE="disallowed") ]] && bin/screen-naughty-seeds.sh $TMPDIR$uuid/seeds/seedphrases || echo "failed due to naughty words" exit 1
 
 
-if bin/screen-naughty-seeds.sh $TMPDIR$uuid/seeds/seedphrases  ; then
+#if bin/screen-naughty-seeds.sh $TMPDIR$uuid/seeds/seedphrases  ; then
 
-	echo "Passed check for naughty seeds"
-else
-	echo "Exited with problem in screen-naughty-seeds.sh"
-  	exit 0
-fi
+#	echo "Passed check for naughty seeds"
+#else
+#	echo "Exited with problem in screen-naughty-seeds.sh"
+#  	exit 0
+#fi
 
 # echo "checking for human error on form submission"
 
