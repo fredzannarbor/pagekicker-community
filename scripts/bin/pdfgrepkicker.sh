@@ -129,7 +129,7 @@ fi
 
 # file processing begins
 
-mkdir -m 755 $outdir
+mkdir -p -m 755 $outdir
 
 while read pattern
 do

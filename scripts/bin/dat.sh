@@ -199,11 +199,11 @@ if [ ! "$passuuid" ] ; then
 	echo "creating uuid"
 	uuid=$(python  -c 'import uuid; print uuid.uuiddat-1()')
 	echo "uuid is" $uuid | tee --append $xform_log
-	mkdir -m 755 $TMPDIR$uuid
+	mkdir -p -m 755 $TMPDIR$uuid
 else
 	uuid=$passuuid
 	echo "received uuid " $uuid
-	mkdir -m 755 $TMPDIR$uuid
+	mkdir -p -m 755 $TMPDIR$uuid
 fi
 
 
@@ -327,7 +327,7 @@ fi
 
 if [ "$decimator_requested" = "Decimator only" ] ; then
 	echo "running Decimator only"
-	mkdir -m 755 $TMPDIR$uuid/decimator
+	mkdir -p -m 755 $TMPDIR$uuid/decimator
 	bin/decimator.sh --pdffile "$TMPDIR$uuid/$uploaded_tat_file" --outdir "$TMPDIR$uuid/decimator" --passuuid "$uuid" --tldr "$tldr"
 	sendemail -t "$customer_email" \
 	-u "Decimator Result" \
@@ -401,7 +401,7 @@ if [ "$extension" = "txt" ] ; then
 	echo "file was txt, no images, so skipping montageur" | tee --append $xform_log
 else
 	echo "copying working files into montageur directory" | tee --append $xform_log
-	mkdir -m 755 $TMPDIR$uuid/montageur
+	mkdir -p -m 755 $TMPDIR$uuid/montageur
 	$scriptpath/bin/montageur.sh --pdfinfile "$TMPDIR$uuid/target.pdf" --stopimagefolder "$scriptpath"userassets/oreilly/stopimages --passuuid "$uuid" --environment "$environment" --montageurdir "montageur" --maximages "5" --tmpdir "$TMPDIR"
 	montageur_success="$?"
 	if [ "$montageur_success" = 1 ] ; then
@@ -513,7 +513,7 @@ echo "built wordclouds" | tee --append $xform_log
 
 if [ "$flickr" = "on" ] ; then
 
-	mkdir -m 755 $TMPDIR$uuid/flickr
+	mkdir -p -m 755 $TMPDIR$uuid/flickr
 
 	python includes/Flickr_title_fetcher.py $TMPDIR$uuid/titles.txt $TMPDIR$uuid/flickr/
 	python includes/Flickr_seed_fetcher.py "$imagekeyword" $TMPDIR$uuid/flickr/
@@ -732,7 +732,7 @@ ls -la $buildtarget"f*"
 
 #deliver *Metadata files* to Magento
 
-mkdir -m 755 $mediatargetpath$uuid
+mkdir -p -m 755 $mediatargetpath$uuid
 cp $TMPDIR$uuid/wordcloudbig.png $mediatargetpath$uuid/$sku"wordcloudbig.png"
 cp $TMPDIR$uuid/summary.txt $mediatargetpath$uuid/$sku"summary.txt"
 cp $TMPDIR$uuid/all_nouns.txt $mediatargetpath$uuid/$sku"all_nouns.txt"
@@ -757,7 +757,7 @@ else
 	productname="$customtitle"
 fi
 echo  "product name is "$productname
-mkdir -m  755 "$metadatatargetpath$uuid"
+mkdir -p -m  755 "$metadatatargetpath$uuid"
 cat includes/builder-metadata-header.csv > $metadatatargetpath$uuid/"current-import.csv"
 . includes/builder-metadata-footer.sh
 # take a number if you are planning to import

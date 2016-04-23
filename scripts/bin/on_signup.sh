@@ -94,9 +94,9 @@ fi
 
 # create directories I will need
 
-mkdir -m 777 $TMPDIR$uuid
-mkdir -m 777 $TMPDIR$uuid/categories
-mkdir -m 755 $metadatatargetpath$uuid
+mkdir -p -m 777 $TMPDIR$uuid
+mkdir -p -m 777 $TMPDIR$uuid/categories
+mkdir -p -m 755 $metadatatargetpath$uuid
  
 echo "metadatatargetpath is "$tadatatargetpath
 echo "uuid is" $uuid
