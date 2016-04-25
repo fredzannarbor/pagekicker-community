@@ -759,14 +759,16 @@ google_form="http://goo.gl/forms/ur1Otr1G2q"
 
 	sendemail -t "$customer_email" \
 		-u "test  build of [ "$booktitle" ] is attached" \
-		-m "Attached you will find a free test version of the book that you asked us to add to the catalog.  It was created by PageKicker's robots running on $MACHINE_NAME in $environment. To add this book to your personal account so that you can request free updates in future, you will need to order it via the PageKicker catalog at this URI:"\ "$WEB_HOST"index.php/"$prevsku"".html."'\n\n'"As an additional gesture of appreciation, here is a coupon code for 3 free books: THANKS54.  It is early days for us and we very much appreciate your feedback.Please take a moment to share your thoughts via this Google Form: "$google_form".  Finally, note that PageKicker is open source; we encourage you to contribute to the project, which is available at $MY_GITHUB_REPO ." \
+		-m "Attached you will find a free test version of the book that you asked us to add to the catalog.  It was created by PageKicker robots running software commit $SFB_VERSION on $MACHINE_NAME in $environment. To add this book to your personal account so that you can request free updates in future, you will need to order it via the PageKicker catalog at this URI:"\ "$WEB_HOST"index.php/"$prevsku.html.  As an additional gesture of appreciation, here is a coupon code for 3 free books: THANKS54.  It is early days for us and we very much appreciate your feedback. Please take a moment to share your thoughts via this Google Form: "$google_form".  Finally, note that PageKicker is open source; we encourage you to contribute to the project, which is available at $MY_GITHUB_REPO ." \
 		-f "$GMAIL_ID" \
 		-cc "$GMAIL_ID" \
 		-xu "$GMAIL_ID" \
 		-xp "$GMAIL_PASSWORD" \
 		-s smtp.gmail.com:587 \
 		-o tls=yes \
-		-a "$TMPDIR$uuid/$safe_product_name"".epub"
+		-a "$TMPDIR$uuid/$safe_product_name"".docx" \
+		-a "$TMPDIR$uuid/$safe_product_name"".epub" \
+		-a "$TMPDIR$uuid/$safe_product_name"".mobi" 
 
 if [ "$mailtofred" = "yes" ] ; then
 
