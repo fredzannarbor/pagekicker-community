@@ -47,7 +47,7 @@ imagedir="images/" # change occurrences elsewhere for consistency with treatment
 sfb_log=$logdir"sfb_log.txt"
 xformlog=$logdir$uuid"/xformlog.txt"
 todaysarchivefolder=$(date +"%Y%m%d")
-sfb_log_archive=$LOCAL_DATA"archives/sfb_log_archive.txt"
+sfb_log_archive=$LOCAL_DATA"logs/sfb_log_archive.log"
 ebooksdelivery=$SFB_MAGENTO_HOME"media/ebooks/"
 
 

@@ -26,7 +26,7 @@ cd $scriptpath
 # . includes/echo-variables.sh
 
 
-"revision number is" $SFB_VERSION
+echo "revision number is" $SFB_VERSION
 
 echo "sfb_log is" $sfb_log
 
@@ -340,15 +340,16 @@ echo "test $covercolor" "$coverfont"
 
 # create directories I will need
 
-mkdir -p -m 777 $TMPDIR$uuid/wiki
-mkdir -p -m 777 $TMPDIR$uuid/user
-mkdir -p -m 777 $TMPDIR$uuid/flickr
-mkdir -p -m 777 $TMPDIR$uuid/fetch
-mkdir -p -m 777 $TMPDIR$uuid/seeds
-mkdir -p -m 777 $TMPDIR$uuid/images
-mkdir -p -m 777 $TMPDIR$uuid/mail
+mkdir -p -m 755 $TMPDIR$uuid/actual_builds
 mkdir -p -m 755 $TMPDIR$uuid/cover
 mkdir -p -m 755 $TMPDIR$uuid/twitter
+mkdir -p -m 777 $TMPDIR$uuid/fetch
+mkdir -p -m 777 $TMPDIR$uuid/flickr
+mkdir -p -m 777 $TMPDIR$uuid/images
+mkdir -p -m 777 $TMPDIR$uuid/mail
+mkdir -p -m 777 $TMPDIR$uuid/seeds
+mkdir -p -m 777 $TMPDIR$uuid/user
+mkdir -p -m 777 $TMPDIR$uuid/wiki
 
 #move assets into position
 
@@ -363,8 +364,17 @@ else
 fi
 
 echo "test seedfile is " $seedfile
+
 cp $scriptpath"assets/pk35pc.jpg" $TMPDIR$uuid/pk35pc.jpg
-cp $seedfile $TMPDIR$uuid/seeds/seedphrases
+
+if cmp -s "$seedfile" "$TMPDIR$uuid/seeds/seedphrases" ; then
+	echo "seedfiles are identical, no action necessary"
+else
+	echo "Rotating new seedfile into tmpdir"
+	cp $seedfile $TMPDIR$uuid"/seeds/seedphrases"
+fi 
+
+
 echo "test copy failed"
 cp $confdir"jobprofiles"/imprints/$imprintdir/$imprintlogo  $TMPDIR$uuid
 cp $confdir"jobprofiles"/signatures/$sigfile $TMPDIR$uuid
@@ -448,12 +458,26 @@ fi
 
 #rotate stopfile
 
-cp "$stopfile" "$scriptpath""lib/IBMcloud/examples/pk-stopwords.txt"
+
+if cmp -s "$scriptpath/lib/IBMcloud/examples/pk-stopwords.txt" $scriptpath"/lib/IBMcloud/examples/restore-pk-stopwords.txt" ; then
+	echo "stopfiles are identical, no action"
+else
+	echo "Rotating stopfile into place"
+	cp "$stopfile" "$scriptpath""lib/IBMcloud/examples/pk-stopwords.txt"
+fi 
+
 echo "running stopfile $stopfile"
-#more "lib/IBMcloud/examples/pk-stopwords.txt"
 
 	"$JAVA_BIN" -jar $scriptpath"lib/IBMcloud/ibm-word-cloud.jar" -c $scriptpath"lib/IBMcloud/examples/configuration.txt" -w "1800" -h "1800" < $TMPDIR$uuid/wiki/wikiraw.md > $TMPDIR$uuid/cover/wordcloudcover.png
 cat "$TMPDIR$uuid/seeds/seedphrases" | uniq | sort  > "$TMPDIR$uuid/seeds/sorted.seedfile"
+
+
+if cmp -s "$scriptpath/lib/IBMcloud/examples/pk-stopwords.txt" "$scriptpath/lib/IBMcloud/examples/restore-pk-stopwords.txt" ; then
+	echo "stopfiles are identical, no action"
+else
+	echo "Rotating old stopfile back in place"
+	cp $scriptpath"/lib/IBMcloud/examples/restore-pk-stopwords.txt"  "$scriptpath/lib/IBMcloud/examples/pk-stopwords.txt"
+fi 
 
 # set font & color
 
@@ -676,14 +700,14 @@ ls -la $buildtarget
 esac
 
 # housecleaning
-cp -u "$buildtarget" "/tmp/pagekicker/actual_builds/$sku.$safe_product_name"
+cp -u "$buildtarget" "/tmp/pagekicker/"$uuid/"actual_builds/""$sku.$safe_product_name"
 
 if [ "$dontcleanupseeds" = "yes" ]; then
 	echo "leaving seed file in place $seedfile"
 else
 	echo "removing seedfile"
 	rm "$seedfile"
-	ls -la $seedfile
+	#ls -la $seedfile (to test that it's gone)
 fi
 
 
