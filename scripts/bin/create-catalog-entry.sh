@@ -537,7 +537,7 @@ echo "seedfile is" $seedfile
 
 
 cat "$TMPDIR$uuid/seeds/seedphrases" | uniq | sort  > "$TMPDIR$uuid/seeds/sorted.seedfile"
-cat "$TMPDIR$uuid/seeds/sorted.seedfile" > "$LOCAL_DATA"/seed-archive/"$sku".seedphrases
+cat "$TMPDIR$uuid/seeds/sorted.seedfile" > "$LOCAL_DATA"seeds/history/"$sku".seedphrases
 
 
 cp $scriptpath"assets/pk35pc.jpg" $TMPDIR$uuid/pk35pc.jpg
@@ -604,14 +604,18 @@ echo "lastname prior to 1st cover build is" $lastname
 
  #copying new stopfile into location for use by the java program below (which is rigid)
 
-. includes/stopwords-switcher.sh
-
 
 
 	"$JAVA_BIN" -jar $scriptpath"lib/IBMcloud/ibm-word-cloud.jar" -c $scriptpath"lib/IBMcloud/examples/configuration.txt" -w "1800" -h "1800" < $TMPDIR$uuid/wiki/wikiraw.md > $TMPDIR$uuid/cover/wordcloudcover.png
 
 #copying old stopfile backup  to overwrite rotated stopfile
-cp -u $scriptpath"/lib/IBMcloud/examples/restore-pk-stopwords.txt"  $scriptpath"/lib/IBMcloud/examples/pk-stopwords.txt" 
+
+if cmp -s "$scriptpath/lib/IBMcloud/examples/pk-stopwords.txt" $scriptpath"/lib/IBMcloud/examples/restore-pk-stopwords.txt" ; then
+	echo "stopfiles are identical, no action"
+else
+	echo "Rotating old stopfile back in place"
+	cp $scriptpath"/lib/IBMcloud/examples/restore-pk-stopwords.txt"  "$scriptpath/lib/IBMcloud/examples/pk-stopwords.txt"
+fi 
 
 
 # set font & color
@@ -755,7 +759,7 @@ google_form="http://goo.gl/forms/ur1Otr1G2q"
 
 	sendemail -t "$customer_email" \
 		-u "test  build of [ "$booktitle" ] is attached" \
-		-m "Attached you will find a free test version of the book that you asked us to add to the catalog.  To add this book to your personal account so that you can request free updates in future, you will need to order it via the PageKicker catalog at this URI:"\ "$WEB_HOST"index.php/"$prevsku"".html."'\n\n'"As an additional gesture of appreciation, here is a coupon code for 3 free books: THANKS54.  It is early days for us and we very much appreciate your feedback.Please take a moment to share your thoughts via this Google Form: "$google_form"." \
+		-m "Attached you will find a free test version of the book that you asked us to add to the catalog.  It was created by PageKicker's robots running on $MACHINE_NAME in $environment. To add this book to your personal account so that you can request free updates in future, you will need to order it via the PageKicker catalog at this URI:"\ "$WEB_HOST"index.php/"$prevsku"".html."'\n\n'"As an additional gesture of appreciation, here is a coupon code for 3 free books: THANKS54.  It is early days for us and we very much appreciate your feedback.Please take a moment to share your thoughts via this Google Form: "$google_form".  Finally, note that PageKicker is open source; we encourage you to contribute to the project, which is available at $MY_GITHUB_REPO ." \
 		-f "$GMAIL_ID" \
 		-cc "$GMAIL_ID" \
 		-xu "$GMAIL_ID" \
