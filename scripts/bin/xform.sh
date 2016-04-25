@@ -16,20 +16,8 @@ xmlfilename=$xmldirectoryname/$xmlbasefile
 
 environment=$(xmlstarlet sel -t -v "/item/environment" "$xmlfilename")
 
-if [ "$environment" = "Production" ] ; then
-
-        . $0/../conf/"config.txt"
-        echo "loaded $environment config file at " $datenow 
-
-elif [ "$environment" = "Staging" ] ; then
-        . $0/../conf/"config.txt"
-        echo "loaded $environment config file at " $datenow 
-
-else
-
-        . ../conf/"config.txt"
-        echo "loaded $environment config file at " $datenow 
-fi
+. ../conf/"config.txt"
+echo "loaded $environment config file at " $datenow 
 
 uuid=$(python  -c 'import uuid; print uuid.uuid1()')
 mkdir -p -m 755 $logdir$uuid 
@@ -77,7 +65,7 @@ case $webform_id in
 
 # echo "found Magento form submission id 4, executing ccc"
 
-bin/create-catalog-entry.sh --xmlfilename "$xmlbasefile" --passuuid "$uuid" --format "xml" --builder "no"
+$scriptpath"bin/create-catalog-entry.sh" --xmlfilename "$xmlbasefile" --passuuid "$uuid" --format "xml" --builder "no"
 
 echo "launched $0 from" $environment 
 ;;
@@ -150,8 +138,8 @@ sendemail -t "$customer_email" \
 
 23)
 
-echo "running dat.sh with xml file from webform"
-bin/dat.sh --xmldirectoryname "$xmldirectoryname" --xmlbasefile "$xmlbasefile"  --passuuid "$uuid" --environment "$environment"
+# echo "running dat.sh with xml file from webform"
+$scriptpath"bin/dat.sh" --xmldirectoryname "$xmldirectoryname" --xmlbasefile "$xmlbasefile"  --passuuid "$uuid" --environment "$environment"
 ;;
 
 
