@@ -20,7 +20,7 @@ google_form="URI to Google Form used in test build email"
 
 SFB_PHP_BIN="/usr/bin/php"
 JAVA_BIN="/usr/bin/java"
-PYTHON_BIN="/usr/bin/java"
+PYTHON_BIN="/usr/bin/python" #2.7 compatible at this point
 PANDOC_BIN="/usr/bin/pandoc"
 LOCAL_MYSQL_PATH="/usr/bin/mysql
 SFB_VERSION=`git rev-parse HEAD` #replace with version control command that produces unique identifier
