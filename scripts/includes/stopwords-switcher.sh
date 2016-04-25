@@ -18,5 +18,6 @@ echo "we are using language-specific stopfile $stopfile"
 
 #rotate stopfile into position
 
-cp "$stopfile" "$scriptpath""lib/IBMcloud/examples/pk-stopwords.txt"
+cp -u "$stopfile" "$scriptpath""lib/IBMcloud/examples/pk-stopwords.txt"
+echo "here"
 
