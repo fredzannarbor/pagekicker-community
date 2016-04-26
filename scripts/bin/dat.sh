@@ -425,7 +425,7 @@ fi
 
 # convert uploaded file to markdown
 
-pandoc -t markdown $TMPDIR$uuid/targetfile.txt -o $TMPDIR$uuid/body.md
+"$"$PANDOC_BIN"_BIN" -t markdown $TMPDIR$uuid/targetfile.txt -o $TMPDIR$uuid/body.md
 
 # run acronym filter
 
@@ -479,7 +479,7 @@ sed -i 's/Averaage/Average/g' $TMPDIR$uuid/rr.txt
 echo "# Readability Report" > $TMPDIR$uuid/rr.md
 cat $TMPDIR$uuid/rr.txt >> $TMPDIR$uuid/rr.md
 cat assets/rr_explanation.md >> $TMPDIR$uuid/rr.md
-pandoc $TMPDIR$uuid/rr.md -o $TMPDIR$uuid/rr.html
+"$"$PANDOC_BIN"_BIN" $TMPDIR$uuid/rr.md -o $TMPDIR$uuid/rr.html
 sed -i G $TMPDIR$uuid/rr.md
 
 
@@ -537,11 +537,11 @@ else
 	cp ../conf/jobprofiles/imprints/$imprint/$imprintcopyrightpage $TMPDIR$uuid/$imprintcopyrightpage
 	# save reports as PDFs
 
-	pandoc $TMPDIR$uuid/summary.md -o $TMPDIR$uuid/summary.pdf --latex-engine=xelatex
-	pandoc $TMPDIR$uuid/all_nouns.txt -o $TMPDIR$uuid/all_nouns.pdf --latex-engine=xelatex
-	pandoc $TMPDIR$uuid/$imprintcopyrightpage -o $TMPDIR$uuid/copyright_notice.pdf --latex-engine=xelatex
-	pandoc $TMPDIR$uuid/rr.md -o $TMPDIR$uuid/rr.pdf --latex-engine=xelatex
-	pandoc $TMPDIR$uuid/sorted_uniqs.txt -o $TMPDIR$uuid/sorted_uniqs.pdf --latex-engine=xelatex
+	"$PANDOC_BIN" $TMPDIR$uuid/summary.md -o $TMPDIR$uuid/summary.pdf --latex-engine=xelatex
+	"$PANDOC_BIN" $TMPDIR$uuid/all_nouns.txt -o $TMPDIR$uuid/all_nouns.pdf --latex-engine=xelatex
+	"$PANDOC_BIN" $TMPDIR$uuid/$imprintcopyrightpage -o $TMPDIR$uuid/copyright_notice.pdf --latex-engine=xelatex
+	"$PANDOC_BIN" $TMPDIR$uuid/rr.md -o $TMPDIR$uuid/rr.pdf --latex-engine=xelatex
+	"$PANDOC_BIN" $TMPDIR$uuid/sorted_uniqs.txt -o $TMPDIR$uuid/sorted_uniqs.pdf --latex-engine=xelatex
 
 # build wordcloud page
 
@@ -570,7 +570,7 @@ else
 	cat $confdir"jobprofiles/bibliography/"$lastname/$lastname"_titles.txt" >> $TMPDIR$uuid/titlepage.md
 	echo "  " >> $TMPDIR$uuid/titlepage.md
 	echo "  " >> $TMPDIR$uuid/titlepage.md
-	pandoc $TMPDIR$uuid/titlepage.md -o $TMPDIR$uuid/titlepage.pdf --variable fontsize=12pt --latex-engine=xelatex
+	"$PANDOC_BIN" $TMPDIR$uuid/titlepage.md -o $TMPDIR$uuid/titlepage.pdf --variable fontsize=12pt --latex-engine=xelatex
 	cd $scriptpath
 
 	echo "# About the Robot Author" > $TMPDIR$uuid/robot_author.md
@@ -598,7 +598,7 @@ else
 
 
 	cat $TMPDIR$uuid/titlepage.md assets/newpage.md $TMPDIR$uuid/$imprintcopyrightpage assets/newpage.md $TMPDIR$uuid/robot_author.md assets/newpage.md $TMPDIR$uuid/acknowledgements.md assets/newpage.md $TMPDIR$uuid/summary.md assets/newpage.md $TMPDIR$uuid/rr.md assets/newpage.md $TMPDIR$uuid/sorted_uniqs.md > $TMPDIR$uuid/textfrontmatter.md
-	cd $TMPDIR$uuid; pandoc textfrontmatter.md --latex-engine=xelatex -o textfrontmatter.pdf ; cd $scriptpath
+	cd $TMPDIR$uuid; "$PANDOC_BIN" textfrontmatter.md --latex-engine=xelatex -o textfrontmatter.pdf ; cd $scriptpath
 
 	echo "assembled front matter"
 
@@ -646,7 +646,7 @@ else
 		cp *.jpg ..
 		cp allflickr.md ..
 		cd ..
-		pandoc -o images.pdf allflickr.md
+		"$PANDOC_BIN" -o images.pdf allflickr.md
 		cd $scriptpath
 		echo "converted flickr md files to pdf pages with images" | tee --append $xform_log
 		
@@ -664,7 +664,7 @@ else
 		sed -e s/\=\=\=\=/xyxyxyxy/g -e s/\=\=\=/xyxyxy/g -e s/\=\=/xyxy/g -e s/xyxyxyxy/\#\#\#\#/g -e s/xyxyxy/\#\#\#/g -e s/xyxy/\#\#/g $TMPDIR$uuid/wikisummaries.md > $TMPDIR$uuid/wikiall.md
 		grep -v '\\x' $TMPDIR$uuid/wikiall.md > $TMPDIR$uuid/wikisafe.md # stripping certain escape characters
 		cp $TMPDIR$uuid/wikisafe.md $TMPDIR$uuid/wikisummaries.md
-		pandoc -o $TMPDIR$uuid/wikisummaries.pdf $TMPDIR$uuid/wikisummaries.md --latex-engine=xelatex
+		"$PANDOC_BIN" -o $TMPDIR$uuid/wikisummaries.pdf $TMPDIR$uuid/wikisummaries.md --latex-engine=xelatex
 
 	else
 		# getwiki =no speeds up performance a lot since fetcher need not run
@@ -688,7 +688,7 @@ fi
 #build epub with TOC
 
 cd $TMPDIR$uuid
-pandoc -S -o full_wtoc.epub titlepage.md \
+"$PANDOC_BIN" -S -o full_wtoc.epub titlepage.md \
 "$imprintcopyrightpage" \
 robot_author.md \
 summary.md \
@@ -702,7 +702,7 @@ echo "getwiki is" $getwiki
 
 if [ "$getwiki" = "yes" ] ; then
 
-	pandoc -s -S -o research_report.docx titlepage.md \
+	"$PANDOC_BIN" -s -S -o research_report.docx titlepage.md \
 	"$imprintcopyrightpage" \
 	robot_author.md \
 	summary.md \
@@ -712,7 +712,7 @@ if [ "$getwiki" = "yes" ] ; then
 
 else 
   
-	pandoc -s -S -o research_report.docx titlepage.md \
+	"$PANDOC_BIN" -s -S -o research_report.docx titlepage.md \
 	"$imprintcopyrightpage" \
 	robot_author.md \
 	summary.md \
