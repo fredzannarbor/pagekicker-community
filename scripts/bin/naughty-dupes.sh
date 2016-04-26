@@ -87,24 +87,12 @@ else
 fi
 
 
-if [ "$environment" = "Production" ] ; then
-
-	confpath="/opt/bitnami/apache2/htdocs/pk-production/production/"
-        . $confpath"conf/config.txt"
-        echo "running prod config" | tee --append $xform_log
-
-else
-	confpath="/opt/bitnami/apache2/htdocs/pk-new/development/"
-        . "$confpath"conf/config.txt
-        echo "running dev config"  | tee --append $xform_log
-
-fi
+. ../"conf/config.txt"
+echo "running in $environment" | tee --append $xform_log
 
 . $scriptpath"includes/set-variables"
 
-# get bzr revision
-bazaar_revision=`bzr revno` | tee --append $sfb_log
-echo "bazaar revision number in" "$environment" "is" $bazaar_revision | tee --append $sfb_log
+echo "software id in" "$environment" "is" $SFB_VERSION | tee --append $sfb_log
 
 cd $scriptpath
 echo "scriptpath is" $scriptpath

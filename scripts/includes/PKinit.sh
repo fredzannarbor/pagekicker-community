@@ -6,10 +6,7 @@ echo $"hello, world"
 
 . ../conf/config.txt
 
-# get bzr revision
-bazaar_revision=`bzr revno`
-echo "bazaar revision number is" $bazaar_revision
-
+echo "software id in $environment is " $SFB_VERSION
 
 echo "completed reading config file and  beginning logging at" `date +'%m/%d/%y%n %H:%M:%S'` | tee --append $sfb_log
 
