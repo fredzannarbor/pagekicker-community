@@ -390,7 +390,7 @@ echo "# Readability Report" >> tmp/$uuid/rr.md
 cat tmp/$uuid/rr.txt >> tmp/$uuid/rr.md
 cat assets/rr_decimator_explanation.md >> tmp/$uuid/rr.md
 sed -i G tmp/$uuid/rr.md
-pandoc tmp/$uuid/rr.md -o tmp/$uuid/rr.txt
+"$PANDOC_BIN" tmp/$uuid/rr.md -o tmp/$uuid/rr.txt
 convert -units pixelsperinch -density 300 -size 3100x2000 -background white -fill black label:@tmp/$uuid/rr.txt tmp/$uuid/rr.png
 convert -units pixelsperinch -density 300  -background blue -fill Yellow -gravity west -size 3300x200 -font "$toplabelfont" -pointsize 30 caption:"Readability Report" tmp/$uuid/toplabel9.png
 convert -units pixelsperinch -density 300 xc:blue -size 3300x200 tmp/$uuid/bottomlabel9.png
@@ -405,7 +405,7 @@ echo "# Bonus Slide: Learn More About This PDF" >> tmp/$uuid/moreinfo.md
 echo " Read the full text at ["$pdfurl"]("$pdfurl')' >> tmp/$uuid/moreinfo.md
 echo "  " >> tmp/$uuid/moreinfo.md
 echo "[Additional analysis tools at "$pagekicker_tat_url"]($pagekicker_tat_url)" >> tmp/$uuid/moreinfo.md
-pandoc -t beamer -V theme:AnnArbor --latex-engine=xelatex tmp/$uuid/moreinfo.md -o tmp/$uuid/moreinfo.pdf
+"$PANDOC_BIN" -t beamer -V theme:AnnArbor --latex-engine=xelatex tmp/$uuid/moreinfo.md -o tmp/$uuid/moreinfo.pdf
 
 
 convert -units pixelsperinch -density 300 tmp/$uuid/home.png  tmp/$uuid/wordcloudslide.png tmp/$uuid/sum1.png tmp/$uuid/sum2.png tmp/$uuid/sum3.png tmp/$uuid/pageburst.png tmp/$uuid/pages.png tmp/$uuid/montage.png tmp/$uuid/keywords.png tmp/$uuid/rrslide.png  -size 3300x2550 tmp/$uuid/slidedeck.pdf
