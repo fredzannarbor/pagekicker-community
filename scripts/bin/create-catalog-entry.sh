@@ -7,8 +7,6 @@ echo $"hello, world, I am speaking" $LANG
 
 . ../conf/config.txt
 
-# get bzr revision
-#bazaar_revision=`cat /home/bitnami/bzr_dev_rev`
 echo "software version number is" $SFB_VERSION
 
 echo "sfb_log is" $sfb_log
