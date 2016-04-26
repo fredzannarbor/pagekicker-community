@@ -136,9 +136,7 @@ fi
 
 . $scriptpath"includes/set-variables"
 
-# get bzr revision
-bazaar_revision=`bzr revno`
-echo "bazaar revision number in" "$environment" "is" $bazaar_revision
+echo "software id in" "$environment" "is" $SFB_VERSION
 
 cd $scriptpath
 echo "scriptpath is" $scriptpath

@@ -228,9 +228,7 @@ fi
 
 . $scriptpath"includes/set-variables.sh"
 
-# get bzr revision
-bazaar_revision=`bzr revno`
-echo "bazaar revision number in" "$environment" "is" $bazaar_revision
+echo "software id in" "$environment" "is" $SFB_VERSION
 
 cd $scriptpath
 echo "scriptpath is" $scriptpath
@@ -331,7 +329,7 @@ if [ "$decimator_requested" = "Decimator only" ] ; then
 	bin/decimator.sh --pdffile "$TMPDIR$uuid/$uploaded_tat_file" --outdir "$TMPDIR$uuid/decimator" --passuuid "$uuid" --tldr "$tldr"
 	sendemail -t "$customer_email" \
 	-u "Decimator Result" \
-	-m "PageKicker's Document Analysis Robots living on "$MACHINE_NAME "and using version " `bzr revno` " of the PageKicker software have analyzed your file " $uploaded_tat_file " in job" $uuid \
+	-m "PageKicker's Document Analysis Robots living on "$MACHINE_NAME "and using version " $SFB_VERSION " of the PageKicker software have analyzed your file " $uploaded_tat_file " in job" $uuid \
        ".  The Decimator slide deck is attached here."  \
 	-f "$GMAIL_ID" \
 	-cc "$GMAIL_ID" \
@@ -823,7 +821,7 @@ if [ "$montageur_success" = 0 ] ; then
 
 sendemail -t "$customer_email" \
 	-u "Document Analysis Tools Result" \
-	-m "PageKicker's Document Analysis Robots living on "$MACHINE_NAME "and using version " `bzr revno` " of the PageKicker software have analyzed your file " $uploaded_tat_file " in job" $uuid \
+	-m "PageKicker's Document Analysis Robots living on "$MACHINE_NAME "and using version " $SFB_VERSION " of the PageKicker software have analyzed your file " $uploaded_tat_file " in job" $uuid \
        ".  A word cloud, an image montage, a list of proper nouns, and a list of possible acronyms have been placed in the PageKicker catalog at" $dat_catalog_url ". Additional files, including a programmatic summary, are attached here." \
 	-f "$GMAIL_ID" \
 	-cc "$GMAIL_ID" \
@@ -846,7 +844,7 @@ else
 
 sendemail -t "$customer_email" \
 	-u "Document Analysis Tools Result" \
-	-m "PageKicker's Document Analysis Robots living on "$MACHINE_NAME "and using version " `bzr revno` " of the PageKicker software have analyzed your file " $uploaded_tat_file " in job" $uuid \
+	-m "PageKicker's Document Analysis Robots living on "$MACHINE_NAME "and using version " $SFB_VERSION " of the PageKicker software have analyzed your file " $uploaded_tat_file " in job" $uuid \
        ".  A word cloud, an image montage, a list of proper nouns, and a list of possible acronyms have been placed in the PageKicker catalog at" $dat_catalog_url ". Additional files, including a programmatic summary, are attached here."  \
 	-f "$GMAIL_ID" \
 	-cc "$GMAIL_ID" \
