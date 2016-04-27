@@ -1,0 +1,12 @@
+config file imported
+wheeling job # e8f3a624-0b06-11e6-9519-70188b823b61 onto the receiving dock
+ran import script and submitted  1 jobs (some may be dupes) for import to the Magento store
+the empty truck has pulled away from the dock, we are waiting for the next truck to arrive
+config file imported
+wheeling job # 948ec89c-0b07-11e6-9519-70188b823b61 onto the receiving dock
+ran import script and submitted  1 jobs (some may be dupes) for import to the Magento store
+the empty truck has pulled away from the dock, we are waiting for the next truck to arrive
+config file imported
+wheeling job # 2d06a6da-0b08-11e6-9519-70188b823b61 onto the receiving dock
+ran import script and submitted  1 jobs (some may be dupes) for import to the Magento store
+the empty truck has pulled away from the dock, we are waiting for the next truck to arrive
