@@ -1,0 +1,9 @@
+# incrontab file for regular PK user monitoring the web interface
+/opt/bitnami/apps/magento/htdocs/media/webforms/xml IN_CREATE /opt/bitnami/apache2/htdocs/pk-new/development/scripts/bin/xform.sh $@ $#
+# 0 IN_ALL_EVENTS logger "/tmp action for $# file"
+/opt/bitnami/apps/magento/htdocs/staging/media/webforms/xml IN_CREATE /opt/bitnami/apache2/htdocs/pk-staging/development/scripts/bin/xform.sh $@ $#
+# 0 IN_ALL_EVENTS logger "/tmp action for $# file"
+/opt/bitnami/apps/magento/htdocs/media/webforms/xml IN_CREATE /opt/bitnami/apache2/htdocs/pk-production/scripts/bin/xform.sh $@ $#
+# 0 IN_ALL_EVENTS logger "/tmp action for $# file"
+/opt/bitnami/apps/magento/htdocs/media/webforms/xml IN_CLOSE_WRITE /opt/bitnami/apache2/htdocs/pk-production/production/scripts/bin/xform.sh $@ $#
+/home/bitnami IN_MODIFY sendemail -m "incrontab fired in home directory" -t fred@pagekicker.com -f fred@pagekicker.com
