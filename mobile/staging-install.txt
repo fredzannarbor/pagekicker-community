@@ -1,0 +1,24 @@
+SETUP NOTES FOR STAGING ENVIRONMENTS -- 
+
+HOW TO CREATE CLONED MAGENTO SERVERS ON BITNAMI
+
+MAGENTO-SPECIFIC
+
+1.  cp -r apps/magento/htdocs to apps/magento/htdocs/newclone
+2.  mySQL database change change System > Configuration > Web > Base URL
+3.  create new download build commands System > Tools > Build Commands for Downloadable Products
+
+PAGEKICKER BACKEND
+
+1.  bzr push /path/to/new/branch
+2.  modify development/conf/config.txt
+3.  modify development/scripts/includes/builder-metadata-footer.sh with build command ids to match item 3 above
+
+MISC
+
+set up SSL by acquiring new certificate (or wildcard certificate for *.pagekicker) 
+location for certificates is /opt/bitnami/apps/magento/htdocs/newclone/conf/certs
+
+
+
+  

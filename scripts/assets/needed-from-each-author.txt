@@ -1,0 +1,9 @@
+I need the following information from the author for each book:
+
+* a one sentence description of the book explaining to the reader why it is worth buying
+* a one para description of the book
+* a three para description
+* an author headshot
+* an updated biography (one to three paras)
+
+
