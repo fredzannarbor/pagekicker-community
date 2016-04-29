@@ -393,7 +393,6 @@ fi
 
 # create directories I will need
 
-<<<<<<< HEAD
 mkdir -p -m 777 $TMPDIR
 mkdir -p -m 777 $TMPDIR$uuid
 mkdir -p -m 777 $TMPDIR$uuid/wiki
@@ -407,22 +406,6 @@ mkdir -p -m 755 $TMPDIR$uuid/cover
 mkdir -p -m 755 $TMPDIR$uuid/twitter
 mkdir -p -m 777 $metadatatargetpath$uuid
 mkdir -p -m 777 $mediatargetpath$uuid
-=======
-# TO DOS check to see if these exist before issuing all these mkdirs, since they generate irritating error messages
-
-mkdir -m 777 $TMPDIR$uuid
-mkdir -m 777 $TMPDIR$uuid/wiki
-mkdir -m 777 $TMPDIR$uuid/user
-mkdir -m 777 $TMPDIR$uuid/flickr
-mkdir -m 777 $TMPDIR$uuid/fetch
-mkdir -m 777 $TMPDIR$uuid/seeds
-mkdir -m 777 $TMPDIR$uuid/images
-mkdir -m 777 $TMPDIR$uuid/mail
-mkdir -m 755 $TMPDIR$uuid/cover
-mkdir -m 755 $TMPDIR$uuid/twitter
-mkdir -m 777 $metadatatargetpath$uuid
-mkdir -m 777 $mediatargetpath$uuid
->>>>>>> crontabs
 
 case "$format" in 
 xml)
@@ -773,12 +756,9 @@ echo "safe_product_name is" "$safe_product_name"
 
 	sendemail -t "$customer_email" \
 		-u "test  build of [ "$booktitle" ] is attached" \
-<<<<<<< HEAD
 		-m "Attached you will find a free test version of the book that you asked us to add to the catalog.  It was created by PageKicker robots running software commit $SFB_VERSION on $MACHINE_NAME in $environment. To add this book to your personal account so that you can request free updates in future, you will need to order it via the PageKicker catalog at this URI:"\ "$WEB_HOST"index.php/"$prevsku.html.  As an additional gesture of appreciation, here is a coupon code for 3 free books: THANKS54.  It is early days for us and we very much appreciate your feedback. Please take a moment to share your thoughts via this Google Form: "$google_form".  Finally, note that PageKicker is open source; we encourage you to contribute to the project, which is available at $MY_GITHUB_REPO ." \
-=======
 	-m "Thanks for trying out PageKicker. What did you think? Attached you will find a free test version of the book that you asked us to add to the catalog.  To add this book to your personal account so that you can request free updates in future, you will need to order it via the PageKicker catalog at this URI:"\ "$WEB_HOST"index.php/"$prevsku"".html."'\n\n'"As an additional gesture of appreciation, here is a coupon code for 3 free books: THANKS54 at the PageKicker demo site:"\ ""$WEB_HOST"index.php/catalog.html.  It is early days for us and we very much appreciate your feedback. Please take a moment to share your thoughts via this Google Form: "$google_form". You may be interested to know that PageKicker has recently open sourced its core technology: $COMMUNITY_GITHUB_REPO .  
 We'd love for you to participate in this amazing project!" \
->>>>>>> crontabs
 		-f "$GMAIL_ID" \
 		-cc "$GMAIL_ID" \
 		-xu "$GMAIL_ID" \
