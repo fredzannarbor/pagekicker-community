@@ -24,7 +24,7 @@ dat="yes"
 
 
 TMPDIR="/tmp/pagekicker/"
-buildtarget="/opt/bitnami/apps/magento/htdocs/media/"
+buildtarget="$mediatargetpath"
 stopimagefolder="none" #default
 maximages="4" #default
 thumbxsize=120 #default
@@ -207,23 +207,8 @@ else
 fi
 
 
-if [ "$environment" = "Production" ] ; then
-
-        . /opt/bitnami/apache2/htdocs/pk-production/production/conf/config.txt
-        echo "loaded prod config file at " $datenow | tee --append $xform_log
- 
-elif [ "$environment" = "Staging" ] ; then
-
-        . /opt/bitnami/apache2/htdocs/pk-staging/development/conf/config.txt
-        echo "loaded staging config file at " $datenow | tee --append $xform_log
-
-else
-
-        . /opt/bitnami/apache2/htdocs/pk-new/development/conf/config.txt
-        echo "loaded dev config file at " $datenow | tee --append $xform_log
-
-
-fi
+. ../conf/config.txt
+echo "loaded  $environment config file at " $datenow | tee --append $xform_log
 
 
 . $scriptpath"includes/set-variables.sh"
@@ -233,7 +218,7 @@ echo "software id in" "$environment" "is" $SFB_VERSION
 cd $scriptpath
 echo "scriptpath is" $scriptpath
 
-export PATH=$PATH:/opt/bitnami/java/bin
+#$export PATH=$PATH:/opt/bitnami/java/bin
 
 #echo "PATH is" $PATH
 
@@ -293,7 +278,7 @@ imagekeyword=$(xmlstarlet sel -t -v "/item/imagekeyword" "$xmlfilename")
 . ../conf/jobprofiles/imprints/$imprint/$imprint".imprint"
 echo "$jobprofile"
 echo "$imprint"
-echo $WEBFORMSHOME
+echo $WEBFORMSXML_HOME
 
 export LANG
 
@@ -384,7 +369,8 @@ elif [ "$extension" = "epub" ] ; then
 elif [ "$extension" = "pdf" ] ; then
 	pdftotext $TMPDIR$uuid/$uploaded_tat_file  $TMPDIR$uuid/targetfile.txt
 	cp $TMPDIR$uuid/$uploaded_tat_file $TMPDIR$uuid/target.pdf
-	echo "ran pdftotext" | tee --append $xform_log
+	echo "ran pdftotext and copied $TMPDIR$uuid/target.pdf" | tee --append $xform_log
+	ls -la $TMPDIR$uuid
 
 else
 	unoconv -f txt $TMPDIR$uuid/$uploaded_tat_file
@@ -400,7 +386,7 @@ if [ "$extension" = "txt" ] ; then
 else
 	echo "copying working files into montageur directory" | tee --append $xform_log
 	mkdir -p -m 755 $TMPDIR$uuid/montageur
-	$scriptpath/bin/montageur.sh --pdfinfile "$TMPDIR$uuid/target.pdf" --stopimagefolder "$scriptpath"userassets/oreilly/stopimages --passuuid "$uuid" --environment "$environment" --montageurdir "montageur" --maximages "5" --tmpdir "$TMPDIR"
+	$scriptpath"bin/montageur.sh" --pdfinfile "$TMPDIR$uuid/target.pdf" --stopimagefolder "$scriptpath"userassets/oreilly/stopimages --passuuid "$uuid" --environment "$environment" --montageurdir "montageur" --maximages "5" --tmpdir "$TMPDIR" --stopimagefolder "none"
 	montageur_success="$?"
 	if [ "$montageur_success" = 1 ] ; then
 		echo "montageur exited with status 1 no images found, skipping montage processing and returning to scriptpath directory" | tee --append $xform_log
@@ -423,7 +409,7 @@ fi
 
 # convert uploaded file to markdown
 
-"$"$PANDOC_BIN"_BIN" -t markdown $TMPDIR$uuid/targetfile.txt -o $TMPDIR$uuid/body.md
+"$PANDOC_BIN" -t markdown $TMPDIR$uuid/targetfile.txt -o $TMPDIR$uuid/body.md
 
 # run acronym filter
 
@@ -436,7 +422,7 @@ split -C 50K $TMPDIR$uuid/targetfile.txt "$TMPDIR$uuid/xtarget."
 for file in "$TMPDIR$uuid/xtarget."*
 do
 
-python $scriptpath"includes/nerv3.py" $file $file"_nouns.txt"
+python $scriptpath"includes/nerv3.py" $file $file"_nouns.txt" 
 echo "ran nerv3 on $file" | tee --append $xform_log
 python includes/PKsum.py -l "$summary_length" -o $file"_summary.txt" $file
 sed -i 's/ \+ / /g' $file"_summary.txt"
@@ -477,7 +463,7 @@ sed -i 's/Averaage/Average/g' $TMPDIR$uuid/rr.txt
 echo "# Readability Report" > $TMPDIR$uuid/rr.md
 cat $TMPDIR$uuid/rr.txt >> $TMPDIR$uuid/rr.md
 cat assets/rr_explanation.md >> $TMPDIR$uuid/rr.md
-"$"$PANDOC_BIN"_BIN" $TMPDIR$uuid/rr.md -o $TMPDIR$uuid/rr.html
+"$PANDOC_BIN" $TMPDIR$uuid/rr.md -o $TMPDIR$uuid/rr.html
 sed -i G $TMPDIR$uuid/rr.md
 
 
@@ -657,7 +643,7 @@ else
 	if [ "$getwiki" = "yes" ] ; then
 
 		sed '/^$/d' $TMPDIR$uuid/all_nouns.txt | sort | uniq -i > $TMPDIR$uuid/seeds
-		/opt/bitnami/python/bin/python bin/wikifetcher.py --infile "$TMPDIR$uuid/seeds" --outfile "$TMPDIR$uuid/wikisummaries.md" --lang "en"
+		"$PYTHON_BIN" bin/wikifetcher.py --infile "$TMPDIR$uuid/seeds" --outfile "$TMPDIR$uuid/wikisummaries.md" --lang "en" 
 		cp $TMPDIR$uuid/wikisummaries.md $TMPDIR$uuid/original.md 
 		sed -e s/\=\=\=\=/xyxyxyxy/g -e s/\=\=\=/xyxyxy/g -e s/\=\=/xyxy/g -e s/xyxyxyxy/\#\#\#\#/g -e s/xyxyxy/\#\#\#/g -e s/xyxy/\#\#/g $TMPDIR$uuid/wikisummaries.md > $TMPDIR$uuid/wikiall.md
 		grep -v '\\x' $TMPDIR$uuid/wikiall.md > $TMPDIR$uuid/wikisafe.md # stripping certain escape characters
