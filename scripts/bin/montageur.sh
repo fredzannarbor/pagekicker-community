@@ -117,31 +117,17 @@ else
 fi
 
 
-if [ "$environment" = "Production" ] ; then
+. ../conf/"config.txt"
+echo "running $environment config"  | tee --append $xform_log
 
-        . $confpath"config.txt"
-        echo "running prod config" | tee --append $xform_log
-
-
-if [ "$environment" = "Staging" ] ; then
-
-	. $confpath"config.txt"
-        echo "running prod config" | tee --append $xform_log
-
-else
-	. $confpath"config.txt"
-        echo "running dev config"  | tee --append $xform_log
-
-fi
-
-. $scriptpath"includes/set-variables"
+. $scriptpath"includes/set-variables.sh"
 
 echo "software id in" "$environment" "is" $SFB_VERSION
 
 cd $scriptpath
 echo "scriptpath is" $scriptpath
 
-export PATH=$PATH:/opt/bitnami/java/bin
+# export PATH=$PATH:/opt/bitnami/java/bin
 
 echo "PATH is" $PATH
 # default values
@@ -153,9 +139,8 @@ thumbysize=120 #default
 outfile="montage.jpg"
 montageurdir="montageur"
 
-
 pdfimages -j "$pdfinfile" $TMPDIR$uuid/"$montageurdir"/extracted_images
-
+ls -la $TMPDIR$uuid
 if [ ls *.pbm &> /dev/null ] ; then
 	echo "pbm files exist so converting to ppm" | tee --append $xform_log
 	for f in $TMPDIR$uuid/"$montageurdir"/extracted_images*.pbm; do
@@ -203,6 +188,10 @@ do
 	fi
 done
 
+ls -la $TMPDIR$uuid
+
+
+
 # count images and create metadata
 
 # if maximages is provided then create a separate montage at the end using just those images
@@ -211,9 +200,9 @@ imagecount=$(ls $TMPDIR$uuid/"$montageurdir"/*.jpg | wc -l)
 echo "imagecount is" $imagecount
 ls -S $TMPDIR$uuid/"$montageurdir"/*.jpg > $TMPDIR$uuid/"$montageurdir"/listbysize.txt
 
-
+ls -la $TMPDIR$uuid
 # delete dupes
-fdupes -dN $TMPDIR$uuid/.
+fdupes $TMPDIR$uuid/.
 
 # kluge move stop images into working directory
 
@@ -224,6 +213,7 @@ if [ "$stopimagefolder" != "none" ] ; then
 	fdupes -r . > $TMPDIR$uuid/"$montageurdir"/dupelist.txt
 	sed -i '/^$/d' $TMPDIR$uuid/"$montageurdir"/dupelist.txt
 	while read -r filename; do
+	echo "$filename is filename"
 	 rm "$filename"
 	done <$TMPDIR$uuid/"$montageurdir"/dupelist.txt
 
@@ -235,6 +225,9 @@ fi
 
 zip $TMPDIR$uuid/"$montageurdir"/extracted_images.zip $TMPDIR$uuid/"$montageurdir"/extracted_images*.jpg 
 
+echo "$pdfinfile is pdfinfile"
+ls -la $TMPDIR$uuid
+
 pdftk "$pdfinfile" dump_data output | grep -E "Figure*|Table*|Map*|Illustration*" | sed 's/BookmarkTitle//' > $TMPDIR$uuid/"$montageurdir"/figures_metadata.txt
 
 # build montage image
@@ -243,7 +236,7 @@ montage -density 300 -units pixelsperinch $TMPDIR$uuid/"$montageurdir"/extracted
 cp $TMPDIR$uuid/"$montageurdir"/$outfile $TMPDIR$uuid/$outfile
 
 montage -density 300 -units pixelsperinch $TMPDIR$uuid/"$montageurdir"/extracted_images*.jpg -tile 3x4 -geometry '800x800>+3+4' $TMPDIR$uuid/"$montageurdir"/portrait_%d.jpg 
-cp -R $TMPDIR$uuid/"$montageurdir"/portrait* tmp/$uuid
+cp -R $TMPDIR$uuid/"$montageurdir"/portrait* $TMPDIR$uuid
 
 # build optional top N images montage
 
