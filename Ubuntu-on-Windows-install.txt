@@ -1,0 +1,7 @@
+To clone the repository for a Ubuntu-on-Windows shell running in Windows 10, you will probably need to do the following things:
+
+1) Set up a regular user account (don't use the default root).
+
+2) Install git, python, and pip:
+
+sudo apt-get install git python-pip
