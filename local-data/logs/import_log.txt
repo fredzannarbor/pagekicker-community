@@ -10,3 +10,61 @@ config file imported
 wheeling job # 2d06a6da-0b08-11e6-9519-70188b823b61 onto the receiving dock
 ran import script and submitted  1 jobs (some may be dupes) for import to the Magento store
 the empty truck has pulled away from the dock, we are waiting for the next truck to arrive
+config file imported
+the empty truck has pulled away from the dock, we are waiting for the next truck to arrive
+config file imported
+the empty truck has pulled away from the dock, we are waiting for the next truck to arrive
+config file imported
+the empty truck has pulled away from the dock, we are waiting for the next truck to arrive
+config file imported
+wheeling job # 049b785a-1153-11e6-9862-22000be3c9f4 onto the receiving dock
+ran import script and submitted  1 jobs (some may be dupes) for import to the Magento store
+the empty truck has pulled away from the dock, we are waiting for the next truck to arrive
+config file imported
+wheeling job # 91f26d0a-1156-11e6-a594-22000be3c9f4 onto the receiving dock
+ran import script and submitted  1 jobs (some may be dupes) for import to the Magento store
+the empty truck has pulled away from the dock, we are waiting for the next truck to arrive
+config file imported
+wheeling job # 8ef21e38-1157-11e6-b699-22000be3c9f4 onto the receiving dock
+ran import script and submitted  1 jobs (some may be dupes) for import to the Magento store
+the empty truck has pulled away from the dock, we are waiting for the next truck to arrive
+config file imported
+wheeling job # 6a1a0174-1158-11e6-826a-22000be3c9f4 onto the receiving dock
+ran import script and submitted  1 jobs (some may be dupes) for import to the Magento store
+the empty truck has pulled away from the dock, we are waiting for the next truck to arrive
+config file imported
+wheeling job # b9279bc0-115b-11e6-87cd-22000be3c9f4 onto the receiving dock
+ran import script and submitted  1 jobs (some may be dupes) for import to the Magento store
+the empty truck has pulled away from the dock, we are waiting for the next truck to arrive
+config file imported
+wheeling job # 3e1bb4ce-115c-11e6-8fe0-22000be3c9f4 onto the receiving dock
+ran import script and submitted  1 jobs (some may be dupes) for import to the Magento store
+the empty truck has pulled away from the dock, we are waiting for the next truck to arrive
+config file imported
+wheeling job # eac9195a-115c-11e6-94fa-22000be3c9f4 onto the receiving dock
+ran import script and submitted  1 jobs (some may be dupes) for import to the Magento store
+the empty truck has pulled away from the dock, we are waiting for the next truck to arrive
+config file imported
+wheeling job # 9eca144a-115d-11e6-b681-22000be3c9f4 onto the receiving dock
+ran import script and submitted  1 jobs (some may be dupes) for import to the Magento store
+the empty truck has pulled away from the dock, we are waiting for the next truck to arrive
+config file imported
+wheeling job # 4f67603e-1161-11e6-b2ad-22000be3c9f4 onto the receiving dock
+config file imported
+wheeling job # 4f67603e-1161-11e6-b2ad-22000be3c9f4 onto the receiving dock
+ran import script and submitted  1 jobs (some may be dupes) for import to the Magento store
+wheeling job # 13fb59dc-1162-11e6-ace3-22000be3c9f4 onto the receiving dock
+ran import script and submitted  1 jobs (some may be dupes) for import to the Magento store
+the empty truck has pulled away from the dock, we are waiting for the next truck to arrive
+config file imported
+wheeling job # 9890fed6-1162-11e6-898b-22000be3c9f4 onto the receiving dock
+ran import script and submitted  1 jobs (some may be dupes) for import to the Magento store
+the empty truck has pulled away from the dock, we are waiting for the next truck to arrive
+config file imported
+wheeling job # 81baab18-1170-11e6-9940-22000be3c9f4 onto the receiving dock
+ran import script and submitted  1 jobs (some may be dupes) for import to the Magento store
+the empty truck has pulled away from the dock, we are waiting for the next truck to arrive
+config file imported
+wheeling job # 29427f0a-1171-11e6-88d2-22000be3c9f4 onto the receiving dock
+ran import script and submitted  1 jobs (some may be dupes) for import to the Magento store
+the empty truck has pulled away from the dock, we are waiting for the next truck to arrive

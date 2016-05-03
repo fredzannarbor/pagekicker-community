@@ -96,3 +96,35 @@ no video search
 covercolor is RosyBrown
 coverfont is Minion
 job  25d818b6-0b31-11e6-9519-70188b823b61 ending logging at 04/25/16 18:03:47
+customeremail was wfzimmerman@gmail.com
+createtime is  1462302374
+no sample tweets
+no video search
+covercolor is chocolate3
+coverfont is Adler
+job  13fb59dc-1162-11e6-ace3-22000be3c9f4 ending logging at 05/03/16 19:08:52
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462302621
+no sample tweets
+no video search
+covercolor is gold1
+coverfont is Adler
+job  9890fed6-1162-11e6-898b-22000be3c9f4 ending logging at 05/03/16 19:12:02
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462308568
+no sample tweets
+no video search
+covercolor is grey48
+coverfont is Calibri
+job  81baab18-1170-11e6-9940-22000be3c9f4 ending logging at 05/03/16 20:51:07
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462308850
+no sample tweets
+no video search
+covercolor is maroon3
+coverfont is Arial
+job  29427f0a-1171-11e6-88d2-22000be3c9f4 ending logging at 05/03/16 20:55:42
+ended logging xform activities

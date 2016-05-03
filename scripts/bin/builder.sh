@@ -34,7 +34,6 @@ echo "completed reading config file and  beginning logging at" `date +'%m/%d/%y%
 
 jobprofile="default"
 jobprofilename="default"
-buildtarget=$TMPDIR"test"
 singleseed="none"
 sample_tweets="no"
 todaysdate=`date`
