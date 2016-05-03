@@ -65,7 +65,7 @@ case $webform_id in
 
 # echo "found Magento form submission id 4, executing ccc"
 
-$scriptpath"bin/create-catalog-entry.sh" --xmlfilename "$xmlbasefile" --passuuid "$uuid" --format "xml" --builder "no"
+$scriptpath"bin/create-catalog-entry.sh" --xmlfilename "$xmlbasefile" --passuuid "$uuid" --format "xml" --builder "yes"
 
 echo "launched $0 from" $environment 
 ;;
