@@ -32,6 +32,7 @@ echo "sfb_log is" $sfb_log
 
 echo "completed reading config file and  beginning logging at" `date +'%m/%d/%y%n %H:%M:%S'` 
 
+
 jobprofile="default"
 jobprofilename="default"
 singleseed="none"
@@ -280,6 +281,8 @@ else
 	echo "received uuid " $uuid
 	mkdir -p -m 777 $TMPDIR$uuid
 fi
+
+buildtarget="$TMPDIR$uuid/buildtarget.default" # in case we don't get buildtarget from xml form
 
 if [ -z "$covercolor" ]; then
 	covercolor="RosyBrown"
