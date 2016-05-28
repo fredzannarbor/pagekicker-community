@@ -7,6 +7,7 @@ Created on Mon Jun 22 11:16:16 2015
 import csv
 import sys
 import os
+from subprocess import call
 
 
 f = sys.argv[1]
@@ -78,6 +79,7 @@ try:
         f6.write(seeds)
         f7.write(imprint)
         f8.write(catid)
+        # call (["ls", "-l"])
 
 finally:
     f.close()       
