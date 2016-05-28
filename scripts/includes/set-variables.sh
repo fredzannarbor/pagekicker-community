@@ -31,6 +31,7 @@ fetchfile="fetch/fetchlist.csv"
 fleet="yes"
 flickr="no"
 import="yes"
+imprint="pagekicker"
 ISBN="012345679X"
 ISBN_assign_automatically="no"
 ISBN_owner="0"
@@ -59,6 +60,7 @@ userid="1"
 userlogo="assets/imprint.png"
 verbose="no"
 wikilocale="en"
+yourname="no"
 
 # summarizer
 

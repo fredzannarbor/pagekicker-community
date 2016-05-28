@@ -21,7 +21,7 @@ echo "sku" $sku
 
 . includes/set-variables.sh
 
-imprint="PageKicker"
+imprint="pagekicker"
 
 while :
 do
@@ -358,6 +358,22 @@ shift 2
 import=${1#*=}
 shift
 ;;
+--price)
+price=$2
+shift 2
+;;
+--price=*)
+price=${1#*=}
+shift
+;;
+--imprint)
+imprint=$2
+shift 2
+;;
+--imprint=*)
+imprint=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -494,7 +510,7 @@ echo "wikilocale now is "$wikilocale
 
 . includes/api-manager.sh
 
-. $confdir"jobprofiles/imprints/pagekicker/pagekicker.imprint"
+. $confdir"jobprofiles/imprints/pagekicker/"$imprint".imprint"
 
 echo $scriptpath "is scriptpath"
 
@@ -656,9 +672,9 @@ composite -gravity Center $TMPDIR$uuid/cover/wordcloudcover.png  $TMPDIR$uuid/co
 convert -background "$covercolor" -fill "$coverfontcolor" -gravity center -size 1800x400 -font "$coverfont" caption:"$booktitle" $TMPDIR$uuid/cover/topcanvas.png +swap -gravity center -composite $TMPDIR$uuid/cover/toplabel.png
 
 #build bottom label
-echo "yourname is" $yourname
+echo "yourname is" $yourname 
 if [ "$yourname" = "yes" ] ; then
-	editedby="$customername"
+	editedby="$customer_name"
 else
 	echo "robot name on cover"
 fi
@@ -673,7 +689,7 @@ convert  -background "$covercolor"  -fill "$coverfontcolor" -gravity south -size
 # resize imprint logo
 
 convert $TMPDIR$uuid/cover/pklogo.png -resize x200 $TMPDIR$uuid/cover/pklogo.png
-
+echo "breakpoint"
 
 # lay the labels on top of the target canvas
 
