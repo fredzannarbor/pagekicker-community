@@ -352,6 +352,7 @@ mkdir -p -m 777 $TMPDIR$uuid/mail
 mkdir -p -m 777 $TMPDIR$uuid/seeds
 mkdir -p -m 777 $TMPDIR$uuid/user
 mkdir -p -m 777 $TMPDIR$uuid/wiki
+mkdir -p -m 755 $LOCAL_DATA"jobprofile_builds/""$jobprofilename"
 
 #move assets into position
 
@@ -703,6 +704,9 @@ esac
 
 # housecleaning
 cp -u "$buildtarget" "/tmp/pagekicker/"$uuid/"actual_builds/""$sku.$safe_product_name"
+cp -u "$buildtarget" "$LOCAL_DATA""archived_builds/""$sku.$safe_product_name" #all builds archive
+cp -u "$buildtarget" "$LOCAL_DATA""jobprofile_builds/""$jobprofilename/""$sku.$safe_product_name" #each robot's archive
+
 
 if [ "$dontcleanupseeds" = "yes" ]; then
 	echo "leaving seed file in place $seedfile"
