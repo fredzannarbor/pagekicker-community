@@ -254,6 +254,14 @@ shift 2
 dontcleanupseeds=${1#*=}
 shift
 ;;
+--batch_uuid)
+batch_uuid=$2
+shift 2
+;;
+--batch_uuid=*)
+batch_uuid=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -706,6 +714,12 @@ esac
 cp -u "$buildtarget" "/tmp/pagekicker/"$uuid/"actual_builds/""$sku.$safe_product_name"
 cp -u "$buildtarget" "$LOCAL_DATA""archived_builds/""$sku.$safe_product_name" #all builds archive
 cp -u "$buildtarget" "$LOCAL_DATA""jobprofile_builds/""$jobprofilename/""$sku.$safe_product_name" #each robot's archive
+if [ -z "$batch_uuid" ] ; then
+	echo "not part of a batch"
+else
+	cp -u "/tmp/pagekicker/"$uuid/"actual_builds/""$sku.$safe_product_name" "$TMPDIR$batch_uuid"
+	ls -l "$TMPDIR$batch_uuid"/*
+fi
 
 
 if [ "$dontcleanupseeds" = "yes" ]; then
