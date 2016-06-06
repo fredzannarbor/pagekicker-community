@@ -290,7 +290,7 @@ else
 	mkdir -p -m 777 $TMPDIR$uuid
 fi
 
-buildtarget="$TMPDIR$uuid/buildtarget.default" # in case we don't get buildtarget from xml form
+
 
 if [ -z "$covercolor" ]; then
 	covercolor="RosyBrown"
@@ -386,7 +386,6 @@ else
 fi 
 
 
-echo "test copy failed"
 cp $confdir"jobprofiles"/imprints/$imprintdir/$imprintlogo  $TMPDIR$uuid
 cp $confdir"jobprofiles"/signatures/$sigfile $TMPDIR$uuid
 cp $confdir"jobprofiles"/imprints/$imprintdir/$imprintlogo  $TMPDIR$uuid/cover
@@ -676,32 +675,44 @@ cat "$TMPDIR$uuid/yaml-metadata.md" >> $TMPDIR$uuid/complete.md
 bibliography_title="$booktitle"
 safe_product_name=$(echo "$booktitle" | sed -e 's/[^A-Za-z0-9._-]/_/g')
 cd $TMPDIR$uuid
-"$PANDOC_BIN" -o "$TMPDIR$uuid/"$safe_product_name".epub" --epub-cover-image=$TMPDIR$uuid/cover/$sku"ebookcover.jpg" $TMPDIR$uuid/complete.md
-"$PANDOC_BIN" -o "$TMPDIR$uuid/"$safe_product_name".docx"  $TMPDIR$uuid/complete.md
+"$PANDOC_BIN" -o "$TMPDIR$uuid/$sku."$safe_product_name".epub" --epub-cover-image=$TMPDIR$uuid/cover/$sku"ebookcover.jpg" $TMPDIR$uuid/complete.md
+"$PANDOC_BIN" -o "$TMPDIR$uuid/$sku."$safe_product_name".docx"  $TMPDIR$uuid/complete.md
 cd $scriptpath
-lib/KindleGen/kindlegen "$TMPDIR$uuid/"$safe_product_name".epub" -o "$safe_product_name"".mobi"
+lib/KindleGen/kindlegen "$TMPDIR$uuid/$sku."$safe_product_name".epub" -o "$sku.$safe_product_name"".mobi"
 ls -lart $TMPDIR$uuid
 echo "built epub and mobi"
 case $ebook_format in
 
 epub)
+if [ ! "$buildtarget" ] ; then
+	buildtarget="$TMPDIR$uuid/buildtarget.epub"
+else
+	echo "received buildtarget as $buildtarget"
+fi
 # deliver epub to build target
-cp $TMPDIR$uuid/$safe_product_name".epub" "$buildtarget"
+cp $TMPDIR$uuid/$sku.$safe_product_name".epub" "$buildtarget"
+
 chmod 755 "$buildtarget"
 echo "checking that buildtarget exists"
 ls -la $buildtarget
 ;;
 
 mobi)
-
-cp $TMPDIR$uuid/$safe_product_name".mobi" "$buildtarget"
-chmod 755 "$buildtarget"
+if [ ! "$buildtarget" ] ; then
+	buildtarget="$TMPDIR$uuid/buildtarget.mobi"
+else
+	echo "received buildtarget as $buildtarget"
+fi
+cp $TMPDIR$uuid/$sku.$safe_product_name".mobi" "$buildtarget"
 echo "checking that buildtarget exists"
 ls -la $buildtarget
 ;;
 docx)
-
-cp $TMPDIR$uuid/$safe_product_name".docx" "$buildtarget"
+if [ ! "$buildtarget" ] ; then
+	buildtarget="$TMPDIR$uuid/buildtarget.docx"
+else
+	echo "received buildtarget as $buildtarget"
+fi
 chmod 755 "$buildtarget"
 echo "checking that buildtarget exists"
 ls -la $buildtarget
@@ -710,17 +721,19 @@ ls -la $buildtarget
 
 esac
 
+
 # housecleaning
-cp -u "$buildtarget" "/tmp/pagekicker/"$uuid/"actual_builds/""$sku.$safe_product_name"
-cp -u "$buildtarget" "$LOCAL_DATA""archived_builds/""$sku.$safe_product_name" #all builds archive
-cp -u "$buildtarget" "$LOCAL_DATA""jobprofile_builds/""$jobprofilename/""$sku.$safe_product_name" #each robot's archive
+
+cp -u $TMPDIR$uuid/$sku.$safe_product_name".epub" "$LOCAL_DATA""jobprofile_builds/""$jobprofilename/""$sku.$safe_product_name.epub" #each robot's archive
+
 if [ -z "$batch_uuid" ] ; then
 	echo "not part of a batch"
 else
-	cp -u "/tmp/pagekicker/"$uuid/"actual_builds/""$sku.$safe_product_name" "$TMPDIR$batch_uuid"
-	ls -l "$TMPDIR$batch_uuid"/*
+	cp $TMPDIR$uuid/$sku.$safe_product_name".epub" $TMPDIR$batch_uuid/$sku.$safe_product_name".epub"
+cp $TMPDIR$uuid/$sku.$safe_product_name".mobi" $TMPDIR$batch_uuid/$sku.$safe_product_name".mobi" 
+cp $TMPDIR$uuid/$sku.$safe_product_name".docx" $TMPDIR$batch_uuid/$sku.$safe_product_name".docx"
+	ls -l "$TMPDIR$batch_uuid"/* # 
 fi
-
 
 if [ "$dontcleanupseeds" = "yes" ]; then
 	echo "leaving seed file in place $seedfile"
