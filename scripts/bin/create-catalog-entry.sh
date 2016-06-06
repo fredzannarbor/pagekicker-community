@@ -787,9 +787,9 @@ echo "safe_product_name is" "$safe_product_name"
 		-xp "$GMAIL_PASSWORD" \
 		-s smtp.gmail.com:587 \
 		-o tls=yes \
-		-a "$TMPDIR$uuid/$safe_product_name"".docx" \
-		-a "$TMPDIR$uuid/$safe_product_name"".epub" \
-		-a "$TMPDIR$uuid/$safe_product_name"".mobi" 
+		-a "$TMPDIR$uuid/$sku.$safe_product_name"".docx" \
+		-a "$TMPDIR$uuid/$sku.$safe_product_name"".epub" \
+		-a "$TMPDIR$uuid/$sku.$safe_product_name"".mobi" 
 
 if [ "$mailtofred" = "yes" ] ; then
 
@@ -801,7 +801,7 @@ if [ "$mailtofred" = "yes" ] ; then
 		-xp "$GMAIL_PASSWORD" \
 		-s smtp.gmail.com:587 \
 		-o tls=yes \
-		-a "$TMPDIR$uuid/$safe_product_name"".mobi"
+		-a "$TMPDIR$uuid/$sku.$safe_product_name"".mobi"
 
 else
 	echo "not mailing to myself"

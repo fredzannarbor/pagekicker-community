@@ -67,7 +67,7 @@ while [  $row_no -lt $2 ]; do
 
 done
 
-zip "$TMPDIR$batch_uuid.zip" $TMPDIR$batch_uuid/*
+zip "$TMPDIR$batch_uuid/$batch_uuid.zip" $TMPDIR$batch_uuid/*
 
 echo "completed adding $row_no new entries with categories assigned"
 
