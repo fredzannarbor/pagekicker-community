@@ -463,11 +463,18 @@ xml)
 
 	echo "environment is" $environment  | tee --append $xform_log
 	echo "jobprofilename is" $jobprofilename  | tee --append $xform_log
-	echo "exemplar_file is" $exemplar_file | tee --append $xform_log
+	
 	
 	echo -n "$seedphrases" > $TMPDIR$uuid/seeds/seedphrases 
 
-	cp $WEBFORMSHOME$submissionid/$exemplar_filedir_code/*/$exemplar_file $TMPDIR$uuid/$exemplar_file
+	if [ -z $exemplar_file ] ; then
+
+		echo "no exemplar file"
+
+	else
+		echo "exemplar_file is" $exemplar_file | tee --append $xform_log
+		cp $WEBFORMSHOME$submissionid/$exemplar_filedir_code/*/"$exemplar_file" $TMPDIR$uuid/"$exemplar_file"
+	fi
 ;;
 csv)
 	echo "getting metadata from csv"
@@ -680,16 +687,17 @@ composite -gravity Center $TMPDIR$uuid/cover/wordcloudcover.png  $TMPDIR$uuid/co
 convert -background "$covercolor" -fill "$coverfontcolor" -gravity center -size 1800x400 -font "$coverfont" caption:"$booktitle" $TMPDIR$uuid/cover/topcanvas.png +swap -gravity center -composite $TMPDIR$uuid/cover/toplabel.png
 
 #build bottom label
+#yourname="yes"
 echo "yourname is" $yourname 
 if [ "$yourname" = "yes" ] ; then
-	editedby="$customer_name"
+	editedby="$customername"
 else
 	echo "robot name on cover"
+	editedby="$jobprofilename"
 fi
 
 echo "editedby is" $editedby
 
-# editedby="PageKicker Robot "$editedby
 convert  -background "$covercolor"  -fill "$coverfontcolor" -gravity south -size 1800x394 \
  -font "$coverfont"  caption:"$editedby" \
  $TMPDIR$uuid/cover/bottomcanvas.png  +swap -gravity center -composite $TMPDIR$uuid/cover/bottomlabel.png
@@ -697,7 +705,6 @@ convert  -background "$covercolor"  -fill "$coverfontcolor" -gravity south -size
 # resize imprint logo
 
 convert $TMPDIR$uuid/cover/pklogo.png -resize x200 $TMPDIR$uuid/cover/pklogo.png
-echo "breakpoint"
 
 # lay the labels on top of the target canvas
 
@@ -707,7 +714,6 @@ composite  -gravity south -geometry +0+0 $TMPDIR$uuid/cover/$imprintlogo $TMPDIR
 convert $TMPDIR$uuid/cover/cover.png -border 36 -bordercolor white $TMPDIR$uuid/cover/bordercover.png
 cp $TMPDIR$uuid/cover/bordercover.png $TMPDIR$uuid/cover/$sku"ebookcover.jpg"
 convert $TMPDIR$uuid/cover/bordercover.png -resize 228x302 $TMPDIR$uuid/cover/$sku"ebookcover_thumb.jpg"
-
 
 # move cover to import directory
 
