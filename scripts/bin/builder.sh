@@ -4,22 +4,10 @@
 
 echo "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
 
-# I forget why I needed to do this -- it decides on environment based on where script is running rather than looking at config file.
-# probably can be deleted from master
-
-#CANON=$(cd -P -- "$(dirname -- "$0")" && printf '%s\n' "$(pwd -P)/$(basename -- "$0")")
-
-#if [ "$CANON" = "/opt/bitnami/apache2/htdocs/pk-new/development/scripts/bin/builder-relative.sh" ] ; then
-	#scriptpath="/opt/bitnami/apache2/htdocs/pk-new/development/scripts/"
-#	echo "my startup scriptpath is" $scriptpath
-#else
-#	scriptpath="/opt/bitnami/apache2/htdocs/pk-production/scripts/"
-#	echo "my startup scriptpath is" $scriptpath
-#fi
-
-. ../conf/config.txt
+scriptpath=$(cat scriptpath.var)
+echo $scriptpath
 cd $scriptpath
-
+. ../conf/config.txt
 
 . includes/set-variables.sh
 #echo "set variables, now echoing them"
@@ -277,6 +265,9 @@ shift
 esac
 done
 
+echo "debug: booktitle is $booktitle"
+
+
 # Suppose some options are required. Check that we got them.
 
 if [ ! "$passuuid" ] ; then
@@ -382,7 +373,7 @@ if cmp -s "$seedfile" "$TMPDIR$uuid/seeds/seedphrases" ; then
 	echo "seedfiles are identical, no action necessary"
 else
 	echo "Rotating new seedfile into tmpdir"
-	cp $seedfile $TMPDIR$uuid"/seeds/seedphrases"
+	cp "$seedfile" $TMPDIR$uuid"/seeds/seedphrases"
 fi 
 
 
