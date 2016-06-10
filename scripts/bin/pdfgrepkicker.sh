@@ -129,7 +129,7 @@ fi
 
 # file processing begins
 
-mkdir -m 755 $outdir
+mkdir -p -m 755 $outdir
 
 while read pattern
 do
@@ -190,8 +190,8 @@ do
 	pdftk $outdir/*stamped.$pattern_filename.pdf cat output $outdir/$pattern_filename".pages.pdf"
 	pattern_filename=`echo "$pattern"|tr -cd 'A-Za-z0-9_-'`
 	sed 's/$/    /' $outdir/$pattern_filename > $outdir/$pattern_filename".md"
-	pandoc --latex-engine=xelatex -o $outdir/$pattern_filename".references.pdf" $outdir/$pattern_filename".md"  
-	pandoc -o $outdir/$pattern_filename".references.html" $outdir/$pattern_filename".md"
+	"$PANDOC_BIN" --latex-engine=xelatex -o $outdir/$pattern_filename".references.pdf" $outdir/$pattern_filename".md"  
+	"$PANDOC_BIN" -o $outdir/$pattern_filename".references.html" $outdir/$pattern_filename".md"
 	echo "completed searching files for $pattern"	
 
 done<"$patternfile"

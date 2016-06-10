@@ -1,0 +1,3 @@
+#: includes/chapter-assembler.sh:4
+msgid "Chapter "
+msgstr ""

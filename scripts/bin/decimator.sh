@@ -2,12 +2,12 @@
 
 # converts long PDFs to 10-slide powerpoints
 
-# assumes all PDFs are decrypte
+# assumes all PDFs are decrypted
 
 #!/bin/bash
 
-# requires inotify to alert that xml file has been created by the Magento webforms plugin and deposited in the correct directory
-# which is set by incrontab command for the bitnami user
+# requires  imagemagick, pdftotext, pdftk, ebook-convert, Cmdflesh.jar
+# requires from repository: nerv3.py, wordcloudwrapper.sh
 
 
 starttime=$(( `date +%s` ))
@@ -17,26 +17,15 @@ starttime=$(( `date +%s` ))
 
 . includes/set-variables
 
-if [ "$environment" = "Production" ] ; then
+. $confdir"config.txt"
+echo "running $environment config" > ~/which_xform
 
-        . /opt/bitnami/apache2/htdocs/pk-production/production/conf/config.txt
-        echo "running prod config" > ~/which_xform
-
-else
-
-        . /opt/bitnami/apache2/htdocs/pk-new/development/conf/config.txt
-        echo "running dev config"  > ~/which_xform
-
-fi
-
-# get bzr revision
-bazaar_revision=`bzr revno`
-echo "bazaar revision number in" "$environment" "is" $bazaar_revision
+echo "version is " $SFB_VERSION
 
 cd $scriptpath
 echo "scriptpath is" $scriptpath
 
-export PATH=$PATH:/opt/bitnami/java/bin
+export PATH=$PATH:$JAVA_BIN
 
 echo "PATH is" $PATH
 # default values
@@ -45,10 +34,10 @@ echo "PATH is" $PATH
 pdfconverter="pdftotext"
 outdir="tmp/$uuid/outdir"
 reporttitle="Gist"
-pdffile="no" 
+pdfinfile="no" 
 pagekicker_tat_url="http://www.pagekicker.com/index.php/tat"
 tldr="none"
-toplabelfont="Futura-Std-Extra-Bold"
+toplabelfont="Futura-Std-Extra-Bold" # must be available font
 
 # command line processing 
 
@@ -60,12 +49,12 @@ case $1 in
 echo "requires user to provide path to directory containing one or more txt files"
 exit 0  # This is not an error, the user requested help, so do not exit status 1.
 ;;
---pdffile)
-pdffile=$2
+--pdfinfile)
+pdfinfile=$2
 shift 2
 ;;
---pdffile=*)
-pdffile=${1#*=}
+--pdfinfile=*)
+pdfinfile=${1#*=}
 shift
 ;;
 --pdfurl)
@@ -125,8 +114,8 @@ done
 
 # Suppose some options are required. Check that we got them.
 
-if [ ! "$pdffile" ]; then
-  echo "ERROR: option '--pdffile' not given. See --help" >&2
+if [ ! "$pdfinfile" ]; then
+  echo "ERROR: option '--pdfinfile' not given. See --help" >&2
    exit 1
 fi
 
@@ -134,7 +123,7 @@ if [ ! "$passuuid" ] ; then
 	echo "creating uuid"
 	uuid=$(python  -c 'import uuid; print uuid.uuid1()')
 	echo "uuid is" $uuid | tee --append $xform_log
-	mkdir -m 755 tmp/$uuid
+	mkdir -p -m 755 tmp/$uuid
 else
 	uuid=$passuuid
 	echo "received uuid " $uuid
@@ -143,13 +132,13 @@ fi
 # file processing begins
 
 
-if [ "$pdffile" = "no" ]; then
+if [ "$pdfinfile" = "no" ]; then
 	wget "$pdfurl" -O tmp/$uuid/downloaded.pdf
-	pdffile="tmp/$uuid/downloaded.pdf"
+	pdfinfile="tmp/$uuid/downloaded.pdf"
 	echo "fetched file from internet"
 else
-	echo "pdffile is" $pdffile
-	cp "$pdffile" tmp/$uuid/downloaded.pdf
+	echo "pdfinfile is" $pdfinfile
+	cp "$pdfinfile" tmp/$uuid/downloaded.pdf
 	echo `ls -l tmp/$uuid/downloaded.pdf`
 	echo "fetched file from local file system"
 fi
@@ -166,7 +155,7 @@ fi
 # create standard presentation that is 10 or 12 slides long absolute max
 
 # slide 1 cover
-# pdftk "$pdffile" cat 1 output tmp/$uuid/outdir/1.pdf
+# pdftk "$pdfinfile" cat 1 output tmp/$uuid/outdir/1.pdf
 
 
 
@@ -234,7 +223,7 @@ convert -units pixelsperinch -density 300 -background blue -fill Yellow -gravity
 
 # sample image
 
-mkdir -m 755 tmp/$uuid/pdf
+mkdir -p -m 755 tmp/$uuid/pdf
 convert -units pixelsperinch -density 300 tmp/$uuid/downloaded.pdf[0] tmp/$uuid/dl-0.jpg
 convert tmp/$uuid/dl-0.jpg -bordercolor linen -border 8x8 \
           -background Linen  -gravity SouthEast -splice 10x10+0+0 \
@@ -401,7 +390,7 @@ echo "# Readability Report" >> tmp/$uuid/rr.md
 cat tmp/$uuid/rr.txt >> tmp/$uuid/rr.md
 cat assets/rr_decimator_explanation.md >> tmp/$uuid/rr.md
 sed -i G tmp/$uuid/rr.md
-pandoc tmp/$uuid/rr.md -o tmp/$uuid/rr.txt
+"$PANDOC_BIN" tmp/$uuid/rr.md -o tmp/$uuid/rr.txt
 convert -units pixelsperinch -density 300 -size 3100x2000 -background white -fill black label:@tmp/$uuid/rr.txt tmp/$uuid/rr.png
 convert -units pixelsperinch -density 300  -background blue -fill Yellow -gravity west -size 3300x200 -font "$toplabelfont" -pointsize 30 caption:"Readability Report" tmp/$uuid/toplabel9.png
 convert -units pixelsperinch -density 300 xc:blue -size 3300x200 tmp/$uuid/bottomlabel9.png
@@ -416,7 +405,7 @@ echo "# Bonus Slide: Learn More About This PDF" >> tmp/$uuid/moreinfo.md
 echo " Read the full text at ["$pdfurl"]("$pdfurl')' >> tmp/$uuid/moreinfo.md
 echo "  " >> tmp/$uuid/moreinfo.md
 echo "[Additional analysis tools at "$pagekicker_tat_url"]($pagekicker_tat_url)" >> tmp/$uuid/moreinfo.md
-pandoc -t beamer -V theme:AnnArbor --latex-engine=xelatex tmp/$uuid/moreinfo.md -o tmp/$uuid/moreinfo.pdf
+"$PANDOC_BIN" -t beamer -V theme:AnnArbor --latex-engine=xelatex tmp/$uuid/moreinfo.md -o tmp/$uuid/moreinfo.pdf
 
 
 convert -units pixelsperinch -density 300 tmp/$uuid/home.png  tmp/$uuid/wordcloudslide.png tmp/$uuid/sum1.png tmp/$uuid/sum2.png tmp/$uuid/sum3.png tmp/$uuid/pageburst.png tmp/$uuid/pages.png tmp/$uuid/montage.png tmp/$uuid/keywords.png tmp/$uuid/rrslide.png  -size 3300x2550 tmp/$uuid/slidedeck.pdf

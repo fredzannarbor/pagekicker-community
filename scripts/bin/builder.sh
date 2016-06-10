@@ -4,37 +4,25 @@
 
 echo "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
 
-# I forget why I needed to do this -- it decides on environment based on where script is running rather than looking at config file.
-# probably can be deleted from master
-
-#CANON=$(cd -P -- "$(dirname -- "$0")" && printf '%s\n' "$(pwd -P)/$(basename -- "$0")")
-
-#if [ "$CANON" = "/opt/bitnami/apache2/htdocs/pk-new/development/scripts/bin/builder-relative.sh" ] ; then
-	#scriptpath="/opt/bitnami/apache2/htdocs/pk-new/development/scripts/"
-#	echo "my startup scriptpath is" $scriptpath
-#else
-#	scriptpath="/opt/bitnami/apache2/htdocs/pk-production/scripts/"
-#	echo "my startup scriptpath is" $scriptpath
-#fi
-
-. ../conf/config.txt
+scriptpath=$(cat scriptpath.var)
+echo $scriptpath
 cd $scriptpath
-
+. ../conf/config.txt
 
 . includes/set-variables.sh
 #echo "set variables, now echoing them"
 # . includes/echo-variables.sh
 
 
-"revision number is" $SFB_VERSION
+echo "revision number is" $SFB_VERSION
 
 echo "sfb_log is" $sfb_log
 
 echo "completed reading config file and  beginning logging at" `date +'%m/%d/%y%n %H:%M:%S'` 
 
+
 jobprofile="default"
 jobprofilename="default"
-buildtarget=$TMPDIR"test"
 singleseed="none"
 sample_tweets="no"
 todaysdate=`date`
@@ -254,6 +242,14 @@ shift 2
 dontcleanupseeds=${1#*=}
 shift
 ;;
+--batch_uuid)
+batch_uuid=$2
+shift 2
+;;
+--batch_uuid=*)
+batch_uuid=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -269,18 +265,23 @@ shift
 esac
 done
 
+echo "debug: booktitle is $booktitle"
+
+
 # Suppose some options are required. Check that we got them.
 
 if [ ! "$passuuid" ] ; then
 	echo "creating uuid"
 	uuid=$("$PYTHON_BIN"  -c 'import uuid; print uuid.uuid1()')
 	echo "uuid is" $uuid | tee --append $xform_log
-	mkdir -m 777 $TMPDIR$uuid
+	mkdir -p -m 777 $TMPDIR$uuid
 else
 	uuid=$passuuid
 	echo "received uuid " $uuid
-	mkdir -m 777 $TMPDIR$uuid
+	mkdir -p -m 777 $TMPDIR$uuid
 fi
+
+
 
 if [ -z "$covercolor" ]; then
 	covercolor="RosyBrown"
@@ -340,15 +341,17 @@ echo "test $covercolor" "$coverfont"
 
 # create directories I will need
 
-mkdir -m 777 $TMPDIR$uuid/wiki
-mkdir -m 777 $TMPDIR$uuid/user
-mkdir -m 777 $TMPDIR$uuid/flickr
-mkdir -m 777 $TMPDIR$uuid/fetch
-mkdir -m 777 $TMPDIR$uuid/seeds
-mkdir -m 777 $TMPDIR$uuid/images
-mkdir -m 777 $TMPDIR$uuid/mail
-mkdir -m 755 $TMPDIR$uuid/cover
-mkdir -m 755 $TMPDIR$uuid/twitter
+mkdir -p -m 755 $TMPDIR$uuid/actual_builds
+mkdir -p -m 755 $TMPDIR$uuid/cover
+mkdir -p -m 755 $TMPDIR$uuid/twitter
+mkdir -p -m 777 $TMPDIR$uuid/fetch
+mkdir -p -m 777 $TMPDIR$uuid/flickr
+mkdir -p -m 777 $TMPDIR$uuid/images
+mkdir -p -m 777 $TMPDIR$uuid/mail
+mkdir -p -m 777 $TMPDIR$uuid/seeds
+mkdir -p -m 777 $TMPDIR$uuid/user
+mkdir -p -m 777 $TMPDIR$uuid/wiki
+mkdir -p -m 755 $LOCAL_DATA"jobprofile_builds/""$jobprofilename"
 
 #move assets into position
 
@@ -363,9 +366,17 @@ else
 fi
 
 echo "test seedfile is " $seedfile
+
 cp $scriptpath"assets/pk35pc.jpg" $TMPDIR$uuid/pk35pc.jpg
-cp $seedfile $TMPDIR$uuid/seeds/seedphrases
-echo "test copy failed"
+
+if cmp -s "$seedfile" "$TMPDIR$uuid/seeds/seedphrases" ; then
+	echo "seedfiles are identical, no action necessary"
+else
+	echo "Rotating new seedfile into tmpdir"
+	cp "$seedfile" $TMPDIR$uuid"/seeds/seedphrases"
+fi 
+
+
 cp $confdir"jobprofiles"/imprints/$imprintdir/$imprintlogo  $TMPDIR$uuid
 cp $confdir"jobprofiles"/signatures/$sigfile $TMPDIR$uuid
 cp $confdir"jobprofiles"/imprints/$imprintdir/$imprintlogo  $TMPDIR$uuid/cover
@@ -409,7 +420,7 @@ fi
 
 if [ "$flickr" = "on" ] ; then
 
-	mkdir -m 755 $TMPDIR$uuid/flickr
+	mkdir -p -m 755 $TMPDIR$uuid/flickr
 
 	
 	echo "about to run flickr fetchers"
@@ -448,12 +459,26 @@ fi
 
 #rotate stopfile
 
-cp "$stopfile" "$scriptpath""lib/IBMcloud/examples/pk-stopwords.txt"
+
+if cmp -s "$scriptpath/lib/IBMcloud/examples/pk-stopwords.txt" $scriptpath"/lib/IBMcloud/examples/restore-pk-stopwords.txt" ; then
+	echo "stopfiles are identical, no action"
+else
+	echo "Rotating stopfile into place"
+	cp "$stopfile" "$scriptpath""lib/IBMcloud/examples/pk-stopwords.txt"
+fi 
+
 echo "running stopfile $stopfile"
-#more "lib/IBMcloud/examples/pk-stopwords.txt"
 
 	"$JAVA_BIN" -jar $scriptpath"lib/IBMcloud/ibm-word-cloud.jar" -c $scriptpath"lib/IBMcloud/examples/configuration.txt" -w "1800" -h "1800" < $TMPDIR$uuid/wiki/wikiraw.md > $TMPDIR$uuid/cover/wordcloudcover.png
 cat "$TMPDIR$uuid/seeds/seedphrases" | uniq | sort  > "$TMPDIR$uuid/seeds/sorted.seedfile"
+
+
+if cmp -s "$scriptpath/lib/IBMcloud/examples/pk-stopwords.txt" "$scriptpath/lib/IBMcloud/examples/restore-pk-stopwords.txt" ; then
+	echo "stopfiles are identical, no action"
+else
+	echo "Rotating old stopfile back in place"
+	cp $scriptpath"/lib/IBMcloud/examples/restore-pk-stopwords.txt"  "$scriptpath/lib/IBMcloud/examples/pk-stopwords.txt"
+fi 
 
 # set font & color
 
@@ -641,32 +666,44 @@ cat "$TMPDIR$uuid/yaml-metadata.md" >> $TMPDIR$uuid/complete.md
 bibliography_title="$booktitle"
 safe_product_name=$(echo "$booktitle" | sed -e 's/[^A-Za-z0-9._-]/_/g')
 cd $TMPDIR$uuid
-"$PANDOC_BIN" -o "$TMPDIR$uuid/"$safe_product_name".epub" --epub-cover-image=$TMPDIR$uuid/cover/$sku"ebookcover.jpg" $TMPDIR$uuid/complete.md
-"$PANDOC_BIN" -o "$TMPDIR$uuid/"$safe_product_name".docx"  $TMPDIR$uuid/complete.md
+"$PANDOC_BIN" -o "$TMPDIR$uuid/$sku."$safe_product_name".epub" --epub-cover-image=$TMPDIR$uuid/cover/$sku"ebookcover.jpg" $TMPDIR$uuid/complete.md
+"$PANDOC_BIN" -o "$TMPDIR$uuid/$sku."$safe_product_name".docx"  $TMPDIR$uuid/complete.md
 cd $scriptpath
-lib/KindleGen/kindlegen "$TMPDIR$uuid/"$safe_product_name".epub" -o "$safe_product_name"".mobi"
+lib/KindleGen/kindlegen "$TMPDIR$uuid/$sku."$safe_product_name".epub" -o "$sku.$safe_product_name"".mobi"
 ls -lart $TMPDIR$uuid
 echo "built epub and mobi"
 case $ebook_format in
 
 epub)
+if [ ! "$buildtarget" ] ; then
+	buildtarget="$TMPDIR$uuid/buildtarget.epub"
+else
+	echo "received buildtarget as $buildtarget"
+fi
 # deliver epub to build target
-cp $TMPDIR$uuid/$safe_product_name".epub" "$buildtarget"
+cp $TMPDIR$uuid/$sku.$safe_product_name".epub" "$buildtarget"
+
 chmod 755 "$buildtarget"
 echo "checking that buildtarget exists"
 ls -la $buildtarget
 ;;
 
 mobi)
-
-cp $TMPDIR$uuid/$safe_product_name".mobi" "$buildtarget"
-chmod 755 "$buildtarget"
+if [ ! "$buildtarget" ] ; then
+	buildtarget="$TMPDIR$uuid/buildtarget.mobi"
+else
+	echo "received buildtarget as $buildtarget"
+fi
+cp $TMPDIR$uuid/$sku.$safe_product_name".mobi" "$buildtarget"
 echo "checking that buildtarget exists"
 ls -la $buildtarget
 ;;
 docx)
-
-cp $TMPDIR$uuid/$safe_product_name".docx" "$buildtarget"
+if [ ! "$buildtarget" ] ; then
+	buildtarget="$TMPDIR$uuid/buildtarget.docx"
+else
+	echo "received buildtarget as $buildtarget"
+fi
 chmod 755 "$buildtarget"
 echo "checking that buildtarget exists"
 ls -la $buildtarget
@@ -675,16 +712,26 @@ ls -la $buildtarget
 
 esac
 
+
 # housecleaning
-dontcleanupseeds="yes"
-cp "$buildtarget" "/tmp/pagekicker/actual_builds/"
+
+cp -u $TMPDIR$uuid/$sku.$safe_product_name".epub" "$LOCAL_DATA""jobprofile_builds/""$jobprofilename/""$sku.$safe_product_name.epub" #each robot's archive
+
+if [ -z "$batch_uuid" ] ; then
+	echo "not part of a batch"
+else
+	cp $TMPDIR$uuid/$sku.$safe_product_name".epub" $TMPDIR$batch_uuid/$sku.$safe_product_name".epub"
+cp $TMPDIR$uuid/$sku.$safe_product_name".mobi" $TMPDIR$batch_uuid/$sku.$safe_product_name".mobi" 
+cp $TMPDIR$uuid/$sku.$safe_product_name".docx" $TMPDIR$batch_uuid/$sku.$safe_product_name".docx"
+	ls -l "$TMPDIR$batch_uuid"/* # 
+fi
 
 if [ "$dontcleanupseeds" = "yes" ]; then
 	echo "leaving seed file in place $seedfile"
 else
 	echo "removing seedfile"
 	rm "$seedfile"
-	ls -la $seedfile
+	#ls -la $seedfile (to test that it's gone)
 fi
 
 

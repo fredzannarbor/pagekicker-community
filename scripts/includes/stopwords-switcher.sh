@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bashv
 
 # selecting stopfile 
 
@@ -16,7 +16,10 @@ fi
 
 echo "we are using language-specific stopfile $stopfile"
 
-#rotate stopfile into position
-
-cp "$stopfile" "$scriptpath""lib/IBMcloud/examples/pk-stopwords.txt"
+if cmp -s "$stopfile $scriptpath/lib/IBMcloud/examples/pk-stopwords.txt" ; then
+	echo "stopfiles are identical, no action"
+else
+	echo "Rotating selected stopfile into place"
+	cp $stopfile "$scriptpath/lib/IBMcloud/examples/pk-stopwords.txt"
+fi 
 

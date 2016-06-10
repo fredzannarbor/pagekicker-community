@@ -79,7 +79,7 @@ if [ ! "$txtdir" ]; then
    exit 1
 fi
 
-mkdir -m 755 $outdir
+mkdir -p -m 755 $outdir
 
 for file in "$txtdir"*.txt
 do
