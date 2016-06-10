@@ -14,9 +14,7 @@ echo $"hello, world, I am speaking" $LANG
 
 . ../conf/config.txt
 
-# get bzr revision
-bazaar_revision=`cat /home/bitnami/bzr_dev_rev`
-echo "bazaar revision number is" $bazaar_revision
+echo "version id number is" $SFB_VERSION
 
 echo "sfb_log is" $sfb_log
 
@@ -94,9 +92,9 @@ fi
 
 # create directories I will need
 
-mkdir -m 777 $TMPDIR$uuid
-mkdir -m 777 $TMPDIR$uuid/categories
-mkdir -m 755 $metadatatargetpath$uuid
+mkdir -p -m 777 $TMPDIR$uuid
+mkdir -p -m 777 $TMPDIR$uuid/categories
+mkdir -p -m 755 $metadatatargetpath$uuid
  
 echo "metadatatargetpath is "$tadatatargetpath
 echo "uuid is" $uuid

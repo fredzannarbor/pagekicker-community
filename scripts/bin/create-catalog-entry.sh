@@ -5,14 +5,16 @@ echo "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
 TEXTDOMAIN=SFB # required for bash language awareness
 echo $"hello, world, I am speaking" $LANG
 
+scriptpath=$(cat scriptpath.var)
+echo $scriptpath
 . ../conf/config.txt
 
 echo "software version number is" $SFB_VERSION
-
 echo "sfb_log is" $sfb_log
 
 echo "completed reading config file and  beginning logging at" `date +'%m/%d/%y%n %H:%M:%S'` 
-
+#echo $PATH
+# echo "I am" $(whoami)
 starttime=$(( `date +%s` ))
 
 sku=`tail -1 < "$LOCAL_DATA""SKUs/sku_list"`
@@ -20,7 +22,7 @@ echo "sku" $sku
 
 . includes/set-variables.sh
 
-imprint="PageKicker"
+imprint="pagekicker"
 
 while :
 do
@@ -357,6 +359,30 @@ shift 2
 import=${1#*=}
 shift
 ;;
+--price)
+price=$2
+shift 2
+;;
+--price=*)
+price=${1#*=}
+shift
+;;
+--imprint)
+imprint=$2
+shift 2
+;;
+--imprint=*)
+imprint=${1#*=}
+shift
+;;
+--batch_uuid)
+batch_uuid=$2
+shift 2
+;;
+--batch_uuid=*)
+batch_uuid=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -392,20 +418,19 @@ fi
 
 # create directories I will need
 
-# TO DOS check to see if these exist before issuing all these mkdirs, since they generate irritating error messages
-
-mkdir -m 777 $TMPDIR$uuid
-mkdir -m 777 $TMPDIR$uuid/wiki
-mkdir -m 777 $TMPDIR$uuid/user
-mkdir -m 777 $TMPDIR$uuid/flickr
-mkdir -m 777 $TMPDIR$uuid/fetch
-mkdir -m 777 $TMPDIR$uuid/seeds
-mkdir -m 777 $TMPDIR$uuid/images
-mkdir -m 777 $TMPDIR$uuid/mail
-mkdir -m 755 $TMPDIR$uuid/cover
-mkdir -m 755 $TMPDIR$uuid/twitter
-mkdir -m 777 $metadatatargetpath$uuid
-mkdir -m 777 $mediatargetpath$uuid
+mkdir -p -m 777 $TMPDIR
+mkdir -p -m 777 $TMPDIR$uuid
+mkdir -p -m 777 $TMPDIR$uuid/wiki
+mkdir -p -m 777 $TMPDIR$uuid/user
+mkdir -p -m 777 $TMPDIR$uuid/flickr
+mkdir -p -m 777 $TMPDIR$uuid/fetch
+mkdir -p -m 777 $TMPDIR$uuid/seeds
+mkdir -p -m 777 $TMPDIR$uuid/images
+mkdir -p -m 777 $TMPDIR$uuid/mail
+mkdir -p -m 755 $TMPDIR$uuid/cover
+mkdir -p -m 755 $TMPDIR$uuid/twitter
+mkdir -p -m 777 $metadatatargetpath$uuid
+mkdir -p -m 777 $mediatargetpath$uuid
 
 case "$format" in 
 xml)
@@ -439,11 +464,18 @@ xml)
 
 	echo "environment is" $environment  | tee --append $xform_log
 	echo "jobprofilename is" $jobprofilename  | tee --append $xform_log
-	echo "exemplar_file is" $exemplar_file | tee --append $xform_log
 	
-	echo -n "$seedphrases" > $TMPDIR$uuid/seeds/seedphrases
+	
+	echo -n "$seedphrases" > $TMPDIR$uuid/seeds/seedphrases 
 
-	cp $WEBFORMSHOME$submissionid/$exemplar_filedir_code/*/$exemplar_file $TMPDIR$uuid/$exemplar_file
+	if [ -z $exemplar_file ] ; then
+
+		echo "no exemplar file"
+
+	else
+		echo "exemplar_file is" $exemplar_file | tee --append $xform_log
+		cp $WEBFORMSHOME$submissionid/$exemplar_filedir_code/*/"$exemplar_file" $TMPDIR$uuid/"$exemplar_file"
+	fi
 ;;
 csv)
 	echo "getting metadata from csv"
@@ -494,7 +526,7 @@ echo "wikilocale now is "$wikilocale
 
 . includes/api-manager.sh
 
-. $confdir"jobprofiles/imprints/pagekicker/pagekicker.imprint"
+. $confdir"jobprofiles/imprints/pagekicker/"$imprint".imprint"
 
 echo $scriptpath "is scriptpath"
 
@@ -507,16 +539,18 @@ echo "$tldr" > $TMPDIR$uuid/tldr.txt
 
 echo "checking for naughty words"
 
- [[ $(PK_ERR_CODE="disallowed") ]] && bin/screen-naughty-seeds.sh $TMPDIR$uuid/seeds/seedphrases || echo "failed due to naughty words" exit 1
+#export uuid
+
+# [[ $(PK_ERR_CODE="disallowed") ]] && bin/screen-naughty-seeds.sh $TMPDIR$uuid/seeds/seedphrases || echo "failed due to naughty words" exit 1
 
 
-if bin/screen-naughty-seeds.sh $TMPDIR$uuid/seeds/seedphrases  ; then
+#if bin/screen-naughty-seeds.sh $TMPDIR$uuid/seeds/seedphrases  ; then
 
-	echo "Passed check for naughty seeds"
-else
-	echo "Exited with problem in screen-naughty-seeds.sh"
-  	exit 0
-fi
+#	echo "Passed check for naughty seeds"
+#else
+#	echo "Exited with problem in screen-naughty-seeds.sh"
+#  	exit 0
+#fi
 
 # echo "checking for human error on form submission"
 
@@ -533,7 +567,7 @@ echo "seedfile is" $seedfile
 
 
 cat "$TMPDIR$uuid/seeds/seedphrases" | uniq | sort  > "$TMPDIR$uuid/seeds/sorted.seedfile"
-cat "$TMPDIR$uuid/seeds/sorted.seedfile" > "$LOCAL_DATA"/seed-archive/"$sku".seedphrases
+cat "$TMPDIR$uuid/seeds/sorted.seedfile" > "$LOCAL_DATA"seeds/history/"$sku".seedphrases
 
 
 cp $scriptpath"assets/pk35pc.jpg" $TMPDIR$uuid/pk35pc.jpg
@@ -600,14 +634,18 @@ echo "lastname prior to 1st cover build is" $lastname
 
  #copying new stopfile into location for use by the java program below (which is rigid)
 
-. includes/stopwords-switcher.sh
-
 
 
 	"$JAVA_BIN" -jar $scriptpath"lib/IBMcloud/ibm-word-cloud.jar" -c $scriptpath"lib/IBMcloud/examples/configuration.txt" -w "1800" -h "1800" < $TMPDIR$uuid/wiki/wikiraw.md > $TMPDIR$uuid/cover/wordcloudcover.png
 
 #copying old stopfile backup  to overwrite rotated stopfile
-cp $scriptpath"/lib/IBMcloud/examples/restore-pk-stopwords.txt"  $scriptpath"/lib/IBMcloud/examples/pk-stopwords.txt" 
+
+if cmp -s "$scriptpath/lib/IBMcloud/examples/pk-stopwords.txt" $scriptpath"/lib/IBMcloud/examples/restore-pk-stopwords.txt" ; then
+	echo "stopfiles are identical, no action"
+else
+	echo "Rotating old stopfile back in place"
+	cp $scriptpath"/lib/IBMcloud/examples/restore-pk-stopwords.txt"  "$scriptpath/lib/IBMcloud/examples/pk-stopwords.txt"
+fi 
 
 
 # set font & color
@@ -650,16 +688,17 @@ composite -gravity Center $TMPDIR$uuid/cover/wordcloudcover.png  $TMPDIR$uuid/co
 convert -background "$covercolor" -fill "$coverfontcolor" -gravity center -size 1800x400 -font "$coverfont" caption:"$booktitle" $TMPDIR$uuid/cover/topcanvas.png +swap -gravity center -composite $TMPDIR$uuid/cover/toplabel.png
 
 #build bottom label
-echo "yourname is" $yourname
+#yourname="yes"
+echo "yourname is" $yourname 
 if [ "$yourname" = "yes" ] ; then
 	editedby="$customername"
 else
 	echo "robot name on cover"
+	editedby="$jobprofilename"
 fi
 
 echo "editedby is" $editedby
 
-# editedby="PageKicker Robot "$editedby
 convert  -background "$covercolor"  -fill "$coverfontcolor" -gravity south -size 1800x394 \
  -font "$coverfont"  caption:"$editedby" \
  $TMPDIR$uuid/cover/bottomcanvas.png  +swap -gravity center -composite $TMPDIR$uuid/cover/bottomlabel.png
@@ -667,7 +706,6 @@ convert  -background "$covercolor"  -fill "$coverfontcolor" -gravity south -size
 # resize imprint logo
 
 convert $TMPDIR$uuid/cover/pklogo.png -resize x200 $TMPDIR$uuid/cover/pklogo.png
-
 
 # lay the labels on top of the target canvas
 
@@ -677,7 +715,6 @@ composite  -gravity south -geometry +0+0 $TMPDIR$uuid/cover/$imprintlogo $TMPDIR
 convert $TMPDIR$uuid/cover/cover.png -border 36 -bordercolor white $TMPDIR$uuid/cover/bordercover.png
 cp $TMPDIR$uuid/cover/bordercover.png $TMPDIR$uuid/cover/$sku"ebookcover.jpg"
 convert $TMPDIR$uuid/cover/bordercover.png -resize 228x302 $TMPDIR$uuid/cover/$sku"ebookcover_thumb.jpg"
-
 
 # move cover to import directory
 
@@ -737,7 +774,7 @@ if [ "$builder" = "yes" ] ; then
 
 	echo "seedfile was" "$TMPDIR"seeds/seedphrases
 
-	$scriptpath"bin/builder.sh" --seedfile $TMPDIR$uuid"/seeds/seedphrases" --booktype "$booktype" --jobprofilename "$jobprofilename" --jobprofile "$jobprofilename.jobprofile" --booktitle  "$booktitle" --ebook_format "epub" --sample_tweets "yes" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername"
+	$scriptpath"bin/builder.sh" --seedfile "$TMPDIR$uuid/seeds/seedphrases" --booktype "$booktype" --jobprofilename "$jobprofilename" --jobprofile "$jobprofilename.jobprofile" --booktitle  "$booktitle" --ebook_format "epub" --sample_tweets "no" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername" --batch_uuid "$batch_uuid"
 
 else
 
@@ -750,15 +787,16 @@ echo "safe_product_name is" "$safe_product_name"
 
 	sendemail -t "$customer_email" \
 		-u "test  build of [ "$booktitle" ] is attached" \
-	-m "Thanks for trying out PageKicker. What did you think? Attached you will find a free test version of the book that you asked us to add to the catalog.  To add this book to your personal account so that you can request free updates in future, you will need to order it via the PageKicker catalog at this URI:"\ "$WEB_HOST"index.php/"$prevsku"".html."'\n\n'"As an additional gesture of appreciation, here is a coupon code for 3 free books: THANKS54 at the PageKicker demo site:"\ ""$WEB_HOST"index.php/catalog.html.  It is early days for us and we very much appreciate your feedback. Please take a moment to share your thoughts via this Google Form: "$google_form". You may be interested to know that PageKicker has recently open sourced its core technology: $COMMUNITY_GITHUB_REPO .  
-We'd love for you to participate in this amazing project!" \
+		-m "Thanks for trying out PageKicker. What did you think? Attached you will find a free test version of the book that you asked us to add to the catalog.  It was built by PageKicker robots running in the environment "$environment" using version "$SFB_VERSION" on the host machine "$MACHINE_NAME". To add this book to your personal account so that you can request free updates in future, you will need to order it via the PageKicker catalog at this URI:"\ "$WEB_HOST"index.php/"$prevsku"".html."'\n\n'"As an additional gesture of appreciation, here is a coupon code for 3 free books: THANKS54 at the PageKicker demo site:"\ ""$WEB_HOST"index.php/catalog.html.  It is early days for us and we very much appreciate your feedback. Please take a moment to share your thoughts via this Google Form: "$google_form". You may be interested to know that PageKicker has recently open sourced its core technology: $COMMUNITY_GITHUB_REPO .  We'd love for you to participate in this amazing project!" \
 		-f "$GMAIL_ID" \
 		-cc "$GMAIL_ID" \
 		-xu "$GMAIL_ID" \
 		-xp "$GMAIL_PASSWORD" \
 		-s smtp.gmail.com:587 \
 		-o tls=yes \
-		-a "$TMPDIR$uuid/$safe_product_name"".epub"
+		-a "$TMPDIR$uuid/$sku.$safe_product_name"".docx" \
+		-a "$TMPDIR$uuid/$sku.$safe_product_name"".epub" \
+		-a "$TMPDIR$uuid/$sku.$safe_product_name"".mobi" 
 
 if [ "$mailtofred" = "yes" ] ; then
 
@@ -770,7 +808,7 @@ if [ "$mailtofred" = "yes" ] ; then
 		-xp "$GMAIL_PASSWORD" \
 		-s smtp.gmail.com:587 \
 		-o tls=yes \
-		-a "$TMPDIR$uuid/$safe_product_name"".mobi"
+		-a "$TMPDIR$uuid/$sku.$safe_product_name"".mobi"
 
 else
 	echo "not mailing to myself"

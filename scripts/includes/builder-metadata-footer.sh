@@ -87,7 +87,7 @@ echo -n "," >> $metadatatargetpath$uuid"/current-import.csv"
 
 # image
 
-[ ! -f $TMPDIR$uuid/$sku"wordcloudbig.png" ] && cp $TMPDIR$uuid/$sku"wordcloudbig.png" $TMPDIR$uuid$sku"ebookcover.jpg"
+# [ ! -f $TMPDIR$uuid/$sku"wordcloudbig.png" ] && cp $TMPDIR$uuid/$sku"wordcloudbig.png" $TMPDIR$uuid$sku"ebookcover.jpg"
 
 echo -n "/"$uuid/$sku"ebookcover.jpg," >> $metadatatargetpath"$uuid/current-import.csv"
 

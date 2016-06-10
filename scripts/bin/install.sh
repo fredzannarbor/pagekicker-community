@@ -10,7 +10,7 @@ echo "installing bitnami downloadable $1"
 
 . ../conf/config.txt
 
-mkdir -m 755 $SFB_MAGENTO_HOME"var/import" 
-mkdir -m 755 $SFB_MAGENTO_HOME"var/export"
-mkdir -m 755 $SFB_MAGENTO_HOME"media/webforms"
-mkdir -m 755 $SFB_MAGENTO_HOME"media/webforms/xml"
+mkdir -p  -m 755 $SFB_MAGENTO_HOME"var/import" 
+mkdir -p -m 755 $SFB_MAGENTO_HOME"var/export"
+mkdir -p -m 755 $SFB_MAGENTO_HOME"media/webforms"
+mkdir -p -m 755 $SFB_MAGENTO_HOME"media/webforms/xml"

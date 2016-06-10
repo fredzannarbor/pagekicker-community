@@ -1,4 +1,4 @@
-#!/bin/bash
+ #!/bin/bash
 
 # requires inotify to alert that xml file has been created by the Magento webforms plugin and deposited in the correct directory
 # which is set by incrontab command for the bitnami user
@@ -8,32 +8,19 @@ datenow=$(date -R)
 
 # parse the command-line very stupidly
 
-xmldirectoryname=$1 # this is different when run from the command line v. from incrontab!
-xmlbasefile=$2 # this is different when run from the command line!
+xmldirectoryname=$1 
+xmlbasefile=$2 
 echo "parameter 1 is" $1
 echo  "parameter 2 is" $2
 xmlfilename=$xmldirectoryname/$xmlbasefile
 
 environment=$(xmlstarlet sel -t -v "/item/environment" "$xmlfilename")
-
-if [ "$environment" = "Production" ] ; then
-
-        . /opt/bitnami/apache2/htdocs/pk-production/conf/config.txt
-        echo "loaded prod config file at " $datenow | tee --append ~/how_I_started
-
-elif [ "$environment" = "Staging" ] ; then
-        . /opt/bitnami/apache2/htdocs/pk-staging/development/conf/config.txt
-        echo "loaded Staging config file at " $datenow | tee --append ~/how_I_started
-
-else
-
-        . /opt/bitnami/apache2/htdocs/pk-new/development/conf/config.txt
-        echo "loaded dev config file at " $datenow | tee --append ~/how_I_started
-
-fi
+scriptpath=$(xmlstarlet sel -t -v  "/item/scriptpath" "$xmlfilename") #  passed to xform via hidden field in webform  b/c  incron is launched from cron directory
+. "$scriptpath"/../conf/"config.txt"
+echo "loaded" $environment "config file at " $datenow  | tee "$xform_log"
 
 uuid=$(python  -c 'import uuid; print uuid.uuid1()')
-mkdir -m 755 $logdir$uuid 
+mkdir -p -m 755 $logdir$uuid 
 xform_log=$logdir$uuid/"xform_log"
 echo "XXXXXXXXXX" | tee --append $xform_log
 echo "xmlfilename provided by webforms is" $xmlfilename | tee --append $xform_log
@@ -44,9 +31,7 @@ echo "started xform at " $starttime " details in" $xform_log "at" $xform_log | t
 sku=`tail -1 < "$LOCAL_DATA""SKUs/sku_list"`
 echo "sku" $sku | tee --append $xform_log
 
-# get bzr revision
-bazaar_revision=`bzr revno`
-echo "bazaar revision number in" "$environment" "is" $bazaar_revision | tee --append $xform_log
+echo "$0 version in $environment" "is" $SFB_VERSION | tee --append $xform_log
 
 cd $scriptpath
 echo "scriptpath is" $scriptpath 
@@ -80,9 +65,9 @@ case $webform_id in
 
 # echo "found Magento form submission id 4, executing ccc"
 
-bin/ccc.sh --xmlfilename "$xmlbasefile" --passuuid "$uuid" --format "xml" --builder "no"
+$scriptpath"bin/create-catalog-entry.sh" --xmlfilename "$xmlbasefile" --passuuid "$uuid" --format "xml" --builder "yes"
 
-echo "launched ccc from" $environment 
+echo "launched $0 from" $environment 
 ;;
 
 21) 
@@ -131,7 +116,7 @@ echo "$robotbio" > $confdir"jobprofiles/authorbios/"$robotname".md"
 echo 'authorbio="$SFB_HOME''/conf/jobprofiles/authorbios/'"$robotname".md'"' >> $confdir"jobprofiles/$robotname".jobprofile
 cat $confdir"jobprofiles/defaults" >> $confdir"jobprofiles/$robotname".jobprofile
 
-mkdir -m 755 $confdir"jobprofiles/bibliography/"$lastname
+mkdir -p -m 755 $confdir"jobprofiles/bibliography/"$lastname
 
 #$LOCAL_MYSQL_PATH --user $LOCAL_MYSQL_USER --password=$LOCAL_MYSQL_PASSWORD sfb-jobs << EOF
 #insert into robots (robot_name, robot_bio, robot_summarizer_on, robot_positive_summary_seed, robot_positive_summary_seed_weight, robot_summary_length, robot_negative_seeds, robot_negative_seed_weight, robot_coverfont, robot_covercolor, robot_ngram_threshold,  robot_language, robot_rows, robot_experience_points_initial) values('$robotname', '$robotbio', '$summarizer_on', '$positive_seeds', '$positive_seed_weight', '$robot_summary_length', '$negative_seeds', '$negative_seed_weight','$robotcoverfont', '$robotcovercolor',  '$summarizer_ngram_threshold', '$robotlanguage', '$robotrows', '100');
@@ -153,8 +138,8 @@ sendemail -t "$customer_email" \
 
 23)
 
-echo "running dat.sh with xml file from webform"
-bin/dat.sh --xmldirectoryname "$xmldirectoryname" --xmlbasefile "$xmlbasefile"  --passuuid "$uuid" --environment "$environment"
+# echo "running dat.sh with xml file from webform"
+$scriptpath"bin/dat.sh" --xmldirectoryname "$xmldirectoryname" --xmlbasefile "$xmlbasefile"  --passuuid "$uuid" --environment "$environment"
 ;;
 
 
@@ -188,7 +173,7 @@ bin/dat.sh --xmldirectoryname "$xmldirectoryname" --xmlbasefile "$xmlbasefile"  
 
 	pdfpath=$pdffullpath$pdffilename
 
-	mkdir images/$uuid images/$uuid/print
+	mkdir -p images/$uuid images/$uuid/print
 	backcovertext=$(xmlstarlet sel -t -v "/item/backcovertext" "$xmlfilename")
 	echo $backcovertext > images/$uuid/print/backcover.txt
 
@@ -220,7 +205,7 @@ bin/dat.sh --xmldirectoryname "$xmldirectoryname" --xmlbasefile "$xmlbasefile"  
 27) 
 
         echo "Feed the Robot" | tee --append $xform_log
-        mkdir -m 755 tmp/$uuid
+        mkdir -p -m 755 tmp/$uuid
         filename=$(xmlstarlet sel -t -v "/item/food_for_thought" "$xmlfilename")
         key_380=$(xmlstarlet sel -t -v "/item/key_380" "$xmlfilename")
         echo "filename is" $filename | tee --append $xform_log

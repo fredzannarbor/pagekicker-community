@@ -19,6 +19,7 @@ import argparse
 import xml.etree.ElementTree as ET
 import collections
 import codecs
+import os
 #from IPython import embed 
 #=================================================
 def listwrite(output_file,thelist):
@@ -37,12 +38,14 @@ def main():
 	
 	in_file = args.path
 	out_file = args.output
+	cwd = os.getcwd()
+	apikey_location = os.path.join(cwd, "api_key.txt")
 	
 	with open(in_file) as f:
 		text = f.read()
 		
 	alchemyObj = AlchemyAPI.AlchemyAPI()
-	alchemyObj.loadAPIKey('/opt/bitnami/apache2/htdocs/pk-new/development/scripts/api_key.txt')
+	alchemyObj.loadAPIKey(apikey_location)
 
 	result = alchemyObj.TextGetRankedNamedEntities(text)
 
