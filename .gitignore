@@ -1,6 +1,4 @@
-scripts/lib/
-api_key.txt
-*~
-conf/jobprofiles/bibliography/Default/Default_titles.tmp
-conf/jobprofiles/bibliography/Default/Default_titles.txt
+sshto21co.sh
+conf/jobprofiles/bibliography/Default/Default_titles.tmp 
+conf/jobprofiles/bibliography/Default/Default_titles.txt 
 conf/jobprofiles/bibliography/Default/default_titles.tmp
