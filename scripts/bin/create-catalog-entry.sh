@@ -5,10 +5,11 @@ echo "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
 TEXTDOMAIN=SFB # required for bash language awareness
 echo $"hello, world, I am speaking" $LANG
 
+scriptpath=$(cat scriptpath.var)
+echo $scriptpath
 . ../conf/config.txt
 
 echo "software version number is" $SFB_VERSION
-
 echo "sfb_log is" $sfb_log
 
 echo "completed reading config file and  beginning logging at" `date +'%m/%d/%y%n %H:%M:%S'` 
@@ -773,7 +774,7 @@ if [ "$builder" = "yes" ] ; then
 
 	echo "seedfile was" "$TMPDIR"seeds/seedphrases
 
-	$scriptpath"bin/builder.sh" --seedfile $TMPDIR$uuid"/seeds/seedphrases" --booktype "$booktype" --jobprofilename "$jobprofilename" --jobprofile "$jobprofilename.jobprofile" --booktitle  "$booktitle" --ebook_format "epub" --sample_tweets "no" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername" --batch_uuid "$batch_uuid"
+	$scriptpath"bin/builder.sh" --seedfile "$TMPDIR$uuid/seeds/seedphrases" --booktype "$booktype" --jobprofilename "$jobprofilename" --jobprofile "$jobprofilename.jobprofile" --booktitle  "$booktitle" --ebook_format "epub" --sample_tweets "no" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername" --batch_uuid "$batch_uuid"
 
 else
 
