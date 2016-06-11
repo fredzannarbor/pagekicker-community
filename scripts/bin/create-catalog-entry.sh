@@ -809,6 +809,7 @@ if [ "$mailtofred" = "yes" ] ; then
 		-s smtp.gmail.com:587 \
 		-o tls=yes \
 		-a "$TMPDIR$uuid/$sku.$safe_product_name"".mobi"
+	echo "mailed a copy to myself"
 
 else
 	echo "not mailing to myself"
