@@ -269,6 +269,7 @@ shift
 esac
 done
 
+
 # Suppose some options are required. Check that we got them.
 
 if [ ! "$passuuid" ] ; then
@@ -303,6 +304,8 @@ else
 	echo "$wikilang"
 fi
 
+echo "debug: booktitle is $booktitle"
+echo "debug: scriptpath is $scriptpath"
 
 TEXTDOMAIN=SFB
 echo $"hello, world, I am speaking" $LANG
