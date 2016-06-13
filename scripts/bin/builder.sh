@@ -4,12 +4,13 @@
 
 echo "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
 
-scriptpath=$(cat scriptpath.var)
-echo $scriptpath
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+echo $DIR
+cd $DIR
+. $DIR/../../conf/config.txt
 cd $scriptpath
-. ../conf/config.txt
-
 . includes/set-variables.sh
+
 #echo "set variables, now echoing them"
 # . includes/echo-variables.sh
 
@@ -19,7 +20,6 @@ echo "revision number is" $SFB_VERSION
 echo "sfb_log is" $sfb_log
 
 echo "completed reading config file and  beginning logging at" `date +'%m/%d/%y%n %H:%M:%S'` 
-
 
 jobprofile="default"
 jobprofilename="default"
