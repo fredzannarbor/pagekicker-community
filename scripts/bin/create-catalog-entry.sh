@@ -311,6 +311,14 @@ shift 2
 revenue_share=${1#*=}
 shift
 ;;
+--imprint)
+imprint=$2
+shift 2
+;;
+--imprint=*)
+imprint=${1#*=}
+shift
+;;
 --tldr)
 tldr=$2
 shift 2
@@ -490,7 +498,7 @@ esac
 
 # import jobprofile which overrides command line values
 
-. $confdir"jobprofiles/$jobprofilename.jobprofile"
+#. $confdir"jobprofiles/$jobprofilename.jobprofile"
 
 
 # assign wikilocale & stopfile based on LANG
@@ -519,17 +527,20 @@ fi
 echo "wikilocale now is "$wikilocale
 
 
+. $confdir"jobprofiles/imprints/$imprint/$imprint".imprint
+
+echo "imprint is $imprint"
+
 # verbose logging
 
 
 # APIs
 
-. includes/api-manager.sh
-
 . $confdir"jobprofiles/imprints/pagekicker/"$imprint".imprint"
 
-echo $scriptpath "is scriptpath"
+. includes/api-manager.sh
 
+# echo $scriptpath "is scriptpath"
 
 echo "Assembling infiles and assets"
 
@@ -572,9 +583,9 @@ cat "$TMPDIR$uuid/seeds/sorted.seedfile" > "$LOCAL_DATA"seeds/history/"$sku".see
 
 cp $scriptpath"assets/pk35pc.jpg" $TMPDIR$uuid/pk35pc.jpg
 
-cp $confdir"jobprofiles"/imprints/$imprintdir/$imprintlogo  $TMPDIR$uuid
+cp $confdir"jobprofiles"/imprints/"$imprintdir"/"$imprintlogo"  $TMPDIR$uuid
 cp $confdir"jobprofiles"/signatures/$sigfile $TMPDIR$uuid
-cp $confdir"jobprofiles"/imprints/$imprintdir/$imprintlogo  $TMPDIR$uuid/cover
+cp $confdir"jobprofiles"/imprints/"$imprintdir"/"$imprintlogo"  $TMPDIR$uuid/cover
 
 
 # build cover if requested
@@ -711,7 +722,7 @@ convert $TMPDIR$uuid/cover/pklogo.png -resize x200 $TMPDIR$uuid/cover/pklogo.png
 
 composite -geometry +0+0 $TMPDIR$uuid/cover/toplabel.png $TMPDIR$uuid/cover/canvas.png $TMPDIR$uuid/cover/step1.png
 composite  -geometry +0+1800 $TMPDIR$uuid/cover/bottomlabel.png $TMPDIR$uuid/cover/step1.png $TMPDIR$uuid/cover/step2.png
-composite  -gravity south -geometry +0+0 $TMPDIR$uuid/cover/$imprintlogo $TMPDIR$uuid/cover/step2.png $TMPDIR$uuid/cover/cover.png
+composite  -gravity south -geometry +0+0 $TMPDIR$uuid/cover/"$imprintlogo" $TMPDIR$uuid/cover/step2.png $TMPDIR$uuid/cover/cover.png
 convert $TMPDIR$uuid/cover/cover.png -border 36 -bordercolor white $TMPDIR$uuid/cover/bordercover.png
 cp $TMPDIR$uuid/cover/bordercover.png $TMPDIR$uuid/cover/$sku"ebookcover.jpg"
 convert $TMPDIR$uuid/cover/bordercover.png -resize 228x302 $TMPDIR$uuid/cover/$sku"ebookcover_thumb.jpg"
@@ -756,16 +767,6 @@ else
 
 fi
 
-#	sendemail -t "$customer_email" \
-#		-u "[ $booktitle ] has been added to the PageKicker catalog" \
-#		-m "Your PageKicker robot living on "$MACHINE_NAME "using version "$bazaar_revision" of the PageKicker software has added your book to the PageKicker online catalog at this URI:"\ "$WEB_HOST"index.php/"$prevsku".html "You can order and download the book there." \
-#		-f "$GMAIL_ID" \
-#		-cc "$GMAIL_ID" \
-#		-xu "$GMAIL_ID" \
-#		-xp "$GMAIL_PASSWORD" \
-#		-s smtp.gmail.com:587 \
-#		-v \
-#		-o tls=yes
 
 ##verbose logging for sendemail
 # cp $TMPDIR$uuid/seeds/seedphrases "$TMPDIR"$uuid/seeds/"$sku"seeds.txt
@@ -788,6 +789,10 @@ echo "safe_product_name is" "$safe_product_name"
 	sendemail -t "$customer_email" \
 		-u "test  build of [ "$booktitle" ] is attached" \
 		-m "Thanks for trying out PageKicker. What did you think? Attached you will find a free test version of the book that you asked us to add to the catalog.  It was built by PageKicker robots running in the environment "$environment" using version "$SFB_VERSION" on the host machine "$MACHINE_NAME". To add this book to your personal account so that you can request free updates in future, you will need to order it via the PageKicker catalog at this URI:"\ "$WEB_HOST"index.php/"$prevsku"".html."'\n\n'"As an additional gesture of appreciation, here is a coupon code for 3 free books: THANKS54 at the PageKicker demo site:"\ ""$WEB_HOST"index.php/catalog.html.  It is early days for us and we very much appreciate your feedback. Please take a moment to share your thoughts via this Google Form: "$google_form". You may be interested to know that PageKicker has recently open sourced its core technology: $COMMUNITY_GITHUB_REPO .  We'd love for you to participate in this amazing project!" \
+		-u "test  build of [ SKU "$sku $booktitle " ] is attached" \
+		-m "Attached you will find a free test version of the book that you asked us to add to the catalog.  It was created by PageKicker robots running software commit $SFB_VERSION on $MACHINE_NAME in $environment. To add this book to your personal account so that you can request free updates in future, you will need to order it via the PageKicker catalog at this URI:"\ "$WEB_HOST"index.php/"$prevsku.html.  As an additional gesture of appreciation, here is a coupon code for 3 free books: THANKS54.  It is early days for us and we very much appreciate your feedback. Please take a moment to share your thoughts via this Google Form: "$google_form".  Finally, note that PageKicker is open source; we encourage you to contribute to the project, which is available at $MY_GITHUB_REPO ." \
+	-m "Thanks for trying out PageKicker. What did you think? Attached you will find a free test version of the book that you asked us to add to the catalog.  To add this book to your personal account so that you can request free updates in future, you will need to order it via the PageKicker catalog at this URI:"\ "$WEB_HOST"index.php/"$prevsku"".html."'\n\n'"As an additional gesture of appreciation, here is a coupon code for 3 free books: THANKS54 at the PageKicker demo site:"\ ""$WEB_HOST"index.php/catalog.html.  It is early days for us and we very much appreciate your feedback. Please take a moment to share your thoughts via this Google Form: "$google_form". You may be interested to know that PageKicker has recently open sourced its core technology: $COMMUNITY_GITHUB_REPO .  
+We'd love for you to participate in this amazing project!" \
 		-f "$GMAIL_ID" \
 		-cc "$GMAIL_ID" \
 		-xu "$GMAIL_ID" \
@@ -801,7 +806,7 @@ echo "safe_product_name is" "$safe_product_name"
 if [ "$mailtofred" = "yes" ] ; then
 
 	sendemail -t "wfzimmerman_441@kindle.com wfz_28@kindle.com wfz_82@kindle.com" \
-		-u "test  build of [ "$booktitle" ] is attached" \
+		-u "test  build of [ "SKU $sku ""$booktitle" ] is attached" \
 		-m "reference copy" \
 		-f "$GMAIL_ID" \
 		-xu "$GMAIL_ID" \
@@ -809,7 +814,9 @@ if [ "$mailtofred" = "yes" ] ; then
 		-s smtp.gmail.com:587 \
 		-o tls=yes \
 		-a "$TMPDIR$uuid/$sku.$safe_product_name"".mobi"
+
 	echo "mailed a copy to myself"
+
 
 else
 	echo "not mailing to myself"

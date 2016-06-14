@@ -250,6 +250,14 @@ shift 2
 batch_uuid=${1#*=}
 shift
 ;;
+--imprint)
+imprint=$2
+shift 2
+;;
+--imprint=*)
+imprint=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -333,7 +341,7 @@ else
 	echo "$seed" > "$seedfile"
 fi
 
-. $confdir"jobprofiles/imprints/pagekicker/pagekicker.imprint"
+. $confdir"jobprofiles/imprints/"$imprint"/"$imprint".imprint"
 . includes/api-manager.sh
 
 echo "test $covercolor" "$coverfont"
@@ -376,10 +384,9 @@ else
 	cp "$seedfile" $TMPDIR$uuid"/seeds/seedphrases"
 fi 
 
-
-cp $confdir"jobprofiles"/imprints/$imprintdir/$imprintlogo  $TMPDIR$uuid
-cp $confdir"jobprofiles"/signatures/$sigfile $TMPDIR$uuid
-cp $confdir"jobprofiles"/imprints/$imprintdir/$imprintlogo  $TMPDIR$uuid/cover
+cp $confdir"jobprofiles"/imprints/"$imprintdir"/"$imprintlogo"  "$TMPDIR$uuid"
+cp $confdir"jobprofiles"/signatures/"$sigfile" "$TMPDIR$uuid"
+cp $confdir"jobprofiles"/imprints/"$imprintdir"/"$imprintlogo" "$TMPDIR$uuid"/cover
 
 
 echo "uuid seed file is supposed to be" "$TMPDIR$uuid/seeds/seedphrases"
@@ -387,7 +394,6 @@ echo "uuid seed file is supposed to be" "$TMPDIR$uuid/seeds/seedphrases"
 ls -la "$TMPDIR$uuid/seeds/"
 
 cat "$TMPDIR$uuid/seeds/seedphrases" | uniq | sort  > "$TMPDIR$uuid/seeds/sorted.seedfile"
-
 
 echo "seeds are"
 cat "$TMPDIR$uuid/seeds/sorted.seedfile"
@@ -544,7 +550,7 @@ convert $TMPDIR$uuid/cover/pklogo.png -resize x200 $TMPDIR$uuid/cover/pklogo.png
 
 composite -geometry +0+0 $TMPDIR$uuid/cover/toplabel.png $TMPDIR$uuid/cover/canvas.png $TMPDIR$uuid/cover/step1.png
 composite  -geometry +0+1800 $TMPDIR$uuid/cover/bottomlabel.png $TMPDIR$uuid/cover/step1.png $TMPDIR$uuid/cover/step2.png
-composite  -gravity south -geometry +0+0 $TMPDIR$uuid/cover/$imprintlogo $TMPDIR$uuid/cover/step2.png $TMPDIR$uuid/cover/cover.png
+composite  -gravity south -geometry +0+0 $TMPDIR$uuid/cover/"$imprintlogo" $TMPDIR$uuid/cover/step2.png $TMPDIR$uuid/cover/cover.png
 convert $TMPDIR$uuid/cover/cover.png -border 36 -bordercolor white $TMPDIR$uuid/cover/bordercover.png
 cp $TMPDIR$uuid/cover/bordercover.png $TMPDIR$uuid/cover/$sku"ebookcover.jpg"
 cp $TMPDIR$uuid/cover/bordercover.png $TMPDIR$uuid/ebookcover.jpg
@@ -633,6 +639,9 @@ if [ "$shortform" = "no" ] ;then
  	cat includes/wikilicense.md >> $TMPDIR/$uuid/backmatter.md
 	echo "# Also by PageKicker Robot" $lastname >>  $TMPDIR$uuid/backmatter.md
 	cat $confdir"jobprofiles/bibliography/"$lastname/$lastname"_titles.txt" >> $TMPDIR$uuid/backmatter.md
+	echo "" >> "$TMPDIR$uuid"/backmatter.md
+	echo "" >> "$TMPDIR$uuid"/backmatter.md
+	cat $confdir"jobprofiles/imprints/$imprint/""$imprint_mission_statement" >> "$TMPDIR$uuid"/backmatter.md
 	echo "assembled back matter"
 
 else
