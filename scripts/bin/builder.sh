@@ -638,7 +638,9 @@ if [ "$shortform" = "no" ] ;then
  	cat includes/wikilicense.md >> $TMPDIR/$uuid/backmatter.md
 	echo "# Also by PageKicker Robot" $lastname >>  $TMPDIR$uuid/backmatter.md
 	cat $confdir"jobprofiles/bibliography/"$lastname/$lastname"_titles.txt" >> $TMPDIR$uuid/backmatter.md
-	cat $confdir"jobprofiles/imprints/$imprint/""$imprint_mission_statement" >> $TMPDIR$uuid/backmatter.md
+	echo "" >> "$TMPDIR$uuid"/backmatter.md
+	echo "" >> "$TMPDIR$uuid"/backmatter.md
+	cat $confdir"jobprofiles/imprints/$imprint/""$imprint_mission_statement" >> "$TMPDIR$uuid"/backmatter.md
 	echo "assembled back matter"
 
 else

@@ -15,7 +15,7 @@ else
 	mkdir -p -m 777 $TMPDIR$uuid
 fi
 
-bin/create-catalog-entry.sh --builder "yes" --booktitle "Test" --yourname "Fred" --jobprofilename "Default" --import "no" --passuuid "$uuid" --seedfile "seeds/revolutionary_figures" 2>&1 > /dev/null | grep -v "IBM"
+bin/create-catalog-entry.sh --builder "yes" --booktitle "Test" --yourname "Fred" --jobprofilename "Default" --import "no" --passuuid "$uuid" --seedfile "seeds/revolutionary_figures" --imprint "pagekicker" 
 
 # tests begin here
 
