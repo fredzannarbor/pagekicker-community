@@ -1,0 +1,13 @@
+firstname=""
+middlename=""
+lastname="Jellicoe"
+editedby=$firstname" "$middlename" "$lastname
+authorbio=$SFB_HOME"conf/jobprofiles/authorbios/Jellicoe.md"
+fortunedb="literature"
+LSI_import="yes"
+BISAC_code="HIS027150"
+coverfont="MinionStd-Black"
+covercolor="NavyBlue"
+newcoverfont="MinionStd-Black"
+newcovercolor="NavyBlue"
+sigfile="jellicoe.png"
