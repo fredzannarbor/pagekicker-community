@@ -1,5 +1,12 @@
-echo "PageKicker imprint"
-imprintlogo="pklogo.png"
-imprintdir="pagekicker"
+imprint="pagekicker" # code, lc, no special characters
+imprintlogo="pklogo.png" # often a colophon
 imprintname="PageKicker"
 imprintcopyrightpage="pkcopyrightpage.md"
+imprint_mission_statement="pagekicker_mission.md" # located in same directory
+# imprint_publisher_name="John Doe" [optional]
+# imprint_editor_name="Jane Doe" [optional]
+# imprint_owner="BigCo" [optional]
+# imprint_language="en" 
+# wikilang = "$imprint_language"
+
+
