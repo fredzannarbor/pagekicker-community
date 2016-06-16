@@ -11,3 +11,4 @@ imprint_language="en"
 wikilocale="$imprint_language" #
 # imprint_audience_range="18+" # age in years
 # imprint_audience_description # free text
+jobprofilename="xmedialab" # default robot for imprint
