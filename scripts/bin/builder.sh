@@ -273,7 +273,7 @@ shift
 esac
 done
 
-echo "debug: booktitle is $booktitle"
+echo "imprint is $imprint" #debug
 
 
 # Suppose some options are required. Check that we got them.
@@ -316,14 +316,12 @@ fi
 TEXTDOMAIN=SFB
 echo $"hello, world, I am speaking" $LANG
 
-safe_product_name=$(echo "$booktit
-le" | sed -e 's/[^A-Za-z0-9._-]/_/g')
+safe_product_name=$(echo "$booktitle"| sed -e 's/[^A-Za-z0-9._-]/_/g')
 echo "safe product name is" $safe_product_name
 echo "jobprofile is" $jobprofile
 echo "jobprofilename is" $jobprofilename
 
 . "$confdir"jobprofiles/"$jobprofile"
-cat "$confdir"jobprofiles/"$jobprofile"
 echo "$authorbio"
 
 #sku=`tail -1 < "$LOCAL_DATA""SKUs/sku_list"`
@@ -384,9 +382,9 @@ else
 	cp "$seedfile" $TMPDIR$uuid"/seeds/seedphrases"
 fi 
 
-cp $confdir"jobprofiles"/imprints/"$imprintdir"/"$imprintlogo"  "$TMPDIR$uuid"
+cp $confdir"jobprofiles"/imprints/"$imprint"/"$imprintlogo"  "$TMPDIR$uuid"
 cp $confdir"jobprofiles"/signatures/"$sigfile" "$TMPDIR$uuid"
-cp $confdir"jobprofiles"/imprints/"$imprintdir"/"$imprintlogo" "$TMPDIR$uuid"/cover
+cp $confdir"jobprofiles"/imprints/"$imprint"/"$imprintlogo" "$TMPDIR$uuid"/cover
 
 echo "uuid seed file is supposed to be" "$TMPDIR$uuid/seeds/seedphrases"
 
@@ -595,7 +593,7 @@ if [ "$shortform" = "no" ]; then
 else
 	echo "short form selected" 
 	echo '![cover image]'"(ebookcover.jpg)" > $TMPDIR$uuid/tmpfrontmatter.md
-	echo '![PK logo]'"(pk35pc.jpg)" >> $TMPDIR$uuid/tmpfrontmatter.md
+	echo '!['"$imprintname"']'"(""$imprintlogo"")" >> $TMPDIR$uuid/tmpfrontmatter.md
 
 fi
 
@@ -641,6 +639,7 @@ if [ "$shortform" = "no" ] ;then
 	echo "" >> "$TMPDIR$uuid"/backmatter.md
 	echo "" >> "$TMPDIR$uuid"/backmatter.md
 	cat $confdir"jobprofiles/imprints/$imprint/""$imprint_mission_statement" >> "$TMPDIR$uuid"/backmatter.md
+	echo '!['"$imprintname"']'("$imprintlogo") >> "$TMPDIR$uuid"/backmatter.md
 	echo "assembled back matter"
 
 else

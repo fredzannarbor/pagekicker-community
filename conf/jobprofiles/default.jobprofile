@@ -1,7 +1,7 @@
 firstname=""
 middlename=""
 lastname="PageKicker"
-editedby=$firstname" "$middlename" "$lastname
+editedby="$firstname""$middlename""$lastname"
 authorbio=$SFB_HOME"conf/jobprofiles/authorbios/default.html"
 fortunedb="literature"
 LSI_import="no"

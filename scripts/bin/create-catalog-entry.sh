@@ -365,6 +365,22 @@ shift 2
 import=${1#*=}
 shift
 ;;
+--batch_uuid)
+batch_uuid=$2
+shift 2
+;;
+--batch_uuid=*)
+batch_uuid=${1#*=}
+shift
+;;
+--editedby)
+editedby=$2
+shift 2
+;;
+--editedby=*)
+editedby=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -549,9 +565,9 @@ cat "$TMPDIR$uuid/seeds/sorted.seedfile" > "$LOCAL_DATA"seeds/history/"$sku".see
 
 cp $scriptpath"assets/pk35pc.jpg" $TMPDIR$uuid/pk35pc.jpg
 
-cp $confdir"jobprofiles"/imprints/"$imprintdir"/"$imprintlogo"  $TMPDIR$uuid
+cp $confdir"jobprofiles"/imprints/"$imprint"/"$imprintlogo"  $TMPDIR$uuid
 cp $confdir"jobprofiles"/signatures/$sigfile $TMPDIR$uuid
-cp $confdir"jobprofiles"/imprints/"$imprintdir"/"$imprintlogo"  $TMPDIR$uuid/cover
+cp $confdir"jobprofiles"/imprints/"$imprint"/"$imprintlogo"  $TMPDIR$uuid/cover
 
 
 # build cover if requested
@@ -681,7 +697,7 @@ convert  -background "$covercolor"  -fill "$coverfontcolor" -gravity south -size
 
 # resize imprint logo
 
-convert $TMPDIR$uuid/cover/pklogo.png -resize x200 $TMPDIR$uuid/cover/pklogo.png
+convert $TMPDIR$uuid/cover/"$imprintlogo" -resize x200 $TMPDIR$uuid/cover/"$imprintlogo"
 
 
 # lay the labels on top of the target canvas
@@ -742,7 +758,7 @@ if [ "$builder" = "yes" ] ; then
 
 	echo "seedfile was" "$TMPDIR"seeds/seedphrases
 
-	$scriptpath"bin/builder.sh" --seedfile $TMPDIR$uuid"/seeds/seedphrases" --booktype "$booktype" --jobprofilename "$jobprofilename" --jobprofile "$jobprofilename.jobprofile" --booktitle  "$booktitle" --ebook_format "epub" --sample_tweets "no" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername"
+	$scriptpath"bin/builder.sh" --seedfile $TMPDIR$uuid"/seeds/seedphrases" --booktype "$booktype" --jobprofilename "$jobprofilename" --jobprofile "$jobprofilename.jobprofile" --booktitle "$booktitle" --ebook_format "epub" --sample_tweets "no" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername" --imprint "$imprint" --batch_uuid "$batch_uuid"
 
 else
 
