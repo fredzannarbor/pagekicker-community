@@ -540,7 +540,7 @@ convert  -background "$covercolor"  -fill "$coverfontcolor" -gravity south -size
 
 # resize imprint logo
 
-convert $TMPDIR$uuid/cover/pklogo.png -resize x200 $TMPDIR$uuid/cover/pklogo.png
+convert $TMPDIR$uuid/cover/"$imprintlogo" -resize x200 $TMPDIR$uuid/cover/"$imprintlogo"
 
 
 # lay the labels on top of the target canvas
