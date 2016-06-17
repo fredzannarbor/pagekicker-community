@@ -5,11 +5,10 @@ echo "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
 TEXTDOMAIN=SFB # required for bash language awareness
 echo $"hello, world, I am speaking" $LANG
 
-scriptpath=$(cat scriptpath.var)
-echo $scriptpath
 . ../conf/config.txt
 
 echo "software version number is" $SFB_VERSION
+
 echo "sfb_log is" $sfb_log
 
 echo "completed reading config file and  beginning logging at" `date +'%m/%d/%y%n %H:%M:%S'` 
@@ -22,7 +21,6 @@ echo "sku" $sku
 
 . includes/set-variables.sh
 
-imprint="pagekicker"
 
 while :
 do
@@ -367,22 +365,6 @@ shift 2
 import=${1#*=}
 shift
 ;;
---price)
-price=$2
-shift 2
-;;
---price=*)
-price=${1#*=}
-shift
-;;
---imprint)
-imprint=$2
-shift 2
-;;
---imprint=*)
-imprint=${1#*=}
-shift
-;;
 --batch_uuid)
 batch_uuid=$2
 shift 2
@@ -480,18 +462,11 @@ xml)
 
 	echo "environment is" $environment  | tee --append $xform_log
 	echo "jobprofilename is" $jobprofilename  | tee --append $xform_log
-	
+	echo "exemplar_file is" $exemplar_file | tee --append $xform_log
 	
 	echo -n "$seedphrases" > $TMPDIR$uuid/seeds/seedphrases 
 
-	if [ -z $exemplar_file ] ; then
-
-		echo "no exemplar file"
-
-	else
-		echo "exemplar_file is" $exemplar_file | tee --append $xform_log
-		cp $WEBFORMSHOME$submissionid/$exemplar_filedir_code/*/"$exemplar_file" $TMPDIR$uuid/"$exemplar_file"
-	fi
+	cp $WEBFORMSHOME$submissionid/$exemplar_filedir_code/*/$exemplar_file $TMPDIR$uuid/$exemplar_file
 ;;
 csv)
 	echo "getting metadata from csv"
@@ -544,7 +519,6 @@ echo "imprint is $imprint"
 
 # APIs
 
-. $confdir"jobprofiles/imprints/pagekicker/"$imprint".imprint"
 
 . includes/api-manager.sh
 
@@ -707,17 +681,16 @@ composite -gravity Center $TMPDIR$uuid/cover/wordcloudcover.png  $TMPDIR$uuid/co
 convert -background "$covercolor" -fill "$coverfontcolor" -gravity center -size 1800x400 -font "$coverfont" caption:"$booktitle" $TMPDIR$uuid/cover/topcanvas.png +swap -gravity center -composite $TMPDIR$uuid/cover/toplabel.png
 
 #build bottom label
-#yourname="yes"
-echo "yourname is" $yourname 
+echo "yourname is" $yourname
 if [ "$yourname" = "yes" ] ; then
 	editedby="$customername"
 else
 	echo "robot name on cover"
-	editedby="$jobprofilename"
 fi
 
 echo "editedby is" $editedby
 
+# editedby="PageKicker Robot "$editedby
 convert  -background "$covercolor"  -fill "$coverfontcolor" -gravity south -size 1800x394 \
  -font "$coverfont"  caption:"$editedby" \
  $TMPDIR$uuid/cover/bottomcanvas.png  +swap -gravity center -composite $TMPDIR$uuid/cover/bottomlabel.png
@@ -725,6 +698,7 @@ convert  -background "$covercolor"  -fill "$coverfontcolor" -gravity south -size
 # resize imprint logo
 
 convert $TMPDIR$uuid/cover/"$imprintlogo" -resize x200 $TMPDIR$uuid/cover/"$imprintlogo"
+
 
 # lay the labels on top of the target canvas
 
@@ -734,6 +708,7 @@ composite  -gravity south -geometry +0+0 $TMPDIR$uuid/cover/"$imprintlogo" $TMPD
 convert $TMPDIR$uuid/cover/cover.png -border 36 -bordercolor white $TMPDIR$uuid/cover/bordercover.png
 cp $TMPDIR$uuid/cover/bordercover.png $TMPDIR$uuid/cover/$sku"ebookcover.jpg"
 convert $TMPDIR$uuid/cover/bordercover.png -resize 228x302 $TMPDIR$uuid/cover/$sku"ebookcover_thumb.jpg"
+
 
 # move cover to import directory
 
@@ -795,8 +770,6 @@ safe_product_name=$(echo "$booktitle" | sed -e 's/[^A-Za-z0-9._-]/_/g')
 echo "safe_product_name is" "$safe_product_name"
 
 	sendemail -t "$customer_email" \
-		-u "test  build of [ "$booktitle" ] is attached" \
-		-m "Thanks for trying out PageKicker. What did you think? Attached you will find a free test version of the book that you asked us to add to the catalog.  It was built by PageKicker robots running in the environment "$environment" using version "$SFB_VERSION" on the host machine "$MACHINE_NAME". To add this book to your personal account so that you can request free updates in future, you will need to order it via the PageKicker catalog at this URI:"\ "$WEB_HOST"index.php/"$prevsku"".html."'\n\n'"As an additional gesture of appreciation, here is a coupon code for 3 free books: THANKS54 at the PageKicker demo site:"\ ""$WEB_HOST"index.php/catalog.html.  It is early days for us and we very much appreciate your feedback. Please take a moment to share your thoughts via this Google Form: "$google_form". You may be interested to know that PageKicker has recently open sourced its core technology: $COMMUNITY_GITHUB_REPO .  We'd love for you to participate in this amazing project!" \
 		-u "test  build of [ SKU "$sku $booktitle " ] is attached" \
 		-m "Attached you will find a free test version of the book that you asked us to add to the catalog.  It was created by PageKicker robots running software commit $SFB_VERSION on $MACHINE_NAME in $environment. To add this book to your personal account so that you can request free updates in future, you will need to order it via the PageKicker catalog at this URI:"\ "$WEB_HOST"index.php/"$prevsku.html.  As an additional gesture of appreciation, here is a coupon code for 3 free books: THANKS54.  It is early days for us and we very much appreciate your feedback. Please take a moment to share your thoughts via this Google Form: "$google_form".  Finally, note that PageKicker is open source; we encourage you to contribute to the project, which is available at $MY_GITHUB_REPO ." \
 	-m "Thanks for trying out PageKicker. What did you think? Attached you will find a free test version of the book that you asked us to add to the catalog.  To add this book to your personal account so that you can request free updates in future, you will need to order it via the PageKicker catalog at this URI:"\ "$WEB_HOST"index.php/"$prevsku"".html."'\n\n'"As an additional gesture of appreciation, here is a coupon code for 3 free books: THANKS54 at the PageKicker demo site:"\ ""$WEB_HOST"index.php/catalog.html.  It is early days for us and we very much appreciate your feedback. Please take a moment to share your thoughts via this Google Form: "$google_form". You may be interested to know that PageKicker has recently open sourced its core technology: $COMMUNITY_GITHUB_REPO .  
@@ -822,9 +795,6 @@ if [ "$mailtofred" = "yes" ] ; then
 		-s smtp.gmail.com:587 \
 		-o tls=yes \
 		-a "$TMPDIR$uuid/$sku.$safe_product_name"".mobi"
-
-	echo "mailed a copy to myself"
-
 
 else
 	echo "not mailing to myself"
