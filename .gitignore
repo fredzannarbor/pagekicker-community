@@ -10,4 +10,6 @@ local-data/local_configurations/
 local-data/logs/
 scratch/
 sshto21co.sh
-
+output.xml
+out.txt
+cookies.txt
