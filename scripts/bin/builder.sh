@@ -273,8 +273,8 @@ shift
 esac
 done
 
-echo "debug: booktitle is $booktitle"
-
+echo "imprint is $imprint" #debug
+echo "editedby is $editedby" #debug
 
 # Suppose some options are required. Check that we got them.
 
@@ -312,19 +312,25 @@ else
 	echo "$wikilang"
 fi
 
+if [ -z "$imprint" ]; then
+	imprint="default"
+	. $confdir"jobprofiles/imprints/"$imprint"/"$imprint".imprint"
+else
+	. $confdir"jobprofiles/imprints/"$imprint"/"$imprint".imprint"
+fi
+
+if [ -z "$jobprofilename" ]; then
+	jobprofilename="default"
+	. "$confdir"jobprofiles/"$jobprofile"
+else
+	. "$confdir"jobprofiles/"$jobprofile"
+fi
 
 TEXTDOMAIN=SFB
 echo $"hello, world, I am speaking" $LANG
 
-safe_product_name=$(echo "$booktit
-le" | sed -e 's/[^A-Za-z0-9._-]/_/g')
+safe_product_name=$(echo "$booktitle"| sed -e 's/[^A-Za-z0-9._-]/_/g')
 echo "safe product name is" $safe_product_name
-echo "jobprofile is" $jobprofile
-echo "jobprofilename is" $jobprofilename
-
-. "$confdir"jobprofiles/"$jobprofile"
-cat "$confdir"jobprofiles/"$jobprofile"
-echo "$authorbio"
 
 #sku=`tail -1 < "$LOCAL_DATA""SKUs/sku_list"`
 echo "sku" $sku
@@ -341,7 +347,7 @@ else
 	echo "$seed" > "$seedfile"
 fi
 
-. $confdir"jobprofiles/imprints/"$imprint"/"$imprint".imprint"
+
 . includes/api-manager.sh
 
 echo "test $covercolor" "$coverfont"
@@ -384,9 +390,9 @@ else
 	cp "$seedfile" $TMPDIR$uuid"/seeds/seedphrases"
 fi 
 
-cp $confdir"jobprofiles"/imprints/"$imprintdir"/"$imprintlogo"  "$TMPDIR$uuid"
+cp $confdir"jobprofiles"/imprints/"$imprint"/"$imprintlogo"  "$TMPDIR$uuid"
 cp $confdir"jobprofiles"/signatures/"$sigfile" "$TMPDIR$uuid"
-cp $confdir"jobprofiles"/imprints/"$imprintdir"/"$imprintlogo" "$TMPDIR$uuid"/cover
+cp $confdir"jobprofiles"/imprints/"$imprint"/"$imprintlogo" "$TMPDIR$uuid"/cover
 
 
 echo "uuid seed file is supposed to be" "$TMPDIR$uuid/seeds/seedphrases"
@@ -450,6 +456,7 @@ else
 fi
 # clean up fetched data
 sed -e s/\=\=\=\=\=/JQJQJQJQJQ/g -e s/\=\=\=\=/JQJQJQJQ/g -e s/\=\=\=/JQJQJQ/g -e s/\=\=/JQJQ/g -e s/Edit\ /\ /g -e s/JQJQJQJQJQ/\#\#\#\#\#/g -e s/JQJQJQJQ/\#\#\#\#/g -e s/JQJQJQ/\#\#\#/g -e s/JQJQ/\#\#/g $TMPDIR$uuid/wiki/wikiraw.md | sed G > $TMPDIR$uuid/wiki/wikiall.md
+echo "editedby is $editedby" #debug
 
 # build cover
 
@@ -543,7 +550,7 @@ convert  -background "$covercolor"  -fill "$coverfontcolor" -gravity south -size
 
 # resize imprint logo
 
-convert $TMPDIR$uuid/cover/pklogo.png -resize x200 $TMPDIR$uuid/cover/pklogo.png
+convert $TMPDIR$uuid/cover/"$imprintlogo" -resize x200 $TMPDIR$uuid/cover/"$imprintlogo"
 
 
 # lay the labels on top of the target canvas
@@ -562,14 +569,14 @@ if [ "$shortform" = "no" ]; then
 
 	echo "# "$booktitle  > $TMPDIR$uuid/titlepage.md
 	echo ""$byline >> $TMPDIR$uuid/titlepage.md
-	echo "by PageKicker Robot" $lastname >> $TMPDIR$uuid/titlepage.md
+	echo "by $editedby" >> $TMPDIR$uuid/titlepage.md
 	echo "  " >> $TMPDIR$uuid/titlepage.md
 	echo "  " >> $TMPDIR$uuid/titlepage.md
 	echo "  " >> $TMPDIR$uuid/titlepage.md
 	echo '![PK logo]'"(pk35pc.jpg)" >> $TMPDIR$uuid/titlepage.md
 	echo "  " >> $TMPDIR$uuid/titlepage.md
 	echo "  " >> $TMPDIR$uuid/titlepage.md
-	echo "# About PageKicker Robot $lastname" >> $TMPDIR$uuid/titlepage.md
+	echo "# $editedby" >> $TMPDIR$uuid/titlepage.md
 	cat "$authorbio" >> $TMPDIR$uuid/titlepage.md
 	echo "  " >> $TMPDIR$uuid/titlepage.md
 	echo "  " >> $TMPDIR$uuid/titlepage.md
@@ -596,7 +603,7 @@ if [ "$shortform" = "no" ]; then
 else
 	echo "short form selected" 
 	echo '![cover image]'"(ebookcover.jpg)" > $TMPDIR$uuid/tmpfrontmatter.md
-	echo '![PK logo]'"(pk35pc.jpg)" >> $TMPDIR$uuid/tmpfrontmatter.md
+	echo '!['"$imprintname"']'"(""$imprintlogo"")" >> $TMPDIR$uuid/tmpfrontmatter.md
 
 fi
 
@@ -637,11 +644,12 @@ if [ "$shortform" = "no" ] ;then
 
 	echo "# Sources" >> $TMPDIR$uuid/backmatter.md
  	cat includes/wikilicense.md >> $TMPDIR/$uuid/backmatter.md
-	echo "# Also by PageKicker Robot" $lastname >>  $TMPDIR$uuid/backmatter.md
+	echo "# Also by $editedby" >>  $TMPDIR$uuid/backmatter.md
 	cat $confdir"jobprofiles/bibliography/"$lastname/$lastname"_titles.txt" >> $TMPDIR$uuid/backmatter.md
 	echo "" >> "$TMPDIR$uuid"/backmatter.md
 	echo "" >> "$TMPDIR$uuid"/backmatter.md
 	cat $confdir"jobprofiles/imprints/$imprint/""$imprint_mission_statement" >> "$TMPDIR$uuid"/backmatter.md
+	echo '!['"$imprintname"']'"(""$imprintlogo"")" >> $TMPDIR$uuid/backmatter.md
 	echo "assembled back matter"
 
 else

@@ -35,11 +35,11 @@ while [  $row_no -lt $2 ]; do
 	mkdir -p -m 777 $TMPDIR$uuid/seeds
 	mkdir -p -m 777 $TMPDIR$uuid/csv
 
-	"$PYTHON_BIN"  $scriptpath"bin/csv_to_metadata.py" "$1" "$uuid" "$row_no"
+	"$PYTHON_BIN"  $scriptpath"bin/csv_to_ccc.py" "$1" "$uuid" "$row_no"
 
 	echo "getting ready to run catalog entry creation command for row $row_no"
 	#catid=$(cat /tmp/pagekicker/$uuid/csv/row.catid)
-	booktitle=$(cat /tmp/pagekicker/$uuid/csv/row.product_name)
+	booktitle=$(cat /tmp/pagekicker/$uuid/csv/row.booktitle)
 	editedby=$(cat /tmp/pagekicker/$uuid/csv/row.editedby)
 	#jobprofile=$(cat /tmp/pagekicker/$uuid/csv/row.jobprofile)
 	seeds=$(cat /tmp/pagekicker/$uuid/csv/row.seeds)
@@ -53,7 +53,10 @@ while [  $row_no -lt $2 ]; do
 	if [ "$2" = "ccc_off" ] ; then
 		echo "not running ccc"
 	else
-		bin/create-catalog-entry.sh --format "csv"  --passuuid "$uuid" --categories "$catid" --booktitle "$booktitle" --booktype "Reader" --covercolor "Random" --coverfont "Minion" --environment "$environment" --jobprofilename "default" --seedfile "/tmp/pagekicker/$uuid/csv/seeds" --builder "yes"  --book_description "$description" --imprint "$imprint" --price "price" --batch_uuid "$batch_uuid" # jobprofilename hard coded
+		bin/create-catalog-entry.sh --format "csv"  --passuuid "$uuid" --booktitle "$booktitle" --booktype "Reader" --covercolor "Random" --coverfont "Minion" --environment "$environment" --jobprofilename "default" --seedfile "/tmp/pagekicker/$uuid/csv/seeds" --builder "yes"  --imprint "$imprint" --batch_uuid "$batch_uuid" --editedby "$editedby" --yourname "no"
+ 
+#--categories "$catid" not implemented
+# --book_description "$description" ditto
 	fi
 	echo "exit value is $?"
 	if [ "$?" -eq 0 ] ; then 
