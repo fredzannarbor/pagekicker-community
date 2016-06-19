@@ -4,11 +4,14 @@
 
 echo "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-echo $DIR
-cd $DIR
-. $DIR/../../conf/config.txt
-cd $scriptpath
+if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
+	echo "config file not found, creating /home/<user>/.pagekicker, put config file there"
+	mkdir -p -m 755 "$HOME"/.pagekicker
+else
+	. "$HOME"/.pagekicker/config.txt
+	echo "read config file from $HOME""/.pagekicker/config.txt"
+fi
+
 . includes/set-variables.sh
 
 #echo "set variables, now echoing them"
