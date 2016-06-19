@@ -28,10 +28,10 @@ if [ ${#tweet} -gt 140 ]
         tweet=${tweet_trunc}...
 fi
 
-consumer_key="YZ5Pbp5nCgOjlLLwrekH1tR7J"
-consumer_secret="OlLyjNmdcXGQPOjoahEPebxbF9lYi0hEpY9y3MZusZuYCMVv12"
-access_token="22919451-GNEr3XyqoupBV244GijdO99LpgaWwhnB0OSwl3jCy"
-access_secret="wLH09s0vWQ1VViODPG5ERUHTh2G1aZgbCcKszMxeLQiUL"
+consumer_key="$TWTR_consumer_key"
+consumer_secret="STWTR_consumer_secret"
+access_token="$TWTR_access_token"
+access_secret="$TWTR_access_secret"
 url="https://api.twitter.com/1.1/statuses/update.json"
 
 http_post -h Authorization "$(oauth_sign \
