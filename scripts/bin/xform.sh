@@ -17,6 +17,17 @@ xmlfilename=$xmldirectoryname/$xmlbasefile
 environment=$(xmlstarlet sel -t -v "/item/environment" "$xmlfilename")
 scriptpath=$(xmlstarlet sel -t -v  "/item/scriptpath" "$xmlfilename") #  passed to xform via hidden field in webform  b/c  incron is launched from cron directory
 . "$scriptpath"/../conf/"config.txt"
+
+# following standard conf module may need to be adjusted to allow for different environments to run from different webforms/builders
+
+#if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
+#	echo "config file not found, creating /home/<user>/.pagekicker, put config file there"
+#	mkdir -p -m 755 "$HOME"/.pagekicker
+#else
+#	. "$HOME"/.pagekicker/config.txt
+#	echo "read config file from $HOME""/.pagekicker/config.txt"
+#fi
+
 echo "loaded" $environment "config file at " $datenow  | tee "$xform_log"
 
 uuid=$(python  -c 'import uuid; print uuid.uuid1()')
