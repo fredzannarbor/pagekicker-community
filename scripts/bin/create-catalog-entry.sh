@@ -5,7 +5,16 @@ echo "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
 TEXTDOMAIN=SFB # required for bash language awareness
 echo $"hello, world, I am speaking" $LANG
 
-. ../conf/config.txt
+if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
+	echo "config file not found, creating /home/<user>/.pagekicker, put config file there"
+	mkdir -p -m 755 "$HOME"/.pagekicker
+	echo "exiting"
+	exit 1
+else
+	. "$HOME"/.pagekicker/config.txt
+	echo "read config file from $HOME""/.pagekicker/config.txt"
+fi
+
 
 echo "software version number is" $SFB_VERSION
 
@@ -479,9 +488,6 @@ csv)
 esac
 
 
-# import jobprofile which overrides command line values
-
-#. $confdir"jobprofiles/$jobprofilename.jobprofile"
 
 
 # assign wikilocale & stopfile based on LANG
@@ -758,7 +764,7 @@ if [ "$builder" = "yes" ] ; then
 
 	echo "seedfile was" "$TMPDIR"seeds/seedphrases
 
-	$scriptpath"bin/builder.sh" --seedfile $TMPDIR$uuid"/seeds/seedphrases" --booktype "$booktype" --jobprofilename "$jobprofilename" --jobprofile "$jobprofilename.jobprofile" --booktitle "$booktitle" --ebook_format "epub" --sample_tweets "no" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername" --imprint "$imprint" --batch_uuid "$batch_uuid"
+	$scriptpath"bin/builder.sh" --seedfile $TMPDIR$uuid"/seeds/seedphrases" --booktype "$booktype" --jobprofilename "$jobprofilename" --booktitle "$booktitle" --ebook_format "epub" --sample_tweets "no" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername" --imprint "$imprint" --batch_uuid "$batch_uuid"
 
 else
 

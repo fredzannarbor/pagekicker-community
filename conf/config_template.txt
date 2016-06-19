@@ -14,7 +14,10 @@ GMAIL_ID="user@example.com"
 GMAIL_PASSWORD="####" # if you have two-factor authentication turned on you will need a Google App password
 environment="pagekicker-development" # each  environment has a unique config.txt file in conf/
 google_form="URI to Google Form used in test build email"
-
+TWTR_consumer_key="key"
+TWTR_consumer_secret="secret"
+TWTR_access_key="key"
+TWTR_access_secret="secret"
 
 # values in this block are assigned likely values, please check
 

@@ -4,11 +4,16 @@
 
 echo "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-echo $DIR
-cd $DIR
-. $DIR/../../conf/config.txt
-cd $scriptpath
+if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
+	echo "config file not found, creating /home/<user>/.pagekicker, put config file there"
+	mkdir -p -m 755 "$HOME"/.pagekicker
+	echo "exiting"
+	exit 1
+else
+	. "$HOME"/.pagekicker/config.txt
+	echo "read config file from $HOME""/.pagekicker/config.txt"
+fi
+
 . includes/set-variables.sh
 
 #echo "set variables, now echoing them"
@@ -21,7 +26,6 @@ echo "sfb_log is" $sfb_log
 
 echo "completed reading config file and  beginning logging at" `date +'%m/%d/%y%n %H:%M:%S'` 
 
-jobprofile="default"
 jobprofilename="default"
 singleseed="none"
 sample_tweets="no"
@@ -113,14 +117,6 @@ shift 2
 --ebook_format=*)
 shift
 ebook_format=${1#*=}
-;;
---jobprofile)
-jobprofile=$2
-shift 2
-;;
---jobprofile=*)
-jobprofile=${1#*=}
-shift
 ;;
 --jobprofilename)
 jobprofilename=$2
@@ -321,9 +317,9 @@ fi
 
 if [ -z "$jobprofilename" ]; then
 	jobprofilename="default"
-	. "$confdir"jobprofiles/"$jobprofile"
+	. "$confdir"jobprofiles/"$jobprofilename".jobprofile
 else
-	. "$confdir"jobprofiles/"$jobprofile"
+	. "$confdir"jobprofiles/"$jobprofilename".jobprofile
 fi
 
 TEXTDOMAIN=SFB
@@ -393,6 +389,7 @@ fi
 cp $confdir"jobprofiles"/imprints/"$imprint"/"$imprintlogo"  "$TMPDIR$uuid"
 cp $confdir"jobprofiles"/signatures/"$sigfile" "$TMPDIR$uuid"
 cp $confdir"jobprofiles"/imprints/"$imprint"/"$imprintlogo" "$TMPDIR$uuid"/cover
+
 
 echo "uuid seed file is supposed to be" "$TMPDIR$uuid/seeds/seedphrases"
 
@@ -564,38 +561,32 @@ cp $TMPDIR$uuid/cover/bordercover.png $TMPDIR$uuid/ebookcover.jpg
 if [ "$shortform" = "no" ]; then
 
 	# building front matter
-	echo "about to build title page"
-
-	echo "# "$booktitle  > $TMPDIR$uuid/titlepage.md
-	echo ""$byline >> $TMPDIR$uuid/titlepage.md
-	echo "by $editedby" >> $TMPDIR$uuid/titlepage.md
+	# removed title page b/c Pandoc already builds it
 	echo "  " >> $TMPDIR$uuid/titlepage.md
 	echo "  " >> $TMPDIR$uuid/titlepage.md
-	echo "  " >> $TMPDIR$uuid/titlepage.md
-	echo '![PK logo]'"(pk35pc.jpg)" >> $TMPDIR$uuid/titlepage.md
-	echo "  " >> $TMPDIR$uuid/titlepage.md
-	echo "  " >> $TMPDIR$uuid/titlepage.md
-	echo "# $editedby" >> $TMPDIR$uuid/titlepage.md
+	echo "# About $editedby" >> $TMPDIR$uuid/titlepage.md
 	cat "$authorbio" >> $TMPDIR$uuid/titlepage.md
 	echo "  " >> $TMPDIR$uuid/titlepage.md
 	echo "  " >> $TMPDIR$uuid/titlepage.md
-	cp $scriptpath"assets/acknowledgements.md" $TMPDIR$uuid/acknowledgements.md
+	
 	cp $scriptpath"assets/rebuild.md" $TMPDIR$uuid/rebuild.md
 	cp $confdir"jobprofiles/signatures/"$sigfile $TMPDIR$uuid/$sigfile
-	echo "  " >> $TMPDIR$uuid/acknowledgements.md
-	echo "  " >> $TMPDIR$uuid/acknowledgements.md
-	echo "This book was created with revision "$SFB_VERSION "of the PageKicker software running on the "$environment "server." >> $TMPDIR$uuid/acknowledgements.md
-	echo "  " >> $TMPDIR$uuid/acknowledgements.md
-	echo "  " >> $TMPDIR$uuid/acknowledgements.md
-	echo '<i>'$lastname'</i>  ' >> $TMPDIR$uuid/acknowledgements.md
-	echo '<i>'"Ann Arbor, Michigan, USA"'</i>' >> $TMPDIR$uuid/acknowledgements.md
-	echo "  " >> $TMPDIR$uuid/acknowledgements.md
-	echo "  " >> $TMPDIR$uuid/acknowledgements.md
-	echo '![Author photo]'"($sigfile)" >> $TMPDIR$uuid/acknowledgements.md
+	echo "# Acknowledgements from the PageKicker Robot Author" >> $TMPDIR$uuid/robo_ack.md
+	echo "I would like to thank "$editedby" for the opportunity to participate in writing this book." >> $TMPDIR$uuid/robo_ack.md
+	echo "  " >> $TMPDIR$uuid/robo_ack.md
+	echo "  " >> $TMPDIR$uuid/robo_ack.md
+	cat $scriptpath/assets/robo_ack.md >> $TMPDIR$uuid/robo_ack.md
+	echo "This book was created with revision "$SFB_VERSION "of the PageKicker software running on the "$environment "server." >> $TMPDIR$uuid/robo_ack.md
+	echo "  " >> $TMPDIR$uuid/robo_ack.md
+	echo "  " >> $TMPDIR$uuid/robo_ack.md
+	echo '<i>'"Ann Arbor, Michigan, USA"'</i>' >> $TMPDIR$uuid/robo_ack.md
+	echo "  " >> $TMPDIR$uuid/robo_ack.md
+	echo "  " >> $TMPDIR$uuid/robo_ack.md
+	echo '![Robot author photo]'"($sigfile)" >> $TMPDIR$uuid/robo_ack.md
 
 	# assemble front matter
 
-	cat $TMPDIR$uuid/titlepage.md $TMPDIR$uuid/acknowledgements.md $TMPDIR$uuid/rebuild.md > $TMPDIR$uuid/tmpfrontmatter.md
+	cat $TMPDIR$uuid/titlepage.md $TMPDIR$uuid/robo_ack.md $TMPDIR$uuid/rebuild.md > $TMPDIR$uuid/tmpfrontmatter.md
 
 	echo "assembled front matter"
 

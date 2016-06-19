@@ -4,7 +4,16 @@
 
 # initialize variables
 
-. ../conf/config.txt
+if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
+	echo "config file not found, creating /home/<user>/.pagekicker, put config file there"
+	mkdir -p -m 755 "$HOME"/.pagekicker
+	echo "exiting"
+	exit 1
+else
+	. "$HOME"/.pagekicker/config.txt
+	echo "read config file from $HOME""/.pagekicker/config.txt"
+fi
+
 . includes/set-variables.sh
 if [ ! "/tmp/pagekicker/buildresult" ] ; then
 	rm /tmp/pagekicker/buildresult
@@ -53,18 +62,8 @@ while [  $row_no -lt $2 ]; do
 	if [ "$2" = "ccc_off" ] ; then
 		echo "not running ccc"
 	else
-echo "flag values are"
-echo $booktitle
-echo $environment
-echo $description
-echo "uuid is $uuid"
-echo "imprint is $imprint"
-
 		bin/create-catalog-entry.sh --format "csv"  --passuuid "$uuid" --booktitle "$booktitle" --booktype "Reader" --covercolor "Random" --coverfont "Minion" --environment "$environment" --jobprofilename "default" --seedfile "/tmp/pagekicker/$uuid/csv/seeds" --builder "yes"  --imprint "$imprint" --batch_uuid "$batch_uuid" --editedby "$editedby" --yourname "no"
-
  
-
-# jobprofilename hard coded 
 #--categories "$catid" not implemented
 # --book_description "$description" ditto
 	fi

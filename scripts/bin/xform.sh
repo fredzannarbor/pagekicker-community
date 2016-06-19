@@ -1,4 +1,4 @@
-#!/bin/bash
+ #!/bin/bash
 
 # requires inotify to alert that xml file has been created by the Magento webforms plugin and deposited in the correct directory
 # which is set by incrontab command for the bitnami user
@@ -8,16 +8,27 @@ datenow=$(date -R)
 
 # parse the command-line very stupidly
 
-xmldirectoryname=$1 # this is different when run from the command line v. from incrontab!
-xmlbasefile=$2 # this is different when run from the command line!
+xmldirectoryname=$1 
+xmlbasefile=$2 
 echo "parameter 1 is" $1
 echo  "parameter 2 is" $2
 xmlfilename=$xmldirectoryname/$xmlbasefile
 
 environment=$(xmlstarlet sel -t -v "/item/environment" "$xmlfilename")
+scriptpath=$(xmlstarlet sel -t -v  "/item/scriptpath" "$xmlfilename") #  passed to xform via hidden field in webform  b/c  incron is launched from cron directory
+. "$scriptpath"/../conf/"config.txt"
 
-. ../conf/"config.txt"
-echo "loaded $environment config file at " $datenow 
+# following standard conf module may need to be adjusted to allow for different environments to run from different webforms/builders
+
+#if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
+#	echo "config file not found, creating /home/<user>/.pagekicker, put config file there"
+#	mkdir -p -m 755 "$HOME"/.pagekicker
+#else
+#	. "$HOME"/.pagekicker/config.txt
+#	echo "read config file from $HOME""/.pagekicker/config.txt"
+#fi
+
+echo "loaded" $environment "config file at " $datenow  | tee "$xform_log"
 
 uuid=$(python  -c 'import uuid; print uuid.uuid1()')
 mkdir -p -m 755 $logdir$uuid 
@@ -65,7 +76,7 @@ case $webform_id in
 
 # echo "found Magento form submission id 4, executing ccc"
 
-$scriptpath"bin/create-catalog-entry.sh" --xmlfilename "$xmlbasefile" --passuuid "$uuid" --format "xml" --builder "no"
+$scriptpath"bin/create-catalog-entry.sh" --xmlfilename "$xmlbasefile" --passuuid "$uuid" --format "xml" --builder "yes"
 
 echo "launched $0 from" $environment 
 ;;
