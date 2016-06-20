@@ -1,4 +1,3 @@
-echo "PageKicker imprint"
 imprint="pagekicker" # lower case no special characters
 imprintlogo="pklogo.png"
 imprintdir="pagekicker"
