@@ -254,6 +254,22 @@ shift 2
 imprint=${1#*=}
 shift
 ;;
+--tldr)
+tldr=$2
+shift 2
+;;
+--tldr=*)
+tldr=${1#*=}
+shift
+;;
+--subtitle)
+subtitle=$2
+shift 2
+;;
+--subtitle=*)
+subtitle=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -271,7 +287,7 @@ done
 
 echo "imprint is $imprint" #debug
 echo "editedby is $editedby" #debug
-
+human_author="$editedby"
 # Suppose some options are required. Check that we got them.
 
 if [ ! "$passuuid" ] ; then
@@ -534,7 +550,7 @@ convert -background "$covercolor" -fill "$coverfontcolor" -gravity center -size 
 
 echo "yourname is" $yourname
 if [ "$yourname" = "yes" ] ; then
-	editedby="$customername"
+	editedby="$human_author"
 else
 	echo "robot name on cover"
 fi
@@ -584,9 +600,21 @@ if [ "$shortform" = "no" ]; then
 	echo "  " >> $TMPDIR$uuid/robo_ack.md
 	echo '![Robot author photo]'"($sigfile)" >> $TMPDIR$uuid/robo_ack.md
 
+
 	# assemble front matter
 
 	cat $TMPDIR$uuid/titlepage.md $TMPDIR$uuid/robo_ack.md $TMPDIR$uuid/rebuild.md > $TMPDIR$uuid/tmpfrontmatter.md
+
+	if [ -z ${tldr+x} ]; then 
+		echo "no tl;dr"
+	else 
+		echo "  " >> $TMPDIR$uuid/tmpfrontmatter.md
+		echo "  " >> $TMPDIR$uuid/tmpfrontmatter.md
+		echo "# TL;DR:" >> $TMPDIR$uuid/tmpfrontmatter.md
+		echo "$tldr" >> $TMPDIR$uuid/tmpfrontmatter.md
+	fi
+
+
 
 	echo "assembled front matter"
 
@@ -658,6 +686,7 @@ my_year=`date +'%Y'`
 echo "" > $TMPDIR$uuid/yaml-metadata.md
 echo "---" >> $TMPDIR$uuid/yaml-metadata.md
 echo "title: $booktitle" >> $TMPDIR$uuid/yaml-metadata.md
+echo "subtitle: $subtitle" >> $TMPDIR$uuid/yaml-metadata.md
 echo "creator: " >> $TMPDIR$uuid/yaml-metadata.md
 echo "- role: author "  >> $TMPDIR$uuid/yaml-metadata.md
 echo "  text: "" $editedby"  >> $TMPDIR$uuid/yaml-metadata.md

@@ -390,6 +390,14 @@ shift 2
 editedby=${1#*=}
 shift
 ;;
+--subtitle)
+subtitle=$2
+shift 2
+;;
+--subtitle=*)
+subtitle=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -520,6 +528,8 @@ echo "wikilocale now is "$wikilocale
 
 echo "imprint is $imprint"
 
+human_author="$editedby"
+
 # verbose logging
 
 
@@ -614,7 +624,7 @@ else
 	echo "zero data returned from wiki, exiting with error message"
 	sendemail -t "$customer_email" \
 		-u "Your submission [ $booktitle ] has not been added to the catalog" \
-		-m "The system was not able to find any valid seed terms in your submission. Make sure that you have provikded several keyphrases and that the words are spelled correctly.  Please let us know by replying to this message if you need assistance." \
+		-m "The system was not able to find any valid seed terms in your submission. Make sure that you have provided several keyphrases and that the words are spelled correctly.  Please let us know by replying to this message if you need assistance." \
 		-f "$GMAIL_ID" \
 		-cc "$GMAIL_ID" \
 		-xu "$GMAIL_ID" \
@@ -687,9 +697,10 @@ composite -gravity Center $TMPDIR$uuid/cover/wordcloudcover.png  $TMPDIR$uuid/co
 convert -background "$covercolor" -fill "$coverfontcolor" -gravity center -size 1800x400 -font "$coverfont" caption:"$booktitle" $TMPDIR$uuid/cover/topcanvas.png +swap -gravity center -composite $TMPDIR$uuid/cover/toplabel.png
 
 #build bottom label
+
 echo "yourname is" $yourname
 if [ "$yourname" = "yes" ] ; then
-	editedby="$customername"
+	editedby="$human_author"
 else
 	echo "robot name on cover"
 fi
@@ -764,7 +775,7 @@ if [ "$builder" = "yes" ] ; then
 
 	echo "seedfile was" "$TMPDIR"seeds/seedphrases
 
-	$scriptpath"bin/builder.sh" --seedfile $TMPDIR$uuid"/seeds/seedphrases" --booktype "$booktype" --jobprofilename "$jobprofilename" --booktitle "$booktitle" --ebook_format "epub" --sample_tweets "no" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername" --imprint "$imprint" --batch_uuid "$batch_uuid"
+	$scriptpath"bin/builder.sh" --seedfile $TMPDIR$uuid"/seeds/seedphrases" --booktype "$booktype" --jobprofilename "$jobprofilename" --booktitle "$booktitle" --ebook_format "epub" --sample_tweets "no" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername" --imprint "$imprint" --batch_uuid "$batch_uuid" --tldr "$tldr" --subtitle "$subtitle"
 
 else
 
