@@ -270,6 +270,14 @@ shift 2
 subtitle=${1#*=}
 shift
 ;;
+--add_corpora)
+add_corpora=$2
+shift 2
+;;
+--add_corpora=*)
+add_corpora=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -749,9 +757,17 @@ ls -la $buildtarget
 esac
 
 
-# housecleaning
+# housekeeping
 
-cp -u $TMPDIR$uuid/$sku.$safe_product_name".epub" "$LOCAL_DATA""jobprofile_builds/""$jobprofilename/""$sku.$safe_product_name.epub" #each robot's archive
+if [ "$add_corpora" = "yes" ] ; then
+
+	cp -u "$TMPDIR$uuid"/"$sku.$safe_product_name".epub "$SFB_HOME"shared-corpus/robots/"$jobprofilename"/"$sku.$safe_product_name.epub" 
+	cp -u "$TMPDIR$uuid"/"$sku.$safe_product_name".epub "$SFB_HOME"shared-corpus/imprints/"$imprint"/"$sku.$safe_product_name.epub" 
+
+else
+	echo "not adding to corpora"
+
+fi
 
 if [ -z "$batch_uuid" ] ; then
 	echo "not part of a batch"
@@ -761,6 +777,7 @@ cp $TMPDIR$uuid/$sku.$safe_product_name".mobi" $TMPDIR$batch_uuid/$sku.$safe_pro
 cp $TMPDIR$uuid/$sku.$safe_product_name".docx" $TMPDIR$batch_uuid/$sku.$safe_product_name".docx"
 	ls -l "$TMPDIR$batch_uuid"/* # 
 fi
+
 
 if [ "$dontcleanupseeds" = "yes" ]; then
 	echo "leaving seed file in place $seedfile"
