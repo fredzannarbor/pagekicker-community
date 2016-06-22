@@ -759,15 +759,46 @@ esac
 
 # housekeeping
 
+unique_seed_string=$(sed -e 's/[^A-Za-z0-9._-]//g' < $TMPDIR$uuid/seeds/sorted.seedfile | tr --delete '\n')
+
+
+#checking if seedstring already in imprint corpus
+
 if [ "$add_corpora" = "yes" ] ; then
 
-	cp -u "$TMPDIR$uuid"/"$sku.$safe_product_name".epub "$SFB_HOME"shared-corpus/robots/"$jobprofilename"/"$sku.$safe_product_name.epub" 
-	cp -u "$TMPDIR$uuid"/"$sku.$safe_product_name".epub "$SFB_HOME"shared-corpus/imprints/"$imprint"/"$sku.$safe_product_name.epub" 
+	if grep -q "$unique_seed_string" "$SFB_HOME"shared-corpus/imprints/"$imprint"/unique_seed_strings.sorted ; then
+		echo "seed string $unique_seed_string is already in corpus for imprint $imprint"
+	else
+		cp -u "$TMPDIR$uuid"/"$sku.$safe_product_name".epub "$SFB_HOME"shared-corpus/imprints/"$imprint"/"$sku.$safe_product_name.epub" 
+		echo "added book associated with $unique_seed_string to corpus for imprint $imprint"
+	fi
+else
+	:
+fi
+
+# checking if seed string is already in robot corpus
+if [ "$add_corpora" = "yes" ] ; then
+
+	if grep -q "$unique_seed_string" "$SFB_HOME"shared-corpus/robots/$jobprofilename/unique_seed_strings.sorted ; then
+		echo "seed string $unique_seed_string is already in corpus for robot $jobprofilename "
+	else
+		cp -u "$TMPDIR$uuid"/"$sku.$safe_product_name".epub "$SFB_HOME"shared-corpus/robots/"$jobprofilename"/"$sku.$safe_product_name.epub" 
+		echo "added book associated with $unique_seed_string to corpus for robot $jobprofilename"
+	fi
+else
+	:
+fi
+
+if [ "$add_corpora" = "yes" ] ; then
+	echo "$unique_seed_string" >> "$SFB_HOME"shared-corpus/imprints/"$imprint"/unique_seed_strings
+	echo "$unique_seed_string" >> "$SFB_HOME"shared-corpus/robots/"$jobprofilename"/unique_seed_strings
+	sort -u $SFB_HOME"shared-corpus/robots/"$jobprofilename"/unique_seed_strings" > $SFB_HOME"shared-corpus/robots/"$jobprofilename"/unique_seed_strings.sorted"
+	sort -u $SFB_HOME"shared-corpus/imprints/"$imprint"/unique_seed_strings" > $SFB_HOME"shared-corpus/imprints/"$imprint"/unique_seed_strings.sorted"
 
 else
-	echo "not adding to corpora"
-
+	echo "not requested to add builds and unique_seed_strings to corpus"
 fi
+
 
 if [ -z "$batch_uuid" ] ; then
 	echo "not part of a batch"

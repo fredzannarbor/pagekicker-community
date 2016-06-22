@@ -585,6 +585,8 @@ echo "seedfile is" $seedfile
 
 cat "$TMPDIR$uuid/seeds/seedphrases" | uniq | sort  > "$TMPDIR$uuid/seeds/sorted.seedfile"
 cat "$TMPDIR$uuid/seeds/sorted.seedfile" > "$LOCAL_DATA"seeds/history/"$sku".seedphrases
+uniq_seed_string=$(sed -e 's/[^A-Za-z0-9._-]//g' < $TMPDIR$uuid/seeds/sorted.seedfile | tr --delete '\n')
+echo $uniq_seed_string >> ../scratch/uqss
 
 
 cp $scriptpath"assets/pk35pc.jpg" $TMPDIR$uuid/pk35pc.jpg
