@@ -12,4 +12,4 @@ else
 	echo "read config file from $HOME""/.pagekicker/config.txt"
 fi
 
-bin/xform.sh /home/fred/bin/magento-1.9.2.4-1/apps/magento/htdocs/media/webforms/xml 3383.xml
+bin/xform.sh "$WEBFORMSXML_HOME" 3383.xml

@@ -245,7 +245,7 @@ $scriptpath"bin/dat.sh" --xmldirectoryname "$xmldirectoryname" --xmlbasefile "$x
 	# get the logo and store it in imprints directory
 
 	echo "imprint logo file name is $imprintlogo"
-	#echo "$WEBFORMSIMAGEDIR"
+	#echo "$WEBFORMSIMAGESDIR"
 	logobase="$WEBFORMSIMAGESDIR""$submissionid"	
 	echo  "logo base is $logobase"
 	logosecuredir=`ls $logobase/*`
