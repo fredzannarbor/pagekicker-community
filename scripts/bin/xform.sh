@@ -6,14 +6,20 @@
 # requires inotify to alert that xml file has been created by the Magento webforms plugin and deposited in the correct directory
 # which is set by incrontab command for the bitnami user
 
-if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
-	echo "config file not found, creating /home/<user>/.pagekicker, put config file there"
-	mkdir -p -m 755 "$HOME"/.pagekicker
-	echo "exiting"
-	exit 1
+if shopt -q  login_shell ; then
+	
+	if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
+		echo "config file not found, creating /home/<user>/.pagekicker, put config file there"
+		mkdir -p -m 755 "$HOME"/.pagekicker
+		echo "exiting"
+		exit 1
+	else
+		. "$HOME"/.pagekicker/config.txt
+		echo "read config file from $HOME""/.pagekicker/config.txt"
+	fi
 else
-	. "$HOME"/.pagekicker/config.txt
-	echo "read config file from $HOME""/.pagekicker/config.txt"
+	. /home/$(whoami)/.pagekicker/config.txt #hard-coding /home is a hack 
+	echo "read config file from /home/$(whoami)/.pagekicker/config.txt"
 fi
 
 starttime=$(( `date +%s` ))

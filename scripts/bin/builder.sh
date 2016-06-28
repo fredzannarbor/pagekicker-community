@@ -4,26 +4,37 @@
 
 echo "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
 
-if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
-	echo "config file not found, creating /home/<user>/.pagekicker, put config file there"
-	mkdir -p -m 755 "$HOME"/.pagekicker
-	echo "exiting"
-	exit 1
+if shopt -q  login_shell ; then
+	
+	if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
+		echo "config file not found, creating /home/<user>/.pagekicker, put config file there"
+		mkdir -p -m 755 "$HOME"/.pagekicker
+		echo "exiting"
+		exit 1
+	else
+		. "$HOME"/.pagekicker/config.txt
+		echo "read config file from login shell $HOME""/.pagekicker/config.txt"
+	fi
 else
-	. "$HOME"/.pagekicker/config.txt
-	echo "read config file from $HOME""/.pagekicker/config.txt"
+	. /home/$(whoami)/.pagekicker/config.txt #hard-coding /home is a hack 
+	echo "read config file from nonlogin shell /home/$(whoami)/.pagekicker/config.txt"
 fi
+
+cd $scriptpath
 
 . includes/set-variables.sh
 
 #echo "set variables, now echoing them"
 # . includes/echo-variables.sh
 
+echo "shortform is $shortform"
+
+
 
 echo "revision number is" $SFB_VERSION
 
 echo "sfb_log is" $sfb_log
-
+am
 echo "completed reading config file and  beginning logging at" `date +'%m/%d/%y%n %H:%M:%S'` 
 
 jobprofilename="default"
