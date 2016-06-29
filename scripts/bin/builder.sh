@@ -34,7 +34,7 @@ echo "shortform is $shortform"
 echo "revision number is" $SFB_VERSION
 
 echo "sfb_log is" $sfb_log
-am
+
 echo "completed reading config file and  beginning logging at" `date +'%m/%d/%y%n %H:%M:%S'` 
 
 jobprofilename="default"
@@ -681,10 +681,18 @@ if [ "$shortform" = "no" ] ;then
 
 	echo "# Sources" >> $TMPDIR$uuid/backmatter.md
  	cat includes/wikilicense.md >> $TMPDIR/$uuid/backmatter.md
-	echo "# Also by $editedby" >>  $TMPDIR$uuid/backmatter.md
-	cat $confdir"jobprofiles/bibliography/"$lastname/$lastname"_titles.txt" >> $TMPDIR$uuid/backmatter.md
+
+	echo "# Also built by PageKicker Robot $jobprofilename" >>  $TMPDIR$uuid/backmatter.md
+	sort -o -u "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.txt"  "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.txt" # currently sort by alphabetical 
+	cat "$LOCAL_DATA"/bibliography/robots/"$jobprofilename"/"$jobprofilename""_titles.txt" >> $TMPDIR$uuid/backmatter.md
+	echo " " >> $TMPDIR$uuid/backmatter.md
+	echo " " >> $TMPDIR$uuid/backmatter.md
+
+	echo "# Also from $imprintname" >>  $TMPDIR$uuid/backmatter.md
+	uniq "$LOCAL_DATA"bibliography/imprints/"$imprint"/$imprint"_titles.txt" >> $TMPDIR$uuid/backmatter.md # imprint pubs are not alpha
 	echo "" >> "$TMPDIR$uuid"/backmatter.md
 	echo "" >> "$TMPDIR$uuid"/backmatter.md
+
 	cat $confdir"jobprofiles/imprints/$imprint/""$imprint_mission_statement" >> "$TMPDIR$uuid"/backmatter.md
 	echo '!['"$imprintname"']'"(""$imprintlogo"")" >> $TMPDIR$uuid/backmatter.md
 	echo "assembled back matter"
@@ -719,6 +727,7 @@ cat "$TMPDIR$uuid/yaml-metadata.md" >> $TMPDIR$uuid/complete.md
 
 
 bibliography_title="$booktitle"
+echo "bibliography title is $bibliography_title"
 safe_product_name=$(echo "$booktitle" | sed -e 's/[^A-Za-z0-9._-]/_/g')
 cd $TMPDIR$uuid
 "$PANDOC_BIN" -o "$TMPDIR$uuid/$sku."$safe_product_name".epub" --epub-cover-image=$TMPDIR$uuid/cover/$sku"ebookcover.jpg" $TMPDIR$uuid/complete.md
@@ -829,7 +838,11 @@ else
 	#ls -la $seedfile (to test that it's gone)
 fi
 
+echo "appending & sorting new bibliography entries"
+echo "* ""$bibliography_title" >> "$LOCAL_DATA"bibliography/robots/"$jobprofilename/"$jobprofilename"_titles.txt"
+ls -lart "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.txt"
+echo "* ""$bibliography_title" >> "$LOCAL_DATA"bibliography/imprints/"$imprint"/"$imprint"_titles.txt
 
-echo "* ""$bibliography_title" >> $confdir"jobprofiles/bibliography/"$jobprofilename/$jobprofilename"_titles.txt"
-cp $confdir"jobprofiles/bibliography/$jobprofilename/"$jobprofilename"_titles.txt" $confdir"jobprofiles/bibliography/"$jobprofilename/$jobprofilename"_titles.tmp"
-sort -u $confdir"jobprofiles/bibliography/"$jobprofilename/$jobprofilename"_titles.tmp" > $confdir"jobprofiles/bibliography/"$jobprofilename/$jobprofilename"_titles.txt"
+
+echo "exiting builder"
+exit 0
