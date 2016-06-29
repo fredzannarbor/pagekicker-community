@@ -4,37 +4,40 @@
 
 echo "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
 
-# I forget why I needed to do this -- it decides on environment based on where script is running rather than looking at config file.
-# probably can be deleted from master
+if shopt -q  login_shell ; then
+	
+	if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
+		echo "config file not found, creating /home/<user>/.pagekicker, put config file there"
+		mkdir -p -m 755 "$HOME"/.pagekicker
+		echo "exiting"
+		exit 1
+	else
+		. "$HOME"/.pagekicker/config.txt
+		echo "read config file from login shell $HOME""/.pagekicker/config.txt"
+	fi
+else
+	. /home/$(whoami)/.pagekicker/config.txt #hard-coding /home is a hack 
+	echo "read config file from nonlogin shell /home/$(whoami)/.pagekicker/config.txt"
+fi
 
-#CANON=$(cd -P -- "$(dirname -- "$0")" && printf '%s\n' "$(pwd -P)/$(basename -- "$0")")
-
-#if [ "$CANON" = "/opt/bitnami/apache2/htdocs/pk-new/development/scripts/bin/builder-relative.sh" ] ; then
-	#scriptpath="/opt/bitnami/apache2/htdocs/pk-new/development/scripts/"
-#	echo "my startup scriptpath is" $scriptpath
-#else
-#	scriptpath="/opt/bitnami/apache2/htdocs/pk-production/scripts/"
-#	echo "my startup scriptpath is" $scriptpath
-#fi
-
-. ../conf/config.txt
 cd $scriptpath
 
-
 . includes/set-variables.sh
+
 #echo "set variables, now echoing them"
 # . includes/echo-variables.sh
 
+echo "shortform is $shortform"
 
-"revision number is" $SFB_VERSION
+
+
+echo "revision number is" $SFB_VERSION
 
 echo "sfb_log is" $sfb_log
-
+am
 echo "completed reading config file and  beginning logging at" `date +'%m/%d/%y%n %H:%M:%S'` 
 
-jobprofile="default"
 jobprofilename="default"
-buildtarget=$TMPDIR"test"
 singleseed="none"
 sample_tweets="no"
 todaysdate=`date`
@@ -125,14 +128,6 @@ shift 2
 --ebook_format=*)
 shift
 ebook_format=${1#*=}
-;;
---jobprofile)
-jobprofile=$2
-shift 2
-;;
---jobprofile=*)
-jobprofile=${1#*=}
-shift
 ;;
 --jobprofilename)
 jobprofilename=$2
@@ -254,6 +249,46 @@ shift 2
 dontcleanupseeds=${1#*=}
 shift
 ;;
+--batch_uuid)
+batch_uuid=$2
+shift 2
+;;
+--batch_uuid=*)
+batch_uuid=${1#*=}
+shift
+;;
+--imprint)
+imprint=$2
+shift 2
+;;
+--imprint=*)
+imprint=${1#*=}
+shift
+;;
+--tldr)
+tldr=$2
+shift 2
+;;
+--tldr=*)
+tldr=${1#*=}
+shift
+;;
+--subtitle)
+subtitle=$2
+shift 2
+;;
+--subtitle=*)
+subtitle=${1#*=}
+shift
+;;
+--add_corpora)
+add_corpora=$2
+shift 2
+;;
+--add_corpora=*)
+add_corpora=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -269,18 +304,23 @@ shift
 esac
 done
 
+echo "imprint is $imprint" #debug
+echo "editedby is $editedby" #debug
+human_author="$editedby"
 # Suppose some options are required. Check that we got them.
 
 if [ ! "$passuuid" ] ; then
 	echo "creating uuid"
 	uuid=$("$PYTHON_BIN"  -c 'import uuid; print uuid.uuid1()')
 	echo "uuid is" $uuid | tee --append $xform_log
-	mkdir -m 777 $TMPDIR$uuid
+	mkdir -p -m 777 $TMPDIR$uuid
 else
 	uuid=$passuuid
 	echo "received uuid " $uuid
-	mkdir -m 777 $TMPDIR$uuid
+	mkdir -p -m 777 $TMPDIR$uuid
 fi
+
+
 
 if [ -z "$covercolor" ]; then
 	covercolor="RosyBrown"
@@ -303,19 +343,25 @@ else
 	echo "$wikilang"
 fi
 
+if [ -z "$imprint" ]; then
+	imprint="default"
+	. $confdir"jobprofiles/imprints/"$imprint"/"$imprint".imprint"
+else
+	. $confdir"jobprofiles/imprints/"$imprint"/"$imprint".imprint"
+fi
+
+if [ -z "$jobprofilename" ]; then
+	jobprofilename="default"
+	. "$confdir"jobprofiles/"$jobprofilename".jobprofile
+else
+	. "$confdir"jobprofiles/"$jobprofilename".jobprofile
+fi
 
 TEXTDOMAIN=SFB
 echo $"hello, world, I am speaking" $LANG
 
-safe_product_name=$(echo "$booktit
-le" | sed -e 's/[^A-Za-z0-9._-]/_/g')
+safe_product_name=$(echo "$booktitle"| sed -e 's/[^A-Za-z0-9._-]/_/g')
 echo "safe product name is" $safe_product_name
-echo "jobprofile is" $jobprofile
-echo "jobprofilename is" $jobprofilename
-
-. "$confdir"jobprofiles/"$jobprofile"
-cat "$confdir"jobprofiles/"$jobprofile"
-echo "$authorbio"
 
 #sku=`tail -1 < "$LOCAL_DATA""SKUs/sku_list"`
 echo "sku" $sku
@@ -332,7 +378,7 @@ else
 	echo "$seed" > "$seedfile"
 fi
 
-. $confdir"jobprofiles/imprints/pagekicker/pagekicker.imprint"
+
 . includes/api-manager.sh
 
 echo "test $covercolor" "$coverfont"
@@ -340,15 +386,17 @@ echo "test $covercolor" "$coverfont"
 
 # create directories I will need
 
-mkdir -m 777 $TMPDIR$uuid/wiki
-mkdir -m 777 $TMPDIR$uuid/user
-mkdir -m 777 $TMPDIR$uuid/flickr
-mkdir -m 777 $TMPDIR$uuid/fetch
-mkdir -m 777 $TMPDIR$uuid/seeds
-mkdir -m 777 $TMPDIR$uuid/images
-mkdir -m 777 $TMPDIR$uuid/mail
-mkdir -m 755 $TMPDIR$uuid/cover
-mkdir -m 755 $TMPDIR$uuid/twitter
+mkdir -p -m 755 $TMPDIR$uuid/actual_builds
+mkdir -p -m 755 $TMPDIR$uuid/cover
+mkdir -p -m 755 $TMPDIR$uuid/twitter
+mkdir -p -m 777 $TMPDIR$uuid/fetch
+mkdir -p -m 777 $TMPDIR$uuid/flickr
+mkdir -p -m 777 $TMPDIR$uuid/images
+mkdir -p -m 777 $TMPDIR$uuid/mail
+mkdir -p -m 777 $TMPDIR$uuid/seeds
+mkdir -p -m 777 $TMPDIR$uuid/user
+mkdir -p -m 777 $TMPDIR$uuid/wiki
+mkdir -p -m 755 $LOCAL_DATA"jobprofile_builds/""$jobprofilename"
 
 #move assets into position
 
@@ -363,12 +411,19 @@ else
 fi
 
 echo "test seedfile is " $seedfile
+
 cp $scriptpath"assets/pk35pc.jpg" $TMPDIR$uuid/pk35pc.jpg
-cp $seedfile $TMPDIR$uuid/seeds/seedphrases
-echo "test copy failed"
-cp $confdir"jobprofiles"/imprints/$imprintdir/$imprintlogo  $TMPDIR$uuid
-cp $confdir"jobprofiles"/signatures/$sigfile $TMPDIR$uuid
-cp $confdir"jobprofiles"/imprints/$imprintdir/$imprintlogo  $TMPDIR$uuid/cover
+
+if cmp -s "$seedfile" "$TMPDIR$uuid/seeds/seedphrases" ; then
+	echo "seedfiles are identical, no action necessary"
+else
+	echo "Rotating new seedfile into tmpdir"
+	cp "$seedfile" $TMPDIR$uuid"/seeds/seedphrases"
+fi 
+
+cp $confdir"jobprofiles"/imprints/"$imprint"/"$imprintlogo"  "$TMPDIR$uuid"
+cp $confdir"jobprofiles"/signatures/"$sigfile" "$TMPDIR$uuid"
+cp $confdir"jobprofiles"/imprints/"$imprint"/"$imprintlogo" "$TMPDIR$uuid"/cover
 
 
 echo "uuid seed file is supposed to be" "$TMPDIR$uuid/seeds/seedphrases"
@@ -376,7 +431,6 @@ echo "uuid seed file is supposed to be" "$TMPDIR$uuid/seeds/seedphrases"
 ls -la "$TMPDIR$uuid/seeds/"
 
 cat "$TMPDIR$uuid/seeds/seedphrases" | uniq | sort  > "$TMPDIR$uuid/seeds/sorted.seedfile"
-
 
 echo "seeds are"
 cat "$TMPDIR$uuid/seeds/sorted.seedfile"
@@ -409,7 +463,7 @@ fi
 
 if [ "$flickr" = "on" ] ; then
 
-	mkdir -m 755 $TMPDIR$uuid/flickr
+	mkdir -p -m 755 $TMPDIR$uuid/flickr
 
 	
 	echo "about to run flickr fetchers"
@@ -433,6 +487,7 @@ else
 fi
 # clean up fetched data
 sed -e s/\=\=\=\=\=/JQJQJQJQJQ/g -e s/\=\=\=\=/JQJQJQJQ/g -e s/\=\=\=/JQJQJQ/g -e s/\=\=/JQJQ/g -e s/Edit\ /\ /g -e s/JQJQJQJQJQ/\#\#\#\#\#/g -e s/JQJQJQJQ/\#\#\#\#/g -e s/JQJQJQ/\#\#\#/g -e s/JQJQ/\#\#/g $TMPDIR$uuid/wiki/wikiraw.md | sed G > $TMPDIR$uuid/wiki/wikiall.md
+echo "editedby is $editedby" #debug
 
 # build cover
 
@@ -448,12 +503,26 @@ fi
 
 #rotate stopfile
 
-cp "$stopfile" "$scriptpath""lib/IBMcloud/examples/pk-stopwords.txt"
+
+if cmp -s "$scriptpath/lib/IBMcloud/examples/pk-stopwords.txt" $scriptpath"/lib/IBMcloud/examples/restore-pk-stopwords.txt" ; then
+	echo "stopfiles are identical, no action"
+else
+	echo "Rotating stopfile into place"
+	cp "$stopfile" "$scriptpath""lib/IBMcloud/examples/pk-stopwords.txt"
+fi 
+
 echo "running stopfile $stopfile"
-#more "lib/IBMcloud/examples/pk-stopwords.txt"
 
 	"$JAVA_BIN" -jar $scriptpath"lib/IBMcloud/ibm-word-cloud.jar" -c $scriptpath"lib/IBMcloud/examples/configuration.txt" -w "1800" -h "1800" < $TMPDIR$uuid/wiki/wikiraw.md > $TMPDIR$uuid/cover/wordcloudcover.png
 cat "$TMPDIR$uuid/seeds/seedphrases" | uniq | sort  > "$TMPDIR$uuid/seeds/sorted.seedfile"
+
+
+if cmp -s "$scriptpath/lib/IBMcloud/examples/pk-stopwords.txt" "$scriptpath/lib/IBMcloud/examples/restore-pk-stopwords.txt" ; then
+	echo "stopfiles are identical, no action"
+else
+	echo "Rotating old stopfile back in place"
+	cp $scriptpath"/lib/IBMcloud/examples/restore-pk-stopwords.txt"  "$scriptpath/lib/IBMcloud/examples/pk-stopwords.txt"
+fi 
 
 # set font & color
 
@@ -500,7 +569,7 @@ convert -background "$covercolor" -fill "$coverfontcolor" -gravity center -size 
 
 echo "yourname is" $yourname
 if [ "$yourname" = "yes" ] ; then
-	editedby="$customername"
+	editedby="$human_author"
 else
 	echo "robot name on cover"
 fi
@@ -512,14 +581,14 @@ convert  -background "$covercolor"  -fill "$coverfontcolor" -gravity south -size
 
 # resize imprint logo
 
-convert $TMPDIR$uuid/cover/pklogo.png -resize x200 $TMPDIR$uuid/cover/pklogo.png
+convert $TMPDIR$uuid/cover/"$imprintlogo" -resize x200 $TMPDIR$uuid/cover/"$imprintlogo"
 
 
 # lay the labels on top of the target canvas
 
 composite -geometry +0+0 $TMPDIR$uuid/cover/toplabel.png $TMPDIR$uuid/cover/canvas.png $TMPDIR$uuid/cover/step1.png
 composite  -geometry +0+1800 $TMPDIR$uuid/cover/bottomlabel.png $TMPDIR$uuid/cover/step1.png $TMPDIR$uuid/cover/step2.png
-composite  -gravity south -geometry +0+0 $TMPDIR$uuid/cover/$imprintlogo $TMPDIR$uuid/cover/step2.png $TMPDIR$uuid/cover/cover.png
+composite  -gravity south -geometry +0+0 $TMPDIR$uuid/cover/"$imprintlogo" $TMPDIR$uuid/cover/step2.png $TMPDIR$uuid/cover/cover.png
 convert $TMPDIR$uuid/cover/cover.png -border 36 -bordercolor white $TMPDIR$uuid/cover/bordercover.png
 cp $TMPDIR$uuid/cover/bordercover.png $TMPDIR$uuid/cover/$sku"ebookcover.jpg"
 cp $TMPDIR$uuid/cover/bordercover.png $TMPDIR$uuid/ebookcover.jpg
@@ -527,45 +596,51 @@ cp $TMPDIR$uuid/cover/bordercover.png $TMPDIR$uuid/ebookcover.jpg
 if [ "$shortform" = "no" ]; then
 
 	# building front matter
-	echo "about to build title page"
-
-	echo "# "$booktitle  > $TMPDIR$uuid/titlepage.md
-	echo ""$byline >> $TMPDIR$uuid/titlepage.md
-	echo "by PageKicker Robot" $lastname >> $TMPDIR$uuid/titlepage.md
+	# removed title page b/c Pandoc already builds it
 	echo "  " >> $TMPDIR$uuid/titlepage.md
 	echo "  " >> $TMPDIR$uuid/titlepage.md
-	echo "  " >> $TMPDIR$uuid/titlepage.md
-	echo '![PK logo]'"(pk35pc.jpg)" >> $TMPDIR$uuid/titlepage.md
-	echo "  " >> $TMPDIR$uuid/titlepage.md
-	echo "  " >> $TMPDIR$uuid/titlepage.md
-	echo "# About PageKicker Robot $lastname" >> $TMPDIR$uuid/titlepage.md
+	echo "# About $editedby" >> $TMPDIR$uuid/titlepage.md
 	cat "$authorbio" >> $TMPDIR$uuid/titlepage.md
 	echo "  " >> $TMPDIR$uuid/titlepage.md
 	echo "  " >> $TMPDIR$uuid/titlepage.md
-	cp $scriptpath"assets/acknowledgements.md" $TMPDIR$uuid/acknowledgements.md
+	
 	cp $scriptpath"assets/rebuild.md" $TMPDIR$uuid/rebuild.md
 	cp $confdir"jobprofiles/signatures/"$sigfile $TMPDIR$uuid/$sigfile
-	echo "  " >> $TMPDIR$uuid/acknowledgements.md
-	echo "  " >> $TMPDIR$uuid/acknowledgements.md
-	echo "This book was created with revision "$SFB_VERSION "of the PageKicker software running on the "$environment "server." >> $TMPDIR$uuid/acknowledgements.md
-	echo "  " >> $TMPDIR$uuid/acknowledgements.md
-	echo "  " >> $TMPDIR$uuid/acknowledgements.md
-	echo '<i>'$lastname'</i>  ' >> $TMPDIR$uuid/acknowledgements.md
-	echo '<i>'"Ann Arbor, Michigan, USA"'</i>' >> $TMPDIR$uuid/acknowledgements.md
-	echo "  " >> $TMPDIR$uuid/acknowledgements.md
-	echo "  " >> $TMPDIR$uuid/acknowledgements.md
-	echo '![Author photo]'"($sigfile)" >> $TMPDIR$uuid/acknowledgements.md
+	echo "# Acknowledgements from the PageKicker Robot Author" >> $TMPDIR$uuid/robo_ack.md
+	echo "I would like to thank "$editedby" for the opportunity to participate in writing this book." >> $TMPDIR$uuid/robo_ack.md
+	echo "  " >> $TMPDIR$uuid/robo_ack.md
+	echo "  " >> $TMPDIR$uuid/robo_ack.md
+	cat $scriptpath/assets/robo_ack.md >> $TMPDIR$uuid/robo_ack.md
+	echo "This book was created with revision "$SFB_VERSION "of the PageKicker software running on the "$environment "server." >> $TMPDIR$uuid/robo_ack.md
+	echo "  " >> $TMPDIR$uuid/robo_ack.md
+	echo "  " >> $TMPDIR$uuid/robo_ack.md
+	echo '<i>'"Ann Arbor, Michigan, USA"'</i>' >> $TMPDIR$uuid/robo_ack.md
+	echo "  " >> $TMPDIR$uuid/robo_ack.md
+	echo "  " >> $TMPDIR$uuid/robo_ack.md
+	echo '![Robot author photo]'"($sigfile)" >> $TMPDIR$uuid/robo_ack.md
+
 
 	# assemble front matter
 
-	cat $TMPDIR$uuid/titlepage.md $TMPDIR$uuid/acknowledgements.md $TMPDIR$uuid/rebuild.md > $TMPDIR$uuid/tmpfrontmatter.md
+	cat $TMPDIR$uuid/titlepage.md $TMPDIR$uuid/robo_ack.md $TMPDIR$uuid/rebuild.md > $TMPDIR$uuid/tmpfrontmatter.md
+
+	if [ -z ${tldr+x} ]; then 
+		echo "no tl;dr"
+	else 
+		echo "  " >> $TMPDIR$uuid/tmpfrontmatter.md
+		echo "  " >> $TMPDIR$uuid/tmpfrontmatter.md
+		echo "# TL;DR:" >> $TMPDIR$uuid/tmpfrontmatter.md
+		echo "$tldr" >> $TMPDIR$uuid/tmpfrontmatter.md
+	fi
+
+
 
 	echo "assembled front matter"
 
 else
 	echo "short form selected" 
 	echo '![cover image]'"(ebookcover.jpg)" > $TMPDIR$uuid/tmpfrontmatter.md
-	echo '![PK logo]'"(pk35pc.jpg)" >> $TMPDIR$uuid/tmpfrontmatter.md
+	echo '!['"$imprintname"']'"(""$imprintlogo"")" >> $TMPDIR$uuid/tmpfrontmatter.md
 
 fi
 
@@ -606,8 +681,12 @@ if [ "$shortform" = "no" ] ;then
 
 	echo "# Sources" >> $TMPDIR$uuid/backmatter.md
  	cat includes/wikilicense.md >> $TMPDIR/$uuid/backmatter.md
-	echo "# Also by PageKicker Robot" $lastname >>  $TMPDIR$uuid/backmatter.md
+	echo "# Also by $editedby" >>  $TMPDIR$uuid/backmatter.md
 	cat $confdir"jobprofiles/bibliography/"$lastname/$lastname"_titles.txt" >> $TMPDIR$uuid/backmatter.md
+	echo "" >> "$TMPDIR$uuid"/backmatter.md
+	echo "" >> "$TMPDIR$uuid"/backmatter.md
+	cat $confdir"jobprofiles/imprints/$imprint/""$imprint_mission_statement" >> "$TMPDIR$uuid"/backmatter.md
+	echo '!['"$imprintname"']'"(""$imprintlogo"")" >> $TMPDIR$uuid/backmatter.md
 	echo "assembled back matter"
 
 else
@@ -626,6 +705,7 @@ my_year=`date +'%Y'`
 echo "" > $TMPDIR$uuid/yaml-metadata.md
 echo "---" >> $TMPDIR$uuid/yaml-metadata.md
 echo "title: $booktitle" >> $TMPDIR$uuid/yaml-metadata.md
+echo "subtitle: $subtitle" >> $TMPDIR$uuid/yaml-metadata.md
 echo "creator: " >> $TMPDIR$uuid/yaml-metadata.md
 echo "- role: author "  >> $TMPDIR$uuid/yaml-metadata.md
 echo "  text: "" $editedby"  >> $TMPDIR$uuid/yaml-metadata.md
@@ -641,32 +721,44 @@ cat "$TMPDIR$uuid/yaml-metadata.md" >> $TMPDIR$uuid/complete.md
 bibliography_title="$booktitle"
 safe_product_name=$(echo "$booktitle" | sed -e 's/[^A-Za-z0-9._-]/_/g')
 cd $TMPDIR$uuid
-"$PANDOC_BIN" -o "$TMPDIR$uuid/"$safe_product_name".epub" --epub-cover-image=$TMPDIR$uuid/cover/$sku"ebookcover.jpg" $TMPDIR$uuid/complete.md
-"$PANDOC_BIN" -o "$TMPDIR$uuid/"$safe_product_name".docx"  $TMPDIR$uuid/complete.md
+"$PANDOC_BIN" -o "$TMPDIR$uuid/$sku."$safe_product_name".epub" --epub-cover-image=$TMPDIR$uuid/cover/$sku"ebookcover.jpg" $TMPDIR$uuid/complete.md
+"$PANDOC_BIN" -o "$TMPDIR$uuid/$sku."$safe_product_name".docx"  $TMPDIR$uuid/complete.md
 cd $scriptpath
-lib/KindleGen/kindlegen "$TMPDIR$uuid/"$safe_product_name".epub" -o "$safe_product_name"".mobi"
+lib/KindleGen/kindlegen "$TMPDIR$uuid/$sku."$safe_product_name".epub" -o "$sku.$safe_product_name"".mobi"
 ls -lart $TMPDIR$uuid
 echo "built epub and mobi"
 case $ebook_format in
 
 epub)
+if [ ! "$buildtarget" ] ; then
+	buildtarget="$TMPDIR$uuid/buildtarget.epub"
+else
+	echo "received buildtarget as $buildtarget"
+fi
 # deliver epub to build target
-cp $TMPDIR$uuid/$safe_product_name".epub" "$buildtarget"
+cp $TMPDIR$uuid/$sku.$safe_product_name".epub" "$buildtarget"
+
 chmod 755 "$buildtarget"
 echo "checking that buildtarget exists"
 ls -la $buildtarget
 ;;
 
 mobi)
-
-cp $TMPDIR$uuid/$safe_product_name".mobi" "$buildtarget"
-chmod 755 "$buildtarget"
+if [ ! "$buildtarget" ] ; then
+	buildtarget="$TMPDIR$uuid/buildtarget.mobi"
+else
+	echo "received buildtarget as $buildtarget"
+fi
+cp $TMPDIR$uuid/$sku.$safe_product_name".mobi" "$buildtarget"
 echo "checking that buildtarget exists"
 ls -la $buildtarget
 ;;
 docx)
-
-cp $TMPDIR$uuid/$safe_product_name".docx" "$buildtarget"
+if [ ! "$buildtarget" ] ; then
+	buildtarget="$TMPDIR$uuid/buildtarget.docx"
+else
+	echo "received buildtarget as $buildtarget"
+fi
 chmod 755 "$buildtarget"
 echo "checking that buildtarget exists"
 ls -la $buildtarget
@@ -675,16 +767,66 @@ ls -la $buildtarget
 
 esac
 
-# housecleaning
-dontcleanupseeds="yes"
-cp "$buildtarget" "/tmp/pagekicker/actual_builds/"
+
+# housekeeping
+
+unique_seed_string=$(sed -e 's/[^A-Za-z0-9._-]//g' < $TMPDIR$uuid/seeds/sorted.seedfile | tr --delete '\n')
+
+
+#checking if seedstring already in imprint corpus
+
+if [ "$add_corpora" = "yes" ] ; then
+
+	if grep -q "$unique_seed_string" "$SFB_HOME"shared-corpus/imprints/"$imprint"/unique_seed_strings.sorted ; then
+		echo "seed string $unique_seed_string is already in corpus for imprint $imprint"
+	else
+		cp -u "$TMPDIR$uuid"/"$sku.$safe_product_name".epub "$SFB_HOME"shared-corpus/imprints/"$imprint"/"$sku.$safe_product_name.epub" 
+		echo "added book associated with $unique_seed_string to corpus for imprint $imprint"
+	fi
+else
+	:
+fi
+
+# checking if seed string is already in robot corpus
+if [ "$add_corpora" = "yes" ] ; then
+
+	if grep -q "$unique_seed_string" "$SFB_HOME"shared-corpus/robots/$jobprofilename/unique_seed_strings.sorted ; then
+		echo "seed string $unique_seed_string is already in corpus for robot $jobprofilename "
+	else
+		cp -u "$TMPDIR$uuid"/"$sku.$safe_product_name".epub "$SFB_HOME"shared-corpus/robots/"$jobprofilename"/"$sku.$safe_product_name.epub" 
+		echo "added book associated with $unique_seed_string to corpus for robot $jobprofilename"
+	fi
+else
+	:
+fi
+
+if [ "$add_corpora" = "yes" ] ; then
+	echo "$unique_seed_string" >> "$SFB_HOME"shared-corpus/imprints/"$imprint"/unique_seed_strings
+	echo "$unique_seed_string" >> "$SFB_HOME"shared-corpus/robots/"$jobprofilename"/unique_seed_strings
+	sort -u $SFB_HOME"shared-corpus/robots/"$jobprofilename"/unique_seed_strings" > $SFB_HOME"shared-corpus/robots/"$jobprofilename"/unique_seed_strings.sorted"
+	sort -u $SFB_HOME"shared-corpus/imprints/"$imprint"/unique_seed_strings" > $SFB_HOME"shared-corpus/imprints/"$imprint"/unique_seed_strings.sorted"
+
+else
+	echo "not requested to add builds and unique_seed_strings to corpus"
+fi
+
+
+if [ -z "$batch_uuid" ] ; then
+	echo "not part of a batch"
+else
+	cp $TMPDIR$uuid/$sku.$safe_product_name".epub" $TMPDIR$batch_uuid/$sku.$safe_product_name".epub"
+cp $TMPDIR$uuid/$sku.$safe_product_name".mobi" $TMPDIR$batch_uuid/$sku.$safe_product_name".mobi" 
+cp $TMPDIR$uuid/$sku.$safe_product_name".docx" $TMPDIR$batch_uuid/$sku.$safe_product_name".docx"
+	ls -l "$TMPDIR$batch_uuid"/* # 
+fi
+
 
 if [ "$dontcleanupseeds" = "yes" ]; then
 	echo "leaving seed file in place $seedfile"
 else
 	echo "removing seedfile"
 	rm "$seedfile"
-	ls -la $seedfile
+	#ls -la $seedfile (to test that it's gone)
 fi
 
 

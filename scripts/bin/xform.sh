@@ -1,60 +1,60 @@
-#!/bin/bash
+ #!/bin/bash
+
+# file path for file attachments must be hard coded 
+# to match the magento file structure & specifically webform field #
 
 # requires inotify to alert that xml file has been created by the Magento webforms plugin and deposited in the correct directory
 # which is set by incrontab command for the bitnami user
+
+if shopt -q  login_shell ; then
+	
+	if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
+		echo "config file not found, creating /home/<user>/.pagekicker, put config file there"
+		mkdir -p -m 755 "$HOME"/.pagekicker
+		echo "exiting"
+		exit 1
+	else
+		. "$HOME"/.pagekicker/config.txt
+		echo "read config file from $HOME""/.pagekicker/config.txt"
+	fi
+else
+	. /home/$(whoami)/.pagekicker/config.txt #hard-coding /home is a hack 
+	echo "read config file from /home/$(whoami)/.pagekicker/config.txt"
+fi
 
 starttime=$(( `date +%s` ))
 datenow=$(date -R)
 
 # parse the command-line very stupidly
 
-xmldirectoryname=$1 # this is different when run from the command line v. from incrontab!
-xmlbasefile=$2 # this is different when run from the command line!
+xmldirectoryname=$1 
+xmlbasefile=$2 
 echo "parameter 1 is" $1
 echo  "parameter 2 is" $2
 xmlfilename=$xmldirectoryname/$xmlbasefile
 
-environment=$(xmlstarlet sel -t -v "/item/environment" "$xmlfilename")
-
-if [ "$environment" = "Production" ] ; then
-
-        . /opt/bitnami/apache2/htdocs/pk-production/conf/config.txt
-        echo "loaded prod config file at " $datenow | tee --append ~/how_I_started
-
-elif [ "$environment" = "Staging" ] ; then
-        . /opt/bitnami/apache2/htdocs/pk-staging/development/conf/config.txt
-        echo "loaded Staging config file at " $datenow | tee --append ~/how_I_started
-
-else
-
-        . /opt/bitnami/apache2/htdocs/pk-new/development/conf/config.txt
-        echo "loaded dev config file at " $datenow | tee --append ~/how_I_started
-
-fi
+echo "loaded" $environment "config file at " $datenow  
 
 uuid=$(python  -c 'import uuid; print uuid.uuid1()')
-mkdir -m 755 $logdir$uuid 
+mkdir -p -m 755 $logdir$uuid 
 xform_log=$logdir$uuid/"xform_log"
 echo "XXXXXXXXXX" | tee --append $xform_log
 echo "xmlfilename provided by webforms is" $xmlfilename | tee --append $xform_log
 echo "xform_log is" $xform_log | tee --append $xform_log
-echo "started xform at " $starttime " details in" $xform_log "at" $xform_log | tee --append $xform_log
+echo "started xform at " $starttime " details in $xform_log" | tee --append $xform_log
+
+echo "WEBFORMSXML_HOME is $WEBFORMSXML_HOME"
 
 
 sku=`tail -1 < "$LOCAL_DATA""SKUs/sku_list"`
 echo "sku" $sku | tee --append $xform_log
 
-# get bzr revision
-bazaar_revision=`bzr revno`
-echo "bazaar revision number in" "$environment" "is" $bazaar_revision | tee --append $xform_log
+echo "$0 version in $environment" "is" $SFB_VERSION | tee --append $xform_log
 
 cd $scriptpath
 echo "scriptpath is" $scriptpath 
 
-export PATH=$PATH:/opt/bitnami/java/bin
-
-echo "PATH is" $PATH | tee --append $xform_log
-
+# echo "PATH is" $PATH | tee --append $xform_log
 
 # use xmlstarlet to extract variable values that are common to all Magento forms
 submissionid=$(xmlstarlet sel -t -v "/item/id" "$xmlfilename")
@@ -80,9 +80,9 @@ case $webform_id in
 
 # echo "found Magento form submission id 4, executing ccc"
 
-bin/ccc.sh --xmlfilename "$xmlbasefile" --passuuid "$uuid" --format "xml" --builder "no"
+$scriptpath"bin/create-catalog-entry.sh" --xmlfilename "$xmlbasefile" --passuuid "$uuid" --format "xml" --builder "yes"
 
-echo "launched ccc from" $environment 
+echo "launched $0 from" $environment 
 ;;
 
 21) 
@@ -131,7 +131,7 @@ echo "$robotbio" > $confdir"jobprofiles/authorbios/"$robotname".md"
 echo 'authorbio="$SFB_HOME''/conf/jobprofiles/authorbios/'"$robotname".md'"' >> $confdir"jobprofiles/$robotname".jobprofile
 cat $confdir"jobprofiles/defaults" >> $confdir"jobprofiles/$robotname".jobprofile
 
-mkdir -m 755 $confdir"jobprofiles/bibliography/"$lastname
+mkdir -p -m 755 $confdir"jobprofiles/bibliography/"$lastname
 
 #$LOCAL_MYSQL_PATH --user $LOCAL_MYSQL_USER --password=$LOCAL_MYSQL_PASSWORD sfb-jobs << EOF
 #insert into robots (robot_name, robot_bio, robot_summarizer_on, robot_positive_summary_seed, robot_positive_summary_seed_weight, robot_summary_length, robot_negative_seeds, robot_negative_seed_weight, robot_coverfont, robot_covercolor, robot_ngram_threshold,  robot_language, robot_rows, robot_experience_points_initial) values('$robotname', '$robotbio', '$summarizer_on', '$positive_seeds', '$positive_seed_weight', '$robot_summary_length', '$negative_seeds', '$negative_seed_weight','$robotcoverfont', '$robotcovercolor',  '$summarizer_ngram_threshold', '$robotlanguage', '$robotrows', '100');
@@ -153,8 +153,8 @@ sendemail -t "$customer_email" \
 
 23)
 
-echo "running dat.sh with xml file from webform"
-bin/dat.sh --xmldirectoryname "$xmldirectoryname" --xmlbasefile "$xmlbasefile"  --passuuid "$uuid" --environment "$environment"
+# echo "running dat.sh with xml file from webform"
+$scriptpath"bin/dat.sh" --xmldirectoryname "$xmldirectoryname" --xmlbasefile "$xmlbasefile"  --passuuid "$uuid" --environment "$environment"
 ;;
 
 
@@ -180,15 +180,15 @@ bin/dat.sh --xmldirectoryname "$xmldirectoryname" --xmlbasefile "$xmlbasefile"  
         editedby=$(xmlstarlet sel -t -v "/item/editedby" "$xmlfilename")
 	pdfx1a=$(xmlstarlet sel -t -v "/item/pdfx1a" "$xmlfilename")
 	echo "pdffilename is" $pdffilename
-	pdfbase=$WEBFORMSHOME$submissionid	
-	echo  "pdf base is" $WEBFORMSHOME$submissionid
+	pdfbase=$WEBFORMSXML_HOME$submissionid	
+	echo  "pdf base is" $WEBFORMSXML_HOME$submissionid
 	pdfsecuredir=`ls $pdfbase/*`
 	pdffullpath=$pdfbase"/356/"$pdfsecuredir"/"
 	echo "pdf full path is" $pdffullpath
 
 	pdfpath=$pdffullpath$pdffilename
 
-	mkdir images/$uuid images/$uuid/print
+	mkdir -p images/$uuid images/$uuid/print
 	backcovertext=$(xmlstarlet sel -t -v "/item/backcovertext" "$xmlfilename")
 	echo $backcovertext > images/$uuid/print/backcover.txt
 
@@ -220,14 +220,60 @@ bin/dat.sh --xmldirectoryname "$xmldirectoryname" --xmlbasefile "$xmlbasefile"  
 27) 
 
         echo "Feed the Robot" | tee --append $xform_log
-        mkdir -m 755 tmp/$uuid
+        mkdir -p -m 755 $TMPDIR$uuid
         filename=$(xmlstarlet sel -t -v "/item/food_for_thought" "$xmlfilename")
         key_380=$(xmlstarlet sel -t -v "/item/key_380" "$xmlfilename")
         echo "filename is" $filename | tee --append $xform_log
-        cp $WEBFORMSHOME$submissionid"/380/$key_380/$filename" tmp/$uuid/$filename
+        cp $WEBFORMSXML_HOME$submissionid"/380/$key_380/$filename" $TMPDIR$uuid/$filename
         curl 'http://localhost:8983/solr/update/extract?literal.id=exid'$uuid"&commit=true" -F "myfile=@tmp/"$uuid"/"$filename
         echo "committed file "$filename "to Solr" | tee --append $xform_log
+;;
+34) 
+	echo "IIIIIII"
+	echo "Sets up imprint file structure in conf/jobprofiles" 
+	# NB overwrites any previous imprint with same $imprint value
 
+	imprintlogo_webform_field="513" #hard code to magento field number
+
+	# read variables from xml file
+	
+	imprint=$(xmlstarlet sel -t -v "/item/imprint" "$xmlfilename") #code
+	imprintname=$(xmlstarlet sel -t -v "/item/imprintname" "$xmlfilename")
+	imprintcopyrightname=$(xmlstarlet sel -t -v "/item/imprintcopyrightname" "$xmlfilename")
+	imprintmissionstatement=$(xmlstarlet sel -t -v "/item/imprintmissionstatement" "$xmlfilename")
+	imprintaudiencedescription=$(xmlstarlet sel -t -v "/item/imprintaudiencedescription" "$xmlfilename")
+	imprintagerange=$(xmlstarlet sel -t -v "/item/imprintagerange" "$xmlfilename")
+	imprintlanguage=$(xmlstarlet sel -t -v "/item/imprintlanguage" "$xmlfilename")
+	imprintlogo=$(xmlstarlet sel -t -v "/item/imprintlogo" "$xmlfilename")
+
+	mkdir -p -m 755 "$confpath"jobprofiles/imprints/"$imprint"
+
+	# get the logo and store it in imprints directory
+
+	echo "imprint logo file name is $imprintlogo"
+	#echo "$WEBFORMSIMAGESDIR"
+	logobase="$WEBFORMSIMAGESDIR""$submissionid"	
+	echo  "logo base is $logobase"
+	logosecuredir=`ls $logobase/*`
+	logofullpath="$WEBFORMSIMAGESDIR""$submissionid"/$imprintlogo_webform_field/$logosecuredir/"/""$imprintlogo" 
+	echo "logo full path is" $logofullpath
+	cp "$logofullpath" "$confpath"jobprofiles/imprints/"$imprint"/"$imprintlogo"
+
+	# echo textarea variables to markdown files 
+
+	echo "$imprintmissionstatement" > "$confdir"jobprofiles/imprints/"$imprint"/"$imprint"_mission.md
+
+	# assemble imprint file
+
+	echo "imprintname="'"'"$imprintname"'"' > "$confpath"jobprofiles/imprints/"$imprint"/"$imprint".imprint
+	echo "imprintlogo="'"'"$imprintlogo"'"' >> "$confpath"jobprofiles/imprints/"$imprint"/"$imprint".imprint
+	echo "imprintcopyrightname="'"'"$imprintcopyrightname"'"' >> "$confpath"jobprofiles/imprints/"$imprint"/"$imprint".imprint
+	echo "imprint_mission_statement="'"'"$imprint.statement"'"' >> "$confpath"jobprofiles/imprints/"$imprint"/"$imprint".imprint
+
+	echo "here is latest imprint file"
+	echo "IIIIIII"
+	cat "$confpath"jobprofiles"/imprints/"$imprint/$imprint.imprint
+	echo "IIIIIII"
 ;;
 *)
 	echo "invalid webform id was " $webform_id | tee --append $xform_log

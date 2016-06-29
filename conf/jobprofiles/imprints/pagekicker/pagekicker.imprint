@@ -1,5 +1,6 @@
-echo "PageKicker imprint"
+imprint="pagekicker" # lower case no special characters
 imprintlogo="pklogo.png"
 imprintdir="pagekicker"
 imprintname="PageKicker"
 imprintcopyrightpage="pkcopyrightpage.md"
+imprint_mission_statement="pagekicker_mission.md"

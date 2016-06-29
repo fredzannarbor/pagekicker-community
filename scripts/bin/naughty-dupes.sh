@@ -79,32 +79,20 @@ if [ ! "$passuuid" ] ; then
 	echo "creating uuid"
 	uuid=$(python  -c 'import uuid; print uuid.uuid1()')
 	echo "uuid is" $uuid | tee --append $xform_log
-	mkdir -m 755 tmp/$uuid
-	mkdir -m 755 tmp/$uuid/montageur
+	mkdir -p -m 755 tmp/$uuid
+	mkdir -p -m 755 tmp/$uuid/montageur
 else
 	uuid=$passuuid
 	echo "received uuid " $uuid
 fi
 
 
-if [ "$environment" = "Production" ] ; then
-
-	confpath="/opt/bitnami/apache2/htdocs/pk-production/production/"
-        . $confpath"conf/config.txt"
-        echo "running prod config" | tee --append $xform_log
-
-else
-	confpath="/opt/bitnami/apache2/htdocs/pk-new/development/"
-        . "$confpath"conf/config.txt
-        echo "running dev config"  | tee --append $xform_log
-
-fi
+. ../"conf/config.txt"
+echo "running in $environment" | tee --append $xform_log
 
 . $scriptpath"includes/set-variables"
 
-# get bzr revision
-bazaar_revision=`bzr revno` | tee --append $sfb_log
-echo "bazaar revision number in" "$environment" "is" $bazaar_revision | tee --append $sfb_log
+echo "software id in" "$environment" "is" $SFB_VERSION | tee --append $sfb_log
 
 cd $scriptpath
 echo "scriptpath is" $scriptpath

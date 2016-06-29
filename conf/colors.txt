@@ -241,9 +241,6 @@ SeaGreen1
 SeaGreen4
 SeaGreen2
 MediumForestGreen
-honeydew
-honeydew1
-honeydew2
 DarkSeaGreen1
 DarkSeaGreen2
 PaleGreen1
@@ -253,8 +250,6 @@ LightGreen
 PaleGreen2
 DarkSeaGreen3
 DarkSeaGreen
-PaleGreen3
-honeydew4
 green1
 lime
 LimeGreen

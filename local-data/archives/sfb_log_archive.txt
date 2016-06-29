@@ -1,0 +1,825 @@
+customeremail was wfzimmerman@gmail.com
+createtime is  1462295658
+job  72c41374-1152-11e6-8879-22000be3c9f4 ending logging at 05/03/16 17:14:18
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462295714
+job  93b3903c-1152-11e6-9116-22000be3c9f4 ending logging at 05/03/16 17:15:15
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462295773
+job  b5375af4-1152-11e6-b6e0-22000be3c9f4 ending logging at 05/03/16 17:16:14
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462295911
+no sample tweets
+no video search
+covercolor is SlateGray2
+coverfont is Calibri
+job  049b785a-1153-11e6-9862-22000be3c9f4 ending logging at 05/03/16 17:20:07
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462297430
+no sample tweets
+no video search
+covercolor is magenta3
+coverfont is Arial
+job  91f26d0a-1156-11e6-a594-22000be3c9f4 ending logging at 05/03/16 17:45:24
+customeremail was wfzimmerman@gmail.com
+createtime is  1462295658
+job  72c41374-1152-11e6-8879-22000be3c9f4 ending logging at 05/03/16 17:14:18
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462295714
+job  93b3903c-1152-11e6-9116-22000be3c9f4 ending logging at 05/03/16 17:15:15
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462295773
+job  b5375af4-1152-11e6-b6e0-22000be3c9f4 ending logging at 05/03/16 17:16:14
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462295911
+no sample tweets
+no video search
+covercolor is SlateGray2
+coverfont is Calibri
+job  049b785a-1153-11e6-9862-22000be3c9f4 ending logging at 05/03/16 17:20:07
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462297430
+no sample tweets
+no video search
+covercolor is magenta3
+coverfont is Arial
+job  91f26d0a-1156-11e6-a594-22000be3c9f4 ending logging at 05/03/16 17:45:24
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462297859
+no sample tweets
+no video search
+covercolor is tan
+coverfont is Adler
+job  8ef21e38-1157-11e6-b699-22000be3c9f4 ending logging at 05/03/16 17:52:35
+customeremail was wfzimmerman@gmail.com
+createtime is  1462295658
+job  72c41374-1152-11e6-8879-22000be3c9f4 ending logging at 05/03/16 17:14:18
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462295714
+job  93b3903c-1152-11e6-9116-22000be3c9f4 ending logging at 05/03/16 17:15:15
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462295773
+job  b5375af4-1152-11e6-b6e0-22000be3c9f4 ending logging at 05/03/16 17:16:14
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462295911
+no sample tweets
+no video search
+covercolor is SlateGray2
+coverfont is Calibri
+job  049b785a-1153-11e6-9862-22000be3c9f4 ending logging at 05/03/16 17:20:07
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462297430
+no sample tweets
+no video search
+covercolor is magenta3
+coverfont is Arial
+job  91f26d0a-1156-11e6-a594-22000be3c9f4 ending logging at 05/03/16 17:45:24
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462297859
+no sample tweets
+no video search
+covercolor is tan
+coverfont is Adler
+job  8ef21e38-1157-11e6-b699-22000be3c9f4 ending logging at 05/03/16 17:52:35
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462298222
+no sample tweets
+no video search
+covercolor is MintCream
+coverfont is Adler
+job  6a1a0174-1158-11e6-826a-22000be3c9f4 ending logging at 05/03/16 17:58:32
+customeremail was wfzimmerman@gmail.com
+createtime is  1462295658
+job  72c41374-1152-11e6-8879-22000be3c9f4 ending logging at 05/03/16 17:14:18
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462295714
+job  93b3903c-1152-11e6-9116-22000be3c9f4 ending logging at 05/03/16 17:15:15
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462295773
+job  b5375af4-1152-11e6-b6e0-22000be3c9f4 ending logging at 05/03/16 17:16:14
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462295911
+no sample tweets
+no video search
+covercolor is SlateGray2
+coverfont is Calibri
+job  049b785a-1153-11e6-9862-22000be3c9f4 ending logging at 05/03/16 17:20:07
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462297430
+no sample tweets
+no video search
+covercolor is magenta3
+coverfont is Arial
+job  91f26d0a-1156-11e6-a594-22000be3c9f4 ending logging at 05/03/16 17:45:24
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462297859
+no sample tweets
+no video search
+covercolor is tan
+coverfont is Adler
+job  8ef21e38-1157-11e6-b699-22000be3c9f4 ending logging at 05/03/16 17:52:35
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462298222
+no sample tweets
+no video search
+covercolor is MintCream
+coverfont is Adler
+job  6a1a0174-1158-11e6-826a-22000be3c9f4 ending logging at 05/03/16 17:58:32
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462299647
+no sample tweets
+no video search
+covercolor is OliveDrab
+coverfont is Adler
+job  b9279bc0-115b-11e6-87cd-22000be3c9f4 ending logging at 05/03/16 18:22:31
+customeremail was wfzimmerman@gmail.com
+createtime is  1462295658
+job  72c41374-1152-11e6-8879-22000be3c9f4 ending logging at 05/03/16 17:14:18
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462295714
+job  93b3903c-1152-11e6-9116-22000be3c9f4 ending logging at 05/03/16 17:15:15
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462295773
+job  b5375af4-1152-11e6-b6e0-22000be3c9f4 ending logging at 05/03/16 17:16:14
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462295911
+no sample tweets
+no video search
+covercolor is SlateGray2
+coverfont is Calibri
+job  049b785a-1153-11e6-9862-22000be3c9f4 ending logging at 05/03/16 17:20:07
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462297430
+no sample tweets
+no video search
+covercolor is magenta3
+coverfont is Arial
+job  91f26d0a-1156-11e6-a594-22000be3c9f4 ending logging at 05/03/16 17:45:24
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462297859
+no sample tweets
+no video search
+covercolor is tan
+coverfont is Adler
+job  8ef21e38-1157-11e6-b699-22000be3c9f4 ending logging at 05/03/16 17:52:35
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462298222
+no sample tweets
+no video search
+covercolor is MintCream
+coverfont is Adler
+job  6a1a0174-1158-11e6-826a-22000be3c9f4 ending logging at 05/03/16 17:58:32
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462299647
+no sample tweets
+no video search
+covercolor is OliveDrab
+coverfont is Adler
+job  b9279bc0-115b-11e6-87cd-22000be3c9f4 ending logging at 05/03/16 18:22:31
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462299875
+no sample tweets
+no video search
+covercolor is grey12
+coverfont is Calibri
+job  3e1bb4ce-115c-11e6-8fe0-22000be3c9f4 ending logging at 05/03/16 18:26:15
+customeremail was wfzimmerman@gmail.com
+createtime is  1462295658
+job  72c41374-1152-11e6-8879-22000be3c9f4 ending logging at 05/03/16 17:14:18
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462295714
+job  93b3903c-1152-11e6-9116-22000be3c9f4 ending logging at 05/03/16 17:15:15
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462295773
+job  b5375af4-1152-11e6-b6e0-22000be3c9f4 ending logging at 05/03/16 17:16:14
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462295911
+no sample tweets
+no video search
+covercolor is SlateGray2
+coverfont is Calibri
+job  049b785a-1153-11e6-9862-22000be3c9f4 ending logging at 05/03/16 17:20:07
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462297430
+no sample tweets
+no video search
+covercolor is magenta3
+coverfont is Arial
+job  91f26d0a-1156-11e6-a594-22000be3c9f4 ending logging at 05/03/16 17:45:24
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462297859
+no sample tweets
+no video search
+covercolor is tan
+coverfont is Adler
+job  8ef21e38-1157-11e6-b699-22000be3c9f4 ending logging at 05/03/16 17:52:35
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462298222
+no sample tweets
+no video search
+covercolor is MintCream
+coverfont is Adler
+job  6a1a0174-1158-11e6-826a-22000be3c9f4 ending logging at 05/03/16 17:58:32
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462299647
+no sample tweets
+no video search
+covercolor is OliveDrab
+coverfont is Adler
+job  b9279bc0-115b-11e6-87cd-22000be3c9f4 ending logging at 05/03/16 18:22:31
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462299875
+no sample tweets
+no video search
+covercolor is grey12
+coverfont is Calibri
+job  3e1bb4ce-115c-11e6-8fe0-22000be3c9f4 ending logging at 05/03/16 18:26:15
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462300157
+no sample tweets
+no video search
+covercolor is tan4
+coverfont is Calibri
+job  eac9195a-115c-11e6-94fa-22000be3c9f4 ending logging at 05/03/16 18:30:52
+customeremail was wfzimmerman@gmail.com
+createtime is  1462295658
+job  72c41374-1152-11e6-8879-22000be3c9f4 ending logging at 05/03/16 17:14:18
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462295714
+job  93b3903c-1152-11e6-9116-22000be3c9f4 ending logging at 05/03/16 17:15:15
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462295773
+job  b5375af4-1152-11e6-b6e0-22000be3c9f4 ending logging at 05/03/16 17:16:14
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462295911
+no sample tweets
+no video search
+covercolor is SlateGray2
+coverfont is Calibri
+job  049b785a-1153-11e6-9862-22000be3c9f4 ending logging at 05/03/16 17:20:07
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462297430
+no sample tweets
+no video search
+covercolor is magenta3
+coverfont is Arial
+job  91f26d0a-1156-11e6-a594-22000be3c9f4 ending logging at 05/03/16 17:45:24
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462297859
+no sample tweets
+no video search
+covercolor is tan
+coverfont is Adler
+job  8ef21e38-1157-11e6-b699-22000be3c9f4 ending logging at 05/03/16 17:52:35
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462298222
+no sample tweets
+no video search
+covercolor is MintCream
+coverfont is Adler
+job  6a1a0174-1158-11e6-826a-22000be3c9f4 ending logging at 05/03/16 17:58:32
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462299647
+no sample tweets
+no video search
+covercolor is OliveDrab
+coverfont is Adler
+job  b9279bc0-115b-11e6-87cd-22000be3c9f4 ending logging at 05/03/16 18:22:31
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462299875
+no sample tweets
+no video search
+covercolor is grey12
+coverfont is Calibri
+job  3e1bb4ce-115c-11e6-8fe0-22000be3c9f4 ending logging at 05/03/16 18:26:15
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462300157
+no sample tweets
+no video search
+covercolor is tan4
+coverfont is Calibri
+job  eac9195a-115c-11e6-94fa-22000be3c9f4 ending logging at 05/03/16 18:30:52
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462300460
+no sample tweets
+no video search
+covercolor is SpringGreen1
+coverfont is Arial
+job  9eca144a-115d-11e6-b681-22000be3c9f4 ending logging at 05/03/16 18:35:52
+customeremail was wfzimmerman@gmail.com
+createtime is  1461603518
+job  e8f3a624-0b06-11e6-9519-70188b823b61 ending logging at 04/25/16 12:58:38
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1461603805
+job  948ec89c-0b07-11e6-9519-70188b823b61 ending logging at 04/25/16 13:03:25
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1461604061
+job  2d06a6da-0b08-11e6-9519-70188b823b61 ending logging at 04/25/16 13:07:41
+ended logging xform activities
+createtime is  1461604210
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  54a75a36-0b08-11e6-9519-70188b823b61 ending logging at 04/25/16 13:13:09
+createtime is  1461604838
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  f70a6baa-0b09-11e6-9519-70188b823b61 ending logging at 04/25/16 13:22:20
+createtime is  1461605245
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  ec113f98-0b0a-11e6-9519-70188b823b61 ending logging at 04/25/16 13:29:21
+createtime is  1461605524
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  925bd70a-0b0b-11e6-9519-70188b823b61 ending logging at 04/25/16 13:33:39
+createtime is  1461615797
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  7bb602e2-0b23-11e6-9519-70188b823b61 ending logging at 04/25/16 16:26:41
+createtime is  1461617055
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  69b7d5c2-0b26-11e6-9519-70188b823b61 ending logging at 04/25/16 16:46:20
+createtime is  1461618272
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  3fabfc38-0b29-11e6-9519-70188b823b61 ending logging at 04/25/16 17:07:50
+createtime is  1461618588
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  fd7fc53c-0b29-11e6-9519-70188b823b61 ending logging at 04/25/16 17:11:39
+createtime is  1461618823
+job  890cd266-0b2a-11e6-9519-70188b823b61 ending logging at 04/25/16 17:13:44
+createtime is  1461618937
+job  cc911790-0b2a-11e6-9519-70188b823b61 ending logging at 04/25/16 17:15:39
+createtime is  1461619189
+no sample tweets
+no video search
+job  61dae61e-0b2b-11e6-9519-70188b823b61 ending logging at 04/25/16 17:20:15
+createtime is  1461619310
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  abc4af30-0b2b-11e6-9519-70188b823b61 ending logging at 04/25/16 17:24:48
+createtime is  1461619857
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  f1ba47e2-0b2c-11e6-9519-70188b823b61 ending logging at 04/25/16 17:32:42
+createtime is  1461620567
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  9926327e-0b2e-11e6-9519-70188b823b61 ending logging at 04/25/16 17:45:31
+createtime is  1461620865
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  4a4a10d4-0b2f-11e6-9519-70188b823b61 ending logging at 04/25/16 17:50:40
+createtime is  1461621663
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  25d818b6-0b31-11e6-9519-70188b823b61 ending logging at 04/25/16 18:03:47
+customeremail was wfzimmerman@gmail.com
+createtime is  1462302374
+no sample tweets
+no video search
+covercolor is chocolate3
+coverfont is Adler
+job  13fb59dc-1162-11e6-ace3-22000be3c9f4 ending logging at 05/03/16 19:08:52
+customeremail was wfzimmerman@gmail.com
+createtime is  1461603518
+job  e8f3a624-0b06-11e6-9519-70188b823b61 ending logging at 04/25/16 12:58:38
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1461603805
+job  948ec89c-0b07-11e6-9519-70188b823b61 ending logging at 04/25/16 13:03:25
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1461604061
+job  2d06a6da-0b08-11e6-9519-70188b823b61 ending logging at 04/25/16 13:07:41
+ended logging xform activities
+createtime is  1461604210
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  54a75a36-0b08-11e6-9519-70188b823b61 ending logging at 04/25/16 13:13:09
+createtime is  1461604838
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  f70a6baa-0b09-11e6-9519-70188b823b61 ending logging at 04/25/16 13:22:20
+createtime is  1461605245
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  ec113f98-0b0a-11e6-9519-70188b823b61 ending logging at 04/25/16 13:29:21
+createtime is  1461605524
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  925bd70a-0b0b-11e6-9519-70188b823b61 ending logging at 04/25/16 13:33:39
+createtime is  1461615797
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  7bb602e2-0b23-11e6-9519-70188b823b61 ending logging at 04/25/16 16:26:41
+createtime is  1461617055
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  69b7d5c2-0b26-11e6-9519-70188b823b61 ending logging at 04/25/16 16:46:20
+createtime is  1461618272
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  3fabfc38-0b29-11e6-9519-70188b823b61 ending logging at 04/25/16 17:07:50
+createtime is  1461618588
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  fd7fc53c-0b29-11e6-9519-70188b823b61 ending logging at 04/25/16 17:11:39
+createtime is  1461618823
+job  890cd266-0b2a-11e6-9519-70188b823b61 ending logging at 04/25/16 17:13:44
+createtime is  1461618937
+job  cc911790-0b2a-11e6-9519-70188b823b61 ending logging at 04/25/16 17:15:39
+createtime is  1461619189
+no sample tweets
+no video search
+job  61dae61e-0b2b-11e6-9519-70188b823b61 ending logging at 04/25/16 17:20:15
+createtime is  1461619310
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  abc4af30-0b2b-11e6-9519-70188b823b61 ending logging at 04/25/16 17:24:48
+createtime is  1461619857
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  f1ba47e2-0b2c-11e6-9519-70188b823b61 ending logging at 04/25/16 17:32:42
+createtime is  1461620567
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  9926327e-0b2e-11e6-9519-70188b823b61 ending logging at 04/25/16 17:45:31
+createtime is  1461620865
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  4a4a10d4-0b2f-11e6-9519-70188b823b61 ending logging at 04/25/16 17:50:40
+createtime is  1461621663
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  25d818b6-0b31-11e6-9519-70188b823b61 ending logging at 04/25/16 18:03:47
+customeremail was wfzimmerman@gmail.com
+createtime is  1462302374
+no sample tweets
+no video search
+covercolor is chocolate3
+coverfont is Adler
+job  13fb59dc-1162-11e6-ace3-22000be3c9f4 ending logging at 05/03/16 19:08:52
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462302621
+no sample tweets
+no video search
+covercolor is gold1
+coverfont is Adler
+job  9890fed6-1162-11e6-898b-22000be3c9f4 ending logging at 05/03/16 19:12:02
+customeremail was wfzimmerman@gmail.com
+createtime is  1461603518
+job  e8f3a624-0b06-11e6-9519-70188b823b61 ending logging at 04/25/16 12:58:38
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1461603805
+job  948ec89c-0b07-11e6-9519-70188b823b61 ending logging at 04/25/16 13:03:25
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1461604061
+job  2d06a6da-0b08-11e6-9519-70188b823b61 ending logging at 04/25/16 13:07:41
+ended logging xform activities
+createtime is  1461604210
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  54a75a36-0b08-11e6-9519-70188b823b61 ending logging at 04/25/16 13:13:09
+createtime is  1461604838
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  f70a6baa-0b09-11e6-9519-70188b823b61 ending logging at 04/25/16 13:22:20
+createtime is  1461605245
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  ec113f98-0b0a-11e6-9519-70188b823b61 ending logging at 04/25/16 13:29:21
+createtime is  1461605524
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  925bd70a-0b0b-11e6-9519-70188b823b61 ending logging at 04/25/16 13:33:39
+createtime is  1461615797
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  7bb602e2-0b23-11e6-9519-70188b823b61 ending logging at 04/25/16 16:26:41
+createtime is  1461617055
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  69b7d5c2-0b26-11e6-9519-70188b823b61 ending logging at 04/25/16 16:46:20
+createtime is  1461618272
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  3fabfc38-0b29-11e6-9519-70188b823b61 ending logging at 04/25/16 17:07:50
+createtime is  1461618588
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  fd7fc53c-0b29-11e6-9519-70188b823b61 ending logging at 04/25/16 17:11:39
+createtime is  1461618823
+job  890cd266-0b2a-11e6-9519-70188b823b61 ending logging at 04/25/16 17:13:44
+createtime is  1461618937
+job  cc911790-0b2a-11e6-9519-70188b823b61 ending logging at 04/25/16 17:15:39
+createtime is  1461619189
+no sample tweets
+no video search
+job  61dae61e-0b2b-11e6-9519-70188b823b61 ending logging at 04/25/16 17:20:15
+createtime is  1461619310
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  abc4af30-0b2b-11e6-9519-70188b823b61 ending logging at 04/25/16 17:24:48
+createtime is  1461619857
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  f1ba47e2-0b2c-11e6-9519-70188b823b61 ending logging at 04/25/16 17:32:42
+createtime is  1461620567
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  9926327e-0b2e-11e6-9519-70188b823b61 ending logging at 04/25/16 17:45:31
+createtime is  1461620865
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  4a4a10d4-0b2f-11e6-9519-70188b823b61 ending logging at 04/25/16 17:50:40
+createtime is  1461621663
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  25d818b6-0b31-11e6-9519-70188b823b61 ending logging at 04/25/16 18:03:47
+customeremail was wfzimmerman@gmail.com
+createtime is  1462302374
+no sample tweets
+no video search
+covercolor is chocolate3
+coverfont is Adler
+job  13fb59dc-1162-11e6-ace3-22000be3c9f4 ending logging at 05/03/16 19:08:52
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462302621
+no sample tweets
+no video search
+covercolor is gold1
+coverfont is Adler
+job  9890fed6-1162-11e6-898b-22000be3c9f4 ending logging at 05/03/16 19:12:02
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462308568
+no sample tweets
+no video search
+covercolor is grey48
+coverfont is Calibri
+job  81baab18-1170-11e6-9940-22000be3c9f4 ending logging at 05/03/16 20:51:07
+customeremail was wfzimmerman@gmail.com
+createtime is  1461603518
+job  e8f3a624-0b06-11e6-9519-70188b823b61 ending logging at 04/25/16 12:58:38
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1461603805
+job  948ec89c-0b07-11e6-9519-70188b823b61 ending logging at 04/25/16 13:03:25
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1461604061
+job  2d06a6da-0b08-11e6-9519-70188b823b61 ending logging at 04/25/16 13:07:41
+ended logging xform activities
+createtime is  1461604210
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  54a75a36-0b08-11e6-9519-70188b823b61 ending logging at 04/25/16 13:13:09
+createtime is  1461604838
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  f70a6baa-0b09-11e6-9519-70188b823b61 ending logging at 04/25/16 13:22:20
+createtime is  1461605245
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  ec113f98-0b0a-11e6-9519-70188b823b61 ending logging at 04/25/16 13:29:21
+createtime is  1461605524
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  925bd70a-0b0b-11e6-9519-70188b823b61 ending logging at 04/25/16 13:33:39
+createtime is  1461615797
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  7bb602e2-0b23-11e6-9519-70188b823b61 ending logging at 04/25/16 16:26:41
+createtime is  1461617055
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  69b7d5c2-0b26-11e6-9519-70188b823b61 ending logging at 04/25/16 16:46:20
+createtime is  1461618272
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  3fabfc38-0b29-11e6-9519-70188b823b61 ending logging at 04/25/16 17:07:50
+createtime is  1461618588
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  fd7fc53c-0b29-11e6-9519-70188b823b61 ending logging at 04/25/16 17:11:39
+createtime is  1461618823
+job  890cd266-0b2a-11e6-9519-70188b823b61 ending logging at 04/25/16 17:13:44
+createtime is  1461618937
+job  cc911790-0b2a-11e6-9519-70188b823b61 ending logging at 04/25/16 17:15:39
+createtime is  1461619189
+no sample tweets
+no video search
+job  61dae61e-0b2b-11e6-9519-70188b823b61 ending logging at 04/25/16 17:20:15
+createtime is  1461619310
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  abc4af30-0b2b-11e6-9519-70188b823b61 ending logging at 04/25/16 17:24:48
+createtime is  1461619857
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  f1ba47e2-0b2c-11e6-9519-70188b823b61 ending logging at 04/25/16 17:32:42
+createtime is  1461620567
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  9926327e-0b2e-11e6-9519-70188b823b61 ending logging at 04/25/16 17:45:31
+createtime is  1461620865
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  4a4a10d4-0b2f-11e6-9519-70188b823b61 ending logging at 04/25/16 17:50:40
+createtime is  1461621663
+no sample tweets
+no video search
+covercolor is RosyBrown
+coverfont is Minion
+job  25d818b6-0b31-11e6-9519-70188b823b61 ending logging at 04/25/16 18:03:47
+customeremail was wfzimmerman@gmail.com
+createtime is  1462302374
+no sample tweets
+no video search
+covercolor is chocolate3
+coverfont is Adler
+job  13fb59dc-1162-11e6-ace3-22000be3c9f4 ending logging at 05/03/16 19:08:52
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462302621
+no sample tweets
+no video search
+covercolor is gold1
+coverfont is Adler
+job  9890fed6-1162-11e6-898b-22000be3c9f4 ending logging at 05/03/16 19:12:02
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462308568
+no sample tweets
+no video search
+covercolor is grey48
+coverfont is Calibri
+job  81baab18-1170-11e6-9940-22000be3c9f4 ending logging at 05/03/16 20:51:07
+ended logging xform activities
+customeremail was wfzimmerman@gmail.com
+createtime is  1462308850
+no sample tweets
+no video search
+covercolor is maroon3
+coverfont is Arial
+job  29427f0a-1171-11e6-88d2-22000be3c9f4 ending logging at 05/03/16 20:55:42

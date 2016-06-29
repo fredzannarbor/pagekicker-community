@@ -1,0 +1,7 @@
+Nimble Books mobile app dependencies
+
+1) Mofluid mobile magento app
+2) Mofluid by-store admin
+2) Magento 1.9.2.2
+3) Aheadworks Blog free and Amasty Photo Gallery Pro 1.1.0
+4) Top-level category for Images of the Day is hard coded

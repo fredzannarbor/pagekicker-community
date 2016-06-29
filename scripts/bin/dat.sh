@@ -24,7 +24,7 @@ dat="yes"
 
 
 TMPDIR="/tmp/pagekicker/"
-buildtarget="/opt/bitnami/apps/magento/htdocs/media/"
+buildtarget="$mediatargetpath"
 stopimagefolder="none" #default
 maximages="4" #default
 thumbxsize=120 #default
@@ -199,43 +199,26 @@ if [ ! "$passuuid" ] ; then
 	echo "creating uuid"
 	uuid=$(python  -c 'import uuid; print uuid.uuiddat-1()')
 	echo "uuid is" $uuid | tee --append $xform_log
-	mkdir -m 755 $TMPDIR$uuid
+	mkdir -p -m 755 $TMPDIR$uuid
 else
 	uuid=$passuuid
 	echo "received uuid " $uuid
-	mkdir -m 755 $TMPDIR$uuid
+	mkdir -p -m 755 $TMPDIR$uuid
 fi
 
 
-if [ "$environment" = "Production" ] ; then
-
-        . /opt/bitnami/apache2/htdocs/pk-production/production/conf/config.txt
-        echo "loaded prod config file at " $datenow | tee --append $xform_log
- 
-elif [ "$environment" = "Staging" ] ; then
-
-        . /opt/bitnami/apache2/htdocs/pk-staging/development/conf/config.txt
-        echo "loaded staging config file at " $datenow | tee --append $xform_log
-
-else
-
-        . /opt/bitnami/apache2/htdocs/pk-new/development/conf/config.txt
-        echo "loaded dev config file at " $datenow | tee --append $xform_log
-
-
-fi
+. ../conf/config.txt
+echo "loaded  $environment config file at " $datenow | tee --append $xform_log
 
 
 . $scriptpath"includes/set-variables.sh"
 
-# get bzr revision
-bazaar_revision=`bzr revno`
-echo "bazaar revision number in" "$environment" "is" $bazaar_revision
+echo "software id in" "$environment" "is" $SFB_VERSION
 
 cd $scriptpath
 echo "scriptpath is" $scriptpath
 
-export PATH=$PATH:/opt/bitnami/java/bin
+#$export PATH=$PATH:/opt/bitnami/java/bin
 
 #echo "PATH is" $PATH
 
@@ -295,7 +278,7 @@ imagekeyword=$(xmlstarlet sel -t -v "/item/imagekeyword" "$xmlfilename")
 . ../conf/jobprofiles/imprints/$imprint/$imprint".imprint"
 echo "$jobprofile"
 echo "$imprint"
-echo $WEBFORMSHOME
+echo $WEBFORMSXML_HOME
 
 export LANG
 
@@ -327,11 +310,11 @@ fi
 
 if [ "$decimator_requested" = "Decimator only" ] ; then
 	echo "running Decimator only"
-	mkdir -m 755 $TMPDIR$uuid/decimator
+	mkdir -p -m 755 $TMPDIR$uuid/decimator
 	bin/decimator.sh --pdffile "$TMPDIR$uuid/$uploaded_tat_file" --outdir "$TMPDIR$uuid/decimator" --passuuid "$uuid" --tldr "$tldr"
 	sendemail -t "$customer_email" \
 	-u "Decimator Result" \
-	-m "PageKicker's Document Analysis Robots living on "$MACHINE_NAME "and using version " `bzr revno` " of the PageKicker software have analyzed your file " $uploaded_tat_file " in job" $uuid \
+	-m "PageKicker's Document Analysis Robots living on "$MACHINE_NAME "and using version " $SFB_VERSION " of the PageKicker software have analyzed your file " $uploaded_tat_file " in job" $uuid \
        ".  The Decimator slide deck is attached here."  \
 	-f "$GMAIL_ID" \
 	-cc "$GMAIL_ID" \
@@ -386,7 +369,8 @@ elif [ "$extension" = "epub" ] ; then
 elif [ "$extension" = "pdf" ] ; then
 	pdftotext $TMPDIR$uuid/$uploaded_tat_file  $TMPDIR$uuid/targetfile.txt
 	cp $TMPDIR$uuid/$uploaded_tat_file $TMPDIR$uuid/target.pdf
-	echo "ran pdftotext" | tee --append $xform_log
+	echo "ran pdftotext and copied $TMPDIR$uuid/target.pdf" | tee --append $xform_log
+	ls -la $TMPDIR$uuid
 
 else
 	unoconv -f txt $TMPDIR$uuid/$uploaded_tat_file
@@ -401,8 +385,8 @@ if [ "$extension" = "txt" ] ; then
 	echo "file was txt, no images, so skipping montageur" | tee --append $xform_log
 else
 	echo "copying working files into montageur directory" | tee --append $xform_log
-	mkdir -m 755 $TMPDIR$uuid/montageur
-	$scriptpath/bin/montageur.sh --pdfinfile "$TMPDIR$uuid/target.pdf" --stopimagefolder "$scriptpath"userassets/oreilly/stopimages --passuuid "$uuid" --environment "$environment" --montageurdir "montageur" --maximages "5" --tmpdir "$TMPDIR"
+	mkdir -p -m 755 $TMPDIR$uuid/montageur
+	$scriptpath"bin/montageur.sh" --pdfinfile "$TMPDIR$uuid/target.pdf" --stopimagefolder "$scriptpath"userassets/oreilly/stopimages --passuuid "$uuid" --environment "$environment" --montageurdir "montageur" --maximages "5" --tmpdir "$TMPDIR" --stopimagefolder "none"
 	montageur_success="$?"
 	if [ "$montageur_success" = 1 ] ; then
 		echo "montageur exited with status 1 no images found, skipping montage processing and returning to scriptpath directory" | tee --append $xform_log
@@ -425,7 +409,7 @@ fi
 
 # convert uploaded file to markdown
 
-pandoc -t markdown $TMPDIR$uuid/targetfile.txt -o $TMPDIR$uuid/body.md
+"$PANDOC_BIN" -t markdown $TMPDIR$uuid/targetfile.txt -o $TMPDIR$uuid/body.md
 
 # run acronym filter
 
@@ -438,7 +422,7 @@ split -C 50K $TMPDIR$uuid/targetfile.txt "$TMPDIR$uuid/xtarget."
 for file in "$TMPDIR$uuid/xtarget."*
 do
 
-python $scriptpath"includes/nerv3.py" $file $file"_nouns.txt"
+python $scriptpath"includes/nerv3.py" $file $file"_nouns.txt" 
 echo "ran nerv3 on $file" | tee --append $xform_log
 python includes/PKsum.py -l "$summary_length" -o $file"_summary.txt" $file
 sed -i 's/ \+ / /g' $file"_summary.txt"
@@ -479,7 +463,7 @@ sed -i 's/Averaage/Average/g' $TMPDIR$uuid/rr.txt
 echo "# Readability Report" > $TMPDIR$uuid/rr.md
 cat $TMPDIR$uuid/rr.txt >> $TMPDIR$uuid/rr.md
 cat assets/rr_explanation.md >> $TMPDIR$uuid/rr.md
-pandoc $TMPDIR$uuid/rr.md -o $TMPDIR$uuid/rr.html
+"$PANDOC_BIN" $TMPDIR$uuid/rr.md -o $TMPDIR$uuid/rr.html
 sed -i G $TMPDIR$uuid/rr.md
 
 
@@ -513,7 +497,7 @@ echo "built wordclouds" | tee --append $xform_log
 
 if [ "$flickr" = "on" ] ; then
 
-	mkdir -m 755 $TMPDIR$uuid/flickr
+	mkdir -p -m 755 $TMPDIR$uuid/flickr
 
 	python includes/Flickr_title_fetcher.py $TMPDIR$uuid/titles.txt $TMPDIR$uuid/flickr/
 	python includes/Flickr_seed_fetcher.py "$imagekeyword" $TMPDIR$uuid/flickr/
@@ -537,11 +521,11 @@ else
 	cp ../conf/jobprofiles/imprints/$imprint/$imprintcopyrightpage $TMPDIR$uuid/$imprintcopyrightpage
 	# save reports as PDFs
 
-	pandoc $TMPDIR$uuid/summary.md -o $TMPDIR$uuid/summary.pdf --latex-engine=xelatex
-	pandoc $TMPDIR$uuid/all_nouns.txt -o $TMPDIR$uuid/all_nouns.pdf --latex-engine=xelatex
-	pandoc $TMPDIR$uuid/$imprintcopyrightpage -o $TMPDIR$uuid/copyright_notice.pdf --latex-engine=xelatex
-	pandoc $TMPDIR$uuid/rr.md -o $TMPDIR$uuid/rr.pdf --latex-engine=xelatex
-	pandoc $TMPDIR$uuid/sorted_uniqs.txt -o $TMPDIR$uuid/sorted_uniqs.pdf --latex-engine=xelatex
+	"$PANDOC_BIN" $TMPDIR$uuid/summary.md -o $TMPDIR$uuid/summary.pdf --latex-engine=xelatex
+	"$PANDOC_BIN" $TMPDIR$uuid/all_nouns.txt -o $TMPDIR$uuid/all_nouns.pdf --latex-engine=xelatex
+	"$PANDOC_BIN" $TMPDIR$uuid/$imprintcopyrightpage -o $TMPDIR$uuid/copyright_notice.pdf --latex-engine=xelatex
+	"$PANDOC_BIN" $TMPDIR$uuid/rr.md -o $TMPDIR$uuid/rr.pdf --latex-engine=xelatex
+	"$PANDOC_BIN" $TMPDIR$uuid/sorted_uniqs.txt -o $TMPDIR$uuid/sorted_uniqs.pdf --latex-engine=xelatex
 
 # build wordcloud page
 
@@ -570,7 +554,7 @@ else
 	cat $confdir"jobprofiles/bibliography/"$lastname/$lastname"_titles.txt" >> $TMPDIR$uuid/titlepage.md
 	echo "  " >> $TMPDIR$uuid/titlepage.md
 	echo "  " >> $TMPDIR$uuid/titlepage.md
-	pandoc $TMPDIR$uuid/titlepage.md -o $TMPDIR$uuid/titlepage.pdf --variable fontsize=12pt --latex-engine=xelatex
+	"$PANDOC_BIN" $TMPDIR$uuid/titlepage.md -o $TMPDIR$uuid/titlepage.pdf --variable fontsize=12pt --latex-engine=xelatex
 	cd $scriptpath
 
 	echo "# About the Robot Author" > $TMPDIR$uuid/robot_author.md
@@ -598,7 +582,7 @@ else
 
 
 	cat $TMPDIR$uuid/titlepage.md assets/newpage.md $TMPDIR$uuid/$imprintcopyrightpage assets/newpage.md $TMPDIR$uuid/robot_author.md assets/newpage.md $TMPDIR$uuid/acknowledgements.md assets/newpage.md $TMPDIR$uuid/summary.md assets/newpage.md $TMPDIR$uuid/rr.md assets/newpage.md $TMPDIR$uuid/sorted_uniqs.md > $TMPDIR$uuid/textfrontmatter.md
-	cd $TMPDIR$uuid; pandoc textfrontmatter.md --latex-engine=xelatex -o textfrontmatter.pdf ; cd $scriptpath
+	cd $TMPDIR$uuid; "$PANDOC_BIN" textfrontmatter.md --latex-engine=xelatex -o textfrontmatter.pdf ; cd $scriptpath
 
 	echo "assembled front matter"
 
@@ -646,7 +630,7 @@ else
 		cp *.jpg ..
 		cp allflickr.md ..
 		cd ..
-		pandoc -o images.pdf allflickr.md
+		"$PANDOC_BIN" -o images.pdf allflickr.md
 		cd $scriptpath
 		echo "converted flickr md files to pdf pages with images" | tee --append $xform_log
 		
@@ -659,12 +643,12 @@ else
 	if [ "$getwiki" = "yes" ] ; then
 
 		sed '/^$/d' $TMPDIR$uuid/all_nouns.txt | sort | uniq -i > $TMPDIR$uuid/seeds
-		/opt/bitnami/python/bin/python bin/wikifetcher.py --infile "$TMPDIR$uuid/seeds" --outfile "$TMPDIR$uuid/wikisummaries.md" --lang "en"
+		"$PYTHON_BIN" bin/wikifetcher.py --infile "$TMPDIR$uuid/seeds" --outfile "$TMPDIR$uuid/wikisummaries.md" --lang "en" 
 		cp $TMPDIR$uuid/wikisummaries.md $TMPDIR$uuid/original.md 
 		sed -e s/\=\=\=\=/xyxyxyxy/g -e s/\=\=\=/xyxyxy/g -e s/\=\=/xyxy/g -e s/xyxyxyxy/\#\#\#\#/g -e s/xyxyxy/\#\#\#/g -e s/xyxy/\#\#/g $TMPDIR$uuid/wikisummaries.md > $TMPDIR$uuid/wikiall.md
 		grep -v '\\x' $TMPDIR$uuid/wikiall.md > $TMPDIR$uuid/wikisafe.md # stripping certain escape characters
 		cp $TMPDIR$uuid/wikisafe.md $TMPDIR$uuid/wikisummaries.md
-		pandoc -o $TMPDIR$uuid/wikisummaries.pdf $TMPDIR$uuid/wikisummaries.md --latex-engine=xelatex
+		"$PANDOC_BIN" -o $TMPDIR$uuid/wikisummaries.pdf $TMPDIR$uuid/wikisummaries.md --latex-engine=xelatex
 
 	else
 		# getwiki =no speeds up performance a lot since fetcher need not run
@@ -688,7 +672,7 @@ fi
 #build epub with TOC
 
 cd $TMPDIR$uuid
-pandoc -S -o full_wtoc.epub titlepage.md \
+"$PANDOC_BIN" -S -o full_wtoc.epub titlepage.md \
 "$imprintcopyrightpage" \
 robot_author.md \
 summary.md \
@@ -702,7 +686,7 @@ echo "getwiki is" $getwiki
 
 if [ "$getwiki" = "yes" ] ; then
 
-	pandoc -s -S -o research_report.docx titlepage.md \
+	"$PANDOC_BIN" -s -S -o research_report.docx titlepage.md \
 	"$imprintcopyrightpage" \
 	robot_author.md \
 	summary.md \
@@ -712,7 +696,7 @@ if [ "$getwiki" = "yes" ] ; then
 
 else 
   
-	pandoc -s -S -o research_report.docx titlepage.md \
+	"$PANDOC_BIN" -s -S -o research_report.docx titlepage.md \
 	"$imprintcopyrightpage" \
 	robot_author.md \
 	summary.md \
@@ -732,7 +716,7 @@ ls -la $buildtarget"f*"
 
 #deliver *Metadata files* to Magento
 
-mkdir -m 755 $mediatargetpath$uuid
+mkdir -p -m 755 $mediatargetpath$uuid
 cp $TMPDIR$uuid/wordcloudbig.png $mediatargetpath$uuid/$sku"wordcloudbig.png"
 cp $TMPDIR$uuid/summary.txt $mediatargetpath$uuid/$sku"summary.txt"
 cp $TMPDIR$uuid/all_nouns.txt $mediatargetpath$uuid/$sku"all_nouns.txt"
@@ -757,7 +741,7 @@ else
 	productname="$customtitle"
 fi
 echo  "product name is "$productname
-mkdir -m  755 "$metadatatargetpath$uuid"
+mkdir -p -m  755 "$metadatatargetpath$uuid"
 cat includes/builder-metadata-header.csv > $metadatatargetpath$uuid/"current-import.csv"
 . includes/builder-metadata-footer.sh
 # take a number if you are planning to import
@@ -823,7 +807,7 @@ if [ "$montageur_success" = 0 ] ; then
 
 sendemail -t "$customer_email" \
 	-u "Document Analysis Tools Result" \
-	-m "PageKicker's Document Analysis Robots living on "$MACHINE_NAME "and using version " `bzr revno` " of the PageKicker software have analyzed your file " $uploaded_tat_file " in job" $uuid \
+	-m "PageKicker's Document Analysis Robots living on "$MACHINE_NAME "and using version " $SFB_VERSION " of the PageKicker software have analyzed your file " $uploaded_tat_file " in job" $uuid \
        ".  A word cloud, an image montage, a list of proper nouns, and a list of possible acronyms have been placed in the PageKicker catalog at" $dat_catalog_url ". Additional files, including a programmatic summary, are attached here." \
 	-f "$GMAIL_ID" \
 	-cc "$GMAIL_ID" \
@@ -846,7 +830,7 @@ else
 
 sendemail -t "$customer_email" \
 	-u "Document Analysis Tools Result" \
-	-m "PageKicker's Document Analysis Robots living on "$MACHINE_NAME "and using version " `bzr revno` " of the PageKicker software have analyzed your file " $uploaded_tat_file " in job" $uuid \
+	-m "PageKicker's Document Analysis Robots living on "$MACHINE_NAME "and using version " $SFB_VERSION " of the PageKicker software have analyzed your file " $uploaded_tat_file " in job" $uuid \
        ".  A word cloud, an image montage, a list of proper nouns, and a list of possible acronyms have been placed in the PageKicker catalog at" $dat_catalog_url ". Additional files, including a programmatic summary, are attached here."  \
 	-f "$GMAIL_ID" \
 	-cc "$GMAIL_ID" \
