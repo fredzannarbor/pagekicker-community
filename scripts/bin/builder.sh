@@ -24,12 +24,7 @@ cd $scriptpath
 
 . includes/set-variables.sh
 
-#echo "set variables, now echoing them"
-# . includes/echo-variables.sh
-
 echo "shortform is $shortform"
-
-
 
 echo "revision number is" $SFB_VERSION
 
@@ -48,7 +43,7 @@ coverfont="Minion"
 covercolor="RosyBrown"
 
 export PERL_SIGNALS="unsafe"
-echo "PERL_SIGNALS" is $PERL_SIGNALS
+echo "PERL_SIGNALS" is $PERL_SIGNALS "UNSAFE is correct"
 
 while :
 do
@@ -306,6 +301,7 @@ done
 
 echo "imprint is $imprint" #debug
 echo "editedby is $editedby" #debug
+echo "jobprofilename is $jobprofilename" #debug
 human_author="$editedby"
 # Suppose some options are required. Check that we got them.
 
@@ -326,21 +322,21 @@ if [ -z "$covercolor" ]; then
 	covercolor="RosyBrown"
 	echo "no cover color in command line so I set it to "$covercolor
 else
-	echo "$covercolor"
+	echo "cover color is $covercolor"
 fi
 
 if [ -z "$coverfont" ]; then
 	coverfont="Minion"
 	echo "no cover font in command line so I set it to "$coverfont
 else
-	echo "$coverfont"
+	echo "cover font is $coverfont"
 fi
 
 if [ -z "$wikilang" ]; then
 	wikilang="en"
 	echo "no wikilang in command line so I set it to "$wikilang
 else
-	echo "$wikilang"
+	echo "wiki search language is $wikilang"
 fi
 
 if [ -z "$imprint" ]; then
@@ -364,7 +360,7 @@ safe_product_name=$(echo "$booktitle"| sed -e 's/[^A-Za-z0-9._-]/_/g')
 echo "safe product name is" $safe_product_name
 
 #sku=`tail -1 < "$LOCAL_DATA""SKUs/sku_list"`
-echo "sku" $sku
+echo "sku is" $sku
 
 
 echo "test $covercolor" "$coverfont"
@@ -401,7 +397,7 @@ mkdir -p -m 755 $LOCAL_DATA"jobprofile_builds/""$jobprofilename"
 #move assets into position
 
 if [ "$truncate_seed" = "yes" ] ; then
-	echo "truncating"
+	echo "truncating path to seed file"
 	echo $seedfile
 	seedfile=$(dirname $seedfile)
 	seedfile=$seedfile"/seedlist"
@@ -433,6 +429,7 @@ ls -la "$TMPDIR$uuid/seeds/"
 cat "$TMPDIR$uuid/seeds/seedphrases" | uniq | sort  > "$TMPDIR$uuid/seeds/sorted.seedfile"
 
 echo "seeds are"
+echo "---"
 cat "$TMPDIR$uuid/seeds/sorted.seedfile"
 echo "---"
 
@@ -727,7 +724,7 @@ cat "$TMPDIR$uuid/yaml-metadata.md" >> $TMPDIR$uuid/complete.md
 
 
 bibliography_title="$booktitle"
-echo "bibliography title is $bibliography_title"
+#echo "bibliography title is $bibliography_title"
 safe_product_name=$(echo "$booktitle" | sed -e 's/[^A-Za-z0-9._-]/_/g')
 cd $TMPDIR$uuid
 "$PANDOC_BIN" -o "$TMPDIR$uuid/$sku."$safe_product_name".epub" --epub-cover-image=$TMPDIR$uuid/cover/$sku"ebookcover.jpg" $TMPDIR$uuid/complete.md
