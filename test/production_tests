@@ -1,0 +1,26 @@
+# procedure for testing production after updating master either 
+# locally or via pull from github
+
+1) submit to add a catalog entry 
+
+2) check "your item has been added to 
+the catalog" email 
+
+3) check that new product has been added with valid 
+attributes including seedlist, imprint, editedby, and downloadable links.
+
+4) order the product from web desktop
+
+5) wait 20 min for email notification
+
+6) download and inspect ebook
+
+7) inspect download build log
+
+8) check that new catalog product is available in iOS and Android apps
+
+9) order on iOS and Android
+
+10) wait for notification on iOS & Android, download & inspect
+
+
