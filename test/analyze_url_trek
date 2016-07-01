@@ -1,0 +1,9 @@
+#!/bin/bash
+# runs test of $analyze_url flag to add web seeds to seed file
+bin/create-catalog-entry.sh --builder "yes" --booktitle "Anton Yelchin 
+of Star Trek Dies" --yourname "yes" --jobprofilename "default" --import 
+"no" --seedfile "/home/fred/scratch/Anton" --imprint "pagekicker" --tldr 
+"Do not leave your car in neutral..." --editedby "Trekkie" --subtitle 
+"An instant book" --analyze_url "http://www.cnn.com" --dontcleanupseeds 
+"yes"
+

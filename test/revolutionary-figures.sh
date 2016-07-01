@@ -1,7 +1,16 @@
-
 #!/bin/bash 
 
-. ../conf/config.txt
+if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
+	echo "config file not found, creating /home/<user>/.pagekicker, put config file there"
+	mkdir -p -m 755 "$HOME"/.pagekicker
+	echo "exiting"
+	exit 1
+else
+	. "$HOME"/.pagekicker/config.txt
+	echo "read config file from $HOME""/.pagekicker/config.txt"
+fi
+
+
 . includes/set-variables.sh
 
 if [ ! "$passuuid" ] ; then

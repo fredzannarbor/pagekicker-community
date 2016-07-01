@@ -5,11 +5,21 @@
 
 # get configuration variables
 
-. ../conf/config.txt
-
-echo "got config file from "$MACHINE_NAME
-
-echo "config file imported" |  tee --append $SFB_HOME"local-data/logs/import_log.txt"
+if shopt -q  login_shell ; then
+	
+	if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
+		echo "config file not found, creating /home/<user>/.pagekicker, put config file there"
+		mkdir -p -m 755 "$HOME"/.pagekicker
+		echo "exiting"
+		exit 1
+	else
+		. "$HOME"/.pagekicker/config.txt
+		echo "read config file from login shell $HOME""/.pagekicker/config.txt"
+	fi
+else
+	. /home/$(whoami)/.pagekicker/config.txt #hard-coding /home is a hack 
+	echo "read config file from nonlogin shell /home/$(whoami)/.pagekicker/config.txt"
+fi
 
 # runs when cron job is triggered every 30 minutes
 
