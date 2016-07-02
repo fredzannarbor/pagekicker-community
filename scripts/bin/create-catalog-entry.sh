@@ -422,6 +422,14 @@ shift 2
 dontcleanupseeds=${1#*=}
 shift
 ;;
+--top_q)
+top_q=$2
+shift 2
+;;
+--top_q=*)
+top_q=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -574,11 +582,14 @@ if [ -z  ${analyze_url+x} ] ; then
 else
 	"$PANDOC_BIN" -s -r html "$analyze_url" -o $TMPDIR$uuid"/webpage.md"
 	"$PYTHON_BIN" bin/nerv3.py $TMPDIR$uuid"/webpage.md" $TMPDIR$uuid"/webseeds"
-	cat $TMPDIR$uuid"/webseeds" >> $TMPDIR$uuid/seeds/seedphrases # cats webseeds without sorting or filtering (for efficiency is done later)
+	 head -n "$top_q" $TMPDIR$uuid"/webseeds" > $TMPDIR$uuid"/webseeds.top_q"
+cat $TMPDIR$uuid"/webseeds.top_q" > $TMPDIR$uuid"/webseeds"
+
+	comm -2 -3 <(sort $TMPDIR$uuid"/webseeds") <(sort "locale/stopwords/webstopwords.en") >> $TMPDIR$uuid/seeds/seedphrases 
 
 fi
 
-echo "checking for naughty words"
+# echo "checking for naughty words"
 
 #export uuid
 
@@ -609,8 +620,8 @@ echo "seedfile is" $seedfile
 
 cat "$TMPDIR$uuid/seeds/seedphrases" | uniq | sort | sed -e '/^$/d' -e '/^[0-9#@]/d' > "$TMPDIR$uuid/seeds/sorted.seedfile"
 cat "$TMPDIR$uuid/seeds/sorted.seedfile" > "$LOCAL_DATA"seeds/history/"$sku".seedphrases
-
-
+cp $TMPDIR$uuid/seeds/sorted.seedfile $TMPDIR$uuid/seeds/debug.sorted
+cp $TMPDIR$uuid/seeds/seedphrases $TMPDIR$uuid/seeds/debug.seedphrases
 
 cp $scriptpath"assets/pk35pc.jpg" $TMPDIR$uuid/pk35pc.jpg
 
@@ -808,7 +819,7 @@ if [ "$builder" = "yes" ] ; then
 
 	echo "seedfile was" "$TMPDIR"seeds/seedphrases
 
-	$scriptpath"bin/builder.sh" --seedfile $TMPDIR$uuid"/seeds/seedphrases" --booktype "$booktype" --jobprofilename "$jobprofilename" --booktitle "$booktitle" --ebook_format "epub" --sample_tweets "no" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername" --imprint "$imprint" --batch_uuid "$batch_uuid" --tldr "$tldr" --subtitle "$subtitle" --add_corpora "$add_corpora" --analyze_url "$analyze_url" --dontcleanupseeds "yes"
+	$scriptpath"bin/builder.sh" --seedfile $TMPDIR$uuid"/seeds/sorted.seedfile" --booktype "$booktype" --jobprofilename "$jobprofilename" --booktitle "$booktitle" --ebook_format "epub" --sample_tweets "no" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername" --imprint "$imprint" --batch_uuid "$batch_uuid" --tldr "$tldr" --subtitle "$subtitle" --add_corpora "$add_corpora" --analyze_url "$analyze_url" --dontcleanupseeds "yes"
 
 else
 

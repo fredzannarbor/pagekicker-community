@@ -437,7 +437,9 @@ if [ -z  ${analyze_url+x} ] ; then
 else
 	"$PANDOC_BIN" -s -r html "$analyze_url" -o $TMPDIR$uuid"/webpage.md"
 	"$PYTHON_BIN" bin/nerv3.py $TMPDIR$uuid"/webpage.md" $TMPDIR$uuid"/webseeds"
-	cat $TMPDIR$uuid"/webseeds" >> $TMPDIR$uuid/seeds/seedphrases # cats webseeds without sorting or filtering (for efficiency is done later)
+ 	head -n "$top_q" $TMPDIR$uuid"/webseeds" > $TMPDIR$uuid"/webseeds.top_q"
+	cat $TMPDIR$uuid"/webseeds.top_q" > $TMPDIR$uuid"/webseeds"
+	comm -2 -3 <(sort $TMPDIR$uuid"/webseeds") <(sort $scriptpath"locale/stopwords/webstopwords."$wikilang) >> $TMPDIR$uuid/seeds/seedphrases 
 
 fi
 
@@ -445,6 +447,7 @@ ls -la "$TMPDIR$uuid/seeds/"
 
 cat "$TMPDIR$uuid/seeds/seedphrases" | uniq | sort | sed -e '/^$/d' -e '/^[0-9#@]/d' > "$TMPDIR$uuid/seeds/sorted.seedfile"
 sort -u "$TMPDIR$uuid/seeds/sorted.seedfile" -o "$TMPDIR$uuid/seeds/sorted.seedfile"
+
 
 echo "seeds are"
 echo "---"
@@ -723,11 +726,6 @@ if [ "$shortform" = "no" ] ;then
 			echo "" >> "$TMPDIR$uuid"/backmatter.md
 		fi
 
-	echo "# Also by $editedby" >>  $TMPDIR$uuid/backmatter.md
-	cat confdir"jobprofiles/bibliography/"$lastname/$lastname"_titles.txt" >> $TMPDIR$uuid/backmatter.md
-
-	echo "" >> "$TMPDIR$uuid"/backmatter.md
-	echo "" >> "$TMPDIR$uuid"/backmatter.md
 
 	cat $confdir"jobprofiles/imprints/$imprint/""$imprint_mission_statement" >> "$TMPDIR$uuid"/backmatter.md
 	echo '!['"$imprintname"']'"(""$imprintlogo"")" >> $TMPDIR$uuid/backmatter.md
