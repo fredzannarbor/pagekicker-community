@@ -56,6 +56,7 @@ special_lasts_minutes="43200"
 special_price="0"
 specialstoreid="0"
 text_extraction_on="yes"
+top_q="20" # number of nerv lines used divided by 2
 userdatadir="none"
 userdescription="no"
 userid="1"

@@ -406,6 +406,30 @@ shift 2
 add_corporaa=${1#*=}
 shift
 ;;
+--analyze_url)
+analyze_url=$2
+shift 2
+;;
+--analyze_url=*)
+analyze_url=${1#*=}
+shift
+;;
+--dontcleanupseeds)
+dontcleanupseeds=$2
+shift 2
+;;
+--dontcleanupseeds=*)
+dontcleanupseeds=${1#*=}
+shift
+;;
+--top_q)
+top_q=$2
+shift 2
+;;
+--top_q=*)
+top_q=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -553,8 +577,19 @@ echo "Assembling infiles and assets"
 echo "$book_description" > $TMPDIR$uuid/book-description.txt
 echo "$tldr" > $TMPDIR$uuid/tldr.txt
 
+if [ -z  ${analyze_url+x} ] ; then
+	:
+else
+	"$PANDOC_BIN" -s -r html "$analyze_url" -o $TMPDIR$uuid"/webpage.md"
+	"$PYTHON_BIN" bin/nerv3.py $TMPDIR$uuid"/webpage.md" $TMPDIR$uuid"/webseeds"
+	 head -n "$top_q" $TMPDIR$uuid"/webseeds" > $TMPDIR$uuid"/webseeds.top_q"
+cat $TMPDIR$uuid"/webseeds.top_q" > $TMPDIR$uuid"/webseeds"
 
-echo "checking for naughty words"
+	comm -2 -3 <(sort $TMPDIR$uuid"/webseeds") <(sort "locale/stopwords/webstopwords.en") >> $TMPDIR$uuid/seeds/seedphrases 
+
+fi
+
+# echo "checking for naughty words"
 
 #export uuid
 
@@ -583,10 +618,10 @@ echo "seedfile is" $seedfile
 # screen for zero value seed file
 
 
-cat "$TMPDIR$uuid/seeds/seedphrases" | uniq | sort  > "$TMPDIR$uuid/seeds/sorted.seedfile"
+cat "$TMPDIR$uuid/seeds/seedphrases" | uniq | sort | sed -e '/^$/d' -e '/^[0-9#@]/d' > "$TMPDIR$uuid/seeds/sorted.seedfile"
 cat "$TMPDIR$uuid/seeds/sorted.seedfile" > "$LOCAL_DATA"seeds/history/"$sku".seedphrases
-
-
+cp $TMPDIR$uuid/seeds/sorted.seedfile $TMPDIR$uuid/seeds/debug.sorted
+cp $TMPDIR$uuid/seeds/seedphrases $TMPDIR$uuid/seeds/debug.seedphrases
 
 cp $scriptpath"assets/pk35pc.jpg" $TMPDIR$uuid/pk35pc.jpg
 
@@ -784,7 +819,7 @@ if [ "$builder" = "yes" ] ; then
 
 	echo "seedfile was" "$TMPDIR"seeds/seedphrases
 
-	$scriptpath"bin/builder.sh" --seedfile $TMPDIR$uuid"/seeds/seedphrases" --booktype "$booktype" --jobprofilename "$jobprofilename" --booktitle "$booktitle" --ebook_format "epub" --sample_tweets "no" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername" --imprint "$imprint" --batch_uuid "$batch_uuid" --tldr "$tldr" --subtitle "$subtitle" --add_corpora "$add_corpora"
+	$scriptpath"bin/builder.sh" --seedfile $TMPDIR$uuid"/seeds/sorted.seedfile" --booktype "$booktype" --jobprofilename "$jobprofilename" --booktitle "$booktitle" --ebook_format "epub" --sample_tweets "no" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername" --imprint "$imprint" --batch_uuid "$batch_uuid" --tldr "$tldr" --subtitle "$subtitle" --add_corpora "$add_corpora" --analyze_url "$analyze_url" --dontcleanupseeds "yes"
 
 else
 

@@ -284,6 +284,14 @@ shift 2
 add_corpora=${1#*=}
 shift
 ;;
+--analyze_url)
+analyze_url=$2
+shift 2
+;;
+--analyze_url=*)
+analyze_url=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -424,9 +432,22 @@ cp $confdir"jobprofiles"/imprints/"$imprint"/"$imprintlogo" "$TMPDIR$uuid"/cover
 
 echo "uuid seed file is supposed to be" "$TMPDIR$uuid/seeds/seedphrases"
 
+if [ -z  ${analyze_url+x} ] ; then
+	:
+else
+	"$PANDOC_BIN" -s -r html "$analyze_url" -o $TMPDIR$uuid"/webpage.md"
+	"$PYTHON_BIN" bin/nerv3.py $TMPDIR$uuid"/webpage.md" $TMPDIR$uuid"/webseeds"
+ 	head -n "$top_q" $TMPDIR$uuid"/webseeds" > $TMPDIR$uuid"/webseeds.top_q"
+	cat $TMPDIR$uuid"/webseeds.top_q" > $TMPDIR$uuid"/webseeds"
+	comm -2 -3 <(sort $TMPDIR$uuid"/webseeds") <(sort $scriptpath"locale/stopwords/webstopwords."$wikilang) >> $TMPDIR$uuid/seeds/seedphrases 
+
+fi
+
 ls -la "$TMPDIR$uuid/seeds/"
 
-cat "$TMPDIR$uuid/seeds/seedphrases" | uniq | sort  > "$TMPDIR$uuid/seeds/sorted.seedfile"
+cat "$TMPDIR$uuid/seeds/seedphrases" | uniq | sort | sed -e '/^$/d' -e '/^[0-9#@]/d' > "$TMPDIR$uuid/seeds/sorted.seedfile"
+sort -u "$TMPDIR$uuid/seeds/sorted.seedfile" -o "$TMPDIR$uuid/seeds/sorted.seedfile"
+
 
 echo "seeds are"
 echo "---"
@@ -511,7 +532,8 @@ fi
 echo "running stopfile $stopfile"
 
 	"$JAVA_BIN" -jar $scriptpath"lib/IBMcloud/ibm-word-cloud.jar" -c $scriptpath"lib/IBMcloud/examples/configuration.txt" -w "1800" -h "1800" < $TMPDIR$uuid/wiki/wikiraw.md > $TMPDIR$uuid/cover/wordcloudcover.png
-cat "$TMPDIR$uuid/seeds/seedphrases" | uniq | sort  > "$TMPDIR$uuid/seeds/sorted.seedfile"
+
+# cat "$TMPDIR$uuid/seeds/seedphrases" | uniq | sort  > "$TMPDIR$uuid/seeds/sorted.seedfile"
 
 
 if cmp -s "$scriptpath/lib/IBMcloud/examples/pk-stopwords.txt" "$scriptpath/lib/IBMcloud/examples/restore-pk-stopwords.txt" ; then
@@ -679,6 +701,7 @@ if [ "$shortform" = "no" ] ;then
 	echo "# Sources" >> $TMPDIR$uuid/backmatter.md
  	cat includes/wikilicense.md >> $TMPDIR/$uuid/backmatter.md
 
+
 	echo "# Also built by PageKicker Robot $jobprofilename" >>  $TMPDIR$uuid/backmatter.md
 	sort -o -u "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.txt"  "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.txt" # currently sort by alphabetical 
 	cat "$LOCAL_DATA"/bibliography/robots/"$jobprofilename"/"$jobprofilename""_titles.txt" >> $TMPDIR$uuid/backmatter.md
@@ -687,8 +710,22 @@ if [ "$shortform" = "no" ] ;then
 
 	echo "# Also from $imprintname" >>  $TMPDIR$uuid/backmatter.md
 	uniq "$LOCAL_DATA"bibliography/imprints/"$imprint"/$imprint"_titles.txt" >> $TMPDIR$uuid/backmatter.md # imprint pubs are not alpha
+
 	echo "" >> "$TMPDIR$uuid"/backmatter.md
 	echo "" >> "$TMPDIR$uuid"/backmatter.md
+	
+		if [ -z  ${url+x} ] ; then
+			:
+		else
+			"$PANDOC_BIN" -s -r html "$analyze_url" -o $TMPDIR$uuid"/analyzed_webpage.md"
+			"$PYTHON_BIN" bin/nerv3.py $TMPDIR$uuid"/analyzed_webpage.md" $TMPDIR$uuid"/analyzed_webseeds"
+			echo "# Webpage Analysis" >> $TMPDIR$uuid/backmatter.md
+			echo "I analyzed this webpage $url. I found the following keywords on the page."
+			comm -2 -3 <(sort $TMPDIR$uuid"/analyzed_webseeds") <(sort $scriptpath"locale/stopwords/webstopwords."$wikilang) >> "$TMPDIR$uuid"/backmatter.md
+			echo "" >> "$TMPDIR$uuid"/backmatter.md
+			echo "" >> "$TMPDIR$uuid"/backmatter.md
+		fi
+
 
 	cat $confdir"jobprofiles/imprints/$imprint/""$imprint_mission_statement" >> "$TMPDIR$uuid"/backmatter.md
 	echo '!['"$imprintname"']'"(""$imprintlogo"")" >> $TMPDIR$uuid/backmatter.md
