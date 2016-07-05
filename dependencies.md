@@ -1,7 +1,13 @@
 Dependencies
 
 python 2.7
-java
+python libraries: 
+scikit-learn
+networkx
+AlchemyAPI
+nltk
+time
+
 imagemagick
 sendemail # note middle "e", this is lightweight version that is very portable
 pandoc

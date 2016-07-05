@@ -1,0 +1,22 @@
+# this file contains syntax for Download Builder commands as reference/backup
+
+# prod mobi:
+
+{{block type='core/template' area='frontend' 
+template='downloadplusbuilder/command/writeseeds.phtml' 
+event=$event file='seedlist'}}' 
+
+/hard/path/to/scripts/bin/builder.sh 
+--seedfile "{{var base_tmp_path}}/seedlist" --booktype "{{var 
+product.booktype}}" --buildtarget "{{var target}}" 
+--jobprofilename "default" --booktitle "{{var product.name}}" 
+--truncate_seed "yes" --ebook_format "mobi" --sample_tweets "no" 
+--wikilang "{{var product.wikilang}}" --coverfont "{{var 
+product.coverfont}}" --covercolor "{{var product.covercolor}}" 
+--customername "{{var customer.name}}" --yourname "{{var 
+product.yourname}}" --imprint "pagekicker" --dontcleanupseeds 
+"yes"
+
+# build target file
+
+{{var product.safe_product_name}}.mobi

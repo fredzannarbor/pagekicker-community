@@ -1,1 +1,0 @@
-<?xml version="1.0"?><api><warnings><login xml:space="preserve">Fetching a token via action=login is deprecated. Use action=query&amp;meta=tokens&amp;type=login instead.</login></warnings><login result="NeedToken" token="0b73e6cef56dfe9539e0d7c099e82ca0571eb03e+\" cookieprefix="enwiki" sessionid="69rod0jpb84kp041s7tboodu13seme7t" /></api>
