@@ -521,7 +521,7 @@ else
 
 	else 
 
-		echo -n '"'$mobilinkname,0,9,builder,8$pipe$epublinkname,0,9,builder,2$pipe$docxlinkname,0,9,builder,11'"', >> $metadatatargetpath$uuid"/current-import.csv"
+	echo -n '"'$mobilinkname,0,9,builder,12$pipe$epublinkname,0,9,builder,9$pipe$docxlinkname,0,9,builder,10'"', >> $metadatatargetpath$uuid"/current-import.csv"
 
 	fi
 

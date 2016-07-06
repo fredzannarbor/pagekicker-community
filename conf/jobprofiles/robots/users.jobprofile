@@ -1,0 +1,7 @@
+firstname="Nimble"
+middlename=""
+lastname="User"
+editedby=$firstname" "$middlename" "$lastname
+authorbio=$SFB_HOME"conf/jobprofiles/authorbios/users.html"
+fortunedb="literature"
+categoryid="15"

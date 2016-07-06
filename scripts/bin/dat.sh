@@ -11,6 +11,33 @@
 # output: unique jpgs, zip, montage
 
 #defaults before command line
+
+if shopt -q  login_shell ; then
+	
+	if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
+		echo "config file not found, creating /home/<user>/.pagekicker, put config file there"
+		mkdir -p -m 755 "$HOME"/.pagekicker
+		echo "exiting"
+		exit 1
+	else
+		. "$HOME"/.pagekicker/config.txt
+		echo "read config file from login shell $HOME""/.pagekicker/config.txt"
+	fi
+else
+	. /home/$(whoami)/.pagekicker/config.txt #hard-coding /home is a hack 
+	echo "read config file from nonlogin shell /home/$(whoami)/.pagekicker/config.txt"
+fi
+
+cd $scriptpath
+
+. includes/set-variables.sh
+
+echo "software id in" "$environment" "is" $SFB_VERSION
+
+cd $scriptpath
+echo "scriptpath is" $scriptpath
+
+
 source ~/.bashrc
 starttime=$(( `date +%s` ))
 
@@ -207,17 +234,6 @@ else
 fi
 
 
-. ../conf/config.txt
-echo "loaded  $environment config file at " $datenow | tee --append $xform_log
-
-
-. $scriptpath"includes/set-variables.sh"
-
-echo "software id in" "$environment" "is" $SFB_VERSION
-
-cd $scriptpath
-echo "scriptpath is" $scriptpath
-
 #$export PATH=$PATH:/opt/bitnami/java/bin
 
 #echo "PATH is" $PATH
@@ -373,11 +389,24 @@ elif [ "$extension" = "pdf" ] ; then
 	ls -la $TMPDIR$uuid
 
 else
+	echo "unoconv debug: TMPDIR $TMPDIR$uuid/$uploaded_tatfile"
+	echo "unoconv debug: targetfile $TMPDIR$uuid/targetfile.txt"
 	unoconv -f txt $TMPDIR$uuid/$uploaded_tat_file
 	cp $TMPDIR$uuid/$filename".txt" $TMPDIR$uuid/targetfile.txt
 	unoconv -f pdf $TMPDIR$uuid/$uploaded_tat_file -o $TMPDIR$uuid/target.pdf
 	echo "file was neither txt, mobi, nor PDF, so converted it to PDF using unoconv" | tee --append $xform_log
 	echo "file might contain images so converted it to PDF for montageur" | tee --append $xform_log
+fi
+
+# catch files without enough text
+wordcount=$(wc -w "$TMPDIR$uuid/targetfile.txt"| cut -f1 -d' ')
+
+if [[ "$wordcount" -lt "100" ]] ; then
+	echo "converted text has $wordcount words, less than 100 so exiting"
+	exit 0
+else
+	echo "converted text has $wordcount words, enough so continuing"
+
 fi
 
 if [ "$extension" = "txt" ] ; then
@@ -643,7 +672,7 @@ else
 	if [ "$getwiki" = "yes" ] ; then
 
 		sed '/^$/d' $TMPDIR$uuid/all_nouns.txt | sort | uniq -i > $TMPDIR$uuid/seeds
-		"$PYTHON_BIN" bin/wikifetcher.py --infile "$TMPDIR$uuid/seeds" --outfile "$TMPDIR$uuid/wikisummaries.md" --lang "en" 
+		"$PYTHON_BIN" bin/wikifetcher.py --infile "$TMPDIR$uuid/seeds" --outfile "$TMPDIR$uuid/wikisummaries.md" --lang "en" 1> /dev/null
 		cp $TMPDIR$uuid/wikisummaries.md $TMPDIR$uuid/original.md 
 		sed -e s/\=\=\=\=/xyxyxyxy/g -e s/\=\=\=/xyxyxy/g -e s/\=\=/xyxy/g -e s/xyxyxyxy/\#\#\#\#/g -e s/xyxyxy/\#\#\#/g -e s/xyxy/\#\#/g $TMPDIR$uuid/wikisummaries.md > $TMPDIR$uuid/wikiall.md
 		grep -v '\\x' $TMPDIR$uuid/wikiall.md > $TMPDIR$uuid/wikisafe.md # stripping certain escape characters

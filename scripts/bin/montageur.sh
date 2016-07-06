@@ -7,6 +7,29 @@
 # input: PDF file
 # output: unique jpgs, zip, montage
 
+if shopt -q  login_shell ; then
+	
+	if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
+		echo "config file not found, creating /home/<user>/.pagekicker, put config file there"
+		mkdir -p -m 755 "$HOME"/.pagekicker
+		echo "exiting"
+		exit 1
+	else
+		. "$HOME"/.pagekicker/config.txt
+		echo "read config file from $HOME""/.pagekicker/config.txt"
+	fi
+else
+	. /home/$(whoami)/.pagekicker/config.txt #hard-coding /home is a hack 
+	echo "read config file from /home/$(whoami)/.pagekicker/config.txt"
+fi
+
+. $scriptpath"includes/set-variables.sh"
+
+echo "software id in" "$environment" "is" $SFB_VERSION
+
+cd $scriptpath
+echo "scriptpath is" $scriptpath
+
 starttime=$(( `date +%s` ))
 
 echo "-M-M-M-M-M-M-M-M-M-M-M-M-M-M" | tee --append $xform_log
@@ -116,22 +139,6 @@ else
 	echo "received uuid " $uuid
 fi
 
-
-. ../conf/"config.txt"
-echo "running $environment config"  | tee --append $xform_log
-
-. $scriptpath"includes/set-variables.sh"
-
-echo "software id in" "$environment" "is" $SFB_VERSION
-
-cd $scriptpath
-echo "scriptpath is" $scriptpath
-
-# export PATH=$PATH:/opt/bitnami/java/bin
-
-echo "PATH is" $PATH
-# default values
-
 stopimagefolder="none" #default
 maximages="3" #default
 thumbxsize=120 #default
@@ -165,8 +172,8 @@ echo "about to mogrify ppms into jpgs"
 
 mogrify -format jpg $TMPDIR$uuid/"$montageurdir"/extracted_images*.ppm
 echo "removing ppm files"
-# rm $TMPDIR$uuid/"$montageurdir"/extracted_images*.ppm
-if [ ls *.pbm &> /dev/null ] ; then
+ rm $TMPDIR$uuid/"$montageurdir"/extracted_images*.ppm
+ if [ ls *.pbm &> /dev/null ] ; then
 	echo "removing pbm files"
 	# rm $TMPDIR$uuid/"$montageurdir"/extracted_images*.pbm
 else 
@@ -189,8 +196,6 @@ do
 done
 
 ls -la $TMPDIR$uuid
-
-
 
 # count images and create metadata
 
