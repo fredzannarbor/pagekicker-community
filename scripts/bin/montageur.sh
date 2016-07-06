@@ -139,13 +139,6 @@ else
 	echo "received uuid " $uuid
 fi
 
-
-
-# export PATH=$PATH:/opt/bitnami/java/bin
-
-echo "PATH is" $PATH
-# default values
-
 stopimagefolder="none" #default
 maximages="3" #default
 thumbxsize=120 #default
@@ -179,8 +172,8 @@ echo "about to mogrify ppms into jpgs"
 
 mogrify -format jpg $TMPDIR$uuid/"$montageurdir"/extracted_images*.ppm
 echo "removing ppm files"
-# rm $TMPDIR$uuid/"$montageurdir"/extracted_images*.ppm
-if [ ls *.pbm &> /dev/null ] ; then
+ rm $TMPDIR$uuid/"$montageurdir"/extracted_images*.ppm
+ if [ ls *.pbm &> /dev/null ] ; then
 	echo "removing pbm files"
 	# rm $TMPDIR$uuid/"$montageurdir"/extracted_images*.pbm
 else 
@@ -203,8 +196,6 @@ do
 done
 
 ls -la $TMPDIR$uuid
-
-
 
 # count images and create metadata
 

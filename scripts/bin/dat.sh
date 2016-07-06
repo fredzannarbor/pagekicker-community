@@ -398,6 +398,17 @@ else
 	echo "file might contain images so converted it to PDF for montageur" | tee --append $xform_log
 fi
 
+# catch files without enough text
+wordcount=$(wc -w "$TMPDIR$uuid/targetfile.txt"| cut -f1 -d' ')
+
+if [[ "$wordcount" -lt "100" ]] ; then
+	echo "converted text has $wordcount words, less than 100 so exiting"
+	exit 0
+else
+	echo "converted text has $wordcount words, enough so continuing"
+
+fi
+
 if [ "$extension" = "txt" ] ; then
 	montageur_success="1" # exit fail
 	echo "file was txt, no images, so skipping montageur" | tee --append $xform_log
