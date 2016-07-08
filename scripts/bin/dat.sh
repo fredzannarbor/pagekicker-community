@@ -671,7 +671,7 @@ else
 
 	if [ "$getwiki" = "yes" ] ; then
 
-		sed '/^$/d' $TMPDIR$uuid/all_nouns.txt | sort | uniq -i > $TMPDIR$uuid/seeds
+		sed sed -e '/^$/d' -e '/^[0-9#@]/d' $TMPDIR$uuid/all_nouns.txt | sort | uniq -i > $TMPDIR$uuid/seeds #filters out numeric
 		"$PYTHON_BIN" bin/wikifetcher.py --infile "$TMPDIR$uuid/seeds" --outfile "$TMPDIR$uuid/wikisummaries.md" --lang "en" 1> /dev/null
 		cp $TMPDIR$uuid/wikisummaries.md $TMPDIR$uuid/original.md 
 		sed -e s/\=\=\=\=/xyxyxyxy/g -e s/\=\=\=/xyxyxy/g -e s/\=\=/xyxy/g -e s/xyxyxyxy/\#\#\#\#/g -e s/xyxyxy/\#\#\#/g -e s/xyxy/\#\#/g $TMPDIR$uuid/wikisummaries.md > $TMPDIR$uuid/wikiall.md
