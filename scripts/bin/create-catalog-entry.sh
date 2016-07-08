@@ -158,12 +158,12 @@ shift 2
 yourname=${1#*=}
 shift
 ;;
---mailtofred)
-mailtofred=$2
+--mailtoadmin)
+mailtoadmin=$2
 shift 2
 ;;
---mailtofred=*)
-mailtofred=${1#*=}
+--mailtoadmin=*)
+mailtoadmin=${1#*=}
 shift
 ;;
 --storecode)
@@ -819,7 +819,7 @@ if [ "$builder" = "yes" ] ; then
 
 	echo "seedfile was" "$TMPDIR"seeds/seedphrases
 
-	$scriptpath"bin/builder.sh" --seedfile $TMPDIR$uuid"/seeds/sorted.seedfile" --booktype "$booktype" --jobprofilename "$jobprofilename" --booktitle "$booktitle" --ebook_format "epub" --sample_tweets "no" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername" --imprint "$imprint" --batch_uuid "$batch_uuid" --tldr "$tldr" --subtitle "$subtitle" --add_corpora "$add_corpora" --analyze_url "$analyze_url" --dontcleanupseeds "yes"
+	$scriptpath"bin/builder.sh" --seedfile $TMPDIR$uuid"/seeds/sorted.seedfile" --booktype "$booktype" --jobprofilename "$jobprofilename" --booktitle "$booktitle" --ebook_format "epub" --sample_tweets "no" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername" --imprint "$imprint" --batch_uuid "$batch_uuid" --tldr "$tldr" --subtitle "$subtitle" --add_corpora "$add_corpora" --analyze_url "$analyze_url" --dontcleanupseeds "yes" --mailtoadmin "$mailtoadmin"
 
 else
 
@@ -845,9 +845,9 @@ We'd love for you to participate in this amazing project!" \
 		-a "$TMPDIR$uuid/$sku.$safe_product_name"".epub" \
 		-a "$TMPDIR$uuid/$sku.$safe_product_name"".mobi" 
 
-if [ "$mailtofred" = "yes" ] ; then
+if [ "$mailtoadmin" = "yes" ] ; then
 
-	sendemail -t "wfzimmerman_441@kindle.com wfz_28@kindle.com wfz_82@kindle.com" \
+	sendemail -t "$mailtoadmin_ids" \
 		-u "test  build of [ "SKU $sku ""$booktitle" ] is attached" \
 		-m "reference copy" \
 		-f "$GMAIL_ID" \
@@ -858,7 +858,7 @@ if [ "$mailtofred" = "yes" ] ; then
 		-a "$TMPDIR$uuid/$sku.$safe_product_name"".mobi"
 
 else
-	echo "not mailing to myself"
+	echo "not mailing to $mailtoadmin_ids"
 
 fi
 

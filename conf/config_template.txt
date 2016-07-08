@@ -48,6 +48,7 @@ APACHE_ROOT="/path/to/userspace/in/apache"
 GMAIL_ID="user@gmail.com" # or Google Apps domain
 GMAIL_PW="gmail_pw" # if you have two-factor authentication you will need a Google App password https://support.google.com/accounts/answer/185833?hl=en
 environment="development" # each environment is assumed to have a separate working tree
+mailtoadmin_ids # if you want to automatically mail each build to admin; can include Kindle addresses e.g. wfz23@kindle.com; can include spaces to separate 
 
 # check the values in this block to be sure they are correct
 

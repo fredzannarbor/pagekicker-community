@@ -292,6 +292,14 @@ shift 2
 analyze_url=${1#*=}
 shift
 ;;
+--mailtoadmin)
+mailtoadmin=$2
+shift 2
+;;
+--mailtoadmin=*)
+mailtoadmin=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
