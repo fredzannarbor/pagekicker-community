@@ -810,6 +810,7 @@ if [ ! "$buildtarget" ] ; then
 else
 	echo "received buildtarget as $buildtarget"
 fi
+cp $TMPDIR$uuid/$sku.$safe_product_name".docx" "$buildtarget"
 chmod 755 "$buildtarget"
 echo "checking that buildtarget exists"
 ls -la $buildtarget
