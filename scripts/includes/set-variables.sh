@@ -1,4 +1,5 @@
 add_corpora="no"
+analyze_url="no"
 arxiv="no"
 BISAC_code="None"
 booktype="Reader"
@@ -109,47 +110,47 @@ fetcharray=()
 
 
 
-#workarounds for my lack of understanding of escaping
+#workarounds & useful regexes
 
-
-html="<html>"
-head="<head>"
-endhead="</endhead>"
-body="<body>"
-slash="/"
-dq='"'
-sq="'"
-p="<p>"
-endp="</p>"
-endbody="</body>"
-endhtml="</html>"
 angbr="<"
-endbr=">"
-openanchor="<a href="$dq
+body="<body>"
+bold="<b>"
+closeparen=")"
+description="test"
+docsandabstracts="'<b>Document titles and abstracts:</b><p>'"
+docxlinkname="Microsoft_Word_docx"
+docxname="Microsoft_Word_docx"
+dq='"'
 endanchor="/a>"
-newline="/n"
-pipe="|"
+endbody="</body>"
+endbold="</b>"
+endbr=">"
+endhead="</endhead>"
+endhtml="</html>"
+endp="</p>"
 epublinkname="ePub"
 epublinkrichname="Pub"
-mobilinkname="Kindle"
-pdflinkname="PDF"
-docxname="Microsoft_Word_docx"
-docxlinkname="Microsoft_Word_docx"
-on=" on "
-docsandabstracts="'<b>Document titles and abstracts:</b><p>'"
 h1=$angbr"h1"$endbr
 h1end=$angbr$slash"h1"$endbr
 h2=$angbr"h2"$endbr
 h2end=$angbr$slash"h2"$endr
 h3=$angbr"h3"$endbr
 h3end=$angbr$slash"h3"$endbr
+head="<head>"
+html="<html>"
+httpvalidate='(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
 imgsrc="<IMG SRC="
-x="x" # for imagemagick scripts
+mobilinkname="Kindle"
+newline="/n"
+on=" on "
+openanchor="<a href="$dq
 openparen="("
-closeparen=")"
-bold="<b>"
-endbold="</b>"
-description="test"
+pdflinkname="PDF"
+pipe="|"
+p="<p>"
+slash="/"
+sq="'"
+x="x" # for imagemagick scripts
 
 #imagemagick setup
 

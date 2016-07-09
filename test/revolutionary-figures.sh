@@ -25,7 +25,7 @@ else
 fi
 
 
-bin/create-catalog-entry.sh --builder "yes" --booktitle "Test" --yourname "Fred" --jobprofilename "default" --import "no" --passuuid "$uuid" --seedfile "seeds/revolutionary_figures" --imprint "pagekicker" 
+bin/create-catalog-entry.sh --builder "yes" --booktitle "Test" --yourname "Fred" --jobprofilename "default" --import "no" --passuuid "$uuid" --seedfile "seeds/revolutionary_figures" --imprint "pagekicker"  --analyze_url "none"
 
 # tests begin here
 

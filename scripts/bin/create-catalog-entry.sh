@@ -576,17 +576,22 @@ echo "Assembling infiles and assets"
 
 echo "$book_description" > $TMPDIR$uuid/book-description.txt
 echo "$tldr" > $TMPDIR$uuid/tldr.txt
-
+echo "analyze_url is $analyze_url"
 if [ -z  ${analyze_url+x} ] ; then
-	:
+	echo "$analyze_url not set as analyze_url"	
 else
-	"$PANDOC_BIN" -s -r html "$analyze_url" -o $TMPDIR$uuid"/webpage.md"
-	"$PYTHON_BIN" bin/nerv3.py $TMPDIR$uuid"/webpage.md" $TMPDIR$uuid"/webseeds"
-	 head -n "$top_q" $TMPDIR$uuid"/webseeds" > $TMPDIR$uuid"/webseeds.top_q"
-cat $TMPDIR$uuid"/webseeds.top_q" > $TMPDIR$uuid"/webseeds"
-
-	comm -2 -3 <(sort $TMPDIR$uuid"/webseeds") <(sort "locale/stopwords/webstopwords.en") >> $TMPDIR$uuid/seeds/seedphrases 
-
+	if [[ $analyze_url =~ $httpvalidate ]] ; then
+		echo "$analyze_url is valid URI"
+		echo "analyze_url is set as $analyze_url"
+		"$PANDOC_BIN" -s -r html "$analyze_url" -o $TMPDIR$uuid"/webpage.md"
+		"$PYTHON_BIN" bin/nerv3.py $TMPDIR$uuid"/webpage.md" $TMPDIR$uuid"/webseeds"
+		echo "seeds extracted from analyze_url"
+		 head -n "$top_q" $TMPDIR$uuid"/webseeds" > $TMPDIR$uuid"/webseeds.top_q"
+		cat $TMPDIR$uuid"/webseeds.top_q" > $TMPDIR$uuid"/webseeds"
+		comm -2 -3 <(sort $TMPDIR$uuid"/webseeds") <(sort "locale/stopwords/webstopwords.en") >> $TMPDIR$uuid/seeds/seedphrases 
+	else
+		echo "invalid URI, analyze_url not added"
+	fi
 fi
 
 # echo "checking for naughty words"

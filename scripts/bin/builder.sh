@@ -441,14 +441,20 @@ cp $confdir"jobprofiles"/imprints/"$imprint"/"$imprintlogo" "$TMPDIR$uuid"/cover
 echo "uuid seed file is supposed to be" "$TMPDIR$uuid/seeds/seedphrases"
 
 if [ -z  ${analyze_url+x} ] ; then
-	:
+	echo "$analyze_url not set as analyze_url"	
 else
-	"$PANDOC_BIN" -s -r html "$analyze_url" -o $TMPDIR$uuid"/webpage.md"
-	"$PYTHON_BIN" bin/nerv3.py $TMPDIR$uuid"/webpage.md" $TMPDIR$uuid"/webseeds"
- 	head -n "$top_q" $TMPDIR$uuid"/webseeds" > $TMPDIR$uuid"/webseeds.top_q"
-	cat $TMPDIR$uuid"/webseeds.top_q" > $TMPDIR$uuid"/webseeds"
-	comm -2 -3 <(sort $TMPDIR$uuid"/webseeds") <(sort $scriptpath"locale/stopwords/webstopwords."$wikilang) >> $TMPDIR$uuid/seeds/seedphrases 
-
+	if [[ $analyze_url =~ $httpvalidate ]] ; then
+		echo "$analyze_url is valid URI"
+		echo "analyze_url is set as $analyze_url"
+		"$PANDOC_BIN" -s -r html "$analyze_url" -o $TMPDIR$uuid"/webpage.md"
+		"$PYTHON_BIN" bin/nerv3.py $TMPDIR$uuid"/webpage.md" $TMPDIR$uuid"/webseeds"
+		echo "seeds extracted from analyze_url"
+		 head -n "$top_q" $TMPDIR$uuid"/webseeds" > $TMPDIR$uuid"/webseeds.top_q"
+		cat $TMPDIR$uuid"/webseeds.top_q" > $TMPDIR$uuid"/webseeds"
+		comm -2 -3 <(sort $TMPDIR$uuid"/webseeds") <(sort "locale/stopwords/webstopwords.en") >> $TMPDIR$uuid/seeds/seedphrases 
+	else
+		echo "invalid URI, analyze_url not added"
+	fi
 fi
 
 ls -la "$TMPDIR$uuid/seeds/"
