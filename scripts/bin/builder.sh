@@ -882,8 +882,8 @@ else
 fi
 
 echo "appending & sorting new bibliography entries"
-echo "* ""$bibliography_title" >> "$LOCAL_DATA"bibliography/robots/"$jobprofilename/"$jobprofilename"_titles.txt"
-ls -lart "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.txt"
+echo "* ""$bibliography_title" >> "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/"$jobprofilename"_titles.txt
+# ls -lart "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.txt"
 echo "* ""$bibliography_title" >> "$LOCAL_DATA"bibliography/imprints/"$imprint"/"$imprint"_titles.txt
 cat "$TMPDIR$uuid"/yaml-metadata.md >> "$LOCAL_DATA"bibliography/yaml/allbuilds.yaml
 
