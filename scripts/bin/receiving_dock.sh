@@ -28,7 +28,7 @@ fi
 while read backofthetruck
 do
 
-	echo "wheeling job #" $backofthetruck "onto the receiving dock"| tee --append $SFB_HOME"local-data/logs/import_log.txt"
+	echo "wheeling job #" $backofthetruck "onto the receiving dock"| tee --append "$logdir"import_log.txt
 
 	echo "metadatarget path is" $metadatatargetpath
 	cp $metadatatargetpath$backofthetruck/current-import.csv $metadatatargetpath"current-import.csv"
@@ -43,14 +43,14 @@ do
 
 	cd $scriptpath
 
-	echo "ran import script and submitted " $importrows "jobs (some may be dupes) for import to the Magento store"  | tee --append $SFB_HOME"local-data/logs/import_log.txt"
+	echo "ran import script and submitted " $importrows "jobs (some may be dupes) for import to the Magento store"  | tee --append "$logdir"import_log.txt
 
 
 done<$scriptpath"import_status/manifest.csv"
 
 rm $scriptpath"import_status/manifest.csv"
 
-echo "the empty truck has pulled away from the dock, we are waiting for the next truck to arrive"  | tee --append $SFB_HOME"local-data/logs/import_log.txt"
+echo "the empty truck has pulled away from the dock, we are waiting for the next truck to arrive"  | tee --append "$logdir"import_log.txt"
 
 exit
 
