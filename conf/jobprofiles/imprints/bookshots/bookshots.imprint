@@ -1,0 +1,12 @@
+imprint="bookshots" # code, lc, no special characters
+imprintlogo="bookshots-logo.png" # often a colophon
+imprintname="BookShots"
+imprintcopyrightpage="bookshotscopyrightpage.md"
+imprint_mission_statement="bookshots_mission.md" # located in same directory
+imprint_publisher_name="Hachette Book Group" 
+imprint_editor_name="James Patterson"
+wikilocale="$imprint_language" #
+imprint_audience_range="18+" # age in years
+imprint_audience_description="binge readers" # free text
+jobprofilename="BookShotsAI" # default robot for imprint
+
