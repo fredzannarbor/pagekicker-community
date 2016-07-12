@@ -1,0 +1,10 @@
+<?php
+/* EXAMPLE: Command Block to write content to a file before command processing */
+$event = $this->getEvent();
+$product = $event->getProduct();
+$customer = $event->getCustomer();
+$file = $this->getFile();
+$path = Mage::getModel('downloadplusbuilder/product_type')->getBaseTmpPath($customer);
+@mkdir($path, 0776, true);
+file_put_contents($path.DS.$file, $product->getSeed());
+?>
