@@ -720,7 +720,7 @@ if [ "$shortform" = "no" ] ;then
 
 
 	echo "# Also built by PageKicker Robot $jobprofilename" >>  $TMPDIR$uuid/backmatter.md
-	sort -u "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.txt" -o  "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.txt" # currently sort by alphabetical 
+	sort -u --ignore-case "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.txt" -o  "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.txt" # currently sort by alphabetical 
 	cat "$LOCAL_DATA"/bibliography/robots/"$jobprofilename"/"$jobprofilename""_titles.txt" >> $TMPDIR$uuid/backmatter.md
 	echo " " >> $TMPDIR$uuid/backmatter.md
 	echo " " >> $TMPDIR$uuid/backmatter.md

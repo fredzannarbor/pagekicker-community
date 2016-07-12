@@ -468,7 +468,7 @@ cat $file"_summary.txt" >> $TMPDIR$uuid/summary.txt
 done
 ls $TMPDIR$uuid/xtarget.*nouns* > $TMPDIR$uuid/testnouns
 cat $TMPDIR$uuid/xtarget.*nouns* > $TMPDIR$uuid/all_nouns.txt
-sort $TMPDIR$uuid/all_nouns.txt | uniq > $TMPDIR$uuid/sorted_uniqs.txt
+sort --ignore-case $TMPDIR$uuid/all_nouns.txt | uniq > $TMPDIR$uuid/sorted_uniqs.txt
 sed -i '1i # Unique Proper Nouns and Key Terms \n' $TMPDIR$uuid/sorted_uniqs.txt
 sed -i '2i \' $TMPDIR$uuid/sorted_uniqs.txt
 sed -i G $TMPDIR$uuid/sorted_uniqs.txt
