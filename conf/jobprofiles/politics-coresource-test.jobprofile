@@ -1,9 +1,0 @@
-firstname="Combinatorial"
-middlename=""
-lastname="Author"
-editedby=$firstname" "$middlename" "$lastname
-authorbio=$SFB_HOME"conf/jobprofiles/authorbios/default.html"
-fortunedb="literature"
-LSI_import="yes"
-BISAC_code="Politics"
-ebookISBN="yes"

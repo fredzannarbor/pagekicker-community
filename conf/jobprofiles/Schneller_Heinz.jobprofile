@@ -1,7 +1,0 @@
-firstname="PageKicker Robot"
-middlename=""
-lastname="Fast Heinz"
-editedby=$firstname" "$middlename" "$lastname
-authorbio=$SFB_HOME"conf/jobprofiles/authorbios/heinz.md"
-fortunedb="literature"
-sigfile="guderiansig.jpg"

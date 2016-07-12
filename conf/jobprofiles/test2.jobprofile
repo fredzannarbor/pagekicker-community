@@ -1,7 +1,0 @@
-lastname="test2"
-authorbio="$SFB_HOME/conf/jobprofiles/authorbios/test2.md"
-coverfont="MinionStd-Black"
-covercolor="NavyBlue"
-newcoverfont="MinionStd-Black"
-newcovercolor="NavyBlue"
-sigfile="jellicoe.png"
