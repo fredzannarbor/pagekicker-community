@@ -400,11 +400,9 @@ else
 	echo "$seed" > "$seedfile"
 fi
 
-
 . includes/api-manager.sh
 
 echo "test $covercolor" "$coverfont"
-
 
 # create directories I will need
 
@@ -432,7 +430,7 @@ else
 	echo "not truncating seedfile"
 fi
 
-echo "test seedfile is " $seedfile
+echo "seedfile is " $seedfile
 
 cp $scriptpath"assets/pk35pc.jpg" $TMPDIR$uuid/pk35pc.jpg
 
@@ -446,9 +444,6 @@ fi
 cp $confdir"jobprofiles"/imprints/"$imprint"/"$imprintlogo"  "$TMPDIR$uuid"
 cp $confdir"jobprofiles"/signatures/"$sigfile" "$TMPDIR$uuid"
 cp $confdir"jobprofiles"/imprints/"$imprint"/"$imprintlogo" "$TMPDIR$uuid"/cover
-
-
-echo "uuid seed file is supposed to be" "$TMPDIR$uuid/seeds/seedphrases"
 
 if [ -z  ${analyze_url+x} ] ; then
 	echo "$analyze_url not set as analyze_url"	
@@ -469,12 +464,12 @@ fi
 
 ls -la "$TMPDIR$uuid/seeds/"
 
-cat "$TMPDIR$uuid/seeds/seedphrases" | uniq | sort | sed -e '/^$/d' -e '/^[0-9#@]/d' > "$TMPDIR$uuid/seeds/sorted.seedfile"
-sort -u "$TMPDIR$uuid/seeds/sorted.seedfile" -o "$TMPDIR$uuid/seeds/sorted.seedfile"
 
+sort -f "$TMPDIR$uuid"/seeds/seedphrases 
+sort -u --ignore-case "$TMPDIR$uuid/seeds/seedphrases" | sed -e '/^$/d' -e '/^[0-9#@]/d' > $TMPDIR$uuid/seeds/sorted.seedfile
 
-echo "seeds are"
 echo "---"
+echo "seeds are"
 cat "$TMPDIR$uuid/seeds/sorted.seedfile"
 echo "---"
 
@@ -556,8 +551,6 @@ fi
 echo "running stopfile $stopfile"
 
 	"$JAVA_BIN" -jar $scriptpath"lib/IBMcloud/ibm-word-cloud.jar" -c $scriptpath"lib/IBMcloud/examples/configuration.txt" -w "1800" -h "1800" < $TMPDIR$uuid/wiki/wikiraw.md > $TMPDIR$uuid/cover/wordcloudcover.png
-
-# cat "$TMPDIR$uuid/seeds/seedphrases" | uniq | sort  > "$TMPDIR$uuid/seeds/sorted.seedfile"
 
 
 if cmp -s "$scriptpath/lib/IBMcloud/examples/pk-stopwords.txt" "$scriptpath/lib/IBMcloud/examples/restore-pk-stopwords.txt" ; then
@@ -727,7 +720,7 @@ if [ "$shortform" = "no" ] ;then
 
 
 	echo "# Also built by PageKicker Robot $jobprofilename" >>  $TMPDIR$uuid/backmatter.md
-	sort -o -u "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.txt"  "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.txt" # currently sort by alphabetical 
+	sort -u "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.txt" -o  "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.txt" # currently sort by alphabetical 
 	cat "$LOCAL_DATA"/bibliography/robots/"$jobprofilename"/"$jobprofilename""_titles.txt" >> $TMPDIR$uuid/backmatter.md
 	echo " " >> $TMPDIR$uuid/backmatter.md
 	echo " " >> $TMPDIR$uuid/backmatter.md
@@ -861,7 +854,7 @@ if [ "$add_corpora" = "yes" ] ; then
 	if grep -q "$unique_seed_string" "$SFB_HOME"shared-corpus/robots/$jobprofilename/unique_seed_strings.sorted ; then
 		echo "seed string $unique_seed_string is already in corpus for robot $jobprofilename "
 	else
-		cp -u "$TMPDIR$uuid"/"$sku.$safe_product_name".epub "$SFB_HOME"shared-corpus/robots/"$jobprofilename"/"$sku.$safe_product_name.epub" 
+		cp "$TMPDIR$uuid"/"$sku.$safe_product_name".epub "$SFB_HOME"shared-corpus/robots/"$jobprofilename"/"$sku.$safe_product_name.epub" 
 		echo "added book associated with $unique_seed_string to corpus for robot $jobprofilename"
 	fi
 else
