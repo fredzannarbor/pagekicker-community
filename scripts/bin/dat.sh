@@ -5,7 +5,6 @@
 
 # requires pdfimages, imagemagick, fdupes
 
-# confpath is hard-coded to /opt/bitnami ...
 
 # input: PDF file OR url
 # output: unique jpgs, zip, montage

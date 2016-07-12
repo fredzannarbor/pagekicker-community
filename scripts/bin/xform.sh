@@ -246,7 +246,7 @@ $scriptpath"bin/dat.sh" --xmldirectoryname "$xmldirectoryname" --xmlbasefile "$x
 	imprintlanguage=$(xmlstarlet sel -t -v "/item/imprintlanguage" "$xmlfilename")
 	imprintlogo=$(xmlstarlet sel -t -v "/item/imprintlogo" "$xmlfilename")
 
-	mkdir -p -m 755 "$confpath"jobprofiles/imprints/"$imprint"
+	mkdir -p -m 755 "$confdir"jobprofiles/imprints/"$imprint"
 
 	# get the logo and store it in imprints directory
 
@@ -257,7 +257,7 @@ $scriptpath"bin/dat.sh" --xmldirectoryname "$xmldirectoryname" --xmlbasefile "$x
 	logosecuredir=`ls $logobase/*`
 	logofullpath="$WEBFORMSIMAGESDIR""$submissionid"/$imprintlogo_webform_field/$logosecuredir/"/""$imprintlogo" 
 	echo "logo full path is" $logofullpath
-	cp "$logofullpath" "$confpath"jobprofiles/imprints/"$imprint"/"$imprintlogo"
+	cp "$logofullpath" "$confdir"jobprofiles/imprints/"$imprint"/"$imprintlogo"
 
 	# echo textarea variables to markdown files 
 
@@ -265,14 +265,14 @@ $scriptpath"bin/dat.sh" --xmldirectoryname "$xmldirectoryname" --xmlbasefile "$x
 
 	# assemble imprint file
 
-	echo "imprintname="'"'"$imprintname"'"' > "$confpath"jobprofiles/imprints/"$imprint"/"$imprint".imprint
-	echo "imprintlogo="'"'"$imprintlogo"'"' >> "$confpath"jobprofiles/imprints/"$imprint"/"$imprint".imprint
-	echo "imprintcopyrightname="'"'"$imprintcopyrightname"'"' >> "$confpath"jobprofiles/imprints/"$imprint"/"$imprint".imprint
-	echo "imprint_mission_statement="'"'"$imprint.statement"'"' >> "$confpath"jobprofiles/imprints/"$imprint"/"$imprint".imprint
+	echo "imprintname="'"'"$imprintname"'"' > "$confdir"jobprofiles/imprints/"$imprint"/"$imprint".imprint
+	echo "imprintlogo="'"'"$imprintlogo"'"' >> "$confdir"jobprofiles/imprints/"$imprint"/"$imprint".imprint
+	echo "imprintcopyrightname="'"'"$imprintcopyrightname"'"' >> "$confdir"jobprofiles/imprints/"$imprint"/"$imprint".imprint
+	echo "imprint_mission_statement="'"'"$imprint.statement"'"' >> "$confdir"jobprofiles/imprints/"$imprint"/"$imprint".imprint
 
 	echo "here is latest imprint file"
 	echo "IIIIIII"
-	cat "$confpath"jobprofiles"/imprints/"$imprint/$imprint.imprint
+	cat "$confdir"jobprofiles"/imprints/"$imprint/$imprint.imprint
 	echo "IIIIIII"
 ;;
 *)
