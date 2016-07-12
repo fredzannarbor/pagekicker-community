@@ -28,11 +28,12 @@ echo "shortform is $shortform"
 
 echo "revision number is" $SFB_VERSION
 
-echo "sfb_log is" $sfb_log
+echo "sfb_log is" $logdir"sfb_log"
 
 echo "completed reading config file and  beginning logging at" `date +'%m/%d/%y%n %H:%M:%S'` 
 
 jobprofilename="default"
+jobprofile="default"
 singleseed="none"
 sample_tweets="no"
 todaysdate=`date`
@@ -130,6 +131,14 @@ shift 2
 ;;
 --jobprofilename=*)
 jobprofilename=${1#*=}
+shift
+;;
+--jobprofile)
+jobprofile=$2
+shift 2
+;;
+--jobprofile=*)
+jobprofile=${1#*=}
 shift
 ;;
 --wikilang)
@@ -315,6 +324,7 @@ shift
 esac
 done
 
+
 echo "imprint is $imprint" #debug
 echo "editedby is $editedby" #debug
 echo "jobprofilename is $jobprofilename" #debug
@@ -363,7 +373,7 @@ else
 fi
 
 if [ -z "$jobprofilename" ]; then
-	jobprofilename="default"
+	jobprofilename="$jobprofile"
 	. "$confdir"jobprofiles/robots/"$jobprofilename".jobprofile
 else
 	. "$confdir"jobprofiles/robots/"$jobprofilename".jobprofile
