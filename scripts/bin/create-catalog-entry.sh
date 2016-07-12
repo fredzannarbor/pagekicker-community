@@ -30,7 +30,6 @@ echo "sku" $sku
 
 . includes/set-variables.sh
 
-
 while :
 do
 case $1 in
@@ -553,12 +552,21 @@ else
 	stopfile="$scriptpath""lib/IBMcloud/examples/pk-stopwords.txt"
 fi
 
-echo "wikilocale now is "$wikilocale
+echo "wikilocale now is "$wikilang
 
+if [ -z "$imprint" ]; then
+	imprint="default"
+	. $confdir"jobprofiles/imprints/"$imprint"/"$imprint".imprint"
+else
+	. $confdir"jobprofiles/imprints/"$imprint"/"$imprint".imprint"
+fi
 
-. $confdir"jobprofiles/imprints/$imprint/$imprint".imprint
-
-echo "imprint is $imprint"
+if [ -z "$jobprofilename" ]; then
+	jobprofilename="default"
+	. "$confdir"jobprofiles/robots/"$jobprofilename".jobprofile
+else
+	. "$confdir"jobprofiles/robots/"$jobprofilename".jobprofile
+fi
 
 human_author="$editedby"
 
@@ -629,10 +637,10 @@ cp $TMPDIR$uuid/seeds/sorted.seedfile $TMPDIR$uuid/seeds/debug.sorted
 cp $TMPDIR$uuid/seeds/seedphrases $TMPDIR$uuid/seeds/debug.seedphrases
 
 cp $scriptpath"assets/pk35pc.jpg" $TMPDIR$uuid/pk35pc.jpg
+cp $confdir"jobprofiles"/imprints/"$imprint"/"$imprintlogo"  $TMPDIR$uuid/cover/"$imprintlogo"
 
-cp $confdir"jobprofiles"/imprints/"$imprint"/"$imprintlogo"  $TMPDIR$uuid
-cp $confdir"jobprofiles"/signatures/$sigfile $TMPDIR$uuid
-cp $confdir"jobprofiles"/imprints/"$imprint"/"$imprintlogo"  $TMPDIR$uuid/cover
+
+cp $confdir"jobprofiles"/signatures/$sigfile $TMPDIR$uuid/$sigfile
 
 
 # build cover if requested

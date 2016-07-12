@@ -364,9 +364,9 @@ fi
 
 if [ -z "$jobprofilename" ]; then
 	jobprofilename="default"
-	. "$confdir"jobprofiles/"$jobprofilename".jobprofile
+	. "$confdir"jobprofiles/robots/"$jobprofilename".jobprofile
 else
-	. "$confdir"jobprofiles/"$jobprofilename".jobprofile
+	. "$confdir"jobprofiles/robots/"$jobprofilename".jobprofile
 fi
 
 TEXTDOMAIN=SFB
