@@ -2,7 +2,7 @@
 
 Please submit pull requests!
 
- - Each expert should come paired with a single blog post representative of the field they represent.
+ - Each expert should come paired with a single blog post representative of the field they represent and the quality of their writing.
  - Experts may be repeated in mutliple fields if they represent multiple fields. Submit a separate link for each subfield.
  - Good writers are preferred.
  - Detailed writers are preferred.
