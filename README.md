@@ -1,2 +1,26 @@
-# blogs-by-experts
-A curated list of blogs written by eloquent experts, organized by field.
+# Blogs by Experts
+
+Increasingly the only media worth reading are technical blogs written directly
+by experts. This is a curated list of such blogs, organized by field.
+
+Pull requests are encouraged. See CONTRIBUTING.md for more details.
+
+# Experts
+
+## Mathematics
+
+ - Terence Tao: [Sumfree sets in groups](https://terrytao.wordpress.com/2016/03/11/sumfree-sets-in-groups/)
+
+## Computer science
+
+ - Scott Aaronson: [The 8000th Busy Beaver number eludes ZF set theory](http://www.scottaaronson.com/blog/?p=2725)
+ - Richard Lipton & Ken Reagan: [A big result on graph isomorphism](https://rjlipton.wordpress.com/2015/11/04/a-big-result-on-graph-isomorphism/)
+
+## Physics
+
+ - Scott Aaronson: [Why I am not an integrated information theorist](http://www.scottaaronson.com/blog/?p=1799)
+
+## Psychiatry
+
+ - Scott Alexander: [Reverse voxsplaining: prison and mental illness](http://slatestarcodex.com/2016/03/07/reverse-voxsplaining-prison-and-mental-illness/)
+
