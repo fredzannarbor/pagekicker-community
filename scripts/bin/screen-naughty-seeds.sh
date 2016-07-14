@@ -28,6 +28,7 @@ cd $scriptpath
 
 # argparse
 # $1 is inbound seedphrases file
+# $2 is verbose
 
 if [ ! "$passuuid" ] ; then
 	echo "creating uuid"
@@ -54,7 +55,13 @@ if grep -qw "$line" "seeds/disallowed-seeds.txt" ; then
 	disallowed="$disallowed""\n ""$line"
 
 else
-	echo "$line is not a naughty word -- your momma raised you right!"
+	if [ "$2" = "v" ] ; then
+		echo "$line is not a naughty word -- your momma raised you right!"
+	else
+		true
+		#echo "$line is not a naughty word -- your momma raised you right!"
+	fi
+
 	echo "$line" >> $TMPDIR$uuid/seeds/allowed_seeds.txt
 fi
 
