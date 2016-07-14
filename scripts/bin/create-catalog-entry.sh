@@ -429,6 +429,14 @@ shift 2
 top_q=${1#*=}
 shift
 ;;
+--summary)
+summary=$2
+shift 2
+;;
+--summary=*)
+summary=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -633,25 +641,49 @@ cat "$TMPDIR$uuid/seeds/sorted.seedfile" > "$LOCAL_DATA"seeds/history/"$sku".see
 
 #expand seeds to valid wiki pages
  
-"$PYTHON_BIN" bin/wiki_seeds_2_pages.py --infile "$TMPDIR$uuid/seeds/sorted.seedfile" --outfile "$TMPDIR$uuid/seeds/pagehits"
+
+"$PYTHON_BIN" bin/wiki_seeds_2_pages.py --infile "$TMPDIR$uuid/seeds/sorted.seedfile" --pagehits "$TMPDIR$uuid/seeds/pagehits"
+
 
 # filter pagehits
 
+
 cp $TMPDIR$uuid/seeds/pagehits $TMPDIR$uuid/seeds/filtered.pagehits
+
+echo "--- filtered pagehits are ---" 
+cat $TMPDIR$uuid/seeds/filtered.pagehits
+
+echo "--- end of pagehits ---"
 
 # fetch data I will need based on seedfile
 
-echo "summary is" $summary
+echo "summary is" $summary #summary should be on for cover building
 wikilocale="en" # hard code for testing
 echo $wikilocale "is wikilocale"
 
 # fetch by pagehits
 
-if [ "$summary" = "true" ] ; then
-	"$PYTHON_BIN"  $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR$uuid/seeds/filtered.pagehits" --outfile "$TMPDIR$uuid/wiki/wikiraw.md" --lang "$wikilocale" --summary 1> /dev/null
-else
-	"$PYTHON_BIN" $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR$uuid/seeds/filtered.pagehits" --outfile "$TMPDIR$uuid/wiki/wikiraw.md" --lang "$wikilocale" 1> /dev/null
-fi
+case $summary in
+	summaries_only)
+		echo "fetching page summaries only"
+	"$PYTHON_BIN"  $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR$uuid/seeds/filtered.pagehits" --outfile "$TMPDIR$uuid/wiki/wikiraw.md" --lang "$wikilocale" --summary  1> /dev/null
+		;;
+	complete_pages_only)
+		echo "fetching complete pages only"
+		"$PYTHON_BIN" $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR$uuid/seeds/filtered.pagehits" --outfile "$TMPDIR$uuid/wiki/wikiraw.md" --lang "$wikilocale"  1> /dev/null
+		;;
+	both)
+		echo "fetching both summaries and complete pages"
+		echo "fetching page summaries now"
+		"$PYTHON_BIN"  $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR$uuid/seeds/filtered.pagehits" --outfile "$TMPDIR$uuid/wiki/wikisummaries.md" --lang "$wikilocale" --summary  1> /dev/null
+		echo "fetching complete pages now"
+		"$PYTHON_BIN" $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR$uuid/seeds/filtered.pagehits" --outfile "$TMPDIR$uuid/wiki/wikicompletepages.md" --lang "$wikilocale"  1> /dev/null
+		;;
+	*)
+		echo "unrecognized summary option"
+	;;
+esac
+
 
 ## video test code
 #video_search="no"
@@ -833,7 +865,7 @@ if [ "$builder" = "yes" ] ; then
 
 	echo "seedfile was" "$TMPDIR"seeds/seedphrases
 
-	$scriptpath"bin/builder.sh" --seedfile $TMPDIR$uuid"/seeds/sorted.seedfile" --booktype "$booktype" --jobprofilename "$jobprofilename" --booktitle "$booktitle" --ebook_format "epub" --sample_tweets "no" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername" --imprint "$imprint" --batch_uuid "$batch_uuid" --tldr "$tldr" --subtitle "$subtitle" --add_corpora "$add_corpora" --analyze_url "$analyze_url" --dontcleanupseeds "yes" --mailtoadmin "$mailtoadmin"
+	$scriptpath"bin/builder.sh" --seedfile $TMPDIR$uuid"/seeds/sorted.seedfile" --booktype "$booktype" --jobprofilename "$jobprofilename" --booktitle "$booktitle" --ebook_format "epub" --sample_tweets "no" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername" --imprint "$imprint" --batch_uuid "$batch_uuid" --tldr "$tldr" --subtitle "$subtitle" --add_corpora "$add_corpora" --analyze_url "$analyze_url" --dontcleanupseeds "yes" --mailtoadmin "$mailtoadmin" --summary "both"
 
 else
 

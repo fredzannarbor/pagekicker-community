@@ -476,11 +476,35 @@ echo "---"
 # fetch data I will need based on seedfile
 echo "summary is" $summary
 
-if [ "$summary" = "true" ] ; then
-	"$PYTHON_BIN"  $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR$uuid/seeds/sorted.seedfile" --outfile "$TMPDIR$uuid/wiki/wikiraw.md" --lang "$wikilang" --summary 1> /dev/null
-else
-	"$PYTHON_BIN"   $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR$uuid/seeds/sorted.seedfile" --outfile "$TMPDIR$uuid/wiki/wikiraw.md" --lang "$wikilang"  1> /dev/null
-fi
+# fetch by pagehits
+
+
+case $summary in
+summaries_only)
+	echo "fetching page summaries only"
+	"$PYTHON_BIN"  $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR$uuid/seeds/filtered.pagehits" --outfile "$TMPDIR$uuid/wiki/wikisummariesraw.md" --lang "$wikilocale" --summary  1> /dev/null
+	sed -e s/\=\=\=\=\=/JQJQJQJQJQ/g -e s/\=\=\=\=/JQJQJQJQ/g -e s/\=\=\=/JQJQJQ/g -e s/\=\=/JQJQ/g -e s/Edit\ /\ /g -e s/JQJQJQJQJQ/\#\#\#\#\#/g -e s/JQJQJQJQ/\#\#\#\#/g -e s/JQJQJQ/\#\#\#/g -e s/JQJQ/\#\#/g $TMPDIR$uuid/wiki/wikisummariesraw.md | sed G > $TMPDIR$uuid/wiki/wikisummaries.md
+;;
+complete_pages_only)
+	echo "fetching complete pages only"
+	"$PYTHON_BIN" $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR$uuid/seeds/filtered.pagehits" --outfile "$TMPDIR$uuid/wiki/wikipagesraw.md" --lang "$wikilocale"  1> /dev/null
+	sed -e s/\=\=\=\=\=/JQJQJQJQJQ/g -e s/\=\=\=\=/JQJQJQJQ/g -e s/\=\=\=/JQJQJQ/g -e s/\=\=/JQJQ/g -e s/Edit\ /\ /g -e s/JQJQJQJQJQ/\#\#\#\#\#/g -e s/JQJQJQJQ/\#\#\#\#/g -e s/JQJQJQ/\#\#\#/g -e s/JQJQ/\#\#/g $TMPDIR$uuid/wiki/wikipagesraw.md | sed G > $TMPDIR$uuid/wiki/wikipages.md
+;;
+both)
+	echo "fetching both summaries and complete pages"
+	echo "fetching page summaries now"
+	"$PYTHON_BIN"  $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR$uuid/seeds/filtered.pagehits" --outfile "$TMPDIR$uuid/wiki/wikisummaries1.md" --lang "$wikilocale" --summary  1> /dev/null
+	echo "fetching complete pages now"
+	"$PYTHON_BIN" $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR$uuid/seeds/filtered.pagehits" --outfile "$TMPDIR$uuid/wiki/wikipages1.md" --lang "$wikilocale"  1> /dev/null
+	sed -e s/\=\=\=\=\=/JQJQJQJQJQ/g -e s/\=\=\=\=/JQJQJQJQ/g -e s/\=\=\=/JQJQJQ/g -e s/\=\=/JQJQ/g -e s/Edit\ /\ /g -e s/JQJQJQJQJQ/\#\#\#\#\#/g -e s/JQJQJQJQ/\#\#\#\#/g -e s/JQJQJQ/\#\#\#/g -e s/JQJQ/\#\#/g $TMPDIR$uuid/wiki/wikisummaries1.md | sed G > $TMPDIR$uuid/wiki/wikisummaries.md
+	sed -e s/\=\=\=\=\=/JQJQJQJQJQ/g -e s/\=\=\=\=/JQJQJQJQ/g -e s/\=\=\=/JQJQJQ/g -e s/\=\=/JQJQ/g -e s/Edit\ /\ /g -e s/JQJQJQJQJQ/\#\#\#\#\#/g -e s/JQJQJQJQ/\#\#\#\#/g -e s/JQJQJQ/\#\#\#/g -e s/JQJQ/\#\#/g $TMPDIR$uuid/wiki/wikipages1.md | sed G > $TMPDIR$uuid/wiki/wikipages.md
+;;
+*)
+	echo "unrecognized summary option"
+;;
+esac
+
+
 
 if [ "$sample_tweets" = "yes" ] ; then
 	echo "searching for Tweets"
@@ -522,8 +546,7 @@ if [ "$video_search" = "yes" ] ; then
 else
 	echo "no video search" >> $sfb_log
 fi
-# clean up fetched data
-sed -e s/\=\=\=\=\=/JQJQJQJQJQ/g -e s/\=\=\=\=/JQJQJQJQ/g -e s/\=\=\=/JQJQJQ/g -e s/\=\=/JQJQ/g -e s/Edit\ /\ /g -e s/JQJQJQJQJQ/\#\#\#\#\#/g -e s/JQJQJQJQ/\#\#\#\#/g -e s/JQJQJQ/\#\#\#/g -e s/JQJQ/\#\#/g $TMPDIR$uuid/wiki/wikiraw.md | sed G > $TMPDIR$uuid/wiki/wikiall.md
+
 echo "editedby is $editedby" #debug
 
 # build cover
@@ -669,7 +692,32 @@ if [ "$shortform" = "no" ]; then
 		echo "$tldr" >> $TMPDIR$uuid/tmpfrontmatter.md
 	fi
 
+	# assemble summary section (wiki human written)
 
+	case $summary in
+	summaries_only)
+		echo "using summaries only for main body"
+		;;
+	complete_pages_only)
+		echo "using complete pages only for main body"
+		;;
+	both)
+		echo "  " >> $TMPDIR$uuid/tmpfrontmatter.md
+		echo "  " >> $TMPDIR$uuid/tmpfrontmatter.md
+		echo "# Abstracts" >> $TMPDIR$uuid/tmpfrontmatter.md
+		echo "  " >> $TMPDIR$uuid/tmpfrontmatter.md
+		echo "  " >> $TMPDIR$uuid/tmpfrontmatter.md
+		cat "$TMPDIR$uuid/wiki/wikisummaries.md" | sed -e 's/#/##/' >> $TMPDIR$uuid/tmpfrontmatter.md
+		echo "  " >> $TMPDIR$uuid/tmpfrontmatter.md
+		echo "  " >> $TMPDIR$uuid/tmpfrontmatter.md
+		echo "# Chapters" >> $TMPDIR$uuid/tmpfrontmatter.md
+		cat "$TMPDIR$uuid/wiki/wikipages.md" | sed -e 's/#/##/' >> $TMPDIR$uuid/tmpfrontmatter.md
+;;
+	*)
+		echo "unrecognized summary option"
+	;;
+	esac
+	
 
 	echo "assembled front matter"
 
@@ -753,7 +801,8 @@ else
 
 fi
 
-	cat $TMPDIR$uuid/wiki/wikiall.md >> $TMPDIR$uuid/tmpfrontmatter.md
+# concatenate front matter, body & back matter
+	# cat $TMPDIR$uuid/wiki/wikiall.md >> $TMPDIR$uuid/tmpfrontmatter.md
 	cat $TMPDIR$uuid/backmatter.md >> $TMPDIR$uuid/tmpfrontmatter.md
 	cp $TMPDIR$uuid/tmpfrontmatter.md $TMPDIR$uuid/complete.md
 
