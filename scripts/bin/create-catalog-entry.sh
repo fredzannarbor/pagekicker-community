@@ -604,18 +604,15 @@ fi
 
 # echo "checking for naughty words"
 
-#export uuid
+export uuid
 
-# [[ $(PK_ERR_CODE="disallowed") ]] && bin/screen-naughty-seeds.sh $TMPDIR$uuid/seeds/seedphrases || echo "failed due to naughty words" exit 1
+if bin/screen-naughty-seeds.sh $TMPDIR$uuid/seeds/seedphrases  ; then
 
-
-#if bin/screen-naughty-seeds.sh $TMPDIR$uuid/seeds/seedphrases  ; then
-
-#	echo "Passed check for naughty seeds"
-#else
-#	echo "Exited with problem in screen-naughty-seeds.sh"
-#  	exit 0
-#fi
+	echo "Passed check for naughty seeds"
+else
+	echo "Exited with problem in screen-naughty-seeds.sh"
+  	exit 0
+fi
 
 # echo "checking for human error on form submission"
 
@@ -633,29 +630,27 @@ echo "seedfile is" $seedfile
 
 cat "$TMPDIR$uuid/seeds/seedphrases" | uniq | sort | sed -e '/^$/d' -e '/^[0-9#@]/d' > "$TMPDIR$uuid/seeds/sorted.seedfile"
 cat "$TMPDIR$uuid/seeds/sorted.seedfile" > "$LOCAL_DATA"seeds/history/"$sku".seedphrases
-cp $TMPDIR$uuid/seeds/sorted.seedfile $TMPDIR$uuid/seeds/debug.sorted
-cp $TMPDIR$uuid/seeds/seedphrases $TMPDIR$uuid/seeds/debug.seedphrases
 
-cp $scriptpath"assets/pk35pc.jpg" $TMPDIR$uuid/pk35pc.jpg
-cp $confdir"jobprofiles"/imprints/"$imprint"/"$imprintlogo"  $TMPDIR$uuid/cover/"$imprintlogo"
+#expand seeds to valid wiki pages
+ 
+"$PYTHON_BIN" bin/wiki_seeds_2_pages.py --infile "$TMPDIR$uuid/seeds/sorted.seedfile" --outfile "$TMPDIR$uuid/seeds/pagehits"
 
+# filter pagehits
 
-cp $confdir"jobprofiles"/signatures/$sigfile $TMPDIR$uuid/$sigfile
-
-
-# build cover if requested
+cp $TMPDIR$uuid/seeds/pagehits $TMPDIR$uuid/seeds/filtered.pagehits
 
 # fetch data I will need based on seedfile
 
 echo "summary is" $summary
 wikilocale="en" # hard code for testing
 echo $wikilocale "is wikilocale"
-# echo "PYTHON_BIN is $PYTHON_BIN" troubleshooting if needed
+
+# fetch by pagehits
 
 if [ "$summary" = "true" ] ; then
-	"$PYTHON_BIN"  $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR$uuid/seeds/seedphrases" --outfile "$TMPDIR$uuid/wiki/wikiraw.md" --lang "$wikilocale" --summary 1> /dev/null
+	"$PYTHON_BIN"  $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR$uuid/seeds/filtered.pagehits" --outfile "$TMPDIR$uuid/wiki/wikiraw.md" --lang "$wikilocale" --summary 1> /dev/null
 else
-	"$PYTHON_BIN" $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR$uuid/seeds/seedphrases" --outfile "$TMPDIR$uuid/wiki/wikiraw.md" --lang "$wikilocale" 1> /dev/null
+	"$PYTHON_BIN" $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR$uuid/seeds/filtered.pagehits" --outfile "$TMPDIR$uuid/wiki/wikiraw.md" --lang "$wikilocale" 1> /dev/null
 fi
 
 ## video test code
@@ -685,7 +680,7 @@ else
 		-f "$GMAIL_ID" \
 		-cc "$GMAIL_ID" \
 		-xu "$GMAIL_ID" \
-		-xp "VnenKBENvGa9" \
+		-xp "$GMAIL_PASSWORD" \
 		-s smtp.gmail.com:587 \
 		-v \
 		-o tls=yes
@@ -694,6 +689,12 @@ fi
 
 
 # build cover
+
+cp $scriptpath"assets/pk35pc.jpg" $TMPDIR$uuid/pk35pc.jpg
+cp $confdir"jobprofiles"/imprints/"$imprint"/"$imprintlogo"  $TMPDIR$uuid/cover/"$imprintlogo"
+
+cp $confdir"jobprofiles"/signatures/$sigfile $TMPDIR$uuid/$sigfile
+
 
 echo "lastname prior to 1st cover build is" $lastname
 
