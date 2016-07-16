@@ -7,6 +7,10 @@ Pull requests are encouraged. See CONTRIBUTING.md for more details.
 
 # Experts
 
+## Biology
+
+ - Lior Pachter: [The perfect human is Puerto Rican](https://liorpachter.wordpress.com/2014/12/02/the-perfect-human-is-puerto-rican/)
+
 ## Mathematics
 
  - Terence Tao: [Sumfree sets in groups](https://terrytao.wordpress.com/2016/03/11/sumfree-sets-in-groups/)
