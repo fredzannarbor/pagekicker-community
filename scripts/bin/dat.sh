@@ -289,8 +289,8 @@ echo "summarizer_ngram_threshold was" $summarizer_ngram_threshold| tee --append 
 echo "url to fetch is" $url | tee --append $xform_log        
 imagekeyword=$(xmlstarlet sel -t -v "/item/imagekeyword" "$xmlfilename")
 
-. ../conf/jobprofiles/"$jobprofilename"".jobprofile"
-. ../conf/jobprofiles/imprints/$imprint/$imprint".imprint"
+. "$confdir"jobprofiles/robots/"$jobprofilename"".jobprofile"
+. "$confdir"jobprofiles/imprints/$imprint/$imprint".imprint"
 echo "$jobprofile"
 echo "$imprint"
 echo $WEBFORMSXML_HOME
@@ -538,7 +538,7 @@ else
 fi
 
 cp assets/PageKicker_cmyk300dpi.png $TMPDIR$uuid/PageKicker_cmyk300dpi.png
-cp ../conf/jobprofiles/imprints/$imprint/$imprintlogo $TMPDIR$uuid/$imprintlogo
+cp "$confdir"jobprofiles/imprints/$imprint/$imprintlogo $TMPDIR$uuid/$imprintlogo
 
 if [ "$frontmatter" = "off" ] ; then 
 
@@ -546,7 +546,7 @@ if [ "$frontmatter" = "off" ] ; then
 else
 
 	echo "copyright page for this imprint is" $imprintcopyrightpage
-	cp ../conf/jobprofiles/imprints/$imprint/$imprintcopyrightpage $TMPDIR$uuid/$imprintcopyrightpage
+	cp "$confdir"jobprofiles/imprints/$imprint/$imprintcopyrightpage $TMPDIR$uuid/$imprintcopyrightpage
 	# save reports as PDFs
 
 	"$PANDOC_BIN" $TMPDIR$uuid/summary.md -o $TMPDIR$uuid/summary.pdf --latex-engine=xelatex
@@ -579,7 +579,7 @@ else
 	echo "  " >> $TMPDIR$uuid/titlepage.md
 	echo "  " >> $TMPDIR$uuid/titlepage.md
 	echo "# Also by PageKicker Robot" $lastname >>  $TMPDIR$uuid/titlepage.md
-	cat $confdir"jobprofiles/bibliography/"$lastname/$lastname"_titles.txt" >> $TMPDIR$uuid/titlepage.md
+	cat $LOCAL_DATA/bibliography/robots/$jobprofilename/$jobprofilename"_titles.txt" >> $TMPDIR$uuid/titlepage.md
 	echo "  " >> $TMPDIR$uuid/titlepage.md
 	echo "  " >> $TMPDIR$uuid/titlepage.md
 	"$PANDOC_BIN" $TMPDIR$uuid/titlepage.md -o $TMPDIR$uuid/titlepage.pdf --variable fontsize=12pt --latex-engine=xelatex
@@ -588,7 +588,7 @@ else
 	echo "# About the Robot Author" > $TMPDIR$uuid/robot_author.md
 	echo "# $lastname" >> $TMPDIR$uuid/robot_author.md
 	cat "$authorbio" >> $TMPDIR$uuid/robot_author.md
-	cp ../conf/jobprofiles/authorphotos/$authorphoto $TMPDIR$uuid
+	cp "$confdir"jobprofiles/authorphotos/$authorphoto $TMPDIR$uuid
 
 	echo "built author page"
 
@@ -596,7 +596,7 @@ else
 
 	cp assets/acknowledgements.md $TMPDIR$uuid/acknowledgements.md
 	echo "sigfile is" $sigfile
-	cp ../conf/jobprofiles/signatures/$sigfile $TMPDIR$uuid
+	cp "$confdir"jobprofiles/signatures/$sigfile $TMPDIR$uuid
 
 	echo "  " >> $TMPDIR$uuid/acknowledgements.md
 	echo "  " >> $TMPDIR$uuid/acknowledgements.md
