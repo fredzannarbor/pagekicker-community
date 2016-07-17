@@ -76,6 +76,11 @@ positive_seed_weight=1
 negative_seeds=""
 negative_seed_weight=1
 summarizer_ngram_threshold=2
+summary="both"
+
+# wiki abstracts
+
+abstracts="both"
 
 #cccsetup
 

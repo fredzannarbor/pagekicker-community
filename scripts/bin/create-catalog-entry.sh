@@ -602,7 +602,7 @@ else
 		"$PANDOC_BIN" -s -r html "$analyze_url" -o $TMPDIR$uuid"/webpage.md"
 		"$PYTHON_BIN" bin/nerv3.py $TMPDIR$uuid"/webpage.md" $TMPDIR$uuid"/webseeds"
 		echo "seeds extracted from analyze_url"
-		 head -n "$top_q" $TMPDIR$uuid"/webseeds" > $TMPDIR$uuid"/webseeds.top_q"
+		 head -n "$top_q" $TMPDIR$uuid"/webseeds" | sed '/^\s*$/d' > $TMPDIR$uuid"/webseeds.top_q"
 		cat $TMPDIR$uuid"/webseeds.top_q" > $TMPDIR$uuid"/webseeds"
 		comm -2 -3 <(sort $TMPDIR$uuid"/webseeds") <(sort "locale/stopwords/webstopwords.en") >> $TMPDIR$uuid/seeds/seedphrases 
 	else
@@ -613,10 +613,11 @@ fi
 # echo "checking for naughty words"
 
 export uuid
+bin/screen-naughty-seeds.sh "$TMPDIR$uuid/seeds/seedphrases" $uuid
+naughtyresult=$?
 
-if bin/screen-naughty-seeds.sh $TMPDIR$uuid/seeds/seedphrases  ; then
-
-	echo "Passed check for naughty seeds"
+if [ $naughtyresult -eq "0" ] ; then
+	echo "naughty seeds ran"
 else
 	echo "Exited with problem in screen-naughty-seeds.sh"
   	exit 0
@@ -666,18 +667,33 @@ echo $wikilocale "is wikilocale"
 case $summary in
 	summaries_only)
 		echo "fetching page summaries only"
-	"$PYTHON_BIN"  $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR$uuid/seeds/filtered.pagehits" --outfile "$TMPDIR$uuid/wiki/wikiraw.md" --lang "$wikilocale" --summary  1> /dev/null
+	"$PYTHON_BIN"  $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR$uuid/seeds/filtered.pagehits" --outfile "$TMPDIR$uuid/wiki/wikisummaries.md" --lang "$wikilocale" --summary  1> /dev/null
+		wordcountsummaries=$(wc -w "$TMPDIR$uuid/wiki/wikisummaries.md" | cut -f1 -d' ')
+		echo "wordcountsummaries is" $wordcountsummaries
+		cp "$TMPDIR$uuid"/wiki/wikisummaries.md "$TMPDIR$uuid"/wiki/wiki4cloud.md
 		;;
 	complete_pages_only)
 		echo "fetching complete pages only"
-		"$PYTHON_BIN" $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR$uuid/seeds/filtered.pagehits" --outfile "$TMPDIR$uuid/wiki/wikiraw.md" --lang "$wikilocale"  1> /dev/null
+		"$PYTHON_BIN" $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR$uuid/seeds/filtered.pagehits" --outfile "$TMPDIR$uuid/wiki/wikipages.md" --lang "$wikilocale"  1> /dev/null
+		wordcountpages=$(wc -w "$TMPDIR$uuid/wiki/wikipages.md" | cut -f1 -d' ')
+		echo "wordcountpages is" $wordcountpages
+		cp "$TMPDIR$uuid"/wiki/wikipages.md "$TMPDIR$uuid"/wiki/wiki4cloud.md
 		;;
 	both)
 		echo "fetching both summaries and complete pages"
 		echo "fetching page summaries now"
 		"$PYTHON_BIN"  $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR$uuid/seeds/filtered.pagehits" --outfile "$TMPDIR$uuid/wiki/wikisummaries.md" --lang "$wikilocale" --summary  1> /dev/null
+		wordcountsummaries=$(wc -w "$TMPDIR$uuid"/wiki/wikisummaries.md | cut -f1 -d' ')
 		echo "fetching complete pages now"
-		"$PYTHON_BIN" $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR$uuid/seeds/filtered.pagehits" --outfile "$TMPDIR$uuid/wiki/wikicompletepages.md" --lang "$wikilocale"  1> /dev/null
+		"$PYTHON_BIN" $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR$uuid/seeds/filtered.pagehits" --outfile "$TMPDIR$uuid/wiki/wikipages.md" --lang "$wikilocale"  1> /dev/null
+		wordcountpages=$(wc -w "$TMPDIR$uuid"/wiki/wikipages.md | cut -f1 -d' ')
+		if [ "$wordcountpages" -gt "100000" ] ; then
+			cp $TMPDIR$uuid/wiki/wikisummaries.md $TMPDIR$uuid/wiki/wiki4cloud.md
+			echo "body too big for wordcloud, using abstracts only"
+		else
+			cat $TMPDIR$uuid/wiki/wikisummaries.md $TMPDIR$uuid/wiki/wikipages.md > $TMPDIR$uuid/wiki/wiki4cloud.md
+			echo "building wordcloud from body + summaries"
+		fi
 		;;
 	*)
 		echo "unrecognized summary option"
@@ -685,26 +701,16 @@ case $summary in
 esac
 
 
-## video test code
-#video_search="no"
-#if [ "$video_search" = "yes" ] ; then
-#	echo "searching for video"
-#	mkdir $TMPDIR$uuid/video
-#		while read -r seed ; do
-#			video_seed_url='https://archive.org/search.php?query=%2Fmetadata%2Flicenseurl%3Ahttp%2Apublicdomain%2A%20'"$seed""&output=xml"
-#			echo "video_seed_url = "$video_seed_url
-#			curl --silent $video_seed_url > "$TMPDIR$uuid"/video/results_"$seed".xml
-#		done<"$TMPDIR$uuid"/seeds/sorted.seedfile
-#else
-#	echo "no videos" >> $sfb_log
-#fi
+if [ "$wordcountsummaries" -gt "0" ] ; then
 
-if [ -s "$TMPDIR$uuid/wiki/wikiraw.md" ] ; then
+	echo "summaries data has been returned, proceeding"
 
-	echo "data has been returned, proceeding"
-	wordcount=$(wc -w "$TMPDIR"$uuid/wiki/wikiraw.md)
+elif [ "$wordcountpages" -gt "0" ] ; then
+
+	echo "pages data has been returned, proceeding"
 
 else
+
 	echo "zero data returned from wiki, exiting with error message"
 	sendemail -t "$customer_email" \
 		-u "Your submission [ $booktitle ] has not been added to the catalog" \
@@ -719,7 +725,6 @@ else
 	exit 73
 fi
 
-
 # build cover
 
 cp $scriptpath"assets/pk35pc.jpg" $TMPDIR$uuid/pk35pc.jpg
@@ -727,15 +732,30 @@ cp $confdir"jobprofiles"/imprints/"$imprint"/"$imprintlogo"  $TMPDIR$uuid/cover/
 
 cp $confdir"jobprofiles"/signatures/$sigfile $TMPDIR$uuid/$sigfile
 
-
-echo "lastname prior to 1st cover build is" $lastname
-
-
- #copying new stopfile into location for use by the java program below (which is rigid)
+#select wordcloud stopfile
 
 
+if [ "$wikilang" = "en" ] ; then
+	stopfile="$scriptpath""lib/IBMcloud/examples/pk-stopwords.txt"
+elif [ "$wikilang" = "sv" ] ; then
+	stopfile="$scriptpath""locale/stopwords/sv"
+elif [ "$wikilang" = "it" ] ; then
+	stopfile="$scriptpath""locale/stopwords/it"
+else
+	stopfile="$scriptpath""lib/IBMcloud/examples/pk-stopwords.txt"
+fi
 
-	"$JAVA_BIN" -jar $scriptpath"lib/IBMcloud/ibm-word-cloud.jar" -c $scriptpath"lib/IBMcloud/examples/configuration.txt" -w "1800" -h "1800" < $TMPDIR$uuid/wiki/wikiraw.md > $TMPDIR$uuid/cover/wordcloudcover.png
+#rotate stopfile
+
+
+if cmp -s "$scriptpath/lib/IBMcloud/examples/pk-stopwords.txt" $scriptpath"/lib/IBMcloud/examples/restore-pk-stopwords.txt" ; then
+	echo "stopfiles are identical, no action"
+else
+	echo "Rotating stopfile into place"
+	cp "$stopfile" "$scriptpath""lib/IBMcloud/examples/pk-stopwords.txt"
+fi 
+
+	"$JAVA_BIN" -jar $scriptpath"lib/IBMcloud/ibm-word-cloud.jar" -c $scriptpath"lib/IBMcloud/examples/configuration.txt" -w "1800" -h "1800" < "$TMPDIR$uuid"/wiki/wiki4cloud.md > $TMPDIR$uuid/cover/wordcloudcover.png
 
 #copying old stopfile backup  to overwrite rotated stopfile
 
@@ -745,7 +765,6 @@ else
 	echo "Rotating old stopfile back in place"
 	cp $scriptpath"/lib/IBMcloud/examples/restore-pk-stopwords.txt"  "$scriptpath/lib/IBMcloud/examples/pk-stopwords.txt"
 fi 
-
 
 # set font & color
 
@@ -865,7 +884,7 @@ if [ "$builder" = "yes" ] ; then
 
 	echo "seedfile was" "$TMPDIR"seeds/seedphrases
 
-	$scriptpath"bin/builder.sh" --seedfile $TMPDIR$uuid"/seeds/sorted.seedfile" --booktype "$booktype" --jobprofilename "$jobprofilename" --booktitle "$booktitle" --ebook_format "epub" --sample_tweets "no" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername" --imprint "$imprint" --batch_uuid "$batch_uuid" --tldr "$tldr" --subtitle "$subtitle" --add_corpora "$add_corpora" --analyze_url "$analyze_url" --dontcleanupseeds "yes" --mailtoadmin "$mailtoadmin" --summary "both"
+	$scriptpath"bin/builder.sh" --seedfile $TMPDIR$uuid"/seeds/sorted.seedfile" --booktype "$booktype" --jobprofilename "$jobprofilename" --booktitle "$booktitle" --ebook_format "epub" --sample_tweets "no" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername" --imprint "$imprint" --batch_uuid "$batch_uuid" --tldr "$tldr" --subtitle "$subtitle" --add_corpora "$add_corpora" --analyze_url "$analyze_url" --dontcleanupseeds "yes" --mailtoadmin "$mailtoadmin" --summary "$summary"
 
 else
 

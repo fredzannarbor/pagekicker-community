@@ -309,6 +309,14 @@ shift 2
 mailtoadmin=${1#*=}
 shift
 ;;
+--buildcover)
+buildcover=$2
+shift 2
+;;
+--buildcover=*)
+buildcover=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -454,16 +462,13 @@ else
 		"$PANDOC_BIN" -s -r html "$analyze_url" -o $TMPDIR$uuid"/webpage.md"
 		"$PYTHON_BIN" bin/nerv3.py $TMPDIR$uuid"/webpage.md" $TMPDIR$uuid"/webseeds"
 		echo "seeds extracted from analyze_url"
-		 head -n "$top_q" $TMPDIR$uuid"/webseeds" > $TMPDIR$uuid"/webseeds.top_q"
+		 head -n "$top_q" $TMPDIR$uuid"/webseeds" | sed '/^\s*$/d' > $TMPDIR$uuid"/webseeds.top_q"
 		cat $TMPDIR$uuid"/webseeds.top_q" > $TMPDIR$uuid"/webseeds"
 		comm -2 -3 <(sort $TMPDIR$uuid"/webseeds") <(sort "locale/stopwords/webstopwords.en") >> $TMPDIR$uuid/seeds/seedphrases 
 	else
 		echo "invalid URI, analyze_url not added"
 	fi
 fi
-
-ls -la "$TMPDIR$uuid/seeds/"
-
 
 sort -f "$TMPDIR$uuid"/seeds/seedphrases 
 sort -u --ignore-case "$TMPDIR$uuid/seeds/seedphrases" | sed -e '/^$/d' -e '/^[0-9#@]/d' > $TMPDIR$uuid/seeds/sorted.seedfile
@@ -473,8 +478,18 @@ echo "seeds are"
 cat "$TMPDIR$uuid/seeds/sorted.seedfile"
 echo "---"
 
-# fetch data I will need based on seedfile
-echo "summary is" $summary
+#expand seeds to valid wiki pages
+ 
+"$PYTHON_BIN" bin/wiki_seeds_2_pages.py --infile "$TMPDIR$uuid/seeds/sorted.seedfile" --pagehits "$TMPDIR$uuid/seeds/pagehits"
+
+# filter pagehits
+
+cp $TMPDIR$uuid/seeds/pagehits $TMPDIR$uuid/seeds/filtered.pagehits
+
+echo "--- filtered pagehits are ---" 
+cat $TMPDIR$uuid/seeds/filtered.pagehits
+
+echo "--- end of pagehits ---"
 
 # fetch by pagehits
 
@@ -484,11 +499,17 @@ summaries_only)
 	echo "fetching page summaries only"
 	"$PYTHON_BIN"  $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR$uuid/seeds/filtered.pagehits" --outfile "$TMPDIR$uuid/wiki/wikisummariesraw.md" --lang "$wikilocale" --summary  1> /dev/null
 	sed -e s/\=\=\=\=\=/JQJQJQJQJQ/g -e s/\=\=\=\=/JQJQJQJQ/g -e s/\=\=\=/JQJQJQ/g -e s/\=\=/JQJQ/g -e s/Edit\ /\ /g -e s/JQJQJQJQJQ/\#\#\#\#\#/g -e s/JQJQJQJQ/\#\#\#\#/g -e s/JQJQJQ/\#\#\#/g -e s/JQJQ/\#\#/g $TMPDIR$uuid/wiki/wikisummariesraw.md | sed G > $TMPDIR$uuid/wiki/wikisummaries.md
+	cp $TMPDIR$uuid/wiki/wikisummaries.md $TMPDIR$uuid/wiki/wikiall.md
+	wordcountsummaries=$(wc -w "$TMPDIR$uuid/wiki/wikisummaries.md" | cut -f1 -d' ')
+	cp "$TMPDIR$uuid"/wiki/wikisummaries.md "$TMPDIR$uuid"/wiki/wiki4cloud.md
 ;;
 complete_pages_only)
 	echo "fetching complete pages only"
 	"$PYTHON_BIN" $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR$uuid/seeds/filtered.pagehits" --outfile "$TMPDIR$uuid/wiki/wikipagesraw.md" --lang "$wikilocale"  1> /dev/null
 	sed -e s/\=\=\=\=\=/JQJQJQJQJQ/g -e s/\=\=\=\=/JQJQJQJQ/g -e s/\=\=\=/JQJQJQ/g -e s/\=\=/JQJQ/g -e s/Edit\ /\ /g -e s/JQJQJQJQJQ/\#\#\#\#\#/g -e s/JQJQJQJQ/\#\#\#\#/g -e s/JQJQJQ/\#\#\#/g -e s/JQJQ/\#\#/g $TMPDIR$uuid/wiki/wikipagesraw.md | sed G > $TMPDIR$uuid/wiki/wikipages.md
+	wordcountpages=$(wc -w "$TMPDIR$uuid/wiki/wikipages.md" | cut -f1 -d' ')
+	cp "$TMPDIR$uuid"/wiki/wikipages.md "$TMPDIR$uuid"/wiki/wiki4cloud.md
+	cp $TMPDIR$uuid/wiki/wikipages.md $TMPDIR$uuid/wiki/wikiall.md
 ;;
 both)
 	echo "fetching both summaries and complete pages"
@@ -498,6 +519,15 @@ both)
 	"$PYTHON_BIN" $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR$uuid/seeds/filtered.pagehits" --outfile "$TMPDIR$uuid/wiki/wikipages1.md" --lang "$wikilocale"  1> /dev/null
 	sed -e s/\=\=\=\=\=/JQJQJQJQJQ/g -e s/\=\=\=\=/JQJQJQJQ/g -e s/\=\=\=/JQJQJQ/g -e s/\=\=/JQJQ/g -e s/Edit\ /\ /g -e s/JQJQJQJQJQ/\#\#\#\#\#/g -e s/JQJQJQJQ/\#\#\#\#/g -e s/JQJQJQ/\#\#\#/g -e s/JQJQ/\#\#/g $TMPDIR$uuid/wiki/wikisummaries1.md | sed G > $TMPDIR$uuid/wiki/wikisummaries.md
 	sed -e s/\=\=\=\=\=/JQJQJQJQJQ/g -e s/\=\=\=\=/JQJQJQJQ/g -e s/\=\=\=/JQJQJQ/g -e s/\=\=/JQJQ/g -e s/Edit\ /\ /g -e s/JQJQJQJQJQ/\#\#\#\#\#/g -e s/JQJQJQJQ/\#\#\#\#/g -e s/JQJQJQ/\#\#\#/g -e s/JQJQ/\#\#/g $TMPDIR$uuid/wiki/wikipages1.md | sed G > $TMPDIR$uuid/wiki/wikipages.md
+
+	wordcountpages=$(wc -w "$TMPDIR$uuid/wiki/wikipages.md" | cut -f1 -d' ')
+		if [ "$wordcountpages" -gt 100000 ] ; then
+			cp $TMPDIR$uuid/wiki/wikisummaries.md $TMPDIR$uuid/wiki/wiki4cloud.md
+			echo "body too big for wordcloud, using abstracts only"
+		else
+			cat $TMPDIR$uuid/wiki/wikisummaries.md $TMPDIR$uuid/wiki/wikipages.md > $TMPDIR$uuid/wiki/wiki4cloud.md
+			echo "building wordcloud from body + summaries"
+		fi
 ;;
 *)
 	echo "unrecognized summary option"
@@ -505,51 +535,43 @@ both)
 esac
 
 
+echo "summary is" $summary #summary should be on for cover building
+wikilocale="en" # hard code for testing
+echo $wikilocale "is wikilocale"
 
-if [ "$sample_tweets" = "yes" ] ; then
-	echo "searching for Tweets"
-	echo "# Tweets mentioning seed terms at $todaysdate" >> $TMPDIR$uuid/twitter/sample_tweets.md
-		while read -r seed ; do
-			echo "seed is $seed"
-			echo "## Tweets re $seed" >> $TMPDIR$uuid/twitter/sample_tweets.md
-			t search all "$seed" >> $TMPDIR$uuid/twitter/sample_tweets.md  # Plug in any twitter search script here
-			#sed -i G $TMPDIR$uuid/twitter/sample_tweets.md
-			echo "  " >> $TMPDIR$uuid/twitter/sample_tweets.md
-			echo "  " >> $TMPDIR$uuid/twitter/sample_tweets.md
-		done<"$TMPDIR$uuid"/seeds/sorted.seedfile
-else
-	echo "no sample tweets" >> $sfb_log
-fi
+if [ -z $wordcountsummaries ] ; then
+	echo "summaries data has been returned, proceeding"
+	wordcountsummaries=$(wc -w "$TMPDIR$uuid"/wiki/wikisummaries.md | cut -f1 -d' ')
 
+elif [ "$wordcountpages" -gt "0" ] ; then
 
-if [ "$flickr" = "on" ] ; then
+	echo "pages data has been returned, proceeding"
+	wordcount=$(wc -w "$TMPDIR$uuid"/wiki/wikipages.md | cut -f1 -d' ')
 
-	mkdir -p -m 755 $TMPDIR$uuid/flickr
-
-	
-	echo "about to run flickr fetchers"
-	while read -r seed ; do
-		"$PYTHON_BIN"  includes/Flickr_title_fetcher.py $TMPDIR$uuid/seeds/sorted.seedfile $TMPDIR$uuid/flickr/
-		"$PYTHON_BIN"  includes/Flickr_seed_fetcher.py "$seed" $TMPDIR/$uuid/flickr/
-	done<"$TMPDIR$uuid"/seeds/sorted.seedfile
 else
 
-	echo "flickr search was off" | tee --append $xform_log
-
+	echo "zero data returned from wiki, exiting with error message"
+	sendemail -t "$customer_email" \
+		-u "Your submission [ $booktitle ] has not been added to the catalog" \
+		-m "The system was not able to find any valid seed terms in your submission. Make sure that you have provided several keyphrases and that the words are spelled correctly.  Please let us know by replying to this message if you need assistance." \
+		-f "$GMAIL_ID" \
+		-cc "$GMAIL_ID" \
+		-xu "$GMAIL_ID" \
+		-xp "$GMAIL_PASSWORD" \
+		-s smtp.gmail.com:587 \
+		-v \
+		-o tls=yes
+	exit 73
 fi
-
-video_search="no"
-if [ "$video_search" = "yes" ] ; then
-	echo "searching for video"
-	mkdir $TMPDIR$uuid/video
-	#videofetcher.py --flags123
-else
-	echo "no video search" >> $sfb_log
-fi
-
-echo "editedby is $editedby" #debug
 
 # build cover
+
+cp $scriptpath"assets/pk35pc.jpg" $TMPDIR$uuid/pk35pc.jpg
+cp $confdir"jobprofiles"/imprints/"$imprint"/"$imprintlogo"  $TMPDIR$uuid/cover/"$imprintlogo"
+
+cp $confdir"jobprofiles"/signatures/$sigfile $TMPDIR$uuid/$sigfile
+
+#select wordcloud stopfile
 
 if [ "$wikilang" = "en" ] ; then
 	stopfile="$scriptpath""lib/IBMcloud/examples/pk-stopwords.txt"
@@ -563,7 +585,6 @@ fi
 
 #rotate stopfile
 
-
 if cmp -s "$scriptpath/lib/IBMcloud/examples/pk-stopwords.txt" $scriptpath"/lib/IBMcloud/examples/restore-pk-stopwords.txt" ; then
 	echo "stopfiles are identical, no action"
 else
@@ -571,17 +592,18 @@ else
 	cp "$stopfile" "$scriptpath""lib/IBMcloud/examples/pk-stopwords.txt"
 fi 
 
-echo "running stopfile $stopfile"
 
-	"$JAVA_BIN" -jar $scriptpath"lib/IBMcloud/ibm-word-cloud.jar" -c $scriptpath"lib/IBMcloud/examples/configuration.txt" -w "1800" -h "1800" < $TMPDIR$uuid/wiki/wikiraw.md > $TMPDIR$uuid/cover/wordcloudcover.png
+	"$JAVA_BIN" -jar $scriptpath"lib/IBMcloud/ibm-word-cloud.jar" -c $scriptpath"lib/IBMcloud/examples/configuration.txt" -w "1800" -h "1800" < $TMPDIR$uuid/wiki/wiki4cloud.md > $TMPDIR$uuid/cover/wordcloudcover.png
 
+#copying old stopfile backup  to overwrite rotated stopfile
 
-if cmp -s "$scriptpath/lib/IBMcloud/examples/pk-stopwords.txt" "$scriptpath/lib/IBMcloud/examples/restore-pk-stopwords.txt" ; then
+if cmp -s "$scriptpath/lib/IBMcloud/examples/pk-stopwords.txt" $scriptpath"/lib/IBMcloud/examples/restore-pk-stopwords.txt" ; then
 	echo "stopfiles are identical, no action"
 else
 	echo "Rotating old stopfile back in place"
 	cp $scriptpath"/lib/IBMcloud/examples/restore-pk-stopwords.txt"  "$scriptpath/lib/IBMcloud/examples/pk-stopwords.txt"
 fi 
+
 
 # set font & color
 
@@ -696,7 +718,14 @@ if [ "$shortform" = "no" ]; then
 
 	case $summary in
 	summaries_only)
-		echo "using summaries only for main body"
+		echo "  " >> $TMPDIR$uuid/tmpfrontmatter.md
+		echo "  " >> $TMPDIR$uuid/tmpfrontmatter.md
+		echo "# Abstracts" >> $TMPDIR$uuid/tmpfrontmatter.md
+		echo "  " >> $TMPDIR$uuid/tmpfrontmatter.md
+		echo "  " >> $TMPDIR$uuid/tmpfrontmatter.md
+		cat "$TMPDIR$uuid/wiki/wikisummaries.md" | sed -e 's/#/##/' >> $TMPDIR$uuid/tmpfrontmatter.md
+		echo "  " >> $TMPDIR$uuid/tmpfrontmatter.md
+		echo "  " >> $TMPDIR$uuid/tmpfrontmatter.md
 		;;
 	complete_pages_only)
 		echo "using complete pages only for main body"
@@ -708,10 +737,12 @@ if [ "$shortform" = "no" ]; then
 		echo "  " >> $TMPDIR$uuid/tmpfrontmatter.md
 		echo "  " >> $TMPDIR$uuid/tmpfrontmatter.md
 		cat "$TMPDIR$uuid/wiki/wikisummaries.md" | sed -e 's/#/##/' >> $TMPDIR$uuid/tmpfrontmatter.md
-		echo "  " >> $TMPDIR$uuid/tmpfrontmatter.md
-		echo "  " >> $TMPDIR$uuid/tmpfrontmatter.md
-		echo "# Chapters" >> $TMPDIR$uuid/tmpfrontmatter.md
-		cat "$TMPDIR$uuid/wiki/wikipages.md" | sed -e 's/#/##/' >> $TMPDIR$uuid/tmpfrontmatter.md
+		echo "  " > $TMPDIR$uuid/tmpbody.md
+		echo "  " >> $TMPDIR$uuid/tmpbody.md
+		echo "# Chapters" >> $TMPDIR$uuid/tmpbody.md
+		cat "$TMPDIR$uuid/wiki/wikipages.md" | sed -e 's/#/##/' >> $TMPDIR$uuid/wiki/tmpbody.md
+		echo "  " > $TMPDIR$uuid/tmpbody.md
+		echo "  " >> $TMPDIR$uuid/tmpbody.md
 ;;
 	*)
 		echo "unrecognized summary option"
@@ -727,6 +758,19 @@ else
 	echo '!['"$imprintname"']'"(""$imprintlogo"")" >> $TMPDIR$uuid/tmpfrontmatter.md
 
 fi
+
+	# assemble body
+
+	if [ "$summary" = "summaries_only" ] ; then
+		echo "no body"
+	else
+		echo "  " >> $TMPDIR$uuid/tmpbody.md
+		echo "  " >> $TMPDIR$uuid/tmpbody.md
+		echo "# Chapters" >> $TMPDIR$uuid/tmpbody.md
+		cat "$TMPDIR$uuid/wiki/wikipages.md" | sed -e 's/#/##/' >> $TMPDIR$uuid/tmpbody.md
+		echo "  " >> $TMPDIR$uuid/tmpbody.md
+		echo "  " >> $TMPDIR$uuid/tmpbody.md
+	fi
 
 	# assemble back matter
 	echo "" >>  $TMPDIR$uuid/backmatter.md
@@ -766,7 +810,6 @@ if [ "$shortform" = "no" ] ;then
 	echo "# Sources" >> $TMPDIR$uuid/backmatter.md
  	cat includes/wikilicense.md >> $TMPDIR/$uuid/backmatter.md
 
-
 	echo "# Also built by PageKicker Robot $jobprofilename" >>  $TMPDIR$uuid/backmatter.md
 	sort -u --ignore-case "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.txt" -o  "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.txt" # currently sort by alphabetical 
 	cat "$LOCAL_DATA"/bibliography/robots/"$jobprofilename"/"$jobprofilename""_titles.txt" >> $TMPDIR$uuid/backmatter.md
@@ -798,11 +841,16 @@ if [ "$shortform" = "no" ] ;then
 
 else
 	echo "no back matter" 
-
+f
 fi
 
 # concatenate front matter, body & back matter
-	# cat $TMPDIR$uuid/wiki/wikiall.md >> $TMPDIR$uuid/tmpfrontmatter.md
+
+	if [ -s "$TMPDIR$uuid/tmpbody.md" ] ; then 
+		cat $TMPDIR$uuid/tmpbody.md >> $TMPDIR$uuid/tmpfrontmatter.md
+	else
+		echo "no body"
+	fi
 	cat $TMPDIR$uuid/backmatter.md >> $TMPDIR$uuid/tmpfrontmatter.md
 	cp $TMPDIR$uuid/tmpfrontmatter.md $TMPDIR$uuid/complete.md
 

@@ -30,22 +30,11 @@ cd $scriptpath
 # $1 is inbound seedphrases file
 # $2 is verbose
 
-if [ ! "$passuuid" ] ; then
-	echo "creating uuid"
-	uuid=$("$PYTHON_BIN"  -c 'import uuid; print uuid.uuid1()')
-	echo "uuid is" $uuid | tee --append $xform_log
-	mkdir -p -m 777 $TMPDIR$uuid
-else
-	uuid=$passuuid
-	echo "received uuid " $uuid
-	mkdir -p -m 777 $TMPDIR$uuid
-fi
+echo "uuid received is $uuid"
 
 mkdir -p -m 777 $TMPDIR
 mkdir -p -m 777 $TMPDIR$uuid
 mkdir -p -m 777 $TMPDIR$uuid/seeds
-ls -lart $TMPDIR$uuid
-
 
 while read -r line; do 
 
@@ -59,7 +48,7 @@ else
 		echo "$line is not a naughty word -- your momma raised you right!"
 	else
 		true
-		#echo "$line is not a naughty word -- your momma raised you right!"
+		echo "$line is not a naughty word -- your momma raised you right!"
 	fi
 
 	echo "$line" >> $TMPDIR$uuid/seeds/allowed_seeds.txt
@@ -86,4 +75,5 @@ else
 		-o tls=yes 
 fi
 
+echo " * * * DONE CHECKING NAUGHTY WORDS * * * "
 exit 0
