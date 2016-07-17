@@ -461,7 +461,7 @@ else
 		echo "analyze_url is set as $analyze_url"
 		"$PANDOC_BIN" -s -r html "$analyze_url" -o $TMPDIR$uuid"/webpage.md"
 		"$PYTHON_BIN" bin/nerv3.py $TMPDIR$uuid"/webpage.md" $TMPDIR$uuid"/webseeds"
-		echo "seeds extracted from analyze_url"
+		echo "seeds have been extracted from analyze_url"
 		 head -n "$top_q" $TMPDIR$uuid"/webseeds" | sed '/^\s*$/d' > $TMPDIR$uuid"/webseeds.top_q"
 		cat $TMPDIR$uuid"/webseeds.top_q" > $TMPDIR$uuid"/webseeds"
 		comm -2 -3 <(sort $TMPDIR$uuid"/webseeds") <(sort "locale/stopwords/webstopwords.en") >> $TMPDIR$uuid/seeds/seedphrases 
@@ -539,12 +539,11 @@ echo "summary is" $summary #summary should be on for cover building
 wikilocale="en" # hard code for testing
 echo $wikilocale "is wikilocale"
 
-if [ -z $wordcountsummaries ] ; then
+if [ -n "$wordcountsummaries" ] ; then
 	echo "summaries data has been returned, proceeding"
 	wordcountsummaries=$(wc -w "$TMPDIR$uuid"/wiki/wikisummaries.md | cut -f1 -d' ')
 
 elif [ "$wordcountpages" -gt "0" ] ; then
-
 	echo "pages data has been returned, proceeding"
 	wordcount=$(wc -w "$TMPDIR$uuid"/wiki/wikipages.md | cut -f1 -d' ')
 
