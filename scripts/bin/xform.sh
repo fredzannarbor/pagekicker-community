@@ -255,7 +255,7 @@ $scriptpath"bin/dat.sh" --xmldirectoryname "$xmldirectoryname" --xmlbasefile "$x
 	logobase="$WEBFORMSIMAGESDIR""$submissionid"	
 	echo  "logo base is $logobase"
 	logosecuredir=`ls $logobase/*`
-	logofullpath="$WEBFORMSIMAGESDIR""$submissionid"/$imprintlogo_webform_field/$logosecuredir/"/""$imprintlogo" 
+	logofullpath="$WEBFORMSIMAGESDIR""$submissionid"/$imprintlogo_webform_field/$logosecuredir"/$imprintlogo" 
 	echo "logo full path is" $logofullpath
 	cp "$logofullpath" "$confdir"jobprofiles/imprints/"$imprint"/"$imprintlogo"
 
