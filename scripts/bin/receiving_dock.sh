@@ -50,7 +50,7 @@ done<$scriptpath"import_status/manifest.csv"
 
 rm $scriptpath"import_status/manifest.csv"
 
-echo "the empty truck has pulled away from the dock, we are waiting for the next truck to arrive"  | tee --append "$logdir"import_log.txt"
+echo "the empty truck has pulled away from the dock, we are waiting for the next truck to arrive"  | tee --append "$logdir"import_log.txt
 
 exit
 
