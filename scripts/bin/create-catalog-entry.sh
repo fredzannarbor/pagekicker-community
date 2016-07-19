@@ -437,6 +437,14 @@ shift 2
 summary=${1#*=}
 shift
 ;;
+--imprint)
+imprint=$2
+shift 2
+;;
+--imprint=*)
+imprint=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -450,8 +458,6 @@ shift
             ;;
 esac
 done
-
-
 
 
 # Suppose some options are required. Check that we got them.
@@ -564,10 +570,12 @@ echo "wikilocale now is "$wikilang
 
 if [ -z "$imprint" ]; then
 	imprint="default"
-	. $confdir"jobprofiles/imprints/"$imprint"/"$imprint".imprint"
+	. $confdir"jobprofiles/imprints/"$imprint"/"$fimpr".imprint"
 else
 	. $confdir"jobprofiles/imprints/"$imprint"/"$imprint".imprint"
+        echo "imprint is $imprint"
 fi
+
 
 if [ -z "$jobprofilename" ]; then
 	jobprofilename="default"
