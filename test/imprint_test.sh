@@ -2,8 +2,8 @@
 
 # $imprint  = $1
 
-echo $imprint
-echo $1
+echo "imprint = $1"
+echo "jobprofilename = $2"
 
 if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
 	echo "config file not found, creating /home/<user>/.pagekicker, put config file there"
@@ -31,7 +31,7 @@ fi
 
 imprint=$1
 
-bin/create-catalog-entry.sh --builder "yes" --booktitle "Burr" --yourname "Manuel" --jobprofilename "default" --import "no" --passuuid "$uuid" --seedfile "seeds/burr" --imprint "$imprint"  --analyze_url "none" --summary "summaries_only"
+bin/create-catalog-entry.sh --builder "yes" --booktitle "Burr" --yourname "Manuel" --jobprofilename "$2" --import "no" --passuuid "$uuid" --seedfile "seeds/burr" --imprint "$imprint"  --analyze_url "none" --summary "summaries_only"
 
 # tests begin here
 
