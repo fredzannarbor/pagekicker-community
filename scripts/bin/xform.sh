@@ -87,74 +87,15 @@ echo "launched $0 from" $environment
 
 21) 
 
-	echo "running create your robot form 21" | tee --append $xform_log
-	robotname=$(xmlstarlet sel -t -v "/item/robotname" "$xmlfilename")
-	robotresidence=$(xmlstarlet sel -t -v "/item/robotresidence" "$xmlfilename")
-	robotbooktype=$(xmlstarlet sel -t -v "/item/robotbooktype" "$xmlfilename")
-	robotcoverfont=$(xmlstarlet sel -t -v "/item/robotcoverfont" "$xmlfilename")
-	robotcovercolor=$(xmlstarlet sel -t -v "/item/robotcovercolor" "$xmlfilename")
-	robotbio=$(xmlstarlet sel -t -v "/item/robotbio" "$xmlfilename")
-	robotrows=$(xmlstarlet sel -t -v "/item/robotrows" "$xmlfilename")
-	robotlanguage=$(xmlstarlet sel -t -v "/item/robotlanguage" "$xmlfilename")
-        
-        # summarizer flags
-
-#        summarizer_on=$(xmlstarlet sel -t -v "/item/summarizer" "$xmlfilename")
-#        robot_summary_length=$(xmlstarlet sel -t -v "/item/summary_length" "$xmlfilename")
-#        positive_seeds=$(xmlstarlet sel -t -v "/item/positive_seeds" "$xmlfilename")
-#        positive_seed_weight=$(xmlstarlet sel -t -v "/item/positive_seed_weight" "$xmlfilename")
-#        negative_seeds=$(xmlstarlet sel -t -v "/item/negative_seeds" "$xmlfilename")
-#        negative_seed_weight=$(xmlstarlet sel -t -v "/item/negative_seed_weight" "$xmlfilename")
-#        summarizer_ngram_threshold=$(xmlstarlet sel -t -v "/item/summarizer_ngram_threshold" "$xmlfilename")
-
-	echo "robotname was" $robotname | tee --append $xform_log
-	echo "robotresidence was" $robotresidence | tee --append $xform_log
-	echo "robotbooktype was" $robotbooktype | tee --append $xform_log
-	echo "robotcoverfont was" $robotcoverfont | tee --append $xform_log
-	echo "robotcovercolor was" $robotcovercolor | tee --append $xform_log
-	echo "robotbio was" $robotbio | tee --append $xform_log
-	echo "robotrows was" $robotrows | tee --append $xform_log
-	echo "robotlanguage was" $robotlanguage | tee --append $xform_log
-#        echo "robot_summary_length was "$robot_summary_length | tee --append $xform_log
-#        echo "robot_summarizer_on was" $summarizer_on | tee --append $xform_log
-#        echo "positive_seeds were" $positive_seeds| tee --append $xform_log
-#        echo "positive_seed_weight was" $positive_seed_weight| tee --append $xform_log
-#        echo "negative_seeds were" $negative_seeds| tee --append $xform_log
-#        echo "negative_seed_weight was "$negative_seed_weight| tee --append $xform_log
-#        echo "summarizer_ngram_threshold was" $summarizer_ngram_threshold| tee --append $xform_log
-
-echo 'firstname=""' > $confdir"jobprofiles/$robotname".jobprofile
-echo 'middlename=""' >> $confdir"jobprofiles/$robotname".jobprofile
-echo 'lastname="'"$robotname"'"' >> $confdir"jobprofiles/$robotname".jobprofile
-echo 'editedby="$firstname" "$middlename" "$lastname"' >> $confdir"jobprofiles/$robotname".jobprofile
-echo "$robotbio" > $confdir"jobprofiles/authorbios/"$robotname".md"
-echo 'authorbio="$SFB_HOME''/conf/jobprofiles/authorbios/'"$robotname".md'"' >> $confdir"jobprofiles/$robotname".jobprofile
-cat $confdir"jobprofiles/defaults" >> $confdir"jobprofiles/$robotname".jobprofile
-
-mkdir -p -m 755 $confdir"jobprofiles/bibliography/"$lastname
-
-#$LOCAL_MYSQL_PATH --user $LOCAL_MYSQL_USER --password=$LOCAL_MYSQL_PASSWORD sfb-jobs << EOF
-#insert into robots (robot_name, robot_bio, robot_summarizer_on, robot_positive_summary_seed, robot_positive_summary_seed_weight, robot_summary_length, robot_negative_seeds, robot_negative_seed_weight, robot_coverfont, robot_covercolor, robot_ngram_threshold,  robot_language, robot_rows, robot_experience_points_initial) values('$robotname', '$robotbio', '$summarizer_on', '$positive_seeds', '$positive_seed_weight', '$robot_summary_length', '$negative_seeds', '$negative_seed_weight','$robotcoverfont', '$robotcovercolor',  '$summarizer_ngram_threshold', '$robotlanguage', '$robotrows', '100');
-#EOF
-
-sendemail -t "$customer_email" \
-	-u "PageKicker robot" $robotname " has been created." \
-	-m "PageKicker robot " $robotname "has been created and is ready to go to work! The attached files are for debugging during development, you can ignore them." \
-	-a $confdir"jobprofiles/authorbios/"$robotname".md" \
-	-a $confdir"jobprofiles/$robotname".jobprofile \
-	-f "$GMAIL_ID" \
-	-cc "$GMAIL_ID" \
-	-xu "$GMAIL_ID" \
-	-xp "$GMAIL_PASSWORD" \
-	-s smtp.gmail.com:587 \
-	-o tls=yes
+echo "running create your robot form 21" | tee --append $xform_log
+$scriptpath"bin/robot-builder.sh" --xmldirectoryname "$xmldirectoryname" --xmlbasefile "$xmlbasefile"  --passuuid "$uuid"
 
 ;;
 
 23)
 
 # echo "running dat.sh with xml file from webform"
-$scriptpath"bin/dat.sh" --xmldirectoryname "$xmldirectoryname" --xmlbasefile "$xmlbasefile"  --passuuid "$uuid" --environment "$environment"
+$scriptpath"bin/dat.sh" --xmldirectoryname "$xmldirectoryname" --xmlbasefile "$xmlbasefile"  --passuuid "$uuid" 
 ;;
 
 
