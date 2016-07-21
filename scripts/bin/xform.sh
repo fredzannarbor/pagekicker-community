@@ -170,51 +170,10 @@ $scriptpath"bin/dat.sh" --xmldirectoryname "$xmldirectoryname" --xmlbasefile "$x
         echo "committed file "$filename "to Solr" | tee --append $xform_log
 ;;
 34) 
-	echo "IIIIIII"
-	echo "Sets up imprint file structure in conf/jobprofiles" 
-	# NB overwrites any previous imprint with same $imprint value
 
-	imprintlogo_webform_field="513" #hard code to magento field number
+echo "running create your imprint webform id 34" | tee --append $xform_log
+$scriptpath"bin/imprint-builder.sh" --xmldirectoryname "$xmldirectoryname" --xmlbasefile "$xmlbasefile"  --passuuid "$uuid"
 
-	# read variables from xml file
-	
-	imprint=$(xmlstarlet sel -t -v "/item/imprint" "$xmlfilename") #code
-	imprintname=$(xmlstarlet sel -t -v "/item/imprintname" "$xmlfilename")
-	imprintcopyrightname=$(xmlstarlet sel -t -v "/item/imprintcopyrightname" "$xmlfilename")
-	imprintmissionstatement=$(xmlstarlet sel -t -v "/item/imprintmissionstatement" "$xmlfilename")
-	imprintaudiencedescription=$(xmlstarlet sel -t -v "/item/imprintaudiencedescription" "$xmlfilename")
-	imprintagerange=$(xmlstarlet sel -t -v "/item/imprintagerange" "$xmlfilename")
-	imprintlanguage=$(xmlstarlet sel -t -v "/item/imprintlanguage" "$xmlfilename")
-	imprintlogo=$(xmlstarlet sel -t -v "/item/imprintlogo" "$xmlfilename")
-
-	mkdir -p -m 755 "$confdir"jobprofiles/imprints/"$imprint"
-
-	# get the logo and store it in imprints directory
-
-	echo "imprint logo file name is $imprintlogo"
-	#echo "$WEBFORMSIMAGESDIR"
-	logobase="$WEBFORMSIMAGESDIR""$submissionid"	
-	echo  "logo base is $logobase"
-	logosecuredir=`ls $logobase/*`
-	logofullpath="$WEBFORMSIMAGESDIR""$submissionid"/$imprintlogo_webform_field/$logosecuredir"/$imprintlogo" 
-	echo "logo full path is" $logofullpath
-	cp "$logofullpath" "$confdir"jobprofiles/imprints/"$imprint"/"$imprintlogo"
-
-	# echo textarea variables to markdown files 
-
-	echo "$imprintmissionstatement" > "$confdir"jobprofiles/imprints/"$imprint"/"$imprint"_mission.md
-
-	# assemble imprint file
-
-	echo "imprintname="'"'"$imprintname"'"' > "$confdir"jobprofiles/imprints/"$imprint"/"$imprint".imprint
-	echo "imprintlogo="'"'"$imprintlogo"'"' >> "$confdir"jobprofiles/imprints/"$imprint"/"$imprint".imprint
-	echo "imprintcopyrightname="'"'"$imprintcopyrightname"'"' >> "$confdir"jobprofiles/imprints/"$imprint"/"$imprint".imprint
-	echo "imprint_mission_statement="'"'"$imprint.statement"'"' >> "$confdir"jobprofiles/imprints/"$imprint"/"$imprint".imprint
-
-	echo "here is latest imprint file"
-	echo "IIIIIII"
-	cat "$confdir"jobprofiles"/imprints/"$imprint/$imprint.imprint
-	echo "IIIIIII"
 ;;
 *)
 	echo "invalid webform id was " $webform_id | tee --append $xform_log
