@@ -50,7 +50,6 @@ shift 2
 passuuid=${1#*=}
 shift
 ;;
-
 --storecode)
 storecode=$2
 shift 2
@@ -304,7 +303,8 @@ echo "$robotbio" > $confdir"jobprofiles/authorbios/"$robotname".md"
 echo 'authorbio="$SFB_HOME''/conf/jobprofiles/authorbios/'"$robotname".md'"' >> $confdir"jobprofiles/$robotname".jobprofile
 cat $confdir"jobprofiles/defaults" >> $confdir"jobprofiles/$robotname".jobprofile
 
-mkdir -p -m 755 $confdir"jobprofiles/bibliography/"$lastname
+mkdir -p -m 755 "$LOCAL_DATA"bibliography/robots/$jobprofilename/$jobprofilename
+touch "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/"$jobprofilename"_titles.txt
 
 # create robot webpage 
 
