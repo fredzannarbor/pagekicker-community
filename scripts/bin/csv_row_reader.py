@@ -38,8 +38,6 @@ destinations= [folder+dest for dest in ('/csv/row.editedby',
 '/csv/row.seeds', 
 '/csv/row.imprint')]
 
-print destinations
-
 with multi_file_manager(destinations, mode='w') as files:
     row = csv_read_row(f, target_row)
     #editedby, booktitle, seeds, imprint = row[0], row[2], row[3], row[4]
