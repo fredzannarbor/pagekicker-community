@@ -317,14 +317,6 @@ shift 2
 revenue_share=${1#*=}
 shift
 ;;
---imprint)
-imprint=$2
-shift 2
-;;
---imprint=*)
-imprint=${1#*=}
-shift
-;;
 --tldr)
 tldr=$2
 shift 2
@@ -737,7 +729,6 @@ fi
 
 cp $scriptpath"assets/pk35pc.jpg" $TMPDIR$uuid/pk35pc.jpg
 cp $confdir"jobprofiles"/imprints/"$imprint"/"$imprintlogo"  $TMPDIR$uuid/cover/"$imprintlogo"
-
 cp $confdir"jobprofiles"/signatures/$sigfile $TMPDIR$uuid/$sigfile
 
 #select wordcloud stopfile
@@ -936,6 +927,5 @@ fi
 echo 'job ' $uuid 'ending logging at' `date +'%m/%d/%y%n %H:%M:%S'` >> $sfb_log
 
 cat "$sfb_log" >> $sfb_log_archive
-echo "copied this job's log to the master archive and am now exiting"
-
+echo -n "copied this job's log to the master archive and am now exiting"
 exit 0

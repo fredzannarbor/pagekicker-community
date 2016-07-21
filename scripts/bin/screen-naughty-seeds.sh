@@ -64,8 +64,8 @@ if [ -z  ${disallowed+x} ] ; then
 
 else
 	sendemail -t "$customer_email" \
-		-m "These seeds have been removed from the build because they were disallowed words:\n $disallowed" \
-		-u "Build modified because of disallowed words." \
+		-m "Disallowed words removed from $booktitle\n: $disallowed" \
+		-u "Disallowed words removed from $booktitle." \
 		-f "$GMAIL_ID" \
 		-f "$GMAIL_ID" \
 		-xu "$GMAIL_ID" \
