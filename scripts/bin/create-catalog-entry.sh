@@ -927,6 +927,5 @@ fi
 echo 'job ' $uuid 'ending logging at' `date +'%m/%d/%y%n %H:%M:%S'` >> $sfb_log
 
 cat "$sfb_log" >> $sfb_log_archive
-echo "copied this job's log to the master archive and am now exiting"
-
+echo -n "copied this job's log to the master archive and am now exiting"
 exit 0
