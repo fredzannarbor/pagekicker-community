@@ -1,0 +1,11 @@
+firstname="Gustavious"
+lastname="Grognard"
+editedby=$firstname" "$middlename" "$lastname
+authorbio="$confdir"/jobprofiles/robots/authorbios/Grognard/Grognard_bio.md
+fortunedb="literature"
+LSI_import="no"
+BISAC_code="none"
+rows="99"
+fetched_document_format="html"
+mylibrary="yes"
+sigfile="grognard.jpg"
