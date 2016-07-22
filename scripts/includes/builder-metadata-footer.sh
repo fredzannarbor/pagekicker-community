@@ -168,13 +168,21 @@ echo -n "," >> $metadatatargetpath$uuid"/current-import.csv"
 
 # price
 
-#./includes/pricing.sh
+if [ "$pricing" = "yes" ] ; then
+	./includes/pricing.sh
+else
+	true
+fi
 
 echo -n "$price," >> $metadatatargetpath$uuid"/current-import.csv"
 
 # special_price
 
-echo -n "$special_price," >> $metadatatargetpath$uuid"/current-import.csv"
+if [ "$special_pricing" = "yes" ] ; then
+	echo -n "$special_price," >> $metadatatargetpath$uuid"/current-import.csv"
+else
+	echo -n "," >> $metadatatargetpath$uuid"/current-import.csv"
+fi
 
 # cost
 

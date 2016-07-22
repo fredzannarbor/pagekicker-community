@@ -65,6 +65,9 @@ userid="1"
 userlogo="assets/imprint.png"
 verbose="no"
 wikilocale="en"
+wordcount=0
+wordcountpages=0
+wordcountsummaries=0
 yourname="no"
 
 # summarizer

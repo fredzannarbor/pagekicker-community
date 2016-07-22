@@ -437,6 +437,14 @@ shift 2
 imprint=${1#*=}
 shift
 ;;
+--pricing)
+pricing=$2
+shift 2
+;;
+--pricing=*)
+pricing=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -700,6 +708,8 @@ case $summary in
 	;;
 esac
 
+wordcount=$(($wordcountsummaries + $wordcountpages))
+echo "wordcount is $wordcount"
 
 if [ "$wordcountsummaries" -gt "0" ] ; then
 
