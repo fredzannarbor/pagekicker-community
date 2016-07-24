@@ -453,6 +453,14 @@ shift 2
 add_this_content=${1#*=}
 shift
 ;;
+--add_this_content_part_name)
+add_this_content_part_name=$2
+shift 2
+;;
+--add_this_content_part_name=*)
+add_this_content_part_name=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -529,7 +537,7 @@ xml)
 	yourname=$(xmlstarlet sel -t -v "/item/yourname" "$xmlfilename")
 	customername=$(xmlstarlet sel -t -v "/item/customername" "$xmlfilename")
 	customerid=$(xmlstarlet sel -t -v "/item/customer_id" "$xmlfilename")
-
+	add_this_content=$(xmlstarlet sel -t -v "/item/add_this_content" "$xmlfilename")
 	echo "environment is" $environment  | tee --append $xform_log
 	echo "jobprofilename is" $jobprofilename  | tee --append $xform_log
 	echo "exemplar_file is" $exemplar_file | tee --append $xform_log
@@ -900,7 +908,9 @@ if [ "$builder" = "yes" ] ; then
 
 	echo "seedfile was" "$TMPDIR"seeds/seedphrases
 
-	$scriptpath"bin/builder.sh" --seedfile $TMPDIR$uuid"/seeds/sorted.seedfile" --booktype "$booktype" --jobprofilename "$jobprofilename" --booktitle "$booktitle" --ebook_format "epub" --sample_tweets "no" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername" --imprint "$imprint" --batch_uuid "$batch_uuid" --tldr "$tldr" --subtitle "$subtitle" --add_corpora "$add_corpora" --analyze_url "$analyze_url" --dontcleanupseeds "yes" --mailtoadmin "$mailtoadmin" --summary "$summary" --add_this_content "$add_this_content"
+	$scriptpath"bin/builder.sh" --seedfile $TMPDIR$uuid"/seeds/sorted.seedfile" --booktype "$booktype" --jobprofilename "$jobprofilename" --booktitle "$booktitle" --ebook_format "epub" --sample_tweets "no" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername" --imprint "$imprint" --batch_uuid "$batch_uuid" --tldr "$tldr" --subtitle "$subtitle" --add_corpora "$add_corpora" --analyze_url "$analyze_url" --dontcleanupseeds "yes" --mailtoadmin "$mailtoadmin" --summary "$summary" --add_this_content "$add_this_content" --add_this_content_part_name "$add_this_content_part_name"
+
+echo "test $@"
 
 else
 

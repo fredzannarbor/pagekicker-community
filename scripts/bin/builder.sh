@@ -325,6 +325,14 @@ shift 2
 add_this_content=${1#*=}
 shift
 ;;
+--add_this_content_part_name)
+add_this_content_part_name=$2
+shift 2
+;;
+--add_this_content_part_name=*)
+add_this_content_part_name=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -774,6 +782,19 @@ else
 fi
 
 	# assemble body
+
+	if [ "$add_this_content" = "none" ] ; then
+		echo "not adding user content"
+	else
+		echo "adding user-provided content file $add_this_content"
+		
+		echo "  " >> $TMPDIR$uuid/add_this_content.md
+		echo "  " >> $TMPDIR$uuid/echo "  " >> $TMPDIR$uuid/add_this_content.md
+		echo "# $add_this_content_part_name" >> "$TMPDIR$uuid/tmpbody.md"
+		cat "$TMPDIR$uuid/add_this_content.md" >> "$TMPDIR$uuid/tmpbody.md"
+		echo "  " >> "$TMPDIR$uuid/tmpbody.md"
+		echo "  " >> "$TMPDIR$uuid/tmpbody.md"
+	fi
 
 	if [ "$summary" = "summaries_only" ] ; then
 		echo "no body"

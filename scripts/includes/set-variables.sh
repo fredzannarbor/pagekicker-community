@@ -1,4 +1,6 @@
 add_corpora="no"
+add_this_content="none"
+add_this_content_part_name="User-Provided Content"
 analyze_url="no"
 arxiv="no"
 BISAC_code="None"
