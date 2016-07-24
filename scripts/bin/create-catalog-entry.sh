@@ -394,7 +394,7 @@ add_corpora=$2
 shift 2
 ;;
 --add_corpora=*)
-add_corporaa=${1#*=}
+add_corpora=${1#*=}
 shift
 ;;
 --analyze_url)
@@ -443,6 +443,14 @@ shift 2
 ;;
 --pricing=*)
 pricing=${1#*=}
+shift
+;;
+--add_this_content)
+add_this_content=$2
+shift 2
+;;
+--add_this_content=*)
+add_this_content=${1#*=}
 shift
 ;;
   --) # End of all options
@@ -853,8 +861,7 @@ echo "* * * building Magento metadata header * * *"
 echo "metadatatargetpath is "$metadatatargetpath
 echo "uuid is" $uuid
 echo "verifying uuid directory"
-ls $metadatatargetpath$uuid
-
+ls $metadatatargetpath$uuid 
 ls -la $TMPDIR$uuid/tldr.txt $TMPDIR$uuid/book-description.txt
 
 cat includes/builder-metadata-header.csv > $metadatatargetpath$uuid/"current-import.csv"
@@ -893,7 +900,7 @@ if [ "$builder" = "yes" ] ; then
 
 	echo "seedfile was" "$TMPDIR"seeds/seedphrases
 
-	$scriptpath"bin/builder.sh" --seedfile $TMPDIR$uuid"/seeds/sorted.seedfile" --booktype "$booktype" --jobprofilename "$jobprofilename" --booktitle "$booktitle" --ebook_format "epub" --sample_tweets "no" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername" --imprint "$imprint" --batch_uuid "$batch_uuid" --tldr "$tldr" --subtitle "$subtitle" --add_corpora "$add_corpora" --analyze_url "$analyze_url" --dontcleanupseeds "yes" --mailtoadmin "$mailtoadmin" --summary "$summary"
+	$scriptpath"bin/builder.sh" --seedfile $TMPDIR$uuid"/seeds/sorted.seedfile" --booktype "$booktype" --jobprofilename "$jobprofilename" --booktitle "$booktitle" --ebook_format "epub" --sample_tweets "no" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername" --imprint "$imprint" --batch_uuid "$batch_uuid" --tldr "$tldr" --subtitle "$subtitle" --add_corpora "$add_corpora" --analyze_url "$analyze_url" --dontcleanupseeds "yes" --mailtoadmin "$mailtoadmin" --summary "$summary" --add_this_content "$add_this_content"
 
 else
 

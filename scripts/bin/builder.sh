@@ -317,6 +317,14 @@ shift 2
 buildcover=${1#*=}
 shift
 ;;
+--add_this_content)
+add_this_content=$2
+shift 2
+;;
+--add_this_content=*)
+add_this_content=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -534,6 +542,13 @@ both)
 ;;
 esac
 
+if [ "$add_this_content" = "none"] ; then
+	echo "no added content"
+else
+	echo "adding user content to cover cloud"
+	pandoc -s "$add_this_content" -t markdown -o "$TMPDIR$uuid"/add_this_content.md
+	cat "$TMPDIR$uuid"/add_this_content.md >> "$TMPDIR$uuid/wiki/wiki4cloud.md"
+fi
 
 echo "summary is" $summary #summary should be on for cover building
 wikilocale="en" # hard code for testing
