@@ -348,6 +348,7 @@ shift
 esac
 done
 
+echo "add_this_content is $add_this_content"
 
 echo "imprint is $imprint" #debug
 echo "editedby is $editedby" #debug
@@ -550,11 +551,13 @@ both)
 ;;
 esac
 
-if [ "$add_this_content" = "none"] ; then
+if [ "$add_this_content" = "none" ] ; then
 	echo "no added content"
 else
 	echo "adding user content to cover cloud"
-	pandoc -s "$add_this_content" -t markdown -o "$TMPDIR$uuid"/add_this_content.md
+	cp "$add_this_content" "$TMPDIR$uuid/add_this_content_raw"
+	echo "$add_this_content"
+	"$PANDOC_BIN" -f docx -s -t markdown -o "$TMPDIR$uuid"/add_this_content.md "$TMPDIR$uuid/add_this_content_raw"
 	cat "$TMPDIR$uuid"/add_this_content.md >> "$TMPDIR$uuid/wiki/wiki4cloud.md"
 fi
 
@@ -801,7 +804,7 @@ fi
 	else
 		echo "  " >> $TMPDIR$uuid/tmpbody.md
 		echo "  " >> $TMPDIR$uuid/tmpbody.md
-		echo "# Chapters" >> $TMPDIR$uuid/tmpbody.md
+		echo "# Algorithmic Content" >> $TMPDIR$uuid/tmpbody.md
 		cat "$TMPDIR$uuid/wiki/wikipages.md" | sed -e 's/#/##/' >> $TMPDIR$uuid/tmpbody.md
 		echo "  " >> $TMPDIR$uuid/tmpbody.md
 		echo "  " >> $TMPDIR$uuid/tmpbody.md

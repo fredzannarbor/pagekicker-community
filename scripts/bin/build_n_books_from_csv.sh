@@ -4,7 +4,7 @@
 
 # initialize variables
 
-# needs $1 = path to data file $2 number of rows
+# needs $1 = path to data file $2 number of rows $3 file name
 
 if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
 	echo "config file not found, creating /home/<user>/.pagekicker, put config file there"
@@ -46,22 +46,29 @@ while [[ "$i" -le $row_no ]]; do
 	"$PYTHON_BIN"  $scriptpath"bin/csv_row_reader.py" "$1" "$uuid" $i
 
 	echo "getting ready to run catalog entry creation command for row $row_no"
-	#catid=$(cat /tmp/pagekicker/$uuid/csv/row.catid)
-	booktitle=$(cat /tmp/pagekicker/$uuid/csv/row.booktitle)
-	editedby=$(cat /tmp/pagekicker/$uuid/csv/row.editedby)
-	#jobprofile=$(cat /tmp/pagekicker/$uuid/csv/row.jobprofile)
-	seeds=$(cat /tmp/pagekicker/$uuid/csv/row.seeds)
-	imprint=$(cat /tmp/pagekicker/$uuid/csv/row.imprint)
-	#price=$(cat /tmp/pagekicker/$uuid/csv/row.price)
+	#catid=$(cat $TMPDIR$uuid/csv/row.catid)
+	booktitle=$(cat $TMPDIR$uuid/csv/row.booktitle)
+	editedby=$(cat $TMPDIR$uuid/csv/row.editedby)
+	#jobprofile=$(cat $TMPDIR$uuid/csv/row.jobprofile)
+	seeds=$(cat $TMPDIR$uuid/csv/row.seeds)
+	imprint=$(cat $TMPDIR$uuid/csv/row.imprint)
+	#echo '"' > $TMPDIR$uuid/csv/row.add_this_content
+	add_this_content=$(cat $TMPDIR$uuid/csv/row.add_this_content)
+	# add_this_content='"'$add_this_content'"'
+	#echo '"' >> $TMPDIR$uuid/csv/row.add_this_content
+	echo "add_this_content is $add_this_content"
+	#price=$(cat $TMPDIR$uuid/csv/row.price)
 	echo "booktitle is $booktitle and editedby is $editedby"
 	echo "seeds are:"
 	echo "$seeds"
-	sed -e 's/\^/\n/g' /tmp/pagekicker/$uuid/csv/row.seeds > /tmp/pagekicker/$uuid/csv/seeds
+	sed -e 's/\^/\n/g' $TMPDIR$uuid/csv/row.seeds > $TMPDIR$uuid/csv/seeds
+
+
 
 	if [ "$2" = "ccc_off" ] ; then
 		echo "not running ccc"
 	else
-		bin/create-catalog-entry.sh --format "csv"  --passuuid "$uuid" --booktitle "$booktitle" --booktype "Reader" --covercolor "Random" --coverfont "Minion" --environment "$environment" --jobprofilename "default" --seedfile "/tmp/pagekicker/$uuid/csv/seeds" --builder "yes"  --imprint "$imprint" --batch_uuid "$batch_uuid" --editedby "$editedby" --yourname "no" --summary "summaries_only"
+		bin/create-catalog-entry.sh --format "csv"  --passuuid "$uuid" --booktitle "$booktitle" --booktype "Reader" --covercolor "Random" --coverfont "Minion" --environment "$environment" --jobprofilename "default" --seedfile "$TMPDIR$uuid/csv/seeds" --builder "yes"  --imprint "$imprint" --batch_uuid "$batch_uuid" --editedby "$editedby" --yourname "no" --summary "both" --add_this_content "$add_this_content"
  
 #--categories "$catid" not implemented
 # --book_description "$description" ditto
