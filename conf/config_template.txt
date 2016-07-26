@@ -10,6 +10,7 @@ SFB_HOME="/path/to/PageKicker/install/"
 SFB_MAGENTO_HOME="/path/to/magento/htdocs/"
 LOCAL_MYSQL_USER="root"
 LOCAL_MYSQL_PASSWORD="$PASSWORD"
+SFB_VERSION=$(git --git-dir="$SFB_HOME/.git" --work-tree="$SFB_HOME" describe --)
 GMAIL_ID="user@example.com"
 GMAIL_PASSWORD="####" # if you have two-factor authentication turned on you will need a Google App password
 environment="pagekicker-development" # each  environment has a unique config.txt file in conf/
