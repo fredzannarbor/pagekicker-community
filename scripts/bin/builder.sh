@@ -23,6 +23,7 @@ fi
 cd $scriptpath
 
 . includes/set-variables.sh
+ls -lart "$seedfile" 
 
 echo "shortform is $shortform"
 
@@ -31,17 +32,6 @@ echo "revision number is" $SFB_VERSION
 echo "sfb_log is" $logdir"sfb_log"
 
 echo "completed reading config file and  beginning logging at" `date +'%m/%d/%y%n %H:%M:%S'` 
-
-jobprofilename="default"
-jobprofile="default"
-singleseed="none"
-sample_tweets="no"
-todaysdate=`date`
-wikilang="en"
-summary="false"
-truncate_seed="yes"
-coverfont="Minion"
-covercolor="RosyBrown"
 
 export PERL_SIGNALS="unsafe"
 echo "PERL_SIGNALS" is $PERL_SIGNALS "UNSAFE is correct"
@@ -348,11 +338,15 @@ shift
 esac
 done
 
+echo "LOCAL_DATA is $LOCAL_DATA"
+
 echo "add_this_content is $add_this_content"
 
 echo "imprint is $imprint" #debug
 echo "editedby is $editedby" #debug
 echo "jobprofilename is $jobprofilename" #debug
+ls -lart "seedfile is" $seedfile 
+
 human_author="$editedby"
 # Suppose some options are required. Check that we got them.
 
@@ -416,14 +410,18 @@ echo "sku is" $sku
 
 echo "test $covercolor" "$coverfont"
 
-
-if [ "$singleseed" = "none" ] ; then
+#echo "seedfile is " $seedfile
+#ls -lart "seedfile is" $seedfile 
+if [ "$singleseed" = "no" ] ; then
 	echo "no singleseed"
 else
 	seed="$singleseed"
 	echo "seed is now singleseed" "$seed"
 	echo "$seed" > "$seedfile"
 fi
+
+#echo "seedfile is " $seedfile
+#ls -lart "seedfile is" $seedfile 
 
 . includes/api-manager.sh
 
@@ -445,17 +443,19 @@ mkdir -p -m 755 $LOCAL_DATA"jobprofile_builds/""$jobprofilename"
 
 #move assets into position
 
-if [ "$truncate_seed" = "yes" ] ; then
-	echo "truncating path to seed file"
-	echo $seedfile
-	seedfile=$(dirname $seedfile)
-	seedfile=$seedfile"/seedlist"
-	echo "truncated seedfile" $seedfile " as kluge for var customer path"
-else
-	echo "not truncating seedfile"
-fi
+#if [ "$truncate_seed" = "yes" ] ; then
+#	echo "truncating path to seed file"
+#	echo $seedfile
+#	seedfile=$(dirname $seedfile)
+#	seedfile=$seedfile"/seedlist"
+#	echo "truncated seedfile" $seedfile " as kluge for var customer path"
+#else
+#	echo "not truncating seedfile"
+#fi
 
-echo "seedfile is " $seedfile
+#echo "seedfile is " $seedfile
+#ls -lart "seedfile is" $seedfile 
+
 
 cp $scriptpath"assets/pk35pc.jpg" $TMPDIR$uuid/pk35pc.jpg
 
@@ -1022,7 +1022,7 @@ if [ "$dontcleanupseeds" = "yes" ]; then
 else
 	echo "removing seedfile"
 	rm "$seedfile"
-	#ls -la $seedfile (to test that it's gone)
+	ls -la $seedfile (to test that it's gone)
 fi
 
 echo "appending & sorting new bibliography entries"
