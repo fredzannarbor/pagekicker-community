@@ -1022,7 +1022,7 @@ if [ "$dontcleanupseeds" = "yes" ]; then
 else
 	echo "removing seedfile"
 	rm "$seedfile"
-	ls -la $seedfile (to test that it's gone)
+	ls -la $seedfile
 fi
 
 echo "appending & sorting new bibliography entries"
