@@ -18,7 +18,7 @@ Pull requests are encouraged. See CONTRIBUTING.md for more details.
 
 ## Economics
 
- - Paul Romer: [Economic Growth](https://paulromer.net/economic-growth-2/)
+ - Paul Romer: [Economic growth](https://paulromer.net/economic-growth-2/)
 
 ## Mathematics
 
@@ -36,4 +36,4 @@ Pull requests are encouraged. See CONTRIBUTING.md for more details.
 ## Security
 
  - Bruce Schneier: [Why cryptography is harder than it looks](https://www.schneier.com/essays/archives/1997/01/why_cryptography_is.html)
- - Matthew Green: [A few thoughts On cryptographic engineering](http://blog.cryptographyengineering.com/2014/04/attack-of-week-openssl-heartbleed.html)
+ - Matthew Green: [A few thoughts on cryptographic engineering](http://blog.cryptographyengineering.com/2014/04/attack-of-week-openssl-heartbleed.html)
