@@ -345,7 +345,7 @@ echo "add_this_content is $add_this_content"
 echo "imprint is $imprint" #debug
 echo "editedby is $editedby" #debug
 echo "jobprofilename is $jobprofilename" #debug
-ls -lart "seedfile is" $seedfile 
+ls -lart $seedfile 
 
 human_author="$editedby"
 # Suppose some options are required. Check that we got them.
