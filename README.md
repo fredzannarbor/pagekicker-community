@@ -11,6 +11,10 @@ Pull requests are encouraged. See CONTRIBUTING.md for more details.
 
  - Lior Pachter: [The perfect human is Puerto Rican](https://liorpachter.wordpress.com/2014/12/02/the-perfect-human-is-puerto-rican/)
 
+## Business
+
+ - Patrick McKenzie: [Salary Negotiation: Make More Money, Be More Valued](http://www.kalzumeus.com/2012/01/23/salary-negotiation/)
+
 ## Computer science
 
  - Richard Lipton & Ken Reagan: [A big result on graph isomorphism](https://rjlipton.wordpress.com/2015/11/04/a-big-result-on-graph-isomorphism/)
