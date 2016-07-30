@@ -18,7 +18,16 @@ payment = Payment(app, wallet)
 def buy_fortune():
 
     fortune = subprocess.check_output(["fortune"])
-    return print(fortune)
+    return fortune
+
+@app.route('/manifest')
+def docs():
+    '''
+    Serves the app manifest to the 21 crawler.
+    '''
+    with open('manifest.yaml', 'r') as f:
+        manifest_yaml = yaml.load(f)
+    return json.dumps(manifest_yaml)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
