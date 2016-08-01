@@ -17,9 +17,9 @@ payment = Payment(app, wallet)
 @payment.required(1000)
 def buy_fortune():
 
-    fortune = subprocess.check_output(["fortune"])
+    fortune = subprocess.check_output(['fortune', 'potterfacts'])
     return fortune
-
+    
 @app.route('/manifest')
 def docs():
     '''
