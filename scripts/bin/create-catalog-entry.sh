@@ -461,6 +461,14 @@ shift 2
 add_this_content_part_name=${1#*=}
 shift
 ;;
+--add_dat_run)
+add_dat_run=$2
+shift 2
+;;
+--add_dat_run=*)
+add_dat_run=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -505,6 +513,7 @@ mkdir -p -m 777 $TMPDIR$uuid/images
 mkdir -p -m 777 $TMPDIR$uuid/mail
 mkdir -p -m 755 $TMPDIR$uuid/cover
 mkdir -p -m 755 $TMPDIR$uuid/twitter
+#mkdir -p -m 755 $TMPDIR$uuid/webseeds
 mkdir -p -m 777 $metadatatargetpath$uuid
 mkdir -p -m 777 $mediatargetpath$uuid
 
@@ -624,7 +633,7 @@ else
 		echo "$analyze_url is valid URI"
 		echo "analyze_url is set as $analyze_url"
 		"$PANDOC_BIN" -s -r html "$analyze_url" -o $TMPDIR$uuid"/webpage.md"
-		"$PYTHON_BIN" bin/nerv3.py $TMPDIR$uuid"/webpage.md" $TMPDIR$uuid"/webseeds"
+		"$PYTHON_BIN" bin/nerv3.py $TMPDIR$uuid"/webpage.md" $TMPDIR$uuid"/webseeds" "$uuid"
 		echo "seeds extracted from analyze_url"
 		 head -n "$top_q" $TMPDIR$uuid"/webseeds" | sed '/^\s*$/d' > $TMPDIR$uuid"/webseeds.top_q"
 		cat $TMPDIR$uuid"/webseeds.top_q" > $TMPDIR$uuid"/webseeds"
