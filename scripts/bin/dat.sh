@@ -387,6 +387,12 @@ elif [ "$extension" = "pdf" ] ; then
 	echo "ran pdftotext and copied $TMPDIR$uuid/target.pdf" | tee --append $xform_log
 	ls -la $TMPDIR$uuid
 
+elif [ "$extension" = "md" ] ; then
+	xvfb-run --auto-servernum ebook-convert $TMPDIR$uuid/$uploaded_tat_file $TMPDIR$uuid/target.pdf
+	echo "converted md file to pdf" | tee --append $xform_log
+	xvfb-run --auto-servernum ebook-convert $TMPDIR$uuid/$uploaded_tat_file $TMPDIR$uuid/targetfile.txt
+	echo "converted md file to txt" | tee --append $xform_log
+
 else
 	echo "unoconv debug: TMPDIR $TMPDIR$uuid/$uploaded_tatfile"
 	echo "unoconv debug: targetfile $TMPDIR$uuid/targetfile.txt"
