@@ -25,7 +25,7 @@ import os
 def listwrite(output_file,thelist):
 	for item in thelist:
 		item.encode('utf-8')
-		output_file.write("%s\n\n" % item)
+		output_file.write("%s\n" % item)
 
 #=================================================
  
