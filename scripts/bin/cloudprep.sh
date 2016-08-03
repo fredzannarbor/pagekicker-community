@@ -1,11 +1,12 @@
 #!/bin/bash
 #  creates summaries and NER reports for all txt files in a directory in preparation for building a big wordcloud
 
+. includes/set-variables.sh
 for file in *.txt*
 do
 	outfile=`basename $file`
-#         python /opt/bitnami/apache2/htdocs/pk-new/development/scripts/includes/PKsum.py $file --output $file.sum
-#         python /opt/bitnami/apache2/htdocs/pk-new/development/scripts/includes/nerv3.py $file $file.ner
+         python $scriptpath/bin/PKsum.py $file --output $file.sum
+         "$PYTHON_BIN" $scriptpath/bin/nerv3.py $file $file.ner $file'.'
 	 /opt/bitnami/apache2/htdocs/pk-new/development/scripts/bin/wordcloudwrapper.sh --txtinfile $file --outfile $outfile 
          echo "did " $file   
 done

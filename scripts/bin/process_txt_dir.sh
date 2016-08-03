@@ -6,6 +6,7 @@
 # note - this would break on splitter output - fix
 # output: directory with results
 
+. includes/set-variables.sh
 wordcloud="off"
 configfile="lib/IBMcloud/examples/configuration.txt"
 outdir=""
@@ -84,8 +85,8 @@ mkdir -p -m 755 $outdir
 for file in "$txtdir"*.txt
 do
 	outfile=`basename $file`
-	python /opt/bitnami/apache2/htdocs/pk-new/development/scripts/includes/PKsum.py $file --output $outdir$outfile".sum" --length 1 
-	python /opt/bitnami/apache2/htdocs/pk-new/development/scripts/includes/nerv3.py $file $outdir$outfile".ner"
+	python "$scriptpath"bin/PKsum.py $file --output $outdir$outfile".sum" --length 1 
+	"$PYTHON_BIN" "$scriptpath"bin/nerv3.py $file $outdir$outfile".ner" $outdir$outfile"."
 
 	if [ "$wordcloud" = "on" ] ; then
 
