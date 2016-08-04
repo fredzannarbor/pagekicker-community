@@ -77,8 +77,6 @@ def main():
 	People_s = sorted(People, key = People.get, reverse = True)
 	Other_s = sorted(Other, key = Other.get, reverse = True)
 
-	print Places_s
-
 	with codecs.open(out_file, mode = 'w', encoding='utf-8') as o:
 		listwrite(o, People_s)
 		listwrite(o, Places_s)
