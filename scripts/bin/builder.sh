@@ -811,6 +811,55 @@ fi
 		echo "  " >> $TMPDIR$uuid/tmpbody.md
 	fi
 
+        # convet text so that I can add acronyms, programmatic summary, named entity recognition
+
+        pandoc -S -o "$TMPDIR"$uuid/targetfile.txt -f markdown "$TMPDIR"$uuid/tmpbody.md 
+
+        # run acronym filter
+
+        $scriptpath/bin/acronym-filter.sh --txtinfile $TMPDIR$uuid/targetfile.txt > $TMPDIR$uuid/acronyms.txt
+
+        # external loop to run NER and summarizer on split file
+
+        split -C 50K $TMPDIR$uuid/targetfile.txt "$TMPDIR$uuid/xtarget."
+
+        for file in "$TMPDIR$uuid/xtarget."*
+        do
+
+        "$PYTHON_BIN" $scriptpath"bin/nerv3.py" $file $file"_nouns.txt" $uuid
+        echo "ran nerv3 on $file" | tee --append $sfb_log
+        python bin/PKsum.py -l "$summary_length" -o $file"_summary.txt" $file
+        sed -i 's/ \+ / /g' $file"_summary.txt"
+        cp $file"_summary.txt" $file"_pp_summary.txt"
+        echo "ran summarizer on $file" | tee --append $sfb_log
+        awk 'length>=50' $file"_pp_summary.txt" > $TMPDIR$uuid/awk.tmp && mv $TMPDIR$uuid/awk.tmp $file"_pp_summary.txt"
+        #echo "postprocessor threw away summary lines shorter than 50 characters" | tee --append $sfb_log
+        awk 'length<=4000' $file"_pp_summary.txt" > $TMPDIR$uuid/awk.tmp && mv $TMPDIR$uuid/awk.tmp $file"_pp_summary.txt"
+        #echo "postprocessor threw away summary lines longer than 4000 characters" | tee --append $sfb_log
+        #echo "---end of summary section of 140K bytes---" >> $file"_pp_summary.txt"
+        #echo "---end of summary section of 140K bytes---" >> $file"_summary.txt"
+        cat $file"_pp_summary.txt" >> $TMPDIR$uuid/pp_summary.txt
+        cat $file"_summary.txt" >> $TMPDIR$uuid/summary.txt
+        #sleep 3
+        done
+        ls $TMPDIR$uuid/xtarget.*nouns* > $TMPDIR$uuid/testnouns
+        cat $TMPDIR$uuid/xtarget.*nouns* > $TMPDIR$uuid/all_nouns.txt
+        sort --ignore-case $TMPDIR$uuid/all_nouns.txt | uniq > $TMPDIR$uuid/sorted_uniqs.txt
+        sed -i '1i # Unique Proper Nouns and Key Terms \n' $TMPDIR$uuid/sorted_uniqs.txt
+        sed -i '2i \' $TMPDIR$uuid/sorted_uniqs.txt
+        sed -i G $TMPDIR$uuid/sorted_uniqs.txt
+        cp $TMPDIR$uuid/sorted_uniqs.txt $TMPDIR$uuid/sorted_uniqs.md
+        sed -i '1i # Programmatically Generated Summary \' $TMPDIR$uuid/pp_summary.txt
+        sed -i G $TMPDIR$uuid/pp_summary.txt
+        sed -i '1i # Programmatically Generated Summary \' $TMPDIR$uuid/summary.txt
+        sed -i G $TMPDIR$uuid/summary.txt
+
+        if [ `wc -c < $TMPDIR$uuid/pp_summary.txt` = "0" ] ; then
+	        echo using "unpostprocessed summary bc wc pp summary = 0"
+        else
+	        cp $TMPDIR$uuid/pp_summary.txt $TMPDIR$uuid/summary.md
+        fi
+
 	# assemble back matter
 	echo "" >>  $TMPDIR$uuid/backmatter.md
 	echo "" >>  $TMPDIR$uuid/backmatter.md
