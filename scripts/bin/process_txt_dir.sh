@@ -23,7 +23,7 @@ txtdir=$2
 shift 2
 ;;
 --txtdir=*)
-pdfinfile=${1#*=}
+txtdir=${1#*=}
 shift
 ;;
 --stopimagefolder)
