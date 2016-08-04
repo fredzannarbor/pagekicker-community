@@ -1061,9 +1061,14 @@ if [ -z "$batch_uuid" ] ; then
 	echo "not part of a batch"
 else
 	cp $TMPDIR$uuid/$sku.$safe_product_name".epub" $TMPDIR$batch_uuid/$sku.$safe_product_name".epub"
-cp $TMPDIR$uuid/$sku.$safe_product_name".mobi" $TMPDIR$batch_uuid/$sku.$safe_product_name".mobi" 
-cp $TMPDIR$uuid/$sku.$safe_product_name".docx" $TMPDIR$batch_uuid/$sku.$safe_product_name".docx"
-	ls -l "$TMPDIR$batch_uuid"/* # 
+        cp $TMPDIR$uuid/$sku.$safe_product_name".mobi" $TMPDIR$batch_uuid/$sku.$safe_product_name".mobi" 
+        cp $TMPDIR$uuid/$sku.$safe_product_name".docx" $TMPDIR$batch_uuid/$sku.$safe_product_name".docx"
+        cp $TMPDIR$uuid/summary.txt  $TMPDIR$batch_uuid/$sku.$safe_product_name"_summary"
+        cp $TMPDIR$uuid/all_nouns.txt  $TMPDIR$batch_uuid/$sku.$safe_product_name"_all_nouns"
+        cp $TMPDIR$uuid/acronyms.txt  $TMPDIR$batch_uuid/$sku.$safe_product_name"_acronyms"
+        cp $TMPDIR$uuid/cover/wordcloudcover.png  $TMPDIR$batch_uuid/$sku.$safe_product_name"_wordcloudcover.png"
+        cp $TMPDIR$uuid/seeds/filtered.pagehits TMPDIR$batch_uuid/$sku.$safe_product_name"_filtered.pagehits"
+        ls -l "$TMPDIR$batch_uuid"/* # debug
 fi
 
 
