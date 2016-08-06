@@ -461,6 +461,14 @@ shift 2
 add_this_content_part_name=${1#*=}
 shift
 ;;
+--add_dat_run)
+add_dat_run=$2
+shift 2
+;;
+--add_dat_run=*)
+add_dat_run=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -495,16 +503,17 @@ fi
 # create directories I will need
 
 mkdir -p -m 777 $TMPDIR
-mkdir -p -m 777 $TMPDIR$uuid
-mkdir -p -m 777 $TMPDIR$uuid/wiki
-mkdir -p -m 777 $TMPDIR$uuid/user
-mkdir -p -m 777 $TMPDIR$uuid/flickr
-mkdir -p -m 777 $TMPDIR$uuid/fetch
-mkdir -p -m 777 $TMPDIR$uuid/seeds
-mkdir -p -m 777 $TMPDIR$uuid/images
-mkdir -p -m 777 $TMPDIR$uuid/mail
-mkdir -p -m 755 $TMPDIR$uuid/cover
-mkdir -p -m 755 $TMPDIR$uuid/twitter
+mkdir -p -m 777 "$TMPDIR"$uuid
+mkdir -p -m 777 "$TMPDIR"$uuid/wiki
+mkdir -p -m 777 "$TMPDIR"$uuid/user
+mkdir -p -m 777 "$TMPDIR"$uuid/flickr
+mkdir -p -m 777 "$TMPDIR"$uuid/fetch
+mkdir -p -m 777 "$TMPDIR"$uuid/seeds
+mkdir -p -m 777 "$TMPDIR"$uuid/images
+mkdir -p -m 777 "$TMPDIR"$uuid/mail
+mkdir -p -m 755 "$TMPDIR"$uuid/cover
+mkdir -p -m 755 "$TMPDIR"$uuid/twitter
+#mkdir -p -m 755 "$TMPDIR"$uuid/webseeds
 mkdir -p -m 777 $metadatatargetpath$uuid
 mkdir -p -m 777 $mediatargetpath$uuid
 
@@ -542,17 +551,17 @@ xml)
 	echo "jobprofilename is" $jobprofilename  | tee --append $xform_log
 	echo "exemplar_file is" $exemplar_file | tee --append $xform_log
 	
-	echo -n "$seedphrases" > $TMPDIR$uuid/seeds/seedphrases 
+	echo -n "$seedphrases" > "$TMPDIR"$uuid/seeds/seedphrases 
 
-	cp $WEBFORMSHOME$submissionid/$exemplar_filedir_code/*/$exemplar_file $TMPDIR$uuid/$exemplar_file
+	cp $WEBFORMSHOME$submissionid/$exemplar_filedir_code/*/$exemplar_file "$TMPDIR"$uuid/$exemplar_file
 ;;
 csv)
 	echo "getting metadata from csv"
-	cp $seedfile $TMPDIR$uuid/seeds/seedphrases
+	cp $seedfile "$TMPDIR"$uuid/seeds/seedphrases
 ;;
 *)
 	echo "getting metadata from command line"
-	cp $seedfile $TMPDIR$uuid/seeds/seedphrases
+	cp $seedfile "$TMPDIR"$uuid/seeds/seedphrases
 ;;
 esac
 
@@ -614,8 +623,8 @@ human_author="$editedby"
 
 echo "Assembling infiles and assets"
 
-echo "$book_description" > $TMPDIR$uuid/book-description.txt
-echo "$tldr" > $TMPDIR$uuid/tldr.txt
+echo "$book_description" > "$TMPDIR"$uuid/book-description.txt
+echo "$tldr" > "$TMPDIR"$uuid/tldr.txt
 echo "analyze_url is $analyze_url"
 if [ -z  ${analyze_url+x} ] ; then
 	echo "$analyze_url not set as analyze_url"	
@@ -623,12 +632,12 @@ else
 	if [[ $analyze_url =~ $httpvalidate ]] ; then
 		echo "$analyze_url is valid URI"
 		echo "analyze_url is set as $analyze_url"
-		"$PANDOC_BIN" -s -r html "$analyze_url" -o $TMPDIR$uuid"/webpage.md"
-		"$PYTHON_BIN" bin/nerv3.py $TMPDIR$uuid"/webpage.md" $TMPDIR$uuid"/webseeds"
+		"$PANDOC_BIN" -s -r html "$analyze_url" -o "$TMPDIR"$uuid"/webpage.md"
+		"$PYTHON_BIN" bin/nerv3.py "$TMPDIR"$uuid"/webpage.md" "$TMPDIR"$uuid"/webseeds" "$uuid"
 		echo "seeds extracted from analyze_url"
-		 head -n "$top_q" $TMPDIR$uuid"/webseeds" | sed '/^\s*$/d' > $TMPDIR$uuid"/webseeds.top_q"
-		cat $TMPDIR$uuid"/webseeds.top_q" > $TMPDIR$uuid"/webseeds"
-		comm -2 -3 <(sort $TMPDIR$uuid"/webseeds") <(sort "locale/stopwords/webstopwords.en") >> $TMPDIR$uuid/seeds/seedphrases 
+		 head -n "$top_q" "$TMPDIR"$uuid"/webseeds" | sed '/^\s*$/d' > "$TMPDIR"$uuid"/webseeds.top_q"
+		cat "$TMPDIR"$uuid"/webseeds.top_q" > "$TMPDIR"$uuid"/webseeds"
+		comm -2 -3 <(sort "$TMPDIR"$uuid"/webseeds") <(sort "locale/stopwords/webstopwords.en") >> "$TMPDIR"$uuid/seeds/seedphrases 
 	else
 		echo "invalid URI, analyze_url not added"
 	fi
@@ -649,7 +658,7 @@ fi
 
 # echo "checking for human error on form submission"
 
-#if bin/screen-human-error.sh $TMPDIR$uuid/seeds/seedphrases  ; then
+#if bin/screen-human-error.sh "$TMPDIR"$uuid/seeds/seedphrases  ; then
 #   echo "Exited with zero value"
 #else
 #   echo "Exited with non zero"
@@ -673,10 +682,10 @@ cat "$TMPDIR$uuid/seeds/sorted.seedfile" > "$LOCAL_DATA"seeds/history/"$sku".see
 # filter pagehits
 
 
-cp $TMPDIR$uuid/seeds/pagehits $TMPDIR$uuid/seeds/filtered.pagehits
+cp "$TMPDIR"$uuid/seeds/pagehits "$TMPDIR"$uuid/seeds/filtered.pagehits
 
 echo "--- filtered pagehits are ---" 
-cat $TMPDIR$uuid/seeds/filtered.pagehits
+cat "$TMPDIR"$uuid/seeds/filtered.pagehits
 
 echo "--- end of pagehits ---"
 
@@ -712,10 +721,10 @@ case $summary in
 		"$PYTHON_BIN" $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR$uuid/seeds/filtered.pagehits" --outfile "$TMPDIR$uuid/wiki/wikipages.md" --lang "$wikilocale"  1> /dev/null
 		wordcountpages=$(wc -w "$TMPDIR$uuid"/wiki/wikipages.md | cut -f1 -d' ')
 		if [ "$wordcountpages" -gt "100000" ] ; then
-			cp $TMPDIR$uuid/wiki/wikisummaries.md $TMPDIR$uuid/wiki/wiki4cloud.md
+			cp "$TMPDIR"$uuid/wiki/wikisummaries.md "$TMPDIR"$uuid/wiki/wiki4cloud.md
 			echo "body too big for wordcloud, using abstracts only"
 		else
-			cat $TMPDIR$uuid/wiki/wikisummaries.md $TMPDIR$uuid/wiki/wikipages.md > $TMPDIR$uuid/wiki/wiki4cloud.md
+			cat "$TMPDIR"$uuid/wiki/wikisummaries.md "$TMPDIR"$uuid/wiki/wikipages.md > "$TMPDIR"$uuid/wiki/wiki4cloud.md
 			echo "building wordcloud from body + summaries"
 		fi
 		;;
@@ -753,9 +762,9 @@ fi
 
 # build cover
 
-cp $scriptpath"assets/pk35pc.jpg" $TMPDIR$uuid/pk35pc.jpg
-cp $confdir"jobprofiles"/imprints/"$imprint"/"$imprintlogo"  $TMPDIR$uuid/cover/"$imprintlogo"
-cp $confdir"jobprofiles"/signatures/$sigfile $TMPDIR$uuid/$sigfile
+cp $scriptpath"assets/pk35pc.jpg" "$TMPDIR"$uuid/pk35pc.jpg
+cp $confdir"jobprofiles"/imprints/"$imprint"/"$imprintlogo"  "$TMPDIR"$uuid/cover/"$imprintlogo"
+cp $confdir"jobprofiles"/signatures/$sigfile "$TMPDIR"$uuid/$sigfile
 
 #select wordcloud stopfile
 
@@ -780,7 +789,7 @@ else
 	cp "$stopfile" "$scriptpath""lib/IBMcloud/examples/pk-stopwords.txt"
 fi 
 
-	"$JAVA_BIN" -jar $scriptpath"lib/IBMcloud/ibm-word-cloud.jar" -c $scriptpath"lib/IBMcloud/examples/configuration.txt" -w "1800" -h "1800" < "$TMPDIR$uuid"/wiki/wiki4cloud.md > $TMPDIR$uuid/cover/wordcloudcover.png
+	"$JAVA_BIN" -jar $scriptpath"lib/IBMcloud/ibm-word-cloud.jar" -c $scriptpath"lib/IBMcloud/examples/configuration.txt" -w "1800" -h "1800" < "$TMPDIR$uuid"/wiki/wiki4cloud.md > "$TMPDIR"$uuid/cover/wordcloudcover.png
 
 #copying old stopfile backup  to overwrite rotated stopfile
 
@@ -816,19 +825,19 @@ fi
 
 #create base canvases
 
-convert -size 1800x2400 xc:$covercolor  $TMPDIR$uuid/cover/canvas.png
-convert -size 1800x800 xc:$covercolor  $TMPDIR$uuid/cover/topcanvas.png
-convert -size 1800x400 xc:$covercolor  $TMPDIR$uuid/cover/bottomcanvas.png
-convert -size 1800x800 xc:$covercolor  $TMPDIR$uuid/cover/toplabel.png
-convert -size 1800x200 xc:$covercolor  $TMPDIR$uuid/cover/bottomlabel.png
+convert -size 1800x2400 xc:$covercolor  "$TMPDIR"$uuid/cover/canvas.png
+convert -size 1800x800 xc:$covercolor  "$TMPDIR"$uuid/cover/topcanvas.png
+convert -size 1800x400 xc:$covercolor  "$TMPDIR"$uuid/cover/bottomcanvas.png
+convert -size 1800x800 xc:$covercolor  "$TMPDIR"$uuid/cover/toplabel.png
+convert -size 1800x200 xc:$covercolor  "$TMPDIR"$uuid/cover/bottomlabel.png
 
 # underlay canvas
 
-composite -gravity Center $TMPDIR$uuid/cover/wordcloudcover.png  $TMPDIR$uuid/cover/canvas.png $TMPDIR$uuid/cover/canvas.png
+composite -gravity Center "$TMPDIR"$uuid/cover/wordcloudcover.png  "$TMPDIR"$uuid/cover/canvas.png "$TMPDIR"$uuid/cover/canvas.png
 
 # build top label
 
-convert -background "$covercolor" -fill "$coverfontcolor" -gravity center -size 1800x400 -font "$coverfont" caption:"$booktitle" $TMPDIR$uuid/cover/topcanvas.png +swap -gravity center -composite $TMPDIR$uuid/cover/toplabel.png
+convert -background "$covercolor" -fill "$coverfontcolor" -gravity center -size 1800x400 -font "$coverfont" caption:"$booktitle" "$TMPDIR"$uuid/cover/topcanvas.png +swap -gravity center -composite "$TMPDIR"$uuid/cover/toplabel.png
 
 #build bottom label
 
@@ -844,33 +853,33 @@ echo "editedby is" $editedby
 # editedby="PageKicker Robot "$editedby
 convert  -background "$covercolor"  -fill "$coverfontcolor" -gravity south -size 1800x394 \
  -font "$coverfont"  caption:"$editedby" \
- $TMPDIR$uuid/cover/bottomcanvas.png  +swap -gravity center -composite $TMPDIR$uuid/cover/bottomlabel.png
+ "$TMPDIR"$uuid/cover/bottomcanvas.png  +swap -gravity center -composite "$TMPDIR"$uuid/cover/bottomlabel.png
 
 # resize imprint logo
 
-convert $TMPDIR$uuid/cover/"$imprintlogo" -resize x200 $TMPDIR$uuid/cover/"$imprintlogo"
+convert "$TMPDIR"$uuid/cover/"$imprintlogo" -resize x200 "$TMPDIR"$uuid/cover/"$imprintlogo"
 
 
 # lay the labels on top of the target canvas
 
-composite -geometry +0+0 $TMPDIR$uuid/cover/toplabel.png $TMPDIR$uuid/cover/canvas.png $TMPDIR$uuid/cover/step1.png
-composite  -geometry +0+1800 $TMPDIR$uuid/cover/bottomlabel.png $TMPDIR$uuid/cover/step1.png $TMPDIR$uuid/cover/step2.png
-composite  -gravity south -geometry +0+0 $TMPDIR$uuid/cover/"$imprintlogo" $TMPDIR$uuid/cover/step2.png $TMPDIR$uuid/cover/cover.png
-convert $TMPDIR$uuid/cover/cover.png -border 36 -bordercolor white $TMPDIR$uuid/cover/bordercover.png
-cp $TMPDIR$uuid/cover/bordercover.png $TMPDIR$uuid/cover/$sku"ebookcover.jpg"
-convert $TMPDIR$uuid/cover/bordercover.png -resize 228x302 $TMPDIR$uuid/cover/$sku"ebookcover_thumb.jpg"
+composite -geometry +0+0 "$TMPDIR"$uuid/cover/toplabel.png "$TMPDIR"$uuid/cover/canvas.png "$TMPDIR"$uuid/cover/step1.png
+composite  -geometry +0+1800 "$TMPDIR"$uuid/cover/bottomlabel.png "$TMPDIR"$uuid/cover/step1.png "$TMPDIR"$uuid/cover/step2.png
+composite  -gravity south -geometry +0+0 "$TMPDIR"$uuid/cover/"$imprintlogo" "$TMPDIR"$uuid/cover/step2.png "$TMPDIR"$uuid/cover/cover.png
+convert "$TMPDIR"$uuid/cover/cover.png -border 36 -bordercolor white "$TMPDIR"$uuid/cover/bordercover.png
+cp "$TMPDIR"$uuid/cover/bordercover.png "$TMPDIR"$uuid/cover/$sku"ebookcover.jpg"
+convert "$TMPDIR"$uuid/cover/bordercover.png -resize 228x302 "$TMPDIR"$uuid/cover/$sku"ebookcover_thumb.jpg"
 
 
 # move cover to import directory
 
-cp $TMPDIR$uuid/cover/$sku"ebookcover.jpg" $mediatargetpath$uuid/$sku"ebookcover.jpg"
+cp "$TMPDIR"$uuid/cover/$sku"ebookcover.jpg" $mediatargetpath$uuid/$sku"ebookcover.jpg"
 ls -l $mediatargetpath$uuid/$sku"ebookcover.jpg"
 echo "* * * building Magento metadata header * * *" 
 echo "metadatatargetpath is "$metadatatargetpath
 echo "uuid is" $uuid
 echo "verifying uuid directory"
 ls $metadatatargetpath$uuid 
-ls -la $TMPDIR$uuid/tldr.txt $TMPDIR$uuid/book-description.txt
+ls -la "$TMPDIR"$uuid/tldr.txt "$TMPDIR"$uuid/book-description.txt
 
 cat includes/builder-metadata-header.csv > $metadatatargetpath$uuid/"current-import.csv"
 echo "writing Magento metadata footer" to $metadatatargetpath$uuid/"current-import.csv"
@@ -902,13 +911,13 @@ fi
 
 
 ##verbose logging for sendemail
-# cp $TMPDIR$uuid/seeds/seedphrases "$TMPDIR"$uuid/seeds/"$sku"seeds.txt
+# cp "$TMPDIR"$uuid/seeds/seedphrases "$TMPDIR"$uuid/seeds/"$sku"seeds.txt
 
 if [ "$builder" = "yes" ] ; then
 
 	echo "seedfile was" "$TMPDIR"seeds/seedphrases
 
-	$scriptpath"bin/builder.sh" --seedfile $TMPDIR$uuid"/seeds/sorted.seedfile" --booktype "$booktype" --jobprofilename "$jobprofilename" --booktitle "$booktitle" --ebook_format "epub" --sample_tweets "no" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername" --imprint "$imprint" --batch_uuid "$batch_uuid" --tldr "$tldr" --subtitle "$subtitle" --add_corpora "$add_corpora" --analyze_url "$analyze_url" --dontcleanupseeds "yes" --mailtoadmin "$mailtoadmin" --summary "$summary" --add_this_content "$add_this_content" --add_this_content_part_name "$add_this_content_part_name"
+	$scriptpath"bin/builder.sh" --seedfile "$TMPDIR"$uuid"/seeds/sorted.seedfile" --booktype "$booktype" --jobprofilename "$jobprofilename" --booktitle "$booktitle" --ebook_format "epub" --sample_tweets "no" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername" --imprint "$imprint" --batch_uuid "$batch_uuid" --tldr "$tldr" --subtitle "$subtitle" --add_corpora "$add_corpora" --analyze_url "$analyze_url" --dontcleanupseeds "yes" --mailtoadmin "$mailtoadmin" --summary "$summary" --add_this_content "$add_this_content" --add_this_content_part_name "$add_this_content_part_name"
 
 echo "test $@"
 

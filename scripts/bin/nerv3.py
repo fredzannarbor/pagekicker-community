@@ -25,19 +25,26 @@ import os
 def listwrite(output_file,thelist):
 	for item in thelist:
 		item.encode('utf-8')
-		output_file.write("%s\n\n" % item)
+		output_file.write("%s\n" % item)
 
 #=================================================
  
 def main():
+
+	tmpdir = "/tmp/pagekicker"
+
 	#personal api key saved as api_key.txt
 	parser = argparse.ArgumentParser()
 	parser.add_argument('path', help = "target file or directory for NER")
 	parser.add_argument('output', help = "target file for output")
+	parser.add_argument('uuid', help = "uuid")
 	args = parser.parse_args()
 	
 	in_file = args.path
 	out_file = args.output
+	uuid = args.uuid
+	folder = os.path.join(tmpdir, uuid)
+	print folder	
 	cwd = os.getcwd()
 	apikey_location = os.path.join(cwd, "api_key.txt")
 	
@@ -69,18 +76,18 @@ def main():
 	Places_s = sorted(Places, key = Places.get, reverse = True)
 	People_s = sorted(People, key = People.get, reverse = True)
 	Other_s = sorted(Other, key = Other.get, reverse = True)
-	
+
 	with codecs.open(out_file, mode = 'w', encoding='utf-8') as o:
 		listwrite(o, People_s)
 		listwrite(o, Places_s)
 		listwrite(o, Other_s)
-  	out_file = 'peoples'
+  	out_file = os.path.join(folder, 'People')
 	with codecs.open(out_file, mode= 'w', encoding='utf-8') as o:
           listwrite(o, People_s)
-  	out_file = 'places'
+  	out_file = os.path.join(folder, 'Places')
     	with codecs.open(out_file, mode= 'w', encoding='utf-8') as o:
          listwrite(o, Places_s)
-  	out_file = 'others'
+  	out_file = os.path.join(folder, 'Other')
 	with codecs.open(out_file, mode= 'w', encoding='utf-8') as o:
           listwrite(o, Other_s)
 #=================================================

@@ -18,7 +18,7 @@ def multi_file_manager(files, mode='w'):
 
 def csv_read_row(filename, n):
     """ Read and return nth row of a csv file, counting from 1. """
-    with open(filename, 'rb') as f:
+    with open(filename, 'r') as f:
         reader = csv.reader(f)
         return next(itertools.islice(reader, n-1, n))
 
@@ -31,7 +31,7 @@ f = sys.argv[1]
 uuid = sys.argv[2]
 target_row = int(sys.argv[3])
 folder = os.path.join(tmpdir, uuid)
-print folder
+
 
 destinations= [folder+dest for dest in ('/csv/row.editedby', 
 '/csv/row.booktitle', 

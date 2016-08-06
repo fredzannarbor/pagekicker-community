@@ -4,7 +4,7 @@
 
 # initialize variables
 
-# needs $1 = path to data file $2 number of rows $3 file name
+# needs $1 = path to data file $2 number of rows 
 
 if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
 	echo "config file not found, creating /home/<user>/.pagekicker, put config file there"
@@ -43,7 +43,7 @@ while [[ "$i" -le $row_no ]]; do
 	mkdir -p -m 777 $TMPDIR$uuid/seeds
 	mkdir -p -m 777 $TMPDIR$uuid/csv
 
-	"$PYTHON_BIN"  $scriptpath"bin/csv_row_reader.py" "$1" "$uuid" $i
+	"$PYTHON_BIN"  $scriptpath"bin/csvreader.py" "$1" "$uuid" $i
 
 	echo "getting ready to run catalog entry creation command for row $row_no"
 	#catid=$(cat $TMPDIR$uuid/csv/row.catid)

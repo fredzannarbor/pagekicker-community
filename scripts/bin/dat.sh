@@ -42,25 +42,14 @@ starttime=$(( `date +%s` ))
 
 xformlog="$logdir$uuid"/xform_log
 
-echo "-D-D-D-D-D-D-D-D" | tee --append $xform_logdat
+echo "-D-D-D-D-D-D-D-D" | tee --append $sfb_logdat
 echo "starting Document Analysis Tools Stand-alone"
 
 dat="yes"
 # default values
 
 
-TMPDIR="/tmp/pagekicker/"
-buildtarget="$mediatargetpath"
-stopimagefolder="none" #default
-maximages="4" #default
-thumbxsize=120 #default
-thumbysize=120 #default
-outfile="montage.jpg"
-montageurdir="montageur"
-flickr="off"
-frontmatter="on"
-backmatter="on"
-montageur="off"
+
 
 echo "parameter 1 is " $1
 echo "parameter 2 is" $2
@@ -224,7 +213,7 @@ done
 if [ ! "$passuuid" ] ; then
 	echo "creating uuid"
 	uuid=$(python  -c 'import uuid; print uuid.uuiddat-1()')
-	echo "uuid is" $uuid | tee --append $xform_log
+	echo "uuid is" $uuid | tee --append $sfb_log
 	mkdir -p -m 755 $TMPDIR$uuid
 else
 	uuid=$passuuid
@@ -263,7 +252,7 @@ uploaded_tat_file=$(xmlstarlet sel -t -v "/item/uploaded_tat_file" "$xmlfilename
 wordcloud_width=$(xmlstarlet sel -t -v "/item/wordcloud_width" "$xmlfilename")
 wordcloud_height=$(xmlstarlet sel -t -v "/item/wordcloud_height" "$xmlfilename")
 wordcloud_submit=$(xmlstarlet sel -t -v "/item/wordcloudat-d_submit" "$xmlfilename")
-echo "uploaded_tat_file is" $uploaded_tat_file | tee --append $xform_log
+echo "uploaded_tat_file is" $uploaded_tat_file | tee --append $sfb_log
 getwiki=$(xmlstarlet sel -t -v "/item/getwiki" "$xmlfilename")
 # echo "wordcloud_width"=$wordcloud_width "and height =" $wordcloud_height
 # summarizer flags
@@ -279,14 +268,14 @@ summarizer_ngram_threshold=$(xmlstarlet sel -t -v "/item/summarizer_ngram_thresh
 decimator_requested=$(xmlstarlet sel -t -v "/item/decimator_requested" "$xmlfilename")
 tldr=$(xmlstarlet sel -t -v "/item/tldr" "$xmlfilename")
 url=$(xmlstarlet sel -t -v "/item/url" "$xmlfilename")
-echo "summarizer on is" $summarizer_on | tee --append $xform_log
-echo "summary length is" $summary_length | tee --append $xform_log
-echo "positive_seeds were" $positive_seeds| tee --append $xform_log
-echo "positive_seed_weight was" $positive_seed_weight| tee --append $xform_log
-echo "negative_seeds were" $negative_seeds| tee --append $xform_log
-echo "negative_seed_weight was "$negative_seed_weight| tee --append $xform_log
-echo "summarizer_ngram_threshold was" $summarizer_ngram_threshold| tee --append $xform_log
-echo "url to fetch is" $url | tee --append $xform_log        
+echo "summarizer on is" $summarizer_on | tee --append $sfb_log
+echo "summary length is" $summary_length | tee --append $sfb_log
+echo "positive_seeds were" $positive_seeds| tee --append $sfb_log
+echo "positive_seed_weight was" $positive_seed_weight| tee --append $sfb_log
+echo "negative_seeds were" $negative_seeds| tee --append $sfb_log
+echo "negative_seed_weight was "$negative_seed_weight| tee --append $sfb_log
+echo "summarizer_ngram_threshold was" $summarizer_ngram_threshold| tee --append $sfb_log
+echo "url to fetch is" $url | tee --append $sfb_log        
 imagekeyword=$(xmlstarlet sel -t -v "/item/imagekeyword" "$xmlfilename")
 
 . "$confdir"jobprofiles/robots/"$jobprofilename"".jobprofile"
@@ -298,12 +287,12 @@ echo $WEBFORMSXML_HOME
 export LANG
 
 if [ -n "$url" ] ; then 
-	echo "downloading file" $url " from Internet" | tee --append $xform_log
+	echo "downloading file" $url " from Internet" | tee --append $sfb_log
 	wget --tries=45 "$url" -O $TMPDIR$uuid/downloaded_wget_file.pdf
 
 else
 
-	echo "uploaded file" $uploaded_tat_file "from user's computer" | tee --append $xform_log
+	echo "uploaded file" $uploaded_tat_file "from user's computer" | tee --append $sfb_log
 
 fi
 
@@ -350,51 +339,59 @@ fi
 # get basename
 filename=$(basename "$TMPDIR$uuid/$uploaded_tat_file")
 filename="${filename%.*}"
-echo "filename is" $filename  | tee --append $xform_log
+echo "filename is" $filename  | tee --append $sfb_log
 # get filename extension
 rawextension=$(echo $TMPDIR$uuid/$uploaded_tat_file |  sed 's/.*\.//')
-echo "raw extension is" $rawextension | tee --append $xform_log
-extension=$(echo $rawextension | tr '[:upper:]' '[:lower:]')
-echo "lowercase extension is " $extension | tee --append $xform_log
+echo "raw extension is" $rawextension | tee --append $sfb_log
+extension=`echo "$rawextension" | tr '[:upper:]' '[:lower:]'`
+echo "lowercased extension is" $extension | tee --append $sfb_log
+
 
 # make sure there are txt and pdf target files
 
 if [ "$extension" = "txt" ] ; then
 	cp $TMPDIR$uuid/$uploaded_tat_file $TMPDIR$uuid/targetfile.txt
-	echo "file was .txt so copied it to targetfile"	 | tee --append $xform_log
+	echo "file was .txt so copied it to targetfile"	 | tee --append $sfb_log
 
 elif [ "$extension" = "mobi" ] ; then
 	xvfb-run --auto-servernum ebook-convert $TMPDIR$uuid/$uploaded_tat_file $TMPDIR$uuid/target.pdf
-	echo "converted mobi to pdf" | tee --append $xform_log
+	echo "converted mobi to pdf" | tee --append $sfb_log
 	pdftotext $TMPDIR$uuid/mobiconvert.pdf $TMPDIR$uuid/targetfile.txt
-	echo "converted resulting PDF to txt" | tee --append $xform_log
+	echo "converted resulting PDF to txt" | tee --append $sfb_log
 
 elif [ "$extension" = "azw" ] ; then
 	xvfb-run --auto-servernum ebook-convert $TMPDIR$uuid/$uploaded_tat_file $TMPDIR$uuid/target.pdf
-	echo "converted azw to pdf" | tee --append $xform_log
+	echo "converted azw to pdf" | tee --append $sfb_log
 	pdftotext $TMPDIR$uuid/azwconvert.pdf $TMPDIR$uuid/targetfile.txt
-	echo "converted resulting PDF to txt" | tee --append $xform_log
+	echo "converted resulting PDF to txt" | tee --append $sfb_log
 
 elif [ "$extension" = "epub" ] ; then
 	xvfb-run --auto-servernum ebook-convert $TMPDIR$uuid/$uploaded_tat_file $TMPDIR$uuid/target.pdf
-	echo "converted epub to pdf" | tee --append $xform_log
+	echo "converted epub to pdf" | tee --append $sfb_log
 	xvfb-run --auto-servernum ebook-convert $TMPDIR$uuid/$uploaded_tat_file $TMPDIR$uuid/targetfile.txt
-	echo "converted epub to txt" | tee --append $xform_log
+	echo "converted epub to txt" | tee --append $sfb_log
 
 elif [ "$extension" = "pdf" ] ; then
 	pdftotext $TMPDIR$uuid/$uploaded_tat_file  $TMPDIR$uuid/targetfile.txt
 	cp $TMPDIR$uuid/$uploaded_tat_file $TMPDIR$uuid/target.pdf
-	echo "ran pdftotext and copied $TMPDIR$uuid/target.pdf" | tee --append $xform_log
+	echo "ran pdftotext and copied $TMPDIR$uuid/target.pdf" | tee --append $sfb_log
 	ls -la $TMPDIR$uuid
+
+elif [ "$extension" = "md" ] ; then
+	xvfb-run --auto-servernum ebook-convert $TMPDIR$uuid/$uploaded_tat_file $TMPDIR$uuid/target.pdf
+	echo "converted md file to pdf" | tee --append $sfb_log
+	xvfb-run --auto-servernum ebook-convert $TMPDIR$uuid/$uploaded_tat_file $TMPDIR$uuid/targetfile.txt
+	echo "converted md file to txt" | tee --append $sfb_log
 
 else
 	echo "unoconv debug: TMPDIR $TMPDIR$uuid/$uploaded_tatfile"
 	echo "unoconv debug: targetfile $TMPDIR$uuid/targetfile.txt"
 	unoconv -f txt $TMPDIR$uuid/$uploaded_tat_file
 	cp $TMPDIR$uuid/$filename".txt" $TMPDIR$uuid/targetfile.txt
-	unoconv -f pdf $TMPDIR$uuid/$uploaded_tat_file -o $TMPDIR$uuid/target.pdf
-	echo "file was neither txt, mobi, nor PDF, so converted it to PDF using unoconv" | tee --append $xform_log
-	echo "file might contain images so converted it to PDF for montageur" | tee --append $xform_log
+	unoconv -f pdf $TMPDIR$uuid/$uploaded_tat_file $TMPDIR$uuid/target.pdf
+	echo "file was neither txt, mobi, nor PDF, so converted it to PDF using unoconv" | tee --append $sfb_log
+	echo "file might contain images so converted it to PDF for montageur" | tee --append $sfb_log
+	echo "debugging else"
 fi
 
 # catch files without enough text
@@ -410,14 +407,14 @@ fi
 
 if [ "$extension" = "txt" ] ; then
 	montageur_success="1" # exit fail
-	echo "file was txt, no images, so skipping montageur" | tee --append $xform_log
+	echo "file was txt, no images, so skipping montageur" | tee --append $sfb_log
 else
-	echo "copying working files into montageur directory" | tee --append $xform_log
+	echo "copying working files into montageur directory" | tee --append $sfb_log
 	mkdir -p -m 755 $TMPDIR$uuid/montageur
 	$scriptpath"bin/montageur.sh" --pdfinfile "$TMPDIR$uuid/target.pdf" --stopimagefolder "$scriptpath"userassets/oreilly/stopimages --passuuid "$uuid" --environment "$environment" --montageurdir "montageur" --maximages "5" --tmpdir "$TMPDIR" --stopimagefolder "none"
 	montageur_success="$?"
 	if [ "$montageur_success" = 1 ] ; then
-		echo "montageur exited with status 1 no images found, skipping montage processing and returning to scriptpath directory" | tee --append $xform_log
+		echo "montageur exited with status 1 no images found, skipping montage processing and returning to scriptpath directory" | tee --append $sfb_log
 	else
 		# echo "processing montages"
 		cp $TMPDIR$uuid/$montageurdir/montage.jpg $TMPDIR$uuid/montage.jpg
@@ -431,7 +428,7 @@ else
 		cd $TMPDIR$uuid ; pdftk portrait*.jpg.pdf cat output portraits.pdf; cd $scriptpath
 	fi
 
-echo "processed montages, proceeding to text analysis" | tee --append $xform_log
+echo "processed montages, proceeding to text analysis" | tee --append $sfb_log
 
 fi
 
@@ -450,16 +447,16 @@ split -C 50K $TMPDIR$uuid/targetfile.txt "$TMPDIR$uuid/xtarget."
 for file in "$TMPDIR$uuid/xtarget."*
 do
 
-python $scriptpath"includes/nerv3.py" $file $file"_nouns.txt" 
-echo "ran nerv3 on $file" | tee --append $xform_log
-python includes/PKsum.py -l "$summary_length" -o $file"_summary.txt" $file
+"$PYTHON_BIN" $scriptpath"bin/nerv3.py" $file $file"_nouns.txt" $uuid
+echo "ran nerv3 on $file" | tee --append $sfb_log
+python bin/PKsum.py -l "$summary_length" -o $file"_summary.txt" $file
 sed -i 's/ \+ / /g' $file"_summary.txt"
 cp $file"_summary.txt" $file"_pp_summary.txt"
-echo "ran summarizer on $file" | tee --append $xform_log
+echo "ran summarizer on $file" | tee --append $sfb_log
 awk 'length>=50' $file"_pp_summary.txt" > $TMPDIR$uuid/awk.tmp && mv $TMPDIR$uuid/awk.tmp $file"_pp_summary.txt"
-#echo "postprocessor threw away summary lines shorter than 50 characters" | tee --append $xform_log
+#echo "postprocessor threw away summary lines shorter than 50 characters" | tee --append $sfb_log
 awk 'length<=4000' $file"_pp_summary.txt" > $TMPDIR$uuid/awk.tmp && mv $TMPDIR$uuid/awk.tmp $file"_pp_summary.txt"
-#echo "postprocessor threw away summary lines longer than 4000 characters" | tee --append $xform_log
+#echo "postprocessor threw away summary lines longer than 4000 characters" | tee --append $sfb_log
 #echo "---end of summary section of 140K bytes---" >> $file"_pp_summary.txt"
 #echo "---end of summary section of 140K bytes---" >> $file"_summary.txt"
 cat $file"_pp_summary.txt" >> $TMPDIR$uuid/pp_summary.txt
@@ -495,7 +492,7 @@ cat assets/rr_explanation.md >> $TMPDIR$uuid/rr.md
 sed -i G $TMPDIR$uuid/rr.md
 
 
-echo "ran readability report" | tee --append $xform_log
+echo "ran readability report" | tee --append $sfb_log
 
 # wordcloud
 
@@ -503,7 +500,7 @@ java -jar lib/IBMcloud/ibm-word-cloud.jar -c $scriptpath"lib/IBMcloud/examples/c
 
 java -jar lib/IBMcloud/ibm-word-cloud.jar -c $scriptpath"lib/IBMcloud/examples/configuration.txt" -h "3100" -w "2400" < $TMPDIR$uuid/targetfile.txt > $TMPDIR$uuid/wc_front.png
 
-echo "built wordclouds" | tee --append $xform_log
+echo "built wordclouds" | tee --append $sfb_log
 
 # build page burst
 
@@ -529,11 +526,11 @@ if [ "$flickr" = "on" ] ; then
 
 	python includes/Flickr_title_fetcher.py $TMPDIR$uuid/titles.txt $TMPDIR$uuid/flickr/
 	python includes/Flickr_seed_fetcher.py "$imagekeyword" $TMPDIR$uuid/flickr/
-	echo "fetched Flickr images on " $imagekeyword | tee --append $xform_log
+	echo "fetched Flickr images on " $imagekeyword | tee --append $sfb_log
 
 else
 
-	echo "flickr search was off" | tee --append $xform_log
+	echo "flickr search was off" | tee --append $sfb_log
 
 fi
 
@@ -542,7 +539,7 @@ cp "$confdir"jobprofiles/imprints/$imprint/$imprintlogo $TMPDIR$uuid/$imprintlog
 
 if [ "$frontmatter" = "off" ] ; then 
 
-	echo "not building front matter" | tee --append $xform_log
+	echo "not building front matter" | tee --append $sfb_log
 else
 
 	echo "copyright page for this imprint is" $imprintcopyrightpage
@@ -641,7 +638,7 @@ else
 
 fi
 if [ "$backmatter" = "off" ] ; then
-	echo "not building back matter" | tee --append $xform_log
+	echo "not building back matter" | tee --append $sfb_log
 else
 
 	# build back matter beginning with flickr 
@@ -660,10 +657,10 @@ else
 		cd ..
 		"$PANDOC_BIN" -o images.pdf allflickr.md
 		cd $scriptpath
-		echo "converted flickr md files to pdf pages with images" | tee --append $xform_log
+		echo "converted flickr md files to pdf pages with images" | tee --append $sfb_log
 		
 	else
-		echo "didn't  process flickr files" | tee --append $xform_log
+		echo "didn't  process flickr files" | tee --append $sfb_log
 	fi
 
 	# assemble keyword reference appendix
@@ -790,7 +787,7 @@ else
 
 fi
 
-echo "put docs on webserver where they are available" | tee --append $xform_log
+echo "put docs on webserver where they are available" | tee --append $sfb_log
 
 # share
 
@@ -805,7 +802,7 @@ if [ "$twitter_announcement" = "yes" ] ; then
         . $TMPDIR$uuid/tcommand
 
 else
-        echo "no twitter announcement" | tee --append $xform_log
+        echo "no twitter announcement" | tee --append $sfb_log
 
 fi
 
@@ -820,7 +817,7 @@ if [ "$fb_announcement" = "yes" ] ; then
         fbcmd PPOST 472605809446163 "PageKicker Robot Igor just ran his Text Analysis Tools and created a wordcloud for $customer_name at $cloud_delivery_url"
 
 else
-        echo "no fb notification" | tee --append $xform_log
+        echo "no fb notification" | tee --append $sfb_log
 fi
 
  # deliver via e-mail

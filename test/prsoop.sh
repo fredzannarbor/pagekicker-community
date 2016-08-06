@@ -1,2 +1,2 @@
 #!/bin/bash
-bin/build_n_books_from_csv.sh ../test/prsoop.csv 5
+bin/build_n_books_from_csv.sh /path/to/test/prsoop.csv 6

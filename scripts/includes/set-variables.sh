@@ -1,10 +1,18 @@
+
+abstracts="both"
 add_corpora="no"
-add_this_content="none"
 add_this_content_part_name="User-Provided Content"
+add_this_content="none"
 analyze_url="no"
+angbr="<"
 arxiv="no"
+attribute_set="Default"
+backmatter="on"
 BISAC_code="None"
+body="<body>"
+bold="<b>"
 booktype="Reader"
+booktypewebformid='"/item/booktype"'
 breaking="no"
 build_all_formats="yes"
 build_bw_pdf="yes"
@@ -14,124 +22,33 @@ build_linkrich_epub="yes"
 build_mobi="yes"
 build_text_epub="yes"
 build_txt_html_only="no"
+builder="yes"
+buildtarget="$mediatargetpath"
+categories="4"
 categoryid=2
+closeparen=")"
+cover_image_extension=".png"
 coverbase="images/bottomcanvas.png"
 covercolor="RosyBrown"
 coverfile="assets/NCP-cover.jpg"
-coverfontcolor="white"
 coverfont="Minion"
+coverfontcolor="white"
 coverRGB="0,0,0"
 covertype_id="1"
 customer_email="store@pagekicker.com"
+customeridwebformid='"/item/customerid"'
 customtitle="none"
 dedicationfilename="default.html"
 dedicationfilename="default.html"
-ebookformat="epub"
-editedby="PageKicker"
-editorid="1"
-endurl="&prop=links&pllimit=500&format=xml"
-exemplar_file="none"
-fetched_document_format="html"
-fetchfile="fetch/fetchlist.csv"
-fleet="yes"
-flickr="no"
-import="yes"
-imprint="pagekicker"
-ISBN="012345679X"
-ISBN_assign_automatically="no"
-ISBN_owner="0"
-jobprofile="default.jobprofile"
-LSI_import="yes"
-mylibrary="yes"
-news_lasts_minutes="43200"
-pass_uuid="no"
-pdfserif="MinionWebPro"
-price=0.99
-refresh="yes"
-rows=1
-sample_tweets="yes"
-seedfile="seeds/current-seeds"
-seedsource="PageKicker"
-SEOmodule_status="off"
-seriesdescriptionfilename="default.html"
-shortform="no"
-singleseed="no"
-special_lasts_minutes="43200"
-special_price="0"
-specialstoreid="0"
-text_extraction_on="yes"
-top_q="20" # number of nerv lines used divided by 2
-userdatadir="none"
-userdescription="no"
-userid="1"
-userlogo="assets/imprint.png"
-verbose="no"
-wikilocale="en"
-wordcount=0
-wordcountpages=0
-wordcountsummaries=0
-yourname="no"
-
-# summarizer
-
-summarizer_on=Y
-summary_length=10
-robot_summary_length=10 
-positive_seeds=""
-positive_seed_weight=1
-negative_seeds=""
-negative_seed_weight=1
-summarizer_ngram_threshold=2
-summary="both"
-
-# wiki abstracts
-
-abstracts="both"
-
-#cccsetup
-
-exemplar_filedir_code=400 # this is the field code value used in the directory structure where magento webforms stores uploaded exemplar files -- softcoded below
-builder="yes"
-mailtofred="yes"
-storecode="admin"
-websites="base"
-attribute_set="Default"
-type="downloadable"
-categories="4"
-status="Enabled"
-visibility="Catalog,Search"
-special_to_buffer="2592000"
-storeids="0"
-news_to_buffer="2592000"
-
-#initializing some more variables
-
-sku=`tail -1 < "$LOCAL_DATA""SKUs/sku_list"`
-
-ebookintro="includes/ebook.intro.html"
-
-nameprefix=""
-middlename=""
-firstname=""
-lastname=""
-
-wikilocale="en"
-
-fetcharray=()
-
-
-
-#workarounds & useful regexes
-
-angbr="<"
-body="<body>"
-bold="<b>"
-closeparen=")"
 description="test"
 docsandabstracts="'<b>Document titles and abstracts:</b><p>'"
 docxlinkname="Microsoft_Word_docx"
 docxname="Microsoft_Word_docx"
 dq='"'
+ebookformat="epub"
+ebookintro="includes/ebook.intro.html"
+editedby="PageKicker"
+editorid="1"
 endanchor="/a>"
 endbody="</body>"
 endbold="</b>"
@@ -139,8 +56,20 @@ endbr=">"
 endhead="</endhead>"
 endhtml="</html>"
 endp="</p>"
+endurl="&prop=links&pllimit=500&format=xml"
+epub=".epub"xmlstarletwebformstart="xmlstarlet sel -t -v"
 epublinkname="ePub"
 epublinkrichname="Pub"
+exemplar_file="none"
+exemplar_filedir_code=400 # this is the field code value used in the directory structure where magento webforms stores uploaded exemplar files -- softcoded below
+fetcharray=()
+fetched_document_format="html"
+fetchfile="fetch/fetchlist.csv"
+firstname=""
+fleet="yes"
+flickr="no"
+flickr="off"
+frontmatter="on"
 h1=$angbr"h1"$endbr
 h1end=$angbr$slash"h1"$endbr
 h2=$angbr"h2"$endbr
@@ -151,34 +80,87 @@ head="<head>"
 html="<html>"
 httpvalidate='(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
 imgsrc="<IMG SRC="
+import="yes"
+imprint="pagekicker"
+ISBN_assign_automatically="no"
+ISBN_owner="0"
+ISBN="012345679X"
+jobprofile="default.jobprofile"
+lastname=""
+LSI_import="yes"
+mailtofred="yes"
+maximages="4" #default
+middlename=""
 mobilinkname="Kindle"
+montageur="off"
+montageurdir="montageur"
+mylibrary="yes"
+nameprefix=""
+negative_seed_weight=1
+negative_seeds=""
 newline="/n"
+news_lasts_minutes="43200"
+news_to_buffer="2592000"
 on=" on "
 openanchor="<a href="$dq
 openparen="("
-pdflinkname="PDF"
-pipe="|"
+outfile="montage.jpg"
 p="<p>"
+pass_uuid="no"
+pdflinkname="PDF"
+pdfserif="MinionWebPro"
+pipe="|"
+positive_seed_weight=1
+positive_seeds=""
+price=0.99
+printconfigfile="yes"
+refresh="yes"
+robot_summary_length=10 
+rows=1
+sample_tweets="yes"
+seedfile="seeds/current-seeds"
+seedsource="PageKicker"
+SEOmodule_status="off"
+seriesdescriptionfilename="default.html"
+shortform="no"
+singleseed="no"
+singleseedwebformid='"/item/singleseed"'
+sku=`tail -1 < "$LOCAL_DATA""SKUs/sku_list"`
 slash="/"
+special_lasts_minutes="43200"
+special_price="0"
+special_to_buffer="2592000"
+specialstoreid="0"
 sq="'"
-x="x" # for imagemagick scripts
-
-#imagemagick setup
-
-cover_image_extension=".png"
+status="Enabled"
+stopimagefolder="none" #default
+storecode="admin"
+storeids="0"
+subtitle=""
+summarizer_ngram_threshold=2
+summarizer_on=Y
+summary_length=10
+summary="both"
+text_extraction_on="yes"
+thumbxsize=120 #default
+thumbysize=120 #default
+top_q="20" # number of nerv lines used divided by 2
 txtformatname=".txt"
 txtwildcard="*.txt"
-epub=".epub"xmlstarletwebformstart="xmlstarlet sel -t -v"
-subtitle=""
-
-# cover builder setup
-
-printconfigfile="yes"
-
-#xmlstarlet setup
-
+type="downloadable"
+userdatadir="none"
+userdescription="no"
+userid="1"
+userlogo="assets/imprint.png"
+verbose="no"
+visibility="Catalog,Search"
+websites="base"
+wikilocale="en"
+wordcount=0
+wordcountpages=0
+wordcountsummaries=0
+x="x" # for imagemagick scripts
 xmlstarletwebformstart="xmlstarlet sel -t -v"
 xpathwebformid='"/item/webform_id"'
-booktypewebformid='"/item/booktype"'
-singleseedwebformid='"/item/singleseed"'
-customeridwebformid='"/item/customerid"'
+yourname="no"
+
