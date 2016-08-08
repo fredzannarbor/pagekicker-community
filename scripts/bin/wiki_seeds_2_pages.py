@@ -31,7 +31,7 @@ wikipedia.set_lang(lang)
 file1 = open(input_file, 'r')
 file3 = codecs.open(pagehits,'w','utf-8')
 for line in file1:
-    print line,
+    print(line)
     try:
         seedhits = wikipedia.search(line)
     
