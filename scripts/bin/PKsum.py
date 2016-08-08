@@ -105,7 +105,7 @@ class TDM:
         try:
             term_matrix = count_vec.fit_transform(corpus)
         except ValueError:
-            print "This document isn't summarizable."
+            print("This document isn't summarizable.")
             sys.exit()
         normalized = sklearn.feature_extraction.text.TfidfTransformer(norm=norm_opt).fit_transform(term_matrix)
         return term_matrix, normalized
@@ -120,7 +120,7 @@ class TDM:
         try:
             term_matrix = count_vec.fit_transform(corpus)
         except ValueError:
-            print "This document isn't summarizable."
+            print("This document isn't summarizable.")
             sys.exit()
         term_matrix_seedless = term_matrix.tocsr()[2:,:]
         pos_seed_vector = term_matrix.getrow(0)
