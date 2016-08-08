@@ -220,7 +220,7 @@ def print_summary(sentences, scores, out_file, length):
 #=================================================
 def output_checker(output_file):
     if output_file == None:
-        print "Output file name not supplied. Please run again with -o option supplied"
+        print("Output file name not supplied. Please run again with -o option supplied")
         from sys import exit
         exit()
 
@@ -259,7 +259,7 @@ def main():
 
     if pos_seed == None and neg_seed == None:
         LR_method = 'unbiased'
-        print LR_method
+        print(LR_method)
         [term_matrix, normalized] = TDM(corpus, pos_seed, neg_seed, stopfile, norm_flag, ngram).matrix
         pos_seed_vector = []
         neg_seed_vector = []
