@@ -26,13 +26,14 @@ starttime=$(( `date +%s` ))
 
 sendemail -t "wfzimmerman@gmail.com" \
 		-u "test  email" \
-		-m "Hi!" \
 		-f "$GMAIL_ID" \
 		-cc "$GMAIL_ID" \
 		-xu "$GMAIL_ID" \
 		-xp "$GMAIL_PASSWORD" \
 		-s smtp.gmail.com:587 \
 		-o tls=yes \
-		-a ../test/tmpbody.md 
+		-a ../test/tmpbody.md \
+		-o message-file="../test/emailbody" \
+		-vv
 	
 exit 0
