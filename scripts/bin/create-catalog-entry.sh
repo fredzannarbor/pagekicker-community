@@ -488,7 +488,7 @@ done
 
 if [ ! "$passuuid" ] ; then
 	echo "creating uuid"
-	uuid=$("$PYTHON_BIN"  -c 'import uuid; print uuid.uuid1()')
+	uuid=$("$PYTHON_BIN"  -c 'import uuid; print(uuid.uuid1())')
 	echo "uuid is" $uuid | tee --append $xform_log
 
 else
@@ -496,6 +496,7 @@ else
 	echo "received uuid " $uuid
 
 fi
+exit
 
 # test values
 
