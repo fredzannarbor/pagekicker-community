@@ -27,9 +27,9 @@ summary = args.summary
 wikipedia.set_lang(lang)
 
 file = open(input_file, 'r')
-file2 = open(output_file, 'w')
+file2 = open(output_file, 'wb')
 for line in file:
-    print  line,
+    print(line),
     try:
         a = wikipedia.summary(line)
         a = wikipedia.page(line)
@@ -41,12 +41,12 @@ for line in file:
         wikipedia.exceptions.DisambiguationError
         wikipedia.exceptions.WikipediaException
         continue
-    file2.write('\n')
-    print a.encode('utf-8')
-    # print b.encode('utf-8')
-    file2.write('\n')
-    file2.write('# ' )
-    file2.write(line)
-    file2.write('\n')
+
+    file2.write(b'\n')
+    # print(a.encode('utf-8'))
+    file2.write(b'\n')
+    file2.write(b'# ' )
+    file2.write(line.encode('utf-8'))
+    file2.write(b'\n')
     file2.write(a.encode('utf-8'))
 file2.close

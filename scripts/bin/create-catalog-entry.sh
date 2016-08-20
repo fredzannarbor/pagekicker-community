@@ -496,7 +496,7 @@ else
 	echo "received uuid " $uuid
 
 fi
-exit
+
 
 # test values
 

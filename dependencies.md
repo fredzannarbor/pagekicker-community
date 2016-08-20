@@ -7,6 +7,7 @@ networkx
 AlchemyAPI
 nltk
 time
+wikipedia
 
 imagemagick
 sendemail # note middle "e", this is lightweight version that is very portable
