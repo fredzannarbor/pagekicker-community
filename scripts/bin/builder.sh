@@ -478,7 +478,7 @@ else
 		echo "$analyze_url is valid URI"
 		echo "analyze_url is set as $analyze_url"
 		"$PANDOC_BIN" -s -r html "$analyze_url" -o  "$TMPDIR"$uuid"/webpage.md"
-		"$PYTHON_BIN" bin/nerv3.py  "$TMPDIR"$uuid"/webpage.md"  "$TMPDIR"$uuid"/webseeds" "$uuid"
+		"$PYTHON27_BIN" bin/nerv3.py  "$TMPDIR"$uuid"/webpage.md"  "$TMPDIR"$uuid"/webseeds" "$uuid"
 		echo "seeds have been extracted from analyze_url"
 		head -n "$top_q"  "$TMPDIR"$uuid"/webseeds" | sed '/^\s*$/d' >  "$TMPDIR"$uuid"/webseeds.top_q"
 		cat  "$TMPDIR"$uuid"/webseeds.top_q" >  "$TMPDIR"$uuid"/webseeds"
@@ -835,12 +835,12 @@ fi
         for file in "$TMPDIR"$uuid"/xtarget."*
         do
 
-        "$PYTHON_BIN" $scriptpath"bin/nerv3.py" $file $file"_nouns.txt" "$uuid"
+        "$PYTHON27_BIN" $scriptpath"bin/nerv3.py" $file $file"_nouns.txt" "$uuid"
         echo "ran nerv3 on $file" | tee --append $sfb_log
         cat "$TMPDIR$uuid"/Places >> "$TMPDIR"$batch_uuid"/"$sku"."$safe_product_name"_Places"
         cat "$TMPDIR$uuid"/People >>  "$TMPDIR"$batch_uuid"/"$sku"."$safe_product_name"_People"
         cat "$TMPDIR$uuid"/Other >>  "$TMPDIR"$batch_uuid"/"$sku"."$safe_product_name"_Other"
-        python bin/PKsum.py -l "$summary_length" -o $file"_summary.txt" $file
+        "$PYTHON27_BIN" bin/PKsum.py -l "$summary_length" -o $file"_summary.txt" $file
         sed -i 's/ \+ / /g' $file"_summary.txt"
         cp $file"_summary.txt" $file"_pp_summary.txt"
         echo "ran summarizer on $file" | tee --append $sfb_log

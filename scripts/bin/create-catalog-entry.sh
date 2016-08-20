@@ -634,7 +634,7 @@ else
 		echo "$analyze_url is valid URI"
 		echo "analyze_url is set as $analyze_url"
 		"$PANDOC_BIN" -s -r html "$analyze_url" -o "$TMPDIR"$uuid"/webpage.md"
-		"$PYTHON_BIN" bin/nerv3.py "$TMPDIR"$uuid"/webpage.md" "$TMPDIR"$uuid"/webseeds" "$uuid"
+		"$PYTHON27_BIN" bin/nerv3.py "$TMPDIR"$uuid"/webpage.md" "$TMPDIR"$uuid"/webseeds" "$uuid"
 		echo "seeds extracted from analyze_url"
 		 head -n "$top_q" "$TMPDIR"$uuid"/webseeds" | sed '/^\s*$/d' > "$TMPDIR"$uuid"/webseeds.top_q"
 		cat "$TMPDIR"$uuid"/webseeds.top_q" > "$TMPDIR"$uuid"/webseeds"
