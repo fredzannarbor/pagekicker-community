@@ -18,6 +18,10 @@ pdftk, fdupes, pdfimages # for montageur.sh
 IBM word cloud (IBMcloud)
 API keys for fetchers (minimum: see Wikimedia https://www.mediawiki.org/wiki/API:Login)
 
+Fonts:
+
+wordcloud needs /usr/share/fonts/truetype/ttf-dejavu fonts
+
 Optional:
 
 xmlstarlet # only needed if you are parsing xml input
