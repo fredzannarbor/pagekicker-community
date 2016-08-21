@@ -10,7 +10,7 @@
 
 # edit path to PageKicker config file here
 
-. /opt/bitnami/apache2/htdocs/pk-new/development/conf/config.txt
+. /home/$USER/.pagekicker/config.txt
 
 
 #   configuraiton values for this program
