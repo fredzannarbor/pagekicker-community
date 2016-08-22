@@ -840,7 +840,10 @@ fi
         cat "$TMPDIR$uuid"/Places >> "$TMPDIR"$batch_uuid"/"$sku"."$safe_product_name"_Places"
         cat "$TMPDIR$uuid"/People >>  "$TMPDIR"$batch_uuid"/"$sku"."$safe_product_name"_People"
         cat "$TMPDIR$uuid"/Other >>  "$TMPDIR"$batch_uuid"/"$sku"."$safe_product_name"_Other"
-        "$PYTHON27_BIN" bin/PKsum.py -l "$summary_length" -o $file"_summary.txt" $file
+	# echo "python_bin is" $PYTHON_BIN # debug
+	# pip freeze # debug
+
+        "$PYTHON_BIN" bin/PKsum.py -l "$summary_length" -o $file"_summary.txt" $file
         sed -i 's/ \+ / /g' $file"_summary.txt"
         cp $file"_summary.txt" $file"_pp_summary.txt"
         echo "ran summarizer on $file" | tee --append $sfb_log

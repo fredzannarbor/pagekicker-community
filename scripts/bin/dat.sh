@@ -449,7 +449,7 @@ do
 
 "$PYTHON_BIN" $scriptpath"bin/nerv3.py" $file $file"_nouns.txt" $uuid
 echo "ran nerv3 on $file" | tee --append $sfb_log
-python bin/PKsum.py -l "$summary_length" -o $file"_summary.txt" $file
+"$PYTHON_BIN" bin/PKsum.py -l "$summary_length" -o $file"_summary.txt" $file
 sed -i 's/ \+ / /g' $file"_summary.txt"
 cp $file"_summary.txt" $file"_pp_summary.txt"
 echo "ran summarizer on $file" | tee --append $sfb_log

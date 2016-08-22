@@ -5,7 +5,7 @@
 for file in *.txt*
 do
 	outfile=`basename $file`
-         python $scriptpath/bin/PKsum.py $file --output $file.sum
+        "$PYTHON_BIN" $scriptpath/bin/PKsum.py $file --output $file.sum
          "$PYTHON_BIN" $scriptpath/bin/nerv3.py $file $file.ner $file'.'
 	 /opt/bitnami/apache2/htdocs/pk-new/development/scripts/bin/wordcloudwrapper.sh --txtinfile $file --outfile $outfile 
          echo "did " $file   

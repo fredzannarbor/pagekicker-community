@@ -85,7 +85,7 @@ mkdir -p -m 755 $outdir
 for file in "$txtdir"*.txt
 do
 	outfile=`basename $file`
-	python "$scriptpath"bin/PKsum.py $file --output $outdir$outfile".sum" --length 1 
+	"$PYTHON_BIN" "$scriptpath"bin/PKsum.py $file --output $outdir$outfile".sum" --length 1 
 	"$PYTHON_BIN" "$scriptpath"bin/nerv3.py $file $outdir$outfile".ner" $outdir$outfile"."
 
 	if [ "$wordcloud" = "on" ] ; then
