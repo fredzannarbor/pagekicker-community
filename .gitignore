@@ -1,3 +1,5 @@
+py3env
+venv
 *~
 api_key.txt
 conf/config.txt
