@@ -9,6 +9,7 @@ networkx
 AlchemyAPI
 nltk
 time
+wikipedia
 
 imagemagick 6.6.9 or more
 sendemail # note middle "e", this is lightweight version that is very portable
@@ -19,6 +20,10 @@ pdftk, fdupes, pdfimages # for montageur.sh
 
 IBM word cloud (IBMcloud)
 API keys for fetchers (minimum: see Wikimedia https://www.mediawiki.org/wiki/API:Login)
+
+Fonts:
+
+wordcloud needs /usr/share/fonts/truetype/ttf-dejavu fonts
 
 Optional:
 

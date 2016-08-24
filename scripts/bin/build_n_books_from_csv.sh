@@ -27,7 +27,7 @@ fi
 #create batch uuid
 
 echo "creating batch_uuid"
-batch_uuid=$("$PYTHON_BIN"  -c 'import uuid; print uuid.uuid1()')
+batch_uuid=$("$PYTHON_BIN"  -c 'import uuid; print(uuid.uuid1())')
 batch_uuid="batch_""$batch_uuid"
 echo "batch_uuid is" $batch_uuid | tee --append $xform_log
 mkdir -p -m 777 $TMPDIR$batch_uuid
@@ -38,7 +38,7 @@ row_no=$2
 i=1
 echo "number of rows to parse is $row_no"
 while [[ "$i" -le $row_no ]]; do
-	uuid=$("$PYTHON_BIN"  -c 'import uuid; print uuid.uuid1()')
+	uuid=$("$PYTHON_BIN"  -c 'import uuid; print(uuid.uuid1())')
 	mkdir -p -m 777 $TMPDIR$uuid
 	mkdir -p -m 777 $TMPDIR$uuid/seeds
 	mkdir -p -m 777 $TMPDIR$uuid/csv

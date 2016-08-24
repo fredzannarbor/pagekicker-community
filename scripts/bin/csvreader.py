@@ -1,4 +1,4 @@
-# reads a single row of csv 
+# reads rows of csv one at a time 
 # code by @martineau 
 # http://stackoverflow.com/questions/38489761/how-can-i-select-only-a-particular-row-in-a-csv-file
 

@@ -45,8 +45,8 @@ class Corpus:
         return [os.path.join(path, item) for item in os.listdir(path)]
         
     def file_read(self, input_text):
-        
-        doc = (file.read(file(input_text))).decode('utf-8', 'replace')
+        with open(input_text, encoding='utf-8', errors='replace') as docfile:
+            doc = docfile.read()
         
         #Sentence tokenizing
         doc = ' '.join(doc.strip().split('\n'))

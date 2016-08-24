@@ -5,11 +5,13 @@ Fred Zimmerman
 fred@pagekicker.com
 (c) PageKicker 2014
 
-This temporary script file is located here:
-/home/fred/.spyder2/.temp.py
 """
 
-import argparse, wikipedia, sys, time, codecs
+import argparse
+import codecs
+import sys
+import time
+import wikipedia
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--infile", help = "seed file", default = 'test')
@@ -40,7 +42,6 @@ for line in file1:
         wikipedia.exceptions.WikipediaException
         continue
     
-
     for i in seedhits:
         file3.write(i+'\n')
     file3.close

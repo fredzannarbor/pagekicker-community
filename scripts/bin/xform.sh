@@ -35,7 +35,7 @@ xmlfilename=$xmldirectoryname/$xmlbasefile
 
 echo "loaded" $environment "config file at " $datenow  
 
-uuid=$(python  -c 'import uuid; print uuid.uuid1()')
+uuid=$("$PYTHON_BIN"  -c 'import uuid; print(uuid.uuid1())')
 mkdir -p -m 755 $logdir$uuid 
 xform_log=$logdir$uuid/"xform_log"
 echo "XXXXXXXXXX" | tee --append $xform_log

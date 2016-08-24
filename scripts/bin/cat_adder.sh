@@ -8,8 +8,8 @@
 
 # initialize variables
 
-. ../conf/config.txt
-. includes/set-variables.sh
+. $HOME/.pagekicker/config.txt
+.  includes/set-variables.sh
 rm /tmp/pagekicker/buildresult
 
 # adds books to specified categories with seed terms 
@@ -28,7 +28,7 @@ do
 	tail -n$row_no "$1" | head -n1 > "$current_row_location"
 
 	# echo "$line" > "/tmp/pagekicker/$uuid/csv/row_no."$row_no
-	/opt/bitnami/python/bin/python  $scriptpath"bin/csv_to_ccc.py" "$current_row_location" "$uuid"
+	"$PYTHON_BIN"  $scriptpath"bin/csv_to_ccc.py" "$current_row_location" "$uuid"
 	
 	echo "running catalog entry creation command"
 	catid=$(cat /tmp/pagekicker/$uuid/csv/row.catid)

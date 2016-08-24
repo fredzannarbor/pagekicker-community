@@ -486,9 +486,12 @@ done
 
 # Suppose some options are required. Check that we got them.
 
+echo "PYTHON_BIN is $PYTHON_BIN" 
+"$PYTHON_BIN" --version
+
 if [ ! "$passuuid" ] ; then
 	echo "creating uuid"
-	uuid=$("$PYTHON_BIN"  -c 'import uuid; print uuid.uuid1()')
+	uuid=$("$PYTHON_BIN"  -c 'import uuid; print(uuid.uuid1())')
 	echo "uuid is" $uuid | tee --append $xform_log
 
 else
@@ -496,6 +499,7 @@ else
 	echo "received uuid " $uuid
 
 fi
+
 
 # test values
 
@@ -633,7 +637,7 @@ else
 		echo "$analyze_url is valid URI"
 		echo "analyze_url is set as $analyze_url"
 		"$PANDOC_BIN" -s -r html "$analyze_url" -o "$TMPDIR"$uuid"/webpage.md"
-		"$PYTHON_BIN" bin/nerv3.py "$TMPDIR"$uuid"/webpage.md" "$TMPDIR"$uuid"/webseeds" "$uuid"
+		"$PYTHON27_BIN" bin/nerv3.py "$TMPDIR"$uuid"/webpage.md" "$TMPDIR"$uuid"/webseeds" "$uuid"
 		echo "seeds extracted from analyze_url"
 		 head -n "$top_q" "$TMPDIR"$uuid"/webseeds" | sed '/^\s*$/d' > "$TMPDIR"$uuid"/webseeds.top_q"
 		cat "$TMPDIR"$uuid"/webseeds.top_q" > "$TMPDIR"$uuid"/webseeds"
@@ -650,7 +654,7 @@ bin/screen-naughty-seeds.sh "$TMPDIR$uuid/seeds/seedphrases" $uuid
 naughtyresult=$?
 
 if [ $naughtyresult -eq "0" ] ; then
-	echo "naughty seeds ran"
+	echo "naughty seeds checked"
 else
 	echo "Exited with problem in screen-naughty-seeds.sh"
   	exit 0
