@@ -1,4 +1,4 @@
-from BeautifulSoup import BeautifulSoup
+from beautifulsoup4 import beautifulsoup4
 import re
 
 def sanitize(html):
