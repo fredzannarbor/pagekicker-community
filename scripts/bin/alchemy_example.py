@@ -159,7 +159,7 @@ if response['status'] == 'OK':
     for concept in response['concepts']:
         print('text: ', concept['text'])
         print('relevance: ', concept['relevance'])
-        print('')
+        print('')alchemyapi = AlchemyAPI()
 else:
     print('Error in concept tagging call: ', response['statusInfo'])
 
