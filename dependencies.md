@@ -1,15 +1,18 @@
 Dependencies
 
-python 2.7
-python libraries: 
+python 2.7 (upgrading to 3.5)
+
+python libraries:
+ 
 scikit-learn
 networkx
 AlchemyAPI
 nltk
 time
 
-imagemagick
+imagemagick 6.6.9 or more
 sendemail # note middle "e", this is lightweight version that is very portable
+          # sendemail has issue with TLS/SSL in Ubuntu 14.04, needs to be fixed
 pandoc
 
 pdftk, fdupes, pdfimages # for montageur.sh
