@@ -486,6 +486,9 @@ done
 
 # Suppose some options are required. Check that we got them.
 
+echo "PYTHON_BIN is $PYTHON_BIN" 
+"$PYTHON_BIN" --version
+
 if [ ! "$passuuid" ] ; then
 	echo "creating uuid"
 	uuid=$("$PYTHON_BIN"  -c 'import uuid; print(uuid.uuid1())')
@@ -651,7 +654,7 @@ bin/screen-naughty-seeds.sh "$TMPDIR$uuid/seeds/seedphrases" $uuid
 naughtyresult=$?
 
 if [ $naughtyresult -eq "0" ] ; then
-	echo "naughty seeds ran"
+	echo "naughty seeds checked"
 else
 	echo "Exited with problem in screen-naughty-seeds.sh"
   	exit 0
