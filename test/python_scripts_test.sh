@@ -9,4 +9,5 @@ python2.7 bin/nerv3.py ../test/tmpbody.md scr/nervoutput 123
 python bin/csvreader.py "../test/1001_1.csv" "123" 1
 python3.5 bin/csvreader.py "../test/1001_1.csv" "123" 1
 python2.7 bin/csvreader.py "../test/1001_1.csv" "123" 1
-
+python3.5 bin/wiki_seeds_2_pages.py --infile "seeds/paella" --pagehits "scr/pagehits"
+python2.7 bin/wiki_seeds_2_pages.py --infile "seeds/paella" --pagehits "scr/pagehits"
