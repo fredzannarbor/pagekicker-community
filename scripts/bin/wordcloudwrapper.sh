@@ -13,7 +13,7 @@
 . /home/$USER/.pagekicker/config.txt
 
 
-#   configuraiton values for this program
+#   configuration values for this program
 
 configfile="$scriptpath"lib/IBMcloud/examples/configuration.txt
 wordcloud_height=5100
