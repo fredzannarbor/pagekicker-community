@@ -13,6 +13,7 @@ Pull requests are encouraged. See CONTRIBUTING.md for more details.
 
 ## Business
 
+ - Andreessen-Horowitz (et al.): [16 Definitions on the Economics of VC](http://a16z.com/2016/09/11/vc-economics/)
  - Patrick McKenzie: [Salary Negotiation: Make More Money, Be More Valued](http://www.kalzumeus.com/2012/01/23/salary-negotiation/)
 
 ## Computer science
