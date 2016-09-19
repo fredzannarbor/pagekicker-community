@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 
 if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
 	echo "config file not found, creating /home/<user>/.pagekicker, put config file there"
@@ -34,6 +34,6 @@ if [ ! -f "$TMPDIR$uuid/ebookcover.jpg" ]; then
 fi
 
 # if error log is empty then PASS
-
+echo "\n"
 echo "PASS" "  $uuid"  | tee -a $LOCAL_DATA/logs/error.log
 
