@@ -8,6 +8,7 @@ fred@pagekicker.com
 This temporary script file is located here:
 /home/fred/.spyder2/.temp.py
 """
+# -*- coding: utf-8 -*-
 
 import argparse, wikipedia
 
@@ -46,7 +47,7 @@ for line in file:
     # print(a.encode('utf-8'))
     file2.write(b'\n')
     file2.write(b'# ' )
-    file2.write(line.encode('utf-8'))
+    file2.write(line)
     file2.write(b'\n')
     file2.write(a.encode('utf-8'))
 file2.close
