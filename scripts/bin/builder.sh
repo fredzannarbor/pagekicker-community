@@ -5,7 +5,7 @@
 echo "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
 
 if shopt -q  login_shell ; then
-	
+
 	if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
 		echo "config file not found, creating /home/<user>/.pagekicker, put config file there"
 		mkdir -p -m 755 "$HOME"/.pagekicker
@@ -16,14 +16,14 @@ if shopt -q  login_shell ; then
 		echo "read config file from login shell $HOME""/.pagekicker/config.txt"
 	fi
 else
-	. /home/$(whoami)/.pagekicker/config.txt #hard-coding /home is a hack 
+	. /home/$(whoami)/.pagekicker/config.txt #hard-coding /home is a hack
 	echo "read config file from nonlogin shell /home/$(whoami)/.pagekicker/config.txt"
 fi
 
 cd $scriptpath
 
 . includes/set-variables.sh
-ls -lart "$seedfile" 
+ls -lart "$seedfile"
 
 echo "shortform is $shortform"
 
@@ -31,7 +31,7 @@ echo "revision number is" $SFB_VERSION
 
 echo "sfb_log is" $logdir"sfb_log"
 
-echo "completed reading config file and  beginning logging at" `date +'%m/%d/%y%n %H:%M:%S'` 
+echo "completed reading config file and  beginning logging at" `date +'%m/%d/%y%n %H:%M:%S'`
 
 export PERL_SIGNALS="unsafe"
 echo "PERL_SIGNALS" is $PERL_SIGNALS "UNSAFE is correct"
@@ -345,7 +345,7 @@ echo "add_this_content is $add_this_content"
 echo "imprint is $imprint" #debug
 echo "editedby is $editedby" #debug
 echo "jobprofilename is $jobprofilename" #debug
-ls -lart $seedfile 
+ls -lart $seedfile
 
 human_author="$editedby"
 # Suppose some options are required. Check that we got them.
@@ -411,7 +411,7 @@ echo "sku is" $sku
 echo "test $covercolor" "$coverfont"
 
 #echo "seedfile is " $seedfile
-#ls -lart "seedfile is" $seedfile 
+#ls -lart "seedfile is" $seedfile
 if [ "$singleseed" = "no" ] ; then
 	echo "no singleseed"
 else
@@ -421,7 +421,7 @@ else
 fi
 
 #echo "seedfile is " $seedfile
-#ls -lart "seedfile is" $seedfile 
+#ls -lart "seedfile is" $seedfile
 
 . includes/api-manager.sh
 
@@ -455,7 +455,7 @@ mkdir -p -m 755 $LOCAL_DATA"jobprofile_builds/""$jobprofilename"
 #fi
 
 #echo "seedfile is " $seedfile
-#ls -lart "seedfile is" $seedfile 
+#ls -lart "seedfile is" $seedfile
 
 
 cp $scriptpath"assets/pk35pc.jpg"  "$TMPDIR"$uuid/pk35pc.jpg
@@ -465,14 +465,14 @@ if cmp -s "$seedfile" "$TMPDIR"$uuid"/seeds/seedphrases" ; then
 else
 	echo "Rotating new seedfile into tmpdir"
 	cp "$seedfile"  "$TMPDIR"$uuid"/seeds/seedphrases"
-fi 
+fi
 
 cp $confdir"jobprofiles"/imprints/"$imprint"/"$imprintlogo"  "$TMPDIR""$uuid"
 cp $confdir"jobprofiles"/signatures/"$sigfile" "$TMPDIR""$uuid"
 cp $confdir"jobprofiles"/imprints/"$imprint"/"$imprintlogo" "$TMPDIR"$uuid"/cover"
 
 if [ -z  ${analyze_url+x} ] ; then
-	echo "$analyze_url not set as analyze_url"	
+	echo "$analyze_url not set as analyze_url"
 else
 	if [[ $analyze_url =~ $httpvalidate ]] ; then
 		echo "$analyze_url is valid URI"
@@ -482,13 +482,13 @@ else
 		echo "seeds have been extracted from analyze_url"
 		head -n "$top_q"  "$TMPDIR"$uuid"/webseeds" | sed '/^\s*$/d' >  "$TMPDIR"$uuid"/webseeds.top_q"
 		cat  "$TMPDIR"$uuid"/webseeds.top_q" >  "$TMPDIR"$uuid"/webseeds"
-		comm -2 -3 <(sort  "$TMPDIR"$uuid"/webseeds") <(sort "locale/stopwords/webstopwords.en") >>  "$TMPDIR"$uuid/seeds/seedphrases 
+		comm -2 -3 <(sort  "$TMPDIR"$uuid"/webseeds") <(sort "locale/stopwords/webstopwords.en") >>  "$TMPDIR"$uuid/seeds/seedphrases
 	else
 		echo "invalid URI, analyze_url not added"
 	fi
 fi
 
-sort -f "$TMPDIR"$uuid"/seeds/seedphrases" 
+sort -f "$TMPDIR"$uuid"/seeds/seedphrases"
 sort -u --ignore-case "$TMPDIR"$uuid"/seeds/seedphrases" | sed -e '/^$/d' -e '/^[0-9#@]/d' >  "$TMPDIR"$uuid/seeds/sorted.seedfile
 
 echo "---"
@@ -497,14 +497,14 @@ cat "$TMPDIR"$uuid"/seeds/sorted.seedfile"
 echo "---"
 
 #expand seeds to valid wiki pages
- 
+
 "$PYTHON_BIN" bin/wiki_seeds_2_pages.py --infile "$TMPDIR"$uuid"/seeds/sorted.seedfile" --pagehits "$TMPDIR"$uuid"/seeds/pagehits"
 
 # filter pagehits
 
 cp  "$TMPDIR"$uuid/seeds/pagehits  "$TMPDIR"$uuid/seeds/filtered.pagehits
 
-echo "--- filtered pagehits are ---" 
+echo "--- filtered pagehits are ---"
 cat  "$TMPDIR"$uuid/seeds/filtered.pagehits
 
 echo "--- end of pagehits ---"
@@ -618,7 +618,7 @@ if cmp -s "$scriptpath/lib/IBMcloud/examples/pk-stopwords.txt" $scriptpath"/lib/
 else
 	echo "Rotating stopfile into place"
 	cp "$stopfile" "$scriptpath""lib/IBMcloud/examples/pk-stopwords.txt"
-fi 
+fi
 
 
 	"$JAVA_BIN" -jar $scriptpath"lib/IBMcloud/ibm-word-cloud.jar" -c $scriptpath"lib/IBMcloud/examples/configuration.txt" -w "1800" -h "1800" <  "$TMPDIR"$uuid/wiki/wiki4cloud.md >  "$TMPDIR"$uuid/cover/wordcloudcover.png
@@ -630,27 +630,27 @@ if cmp -s "$scriptpath/lib/IBMcloud/examples/pk-stopwords.txt" $scriptpath"/lib/
 else
 	echo "Rotating old stopfile back in place"
 	cp $scriptpath"/lib/IBMcloud/examples/restore-pk-stopwords.txt"  "$scriptpath/lib/IBMcloud/examples/pk-stopwords.txt"
-fi 
+fi
 
 
 # set font & color
 
 if [ "$coverfont" = "Random" ] ; then
 	coverfont=`./bin/random-line.sh ../conf/fonts.txt`
-	echo "random coverfont is " $coverfont 
+	echo "random coverfont is " $coverfont
 
 else
 	coverfont=$coverfont
-	echo "using specified cover font" $coverfont 
+	echo "using specified cover font" $coverfont
 fi
 
 
 if [ "$covercolor" = "Random" ]; then
 	covercolor=`./bin/random-line.sh ../conf/colors.txt`
-	echo "random covercolor is " $covercolor 
+	echo "random covercolor is " $covercolor
 else
 	covercolor=$covercolor
-	echo "using specified covercolor "$covercolor 
+	echo "using specified covercolor "$covercolor
 
 fi
 
@@ -715,7 +715,7 @@ if [ "$shortform" = "no" ]; then
 	cat "$authorbio" >>  "$TMPDIR"$uuid/titlepage.md
 	echo "  " >>  "$TMPDIR"$uuid/titlepage.md
 	echo "  " >>  "$TMPDIR"$uuid/titlepage.md
-	
+
 	cp $scriptpath"assets/rebuild.md"  "$TMPDIR"$uuid/rebuild.md
 	cp $confdir"jobprofiles/signatures/"$sigfile  "$TMPDIR"$uuid/$sigfile
 	echo "# Acknowledgements from the PageKicker Robot Author" >>  "$TMPDIR"$uuid/robo_ack.md
@@ -736,9 +736,9 @@ if [ "$shortform" = "no" ]; then
 
 	cat  "$TMPDIR"$uuid/titlepage.md  "$TMPDIR"$uuid/robo_ack.md  "$TMPDIR"$uuid/rebuild.md >  "$TMPDIR"$uuid/tmpfrontmatter.md
 
-	if [ -z ${tldr+x} ]; then 
+	if [ -z "$tldr" ]; then
 		echo "no tl;dr"
-	else 
+	else
 		echo "  " >>  "$TMPDIR"$uuid/tmpfrontmatter.md
 		echo "  " >>  "$TMPDIR"$uuid/tmpfrontmatter.md
 		echo "# TL;DR:" >>  "$TMPDIR"$uuid/tmpfrontmatter.md
@@ -779,12 +779,12 @@ if [ "$shortform" = "no" ]; then
 		echo "unrecognized summary option"
 	;;
 	esac
-	
+
 
 	echo "assembled front matter"
 
 else
-	echo "short form selected" 
+	echo "short form selected"
 	echo '![cover image]'"(ebookcover.jpg)" >  "$TMPDIR"$uuid/tmpfrontmatter.md
 	echo '!['"$imprintname"']'"(""$imprintlogo"")" >>  "$TMPDIR"$uuid/tmpfrontmatter.md
 
@@ -798,7 +798,7 @@ fi
 		echo "not adding user content"
 	else
 		echo "adding user-provided content file $add_this_content"
-		
+
 		echo "  " >>  "$TMPDIR"$uuid/add_this_content.md
 		echo "  " >>  "$TMPDIR"$uuid/echo "  " >>  "$TMPDIR"$uuid/add_this_content.md
 		echo "# $add_this_content_part_name" >> "$TMPDIR"$uuid"/tmpbody.md"
@@ -820,7 +820,7 @@ fi
 
         # convert text so that I can add acronyms, programmatic summary, named entity recognition
 
-        pandoc -S -o "$TMPDIR"$uuid/targetfile.txt -f markdown "$TMPDIR"$uuid/tmpbody.md 
+        pandoc -S -o "$TMPDIR"$uuid/targetfile.txt -f markdown "$TMPDIR"$uuid/tmpbody.md
 
 
 
@@ -840,7 +840,7 @@ fi
         cat "$TMPDIR$uuid"/Places >> "$TMPDIR"$batch_uuid"/"$sku"."$safe_product_name"_Places"
         cat "$TMPDIR$uuid"/People >>  "$TMPDIR"$batch_uuid"/"$sku"."$safe_product_name"_People"
         cat "$TMPDIR$uuid"/Other >>  "$TMPDIR"$batch_uuid"/"$sku"."$safe_product_name"_Other"
-	echo "python_bin is" $PYTHON_BIN # debug 
+	echo "python_bin is" $PYTHON_BIN # debug
 	"$PYTHON_BIN" --version
 	pip freeze # debug
 
@@ -904,9 +904,9 @@ fi
 		# $PANDOC -o images.pdf allflickr.md
 		# cd $scriptpath
 		# echo "converted flickr md files to pdf pages with images" | tee --append $xform_log
-		
+
 	else
-		echo "didn't  process flickr files" 
+		echo "didn't  process flickr files"
 	fi
 
 if [ "$shortform" = "no" ] ;then
@@ -915,7 +915,7 @@ if [ "$shortform" = "no" ] ;then
  	cat includes/wikilicense.md >> $TMPDIR/$uuid/backmatter.md
 
 	echo "# Also built by PageKicker Robot $jobprofilename" >>   "$TMPDIR"$uuid/backmatter.md
-	sort -u --ignore-case "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.txt" -o  "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.txt" # currently sort by alphabetical 
+	sort -u --ignore-case "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.txt" -o  "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.txt" # currently sort by alphabetical
 	cat "$LOCAL_DATA"/bibliography/robots/"$jobprofilename"/"$jobprofilename""_titles.txt" >>  "$TMPDIR"$uuid/backmatter.md
 	echo " ">>  "$TMPDIR"$uuid/backmatter.md
 	echo " " >>  "$TMPDIR"$uuid/backmatter.md
@@ -925,7 +925,7 @@ if [ "$shortform" = "no" ] ;then
 
 	echo "" >> "$TMPDIR"$uuid"/backmatter.md"
 	echo "" >> "$TMPDIR"$uuid"/backmatter.md"
-	
+
 		if [ -z  ${url+x} ] ; then
 			:
 		else
@@ -943,7 +943,7 @@ if [ "$shortform" = "no" ] ;then
 	echo "assembled back matter"
 
 else
-	echo "no back matter" 
+	echo "no back matter"
 
 fi
 
@@ -951,7 +951,7 @@ fi
 
 # concatenate front matter, body & back matter
 
-	if [ -s "$TMPDIR"$uuid"/tmpbody.md" ] ; then 
+	if [ -s "$TMPDIR"$uuid"/tmpbody.md" ] ; then
 		cat  "$TMPDIR"$uuid"/tmpbody.md" >>  "$TMPDIR"$uuid/tmpfrontmatter.md
 	else
 		echo "no body"
@@ -1044,7 +1044,7 @@ if [ "$add_corpora" = "yes" ] ; then
 	if grep -q "$unique_seed_string" "$SFB_HOME"shared-corpus/imprints/"$imprint"/unique_seed_strings.sorted ; then
 		echo "seed string $unique_seed_string is already in corpus for imprint $imprint"
 	else
-		cp -u "$TMPDIR"$uuid"/"$sku.$safe_product_name".epub" "$SFB_HOME"shared-corpus/imprints"/"$imprint"/"$sku.$safe_product_name".epub" 
+		cp -u "$TMPDIR"$uuid"/"$sku.$safe_product_name".epub" "$SFB_HOME"shared-corpus/imprints"/"$imprint"/"$sku.$safe_product_name".epub"
 		echo "added book associated with $unique_seed_string to corpus for imprint $imprint"
 	fi
 else
@@ -1057,7 +1057,7 @@ if [ "$add_corpora" = "yes" ] ; then
 	if grep -q "$unique_seed_string" "$SFB_HOME"shared-corpus/robots/$jobprofilename/unique_seed_strings.sorted ; then
 		echo "seed string $unique_seed_string is already in corpus for robot $jobprofilename "
 	else
-		cp "$TMPDIR"$uuid"/"$sku.$safe_product_name".epub" "$SFB_HOME"shared-corpus/robots/"$jobprofilename"/"$sku.$safe_product_name.epub" 
+		cp "$TMPDIR"$uuid"/"$sku.$safe_product_name".epub" "$SFB_HOME"shared-corpus/robots/"$jobprofilename"/"$sku.$safe_product_name.epub"
 		echo "added book associated with $unique_seed_string to corpus for robot $jobprofilename"
 	fi
 else
@@ -1079,7 +1079,7 @@ if [ -z "$batch_uuid" ] ; then
 	echo "not part of a batch"
 else
 	cp  "$TMPDIR"$uuid/$sku.$safe_product_name".epub"  "$TMPDIR"$batch_uuid/$sku.$safe_product_name".epub"
-        cp  "$TMPDIR"$uuid/$sku.$safe_product_name".mobi"  "$TMPDIR"$batch_uuid/$sku.$safe_product_name".mobi" 
+        cp  "$TMPDIR"$uuid/$sku.$safe_product_name".mobi"  "$TMPDIR"$batch_uuid/$sku.$safe_product_name".mobi"
         cp  "$TMPDIR"$uuid/$sku.$safe_product_name".docx"  "$TMPDIR"$batch_uuid/$sku.$safe_product_name".docx"
         cp  "$TMPDIR"$uuid/summary.txt   "$TMPDIR"$batch_uuid/$sku.$safe_product_name"_summary"
         cp  "$TMPDIR"$uuid/all_nouns.txt   "$TMPDIR"$batch_uuid/$sku.$safe_product_name"_all_nouns"
