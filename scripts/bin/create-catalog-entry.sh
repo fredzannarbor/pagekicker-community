@@ -20,7 +20,7 @@ echo "software version number is" $SFB_VERSION
 
 echo "sfb_log is" $sfb_log
 
-echo "completed reading config file and  beginning logging at" `date +'%m/%d/%y%n %H:%M:%S'` 
+echo "completed reading config file and  beginning logging at" `date +'%m/%d/%y%n %H:%M:%S'`
 #echo $PATH
 # echo "I am" $(whoami)
 starttime=$(( `date +%s` ))
@@ -486,7 +486,7 @@ done
 
 # Suppose some options are required. Check that we got them.
 
-echo "PYTHON_BIN is $PYTHON_BIN" 
+echo "PYTHON_BIN is $PYTHON_BIN"
 "$PYTHON_BIN" --version
 
 if [ ! "$passuuid" ] ; then
@@ -521,7 +521,7 @@ mkdir -p -m 755 "$TMPDIR"$uuid/twitter
 mkdir -p -m 777 $metadatatargetpath$uuid
 mkdir -p -m 777 $mediatargetpath$uuid
 
-case "$format" in 
+case "$format" in
 xml)
 	echo "getting metadata from xml file"
 
@@ -554,8 +554,8 @@ xml)
 	echo "environment is" $environment  | tee --append $xform_log
 	echo "jobprofilename is" $jobprofilename  | tee --append $xform_log
 	echo "exemplar_file is" $exemplar_file | tee --append $xform_log
-	
-	echo -n "$seedphrases" > "$TMPDIR"$uuid/seeds/seedphrases 
+
+	echo -n "$seedphrases" > "$TMPDIR"$uuid/seeds/seedphrases
 
 	cp $WEBFORMSHOME$submissionid/$exemplar_filedir_code/*/$exemplar_file "$TMPDIR"$uuid/$exemplar_file
 ;;
@@ -627,11 +627,11 @@ human_author="$editedby"
 
 echo "Assembling infiles and assets"
 
-echo "$book_description" > "$TMPDIR"$uuid/book-description.txt
-echo "$tldr" > "$TMPDIR"$uuid/tldr.txt
+echo -n "$book_description" > "$TMPDIR"$uuid/book-description.txt
+echo -n "$tldr" > "$TMPDIR"$uuid/tldr.txt
 echo "analyze_url is $analyze_url"
 if [ -z  ${analyze_url+x} ] ; then
-	echo "$analyze_url not set as analyze_url"	
+	echo "$analyze_url not set as analyze_url"
 else
 	if [[ $analyze_url =~ $httpvalidate ]] ; then
 		echo "$analyze_url is valid URI"
@@ -641,7 +641,7 @@ else
 		echo "seeds extracted from analyze_url"
 		 head -n "$top_q" "$TMPDIR"$uuid"/webseeds" | sed '/^\s*$/d' > "$TMPDIR"$uuid"/webseeds.top_q"
 		cat "$TMPDIR"$uuid"/webseeds.top_q" > "$TMPDIR"$uuid"/webseeds"
-		comm -2 -3 <(sort "$TMPDIR"$uuid"/webseeds") <(sort "locale/stopwords/webstopwords.en") >> "$TMPDIR"$uuid/seeds/seedphrases 
+		comm -2 -3 <(sort "$TMPDIR"$uuid"/webseeds") <(sort "locale/stopwords/webstopwords.en") >> "$TMPDIR"$uuid/seeds/seedphrases
 	else
 		echo "invalid URI, analyze_url not added"
 	fi
@@ -668,7 +668,7 @@ fi
 #   echo "Exited with non zero"
 #   exit 0
 #fi
-	
+
 echo "seedfile is" $seedfile
 
 # screen for zero value seed file
@@ -678,7 +678,7 @@ cat "$TMPDIR$uuid/seeds/seedphrases" | uniq | sort | sed -e '/^$/d' -e '/^[0-9#@
 cat "$TMPDIR$uuid/seeds/sorted.seedfile" > "$LOCAL_DATA"seeds/history/"$sku".seedphrases
 
 #expand seeds to valid wiki pages
- 
+
 
 "$PYTHON_BIN" bin/wiki_seeds_2_pages.py --infile "$TMPDIR$uuid/seeds/sorted.seedfile" --pagehits "$TMPDIR$uuid/seeds/pagehits"
 
@@ -688,7 +688,7 @@ cat "$TMPDIR$uuid/seeds/sorted.seedfile" > "$LOCAL_DATA"seeds/history/"$sku".see
 
 cp "$TMPDIR"$uuid/seeds/pagehits "$TMPDIR"$uuid/seeds/filtered.pagehits
 
-echo "--- filtered pagehits are ---" 
+echo "--- filtered pagehits are ---"
 cat "$TMPDIR"$uuid/seeds/filtered.pagehits
 
 echo "--- end of pagehits ---"
@@ -791,7 +791,7 @@ if cmp -s "$scriptpath/lib/IBMcloud/examples/pk-stopwords.txt" $scriptpath"/lib/
 else
 	echo "Rotating stopfile into place"
 	cp "$stopfile" "$scriptpath""lib/IBMcloud/examples/pk-stopwords.txt"
-fi 
+fi
 
 	"$JAVA_BIN" -jar $scriptpath"lib/IBMcloud/ibm-word-cloud.jar" -c $scriptpath"lib/IBMcloud/examples/configuration.txt" -w "1800" -h "1800" < "$TMPDIR$uuid"/wiki/wiki4cloud.md > "$TMPDIR"$uuid/cover/wordcloudcover.png
 
@@ -802,27 +802,27 @@ if cmp -s "$scriptpath/lib/IBMcloud/examples/pk-stopwords.txt" $scriptpath"/lib/
 else
 	echo "Rotating old stopfile back in place"
 	cp $scriptpath"/lib/IBMcloud/examples/restore-pk-stopwords.txt"  "$scriptpath/lib/IBMcloud/examples/pk-stopwords.txt"
-fi 
+fi
 
 # set font & color
 
 
 if [ "$coverfont" = "Random" ] ; then
 	coverfont=`./bin/random-line.sh ../conf/fonts.txt`
-	echo "random coverfont is " $coverfont 
+	echo "random coverfont is " $coverfont
 
 else
 	coverfont=$coverfont
-	echo "using specified cover font" $coverfont 
+	echo "using specified cover font" $coverfont
 fi
 
 
 if [ "$covercolor" = "Random" ]; then
 	covercolor=`./bin/random-line.sh ../conf/colors.txt`
-	echo "random covercolor is " $covercolor 
+	echo "random covercolor is " $covercolor
 else
 	covercolor=$covercolor
-	echo "using specified covercolor "$covercolor 
+	echo "using specified covercolor "$covercolor
 
 fi
 
@@ -878,30 +878,30 @@ convert "$TMPDIR"$uuid/cover/bordercover.png -resize 228x302 "$TMPDIR"$uuid/cove
 
 cp "$TMPDIR"$uuid/cover/$sku"ebookcover.jpg" $mediatargetpath$uuid/$sku"ebookcover.jpg"
 ls -l $mediatargetpath$uuid/$sku"ebookcover.jpg"
-echo "* * * building Magento metadata header * * *" 
+echo "* * * building Magento metadata header * * *"
 echo "metadatatargetpath is "$metadatatargetpath
 echo "uuid is" $uuid
 echo "verifying uuid directory"
-ls $metadatatargetpath$uuid 
+ls $metadatatargetpath$uuid
 ls -la "$TMPDIR"$uuid/tldr.txt "$TMPDIR"$uuid/book-description.txt
 
 cat includes/builder-metadata-header.csv > $metadatatargetpath$uuid/"current-import.csv"
 echo "writing Magento metadata footer" to $metadatatargetpath$uuid/"current-import.csv"
 . includes/builder-metadata-footer.sh >> $metadatatargetpath$uuid/"current-import.csv"
 
-echo "writing Dublin Core metadata for use by pandoc" 
+echo "writing Dublin Core metadata for use by pandoc"
 #. includes/dc-metadata.txt
 
 # increment SKU by 1
 		prevsku=$sku
-		sku=$((sku+1)) 
+		sku=$((sku+1))
 		echo $sku >> "$LOCAL_DATA""SKUs/sku_list"
-		echo "incremented SKU by 1 to" $sku " and updated SKUs/sku_list" 
+		echo "incremented SKU by 1 to" $sku " and updated SKUs/sku_list"
 
-# 
-if [ "$import" = "yes" ] ; then 
+#
+if [ "$import" = "yes" ] ; then
 
-	echo "adding import job to the manifest" 
+	echo "adding import job to the manifest"
 
 	echo $uuid >> import_status/manifest.csv
 
@@ -909,7 +909,7 @@ if [ "$import" = "yes" ] ; then
 
 else
 
-	echo "not importing this job" 
+	echo "not importing this job"
 
 fi
 
@@ -945,7 +945,7 @@ echo "safe_product_name is" "$safe_product_name"
 		-o tls=yes \
 		-a "$TMPDIR$uuid/$sku.$safe_product_name"".docx" \
 		-a "$TMPDIR$uuid/$sku.$safe_product_name"".epub" \
-		-a "$TMPDIR$uuid/$sku.$safe_product_name"".mobi" 
+		-a "$TMPDIR$uuid/$sku.$safe_product_name"".mobi"
 
 if [ "$mailtoadmin" = "yes" ] ; then
 
