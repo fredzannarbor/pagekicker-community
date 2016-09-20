@@ -512,14 +512,14 @@ echo "--- end of pagehits ---"
 # fetch by pagehits
 
 
-case $summary in
+case "$summary" in
 summaries_only)
 	echo "fetching page summaries only"
 	"$PYTHON_BIN"  $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR"$uuid"/seeds/filtered.pagehits" --outfile "$TMPDIR"$uuid/"wiki/wikisummariesraw.md" --lang "$wikilocale" --summary  1> /dev/null
 	sed -e s/\=\=\=\=\=/JQJQJQJQJQ/g -e s/\=\=\=\=/JQJQJQJQ/g -e s/\=\=\=/JQJQJQ/g -e s/\=\=/JQJQ/g -e s/Edit\ /\ /g -e s/JQJQJQJQJQ/\#\#\#\#\#/g -e s/JQJQJQJQ/\#\#\#\#/g -e s/JQJQJQ/\#\#\#/g -e s/JQJQ/\#\#/g  "$TMPDIR"$uuid/wiki/wikisummariesraw.md | sed G >  "$TMPDIR"$uuid/wiki/wikisummaries.md
 	cp  "$TMPDIR"$uuid/wiki/wikisummaries.md  "$TMPDIR"$uuid/wiki/wikiall.md
-	wordcountsummaries=$(wc -w "$TMPDIR"$uuid/wiki/wikisummaries.md" | cut -f1 -d' ')
-	cp "$TMPDIR"$uuid"/wiki/wikisummaries.md "$TMPDIR"$uuid"/wiki/wiki4cloud.md"
+	wordcountsummaries=$(wc -w "$TMPDIR"$uuid/wiki/wikisummaries.md | cut -f1 -d' ')
+	cp "$TMPDIR"$uuid"/wiki/wikisummaries.md" "$TMPDIR"$uuid"/wiki/wiki4cloud.md"
 ;;
 complete_pages_only)
 	echo "fetching complete pages only"
@@ -986,7 +986,7 @@ cd  "$TMPDIR"$uuid
 "$PANDOC_BIN" -o "$TMPDIR"$uuid/$sku"."$safe_product_name".epub" --epub-cover-image="$TMPDIR"$uuid/cover/$sku"ebookcover.jpg"  "$TMPDIR"$uuid/complete.md
 "$PANDOC_BIN" -o "$TMPDIR"$uuid/$sku"."$safe_product_name".docx"   "$TMPDIR"$uuid/complete.md
 cd $scriptpath
-lib/KindleGen/kindlegen "$TMPDIR"$uuid/$sku."$safe_product_name"".epub" -o "$sku.$safe_product_name"".mobi"
+lib/KindleGen/kindlegen "$TMPDIR"$uuid/$sku."$safe_product_name"".epub" -o "$sku.$safe_product_name"".mobi" 1> /dev/null
 #ls -lart  "$TMPDIR"$uuid
 echo "built epub and mobi"
 
