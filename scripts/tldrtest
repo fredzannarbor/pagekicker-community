@@ -1,0 +1,8 @@
+if [ -z ${tldr+x} ]; then 
+		echo "no tl;dr"
+	else 
+		echo "  " >>  "$TMPDIR"$uuid/tmpfrontmatter.md
+		echo "  " >>  "$TMPDIR"$uuid/tmpfrontmatter.md
+		echo "# TL;DR:" >>  "$TMPDIR"$uuid/tmpfrontmatter.md
+		echo "$tldr" >>  "$TMPDIR"$uuid/tmpfrontmatter.md
+fi
