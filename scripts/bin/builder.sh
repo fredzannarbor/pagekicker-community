@@ -987,7 +987,7 @@ cd  "$TMPDIR"$uuid
 "$PANDOC_BIN" -o "$TMPDIR"$uuid/$sku"."$safe_product_name".docx"   "$TMPDIR"$uuid/complete.md
 cd $scriptpath
 lib/KindleGen/kindlegen "$TMPDIR"$uuid/$sku."$safe_product_name"".epub" -o "$sku.$safe_product_name"".mobi"
-ls -lart  "$TMPDIR"$uuid
+#ls -lart  "$TMPDIR"$uuid
 echo "built epub and mobi"
 
 case $ebook_format in
@@ -1086,7 +1086,7 @@ else
         cp  "$TMPDIR"$uuid/acronyms.txt   "$TMPDIR"$batch_uuid/$sku.$safe_product_name"_acronyms"
         cp  "$TMPDIR"$uuid/cover/wordcloudcover.png   "$TMPDIR"$batch_uuid/$sku.$safe_product_name"_wordcloudcover.png"
         cp  "$TMPDIR"$uuid/seeds/filtered.pagehits "$TMPDIR"$batch_uuid/$sku.$safe_product_name"_filtered.pagehits"
-        ls -l "$TMPDIR""$batch_uuid"/* # debug
+        #ls -l "$TMPDIR""$batch_uuid"/* # debug
 fi
 
 
