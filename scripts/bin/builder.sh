@@ -498,7 +498,7 @@ echo "---"
 
 #expand seeds to valid wiki pages
 
-"$PYTHON_BIN" bin/wiki_seeds_2_pages.py --infile "$TMPDIR"$uuid"/seeds/sorted.seedfile" --pagehits "$TMPDIR"$uuid"/seeds/pagehits"
+"$PYTHON27_BIN" bin/wiki_seeds_2_pages.py --infile "$TMPDIR"$uuid"/seeds/sorted.seedfile" --pagehits "$TMPDIR"$uuid"/seeds/pagehits"
 
 # filter pagehits
 
@@ -842,7 +842,7 @@ fi
         cat "$TMPDIR$uuid"/Other >>  "$TMPDIR"$batch_uuid"/"$sku"."$safe_product_name"_Other"
 	echo "python_bin is" $PYTHON_BIN # debug
 	"$PYTHON_BIN" --version
-	pip freeze # debug
+	#pip freeze # debug
 
         "$PYTHON_BIN" bin/PKsum.py -l "$summary_length" -o $file"_summary.txt" $file
         sed -i 's/ \+ / /g' $file"_summary.txt"
@@ -1002,8 +1002,8 @@ fi
 cp  "$TMPDIR"$uuid/$sku.$safe_product_name".epub" "$buildtarget"
 
 chmod 755 "$buildtarget"
-echo "checking that buildtarget exists"
-ls -la $buildtarget
+#echo "checking that buildtarget exists"
+#ls -la $buildtarget
 ;;
 
 mobi)
@@ -1013,8 +1013,8 @@ else
 	echo "received buildtarget as $buildtarget"
 fi
 cp  "$TMPDIR"$uuid/$sku.$safe_product_name".mobi" "$buildtarget"
-echo "checking that buildtarget exists"
-ls -la $buildtarget
+#echo "checking that buildtarget exists"
+#ls -la $buildtarget
 ;;
 docx)
 if [ ! "$buildtarget" ] ; then
@@ -1025,7 +1025,7 @@ fi
 cp  "$TMPDIR"$uuid/$sku"."$safe_product_name".docx" "$buildtarget"
 chmod 755 "$buildtarget"
 echo "checking that buildtarget exists"
-ls -la $buildtarget
+#ls -la $buildtarget
 ;;
 *)
 
@@ -1095,7 +1095,7 @@ if [ "$dontcleanupseeds" = "yes" ]; then
 else
 	echo "removing seedfile"
 	rm "$seedfile"
-	ls -la $seedfile
+	ls -la "$seedfile"
 fi
 
 echo "appending & sorting new bibliography entries"
