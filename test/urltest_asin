@@ -1,0 +1,4 @@
+#!/bin/bash
+# runs ccc with $url parameter set
+bin/create-catalog-entry.sh --builder "yes" --booktitle "BWV 29" --yourname "All of Bach" --jobprofilename "default" --import "no" --passuuid "$uuid" --seedfile "seeds/null" --imprint "pagekicker" --analyze_url 
+"https://www.amazon.com/dp/B004H4XC1Y"
