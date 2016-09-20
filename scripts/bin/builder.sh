@@ -816,7 +816,7 @@ fi
 		cat "$TMPDIR"$uuid"/wiki/wikipages.md" | sed -e 's/#/##/' >>  "$TMPDIR"$uuid/tmpbody.md
 		echo "  " >>  "$TMPDIR"$uuid/tmpbody.md
 		echo "  " >>  "$TMPDIR"$uuid/tmpbody.md
-	fi
+
 
         # convert text so that I can add acronyms, programmatic summary, named entity recognition
 
@@ -875,7 +875,7 @@ fi
         else
 	        cp  "$TMPDIR"$uuid/pp_summary.txt  "$TMPDIR"$uuid/summary.md
         fi
-
+fi
 	# assemble back matter
 	echo "" >>   "$TMPDIR"$uuid/backmatter.md
 	echo "" >>   "$TMPDIR"$uuid/backmatter.md
