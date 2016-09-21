@@ -1,11 +1,17 @@
-argparse==1.2.1
+#assumes Python 3.5.2
 beautifulsoup4==4.5.1
+decorator==4.0.10
+networkx==1.11
+nltk==3.2.1
+numpy==1.11.1
 pbr==1.10.0
 requests==2.11.1
+scikit-learn==0.17.1
+scipy==0.18.1
 six==1.10.0
+sklearn==0.0
 stevedore==1.17.1
 virtualenv==15.0.3
 virtualenv-clone==0.2.6
 virtualenvwrapper==4.7.2
 wikipedia==1.4.0
-#wsgiref==0.1.2
