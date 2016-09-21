@@ -498,7 +498,7 @@ echo "---"
 
 #expand seeds to valid wiki pages
 
-"$PYTHON_BIN" bin/wiki_seeds_2_pages.py --infile "$TMPDIR"$uuid"/seeds/sorted.seedfile" --pagehits "$TMPDIR"$uuid"/seeds/pagehits"
+"$PYTHON27_BIN" bin/wiki_seeds_2_pages.py --infile "$TMPDIR"$uuid"/seeds/sorted.seedfile" --pagehits "$TMPDIR"$uuid"/seeds/pagehits"
 
 # filter pagehits
 
@@ -512,14 +512,14 @@ echo "--- end of pagehits ---"
 # fetch by pagehits
 
 
-case $summary in
+case "$summary" in
 summaries_only)
 	echo "fetching page summaries only"
 	"$PYTHON_BIN"  $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR"$uuid"/seeds/filtered.pagehits" --outfile "$TMPDIR"$uuid/"wiki/wikisummariesraw.md" --lang "$wikilocale" --summary  1> /dev/null
 	sed -e s/\=\=\=\=\=/JQJQJQJQJQ/g -e s/\=\=\=\=/JQJQJQJQ/g -e s/\=\=\=/JQJQJQ/g -e s/\=\=/JQJQ/g -e s/Edit\ /\ /g -e s/JQJQJQJQJQ/\#\#\#\#\#/g -e s/JQJQJQJQ/\#\#\#\#/g -e s/JQJQJQ/\#\#\#/g -e s/JQJQ/\#\#/g  "$TMPDIR"$uuid/wiki/wikisummariesraw.md | sed G >  "$TMPDIR"$uuid/wiki/wikisummaries.md
 	cp  "$TMPDIR"$uuid/wiki/wikisummaries.md  "$TMPDIR"$uuid/wiki/wikiall.md
-	wordcountsummaries=$(wc -w "$TMPDIR"$uuid/wiki/wikisummaries.md" | cut -f1 -d' ')
-	cp "$TMPDIR"$uuid"/wiki/wikisummaries.md "$TMPDIR"$uuid"/wiki/wiki4cloud.md"
+	wordcountsummaries=$(wc -w "$TMPDIR"$uuid/wiki/wikisummaries.md | cut -f1 -d' ')
+	cp "$TMPDIR"$uuid"/wiki/wikisummaries.md" "$TMPDIR"$uuid"/wiki/wiki4cloud.md"
 ;;
 complete_pages_only)
 	echo "fetching complete pages only"
@@ -816,7 +816,7 @@ fi
 		cat "$TMPDIR"$uuid"/wiki/wikipages.md" | sed -e 's/#/##/' >>  "$TMPDIR"$uuid/tmpbody.md
 		echo "  " >>  "$TMPDIR"$uuid/tmpbody.md
 		echo "  " >>  "$TMPDIR"$uuid/tmpbody.md
-	fi
+
 
         # convert text so that I can add acronyms, programmatic summary, named entity recognition
 
@@ -842,7 +842,7 @@ fi
         cat "$TMPDIR$uuid"/Other >>  "$TMPDIR"$batch_uuid"/"$sku"."$safe_product_name"_Other"
 	echo "python_bin is" $PYTHON_BIN # debug
 	"$PYTHON_BIN" --version
-	pip freeze # debug
+	#pip freeze # debug
 
         "$PYTHON_BIN" bin/PKsum.py -l "$summary_length" -o $file"_summary.txt" $file
         sed -i 's/ \+ / /g' $file"_summary.txt"
@@ -875,7 +875,7 @@ fi
         else
 	        cp  "$TMPDIR"$uuid/pp_summary.txt  "$TMPDIR"$uuid/summary.md
         fi
-
+fi
 	# assemble back matter
 	echo "" >>   "$TMPDIR"$uuid/backmatter.md
 	echo "" >>   "$TMPDIR"$uuid/backmatter.md
@@ -986,8 +986,8 @@ cd  "$TMPDIR"$uuid
 "$PANDOC_BIN" -o "$TMPDIR"$uuid/$sku"."$safe_product_name".epub" --epub-cover-image="$TMPDIR"$uuid/cover/$sku"ebookcover.jpg"  "$TMPDIR"$uuid/complete.md
 "$PANDOC_BIN" -o "$TMPDIR"$uuid/$sku"."$safe_product_name".docx"   "$TMPDIR"$uuid/complete.md
 cd $scriptpath
-lib/KindleGen/kindlegen "$TMPDIR"$uuid/$sku."$safe_product_name"".epub" -o "$sku.$safe_product_name"".mobi"
-ls -lart  "$TMPDIR"$uuid
+lib/KindleGen/kindlegen "$TMPDIR"$uuid/$sku."$safe_product_name"".epub" -o "$sku.$safe_product_name"".mobi" 1> /dev/null
+#ls -lart  "$TMPDIR"$uuid
 echo "built epub and mobi"
 
 case $ebook_format in
@@ -1002,8 +1002,8 @@ fi
 cp  "$TMPDIR"$uuid/$sku.$safe_product_name".epub" "$buildtarget"
 
 chmod 755 "$buildtarget"
-echo "checking that buildtarget exists"
-ls -la $buildtarget
+#echo "checking that buildtarget exists"
+#ls -la $buildtarget
 ;;
 
 mobi)
@@ -1013,8 +1013,8 @@ else
 	echo "received buildtarget as $buildtarget"
 fi
 cp  "$TMPDIR"$uuid/$sku.$safe_product_name".mobi" "$buildtarget"
-echo "checking that buildtarget exists"
-ls -la $buildtarget
+#echo "checking that buildtarget exists"
+#ls -la $buildtarget
 ;;
 docx)
 if [ ! "$buildtarget" ] ; then
@@ -1025,7 +1025,7 @@ fi
 cp  "$TMPDIR"$uuid/$sku"."$safe_product_name".docx" "$buildtarget"
 chmod 755 "$buildtarget"
 echo "checking that buildtarget exists"
-ls -la $buildtarget
+#ls -la $buildtarget
 ;;
 *)
 
@@ -1086,7 +1086,7 @@ else
         cp  "$TMPDIR"$uuid/acronyms.txt   "$TMPDIR"$batch_uuid/$sku.$safe_product_name"_acronyms"
         cp  "$TMPDIR"$uuid/cover/wordcloudcover.png   "$TMPDIR"$batch_uuid/$sku.$safe_product_name"_wordcloudcover.png"
         cp  "$TMPDIR"$uuid/seeds/filtered.pagehits "$TMPDIR"$batch_uuid/$sku.$safe_product_name"_filtered.pagehits"
-        ls -l "$TMPDIR""$batch_uuid"/* # debug
+        #ls -l "$TMPDIR""$batch_uuid"/* # debug
 fi
 
 
@@ -1095,7 +1095,7 @@ if [ "$dontcleanupseeds" = "yes" ]; then
 else
 	echo "removing seedfile"
 	rm "$seedfile"
-	ls -la $seedfile
+	ls -la "$seedfile"
 fi
 
 echo "appending & sorting new bibliography entries"
