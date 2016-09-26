@@ -650,7 +650,7 @@ fi
 # echo "checking for naughty words"
 
 export uuid
-bin/screen-naughty-seeds.sh "$TMPDIR$uuid/seeds/seedphrases" $uuid
+"$scriptpath"bin/screen-naughty-seeds.sh "$TMPDIR$uuid/seeds/seedphrases" $uuid
 naughtyresult=$?
 
 if [ $naughtyresult -eq "0" ] ; then

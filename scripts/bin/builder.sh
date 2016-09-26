@@ -682,7 +682,7 @@ if [ "$yourname" = "yes" ] ; then
 else
 	echo "robot name on cover"
 fi
-
+editedby="debug"
 echo "editedby is" $editedby
 convert  -background "$covercolor"  -fill "$coverfontcolor" -gravity south -size 1800x394 \
  -font "$coverfont"  caption:"$editedby" \
