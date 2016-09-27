@@ -1031,6 +1031,7 @@ echo "checking that buildtarget exists"
 
 esac
 
+cp "$TMPDIR"$uuid/$sku.$safe_product_name".epub" /tmp/pagekicker/test.epub
 
 # housekeeping
 

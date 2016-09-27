@@ -29,7 +29,7 @@ $scriptpath"bin/builder.sh" --singleseed "$1"
 # tests begin here
 
 if [ ! -f "$TMPDIR$uuid/ebookcover.jpg" ]; then
-    echo "error: cover not found! " > "$TMPDIR$uuid/error.log"
+    echo "error: cover not found! at "$TMPDIR$uuid"/ebookcover.jpg"  > "$TMPDIR$uuid/error.log"
 fi
 exit 0
 # if error log is empty then PASS
