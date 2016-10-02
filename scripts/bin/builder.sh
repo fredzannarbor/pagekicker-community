@@ -1032,7 +1032,7 @@ echo "checking that buildtarget exists"
 esac
 
 cp "$TMPDIR"$uuid/$sku.$safe_product_name".epub" /tmp/pagekicker/test.epub
-
+cp "$TMPDIR"$uuid/$sku.$safe_product_name".docx" /tmp/pagekicker/delivery.docx
 # housekeeping
 
 unique_seed_string=$(sed -e 's/[^A-Za-z0-9._-]//g' <  "$TMPDIR"$uuid/seeds/sorted.seedfile | tr --delete '\n')
