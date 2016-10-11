@@ -323,6 +323,14 @@ shift 2
 add_this_content_part_name=${1#*=}
 shift
 ;;
+--two1)
+two1=$2
+shift 2
+;;
+--two1=*)
+two1=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -724,6 +732,14 @@ if [ "$shortform" = "no" ]; then
 	echo "  " >>  "$TMPDIR"$uuid/robo_ack.md
 	cat $scriptpath/assets/robo_ack.md >>  "$TMPDIR"$uuid/robo_ack.md
 	echo "This book was created with revision "$SFB_VERSION "on branch" `git rev-parse --abbrev-ref HEAD` "of the PageKicker software running on  the server $environment. " >>  "$TMPDIR"$uuid/robo_ack.md
+	echo "  " >>  "$TMPDIR"$uuid/robo_ack.md
+	echo "  " >>  "$TMPDIR"$uuid/robo_ack.md
+	appurl = 'https://21.co/pagekicker/app/term-paper-factory/'
+	if [ "$two1" = "yes" ] ; then
+		echo "This book was purchased via the machine-payable web on the 21.co platform. The app is available at " 'https://21.co/pagekicker/app/term-paper-factory/'"." >>  "$TMPDIR"$uuid/robo_ack.md
+	else
+		true
+	fi
 	echo "  " >>  "$TMPDIR"$uuid/robo_ack.md
 	echo "  " >>  "$TMPDIR"$uuid/robo_ack.md
 	echo '<i>'"Ann Arbor, Michigan, USA"'</i>' >>  "$TMPDIR"$uuid/robo_ack.md
