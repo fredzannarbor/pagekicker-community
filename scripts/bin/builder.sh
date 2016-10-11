@@ -723,7 +723,7 @@ if [ "$shortform" = "no" ]; then
 	echo "  " >>  "$TMPDIR"$uuid/robo_ack.md
 	echo "  " >>  "$TMPDIR"$uuid/robo_ack.md
 	cat $scriptpath/assets/robo_ack.md >>  "$TMPDIR"$uuid/robo_ack.md
-	echo "This book was created with revision "$SFB_VERSION "on branch" `git rev-parse --abbrev-ref HEAD` "of the PageKicker software running on  the "$environment "server." >>  "$TMPDIR"$uuid/robo_ack.md
+	echo "This book was created with revision "$SFB_VERSION "on branch" `git rev-parse --abbrev-ref HEAD` "of the PageKicker software running on  the server $environment. " >>  "$TMPDIR"$uuid/robo_ack.md
 	echo "  " >>  "$TMPDIR"$uuid/robo_ack.md
 	echo "  " >>  "$TMPDIR"$uuid/robo_ack.md
 	echo '<i>'"Ann Arbor, Michigan, USA"'</i>' >>  "$TMPDIR"$uuid/robo_ack.md
