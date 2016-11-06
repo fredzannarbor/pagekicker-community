@@ -671,7 +671,6 @@ composite -gravity Center  "$TMPDIR"$uuid/cover/wordcloudcover.png   "$TMPDIR"$u
 
 # build top label
 
-
 convert -background "$covercolor" -fill "$coverfontcolor" -gravity center -size 1800x400 -font "$coverfont" caption:"$booktitle"  "$TMPDIR"$uuid/cover/topcanvas.png +swap -gravity center -composite  "$TMPDIR"$uuid/cover/toplabel.png
 
 #build bottom label
