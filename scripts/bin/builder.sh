@@ -23,7 +23,7 @@ fi
 cd $scriptpath
 
 . includes/set-variables.sh
-ls -lart "$seedfile"
+ ls -lart "$seedfile"
 
 echo "shortform is $shortform"
 
@@ -718,7 +718,7 @@ if [ "$shortform" = "no" ]; then
 	cp $scriptpath"assets/rebuild.md"  "$TMPDIR"$uuid/rebuild.md
 	cp $confdir"jobprofiles/signatures/"$sigfile  "$TMPDIR"$uuid/$sigfile
 	echo "# Acknowledgements from the PageKicker Robot Author" >>  "$TMPDIR"$uuid/robo_ack.md
-	echo "I would like to thank "$editedby" for the opportunity to participate in writing this book." >>  "$TMPDIR"$uuid/robo_ack.md
+	echo "I would like to thank PageKicker for the opportunity to write this book." >>  "$TMPDIR"$uuid/robo_ack.md
 	echo "  " >>  "$TMPDIR"$uuid/robo_ack.md
 	echo "  " >>  "$TMPDIR"$uuid/robo_ack.md
 	cat $scriptpath/assets/robo_ack.md >>  "$TMPDIR"$uuid/robo_ack.md
