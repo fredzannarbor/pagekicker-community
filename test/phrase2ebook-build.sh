@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "**** BOOK BUILDER ***"
+
 if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
 	echo "config file not found, creating /home/<user>/.pagekicker, put config file there"
 	mkdir -p -m 755 "$HOME"/.pagekicker
@@ -16,7 +18,8 @@ fi
 if [ ! "$passuuid" ] ; then
 	#echo "creating uuid"
 	uuid=$("$PYTHON_BIN"  -c 'import uuid; print(uuid.uuid1())')
-	#echo "uuid is" $uuid | tee --append $xform_log
+
+	echo "uuid is" $uuid
 	mkdir -p -m 777 $TMPDIR$uuid
 else
 	uuid=$passuuid
@@ -24,9 +27,8 @@ else
 	mkdir -p -m 777 $TMPDIR$uuid
 fi
 
-
-$scriptpath"bin/builder.sh" --singleseed "$1"
-# tests begin here
+$scriptpath"bin/builder.sh" --singleseed "$1" --booktitle "$2" --jobprofilename "$3" --passuuid "$uuid"
+cp $TMPDIR$uuid/*.epub $TMPDIR"/delivery.epub"
 
 if [ ! -f "$TMPDIR$uuid/ebookcover.jpg" ]; then
     echo "error: cover not found! at "$TMPDIR$uuid"/ebookcover.jpg"  > "$TMPDIR$uuid/error.log"
