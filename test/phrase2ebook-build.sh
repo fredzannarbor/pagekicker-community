@@ -25,8 +25,8 @@ else
 	mkdir -p -m 777 $TMPDIR$uuid
 fi
 
-
-$scriptpath"bin/builder.sh" --singleseed "$1" --booktitle "$2" --jobprofilename "$3" --passuuid "$uuid"
+echo "$@"
+$scriptpath"bin/builder.sh" "$@"
 cp $TMPDIR$uuid/*.epub $TMPDIR"/delivery.epub"
 
 if [ ! -f "$TMPDIR$uuid/ebookcover.jpg" ]; then
