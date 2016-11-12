@@ -1,5 +1,5 @@
 #!/bin/bash
-
+pwd
 echo "**** BOOK BUILDER ***"
 if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
 	echo "config file not found, creating /home/<user>/.pagekicker, put config file there"
@@ -11,7 +11,8 @@ else
 	echo "read config file from $HOME""/.pagekicker/config.txt"
 fi
 
-
+echo -n "pwd is "
+pwd
 . includes/set-variables.sh
 
 if [ ! "$passuuid" ] ; then
@@ -28,7 +29,7 @@ fi
 echo "$@"
 $scriptpath"bin/builder.sh" "$@"
 cp $TMPDIR$uuid/*.epub $TMPDIR"/delivery.epub"
-
+cp $TMPDIR$uuid/4stdout.txt $TMPDIR"/4stdout.txt"
 if [ ! -f "$TMPDIR$uuid/ebookcover.jpg" ]; then
     echo "error: cover not found! at "$TMPDIR$uuid"/ebookcover.jpg"  > "$TMPDIR$uuid/error.log"
 fi
