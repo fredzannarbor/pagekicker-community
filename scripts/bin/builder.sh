@@ -43,7 +43,7 @@ case $1 in
 echo "for help review source code for now"
 exit 0  # This is not an error, the user requested help, so do not exit status 1.
 ;;
---passuuid)
+-U|--passuuid)
 passuuid=$2
 shift 2
 ;;
@@ -51,7 +51,7 @@ shift 2
 passuuid=${1#*=}
 shift
 ;;
---seedfile)
+-s|--seedfile)
 seedfile=$2
 shift 2
 ;;
@@ -59,7 +59,7 @@ shift 2
 seedfile=${1#*=}
 shift
 ;;
---booktype)
+-t|--booktype)
 booktype=$2
 shift 2
 ;;
@@ -67,7 +67,7 @@ shift 2
 booktype=${1#*=}
 shift
 ;;
---booktitle)
+-T|--booktitle)
 booktitle=$2
 shift 2
 ;;
@@ -75,7 +75,7 @@ shift 2
 booktitle=${1#*=}
 shift
 ;;
---buildtarget)
+-G|--buildtarget)
 buildtarget=$2
 shift 2
 ;;
@@ -83,7 +83,7 @@ shift 2
 buildtarget=${1#*=}
 shift
 ;;
---singleseed)
+-S|--singleseed|s)
 singleseed=$2
 shift 2
 ;;
@@ -99,7 +99,7 @@ shift 2
 shift
 truncate_seed=${1#*=}
 ;;
---sample_tweets)
+-w|--sample_tweets)
 sample_tweets=$2
 shift 2
 ;;
@@ -107,7 +107,7 @@ shift 2
 shift
 sample_tweets=${1#*=}
 ;;
---ebook_format)
+-f|--ebook_format)
 ebook_format=$2
 shift 2
 ;;
@@ -115,7 +115,7 @@ shift 2
 shift
 ebook_format=${1#*=}
 ;;
---jobprofilename)
+-J|--jobprofilename)
 jobprofilename=$2
 shift 2
 ;;
@@ -131,7 +131,7 @@ shift 2
 jobprofile=${1#*=}
 shift
 ;;
---wikilang)
+-L|--wikilang)
 wikilang=$2
 shift 2
 ;;
@@ -139,7 +139,7 @@ shift 2
 wikilang=${1#*=}
 shift
 ;;
---summary)
+-M|--summary)
 summary=$2
 shift 2
 ;;
@@ -147,7 +147,7 @@ shift 2
 summary=${1#*=}
 shift
 ;;
---safe_product_name)
+-n|--safe_product_name)
 safe_product_name=$2
 shift 2
 ;;
@@ -155,7 +155,7 @@ shift 2
 safe_product_name=${1#*=}
 shift
 ;;
---coverfont)
+-F|--coverfont)
 coverfont=$2
 shift 2
 ;;
@@ -163,7 +163,7 @@ shift 2
 coverfont=${1#*=}
 shift
 ;;
---covercolor)
+-L|--covercolor)
 covercolor=$2
 shift 2
 ;;
@@ -179,7 +179,7 @@ shift 2
 fromccc=${1#*=}
 shift
 ;;
---editedby)
+-b|--editedby)
 editedby=$2
 shift 2
 ;;
@@ -187,7 +187,7 @@ shift 2
 editedby=${1#*=}
 shift
 ;;
---yourname)
+-Y|--yourname)
 yourname=$2
 shift 2
 ;;
@@ -195,7 +195,7 @@ shift 2
 yourname=${1#*=}
 shift
 ;;
---customername)
+-N|--customername)
 customername=$2
 shift 2
 ;;
@@ -243,7 +243,7 @@ shift 2
 dontcleanupseeds=${1#*=}
 shift
 ;;
---batch_uuid)
+-u|--batch_uuid)
 batch_uuid=$2
 shift 2
 ;;
@@ -251,7 +251,7 @@ shift 2
 batch_uuid=${1#*=}
 shift
 ;;
---imprint)
+-I|--imprint)
 imprint=$2
 shift 2
 ;;
@@ -259,7 +259,7 @@ shift 2
 imprint=${1#*=}
 shift
 ;;
---tldr)
+-l|--tldr)
 tldr=$2
 shift 2
 ;;
@@ -984,10 +984,12 @@ safe_product_name=$(echo "$booktitle" | sed -e 's/[^A-Za-z0-9._-]/_/g')
 cd  "$TMPDIR"$uuid
 "$PANDOC_BIN" -o "$TMPDIR"$uuid/$sku"."$safe_product_name".epub" --epub-cover-image="$TMPDIR"$uuid/cover/$sku"ebookcover.jpg"  "$TMPDIR"$uuid/complete.md
 "$PANDOC_BIN" -o "$TMPDIR"$uuid/$sku"."$safe_product_name".docx"   "$TMPDIR"$uuid/complete.md
+"$PANDOC_BIN" -o "$TMPDIR"$uuid/$sku"."$safe_product_name".txt"   "$TMPDIR"$uuid/complete.md
+cp "$TMPDIR"$uuid/$sku"."$safe_product_name".txt" "$TMPDIR"$uuid/4stdout".txt"
 cd $scriptpath
 lib/KindleGen/kindlegen "$TMPDIR"$uuid/$sku."$safe_product_name"".epub" -o "$sku.$safe_product_name"".mobi" 1> /dev/null
 #ls -lart  "$TMPDIR"$uuid
-echo "built epub and mobi"
+echo "built epub, mobi, and txt"
 
 case $ebook_format in
 
