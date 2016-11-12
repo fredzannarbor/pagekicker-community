@@ -676,15 +676,17 @@ echo "seedfile is" $seedfile
 
 cat "$TMPDIR$uuid/seeds/seedphrases" | uniq | sort | sed -e '/^$/d' -e '/^[0-9#@]/d' > "$TMPDIR$uuid/seeds/sorted.seedfile"
 cat "$TMPDIR$uuid/seeds/sorted.seedfile" > "$LOCAL_DATA"seeds/history/"$sku".seedphrases
+echo $expand_seeds_to_pages
 
-#expand seeds to valid wiki pages
-
-
-"$PYTHON_BIN" bin/wiki_seeds_2_pages.py --infile "$TMPDIR$uuid/seeds/sorted.seedfile" --pagehits "$TMPDIR$uuid/seeds/pagehits"
-
+if [ "$expand_seeds_to_pages" = "yes" ] ; then
+		echo "$expand_seeds_to_pages"
+		"$PYTHON27_BIN" bin/wiki_seeds_2_pages.py --infile "$TMPDIR"$uuid"/seeds/sorted.seedfile" --pagehits "$TMPDIR"$uuid"/seeds/pagehits"
+else
+		echo "not expanding seeds to pages"
+		cp $TMPDIR$uuid"/seeds/sorted.seedfile" $TMPDIR$uuid"/seeds/pagehits"
+fi
 
 # filter pagehits
-
 
 cp "$TMPDIR"$uuid/seeds/pagehits "$TMPDIR"$uuid/seeds/filtered.pagehits
 
@@ -919,9 +921,10 @@ fi
 
 if [ "$builder" = "yes" ] ; then
 
-	echo "seedfile was" "$TMPDIR"seeds/seedphrases
+	echo "seedfile was" $TMPDIR"/seeds/seedphrases"
 
-	$scriptpath"bin/builder.sh" --seedfile "$TMPDIR"$uuid"/seeds/sorted.seedfile" --booktype "$booktype" --jobprofilename "$jobprofilename" --booktitle "$booktitle" --ebook_format "epub" --sample_tweets "no" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername" --imprint "$imprint" --batch_uuid "$batch_uuid" --tldr "$tldr" --subtitle "$subtitle" --add_corpora "$add_corpora" --analyze_url "$analyze_url" --dontcleanupseeds "yes" --mailtoadmin "$mailtoadmin" --summary "$summary" --add_this_content "$add_this_content" --add_this_content_part_name "$add_this_content_part_name"
+	$scriptpath"bin/builder.sh" --seedfile $TMPDIR$uuid"/seeds/sorted.seedfile"	--booktype "$booktype" --jobprofilename "$jobprofilename" --booktitle "$booktitle" \
+	--ebook_format "epub" --sample_tweets "no" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername" --imprint "$imprint" --batch_uuid "$batch_uuid" --tldr "$tldr" --subtitle "$subtitle" --add_corpora "$add_corpora" --analyze_url "$analyze_url" --dontcleanupseeds "yes" --mailtoadmin "$mailtoadmin" --summary "$summary" --add_this_content "$add_this_content" --add_this_content_part_name "$add_this_content_part_name"
 
 echo "test $@"
 

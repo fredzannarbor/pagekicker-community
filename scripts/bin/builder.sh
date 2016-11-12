@@ -323,6 +323,14 @@ shift 2
 add_this_content_part_name=${1#*=}
 shift
 ;;
+--expand_seeds_to_pages)
+expand_seeds_to_pages=$2
+shift 2
+;;
+--expand_seeds_to_pages=*)
+expand_seeds_to_pages=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -498,7 +506,13 @@ echo "---"
 
 #expand seeds to valid wiki pages
 
-"$PYTHON27_BIN" bin/wiki_seeds_2_pages.py --infile "$TMPDIR"$uuid"/seeds/sorted.seedfile" --pagehits "$TMPDIR"$uuid"/seeds/pagehits"
+if [ "$expand_seeds_to_pages" = "yes" ] ; then
+		echo "$expand_seeds_to_pages"
+		"$PYTHON27_BIN" bin/wiki_seeds_2_pages.py --infile "$TMPDIR"$uuid"/seeds/sorted.seedfile" --pagehits "$TMPDIR"$uuid"/seeds/pagehits"
+else
+		echo "not expanding seeds to pages"
+		cp "$TMPDIR"$uuid"/seeds/sorted.seedfile" "$TMPDIR"$uuid"/seeds/pagehits"
+fi
 
 # filter pagehits
 
