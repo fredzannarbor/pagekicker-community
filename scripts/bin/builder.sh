@@ -377,17 +377,45 @@ else
 	mkdir -p -m 777  "$TMPDIR"$uuid
 fi
 
-
+--two1)
+two1=$2
+shift 2
+;;
+--two1=*)
+two1=${1#*=}
+shift
+;;
 
 if [ -z "$covercolor" ]; then
 	covercolor="RosyBrown"
-	echo "no cover color in command line so I set it to "$covercolor
+	echo "no cover color in command line so I set --two1)
+two1=$2
+shift 2
+;;
+--two1=*)
+two1=${1#*=}
+shift
+;;it to "$covercolor
 else
-	echo "cover color is $covercolor"
+	echo "cover color is $covercolor"--two1)
+two1=$2
+shift 2
+;;
+--two1=*)
+two1=${1#*=}
+shift
+;;
 fi
 
 if [ -z "$coverfont" ]; then
-	coverfont="Minion"
+	coverfont="Minion"--two1)
+two1=$2
+shift 2
+;;
+--two1=*)
+two1=${1#*=}
+shift
+;;
 	echo "no cover font in command line so I set it to "$coverfont
 else
 	echo "cover font is $coverfont"
@@ -878,15 +906,13 @@ fi
         cp $file"_summary.txt" $file"_pp_summary.txt"
         echo "ran summarizer on $file" | tee --append $sfb_log
         awk 'length>=50' $file"_pp_summary.txt" >  "$TMPDIR"$uuid/awk.tmp && mv  "$TMPDIR"$uuid/awk.tmp $file"_pp_summary.txt"
-        #echo "postprocessor threw away summary lines shorter than 50 characters" | tee --append $sfb_log
         awk 'length<=4000' $file"_pp_summary.txt" >  "$TMPDIR"$uuid/awk.tmp && mv  "$TMPDIR"$uuid/awk.tmp $file"_pp_summary.txt"
-        #echo "postprocessor threw away summary lines longer than 4000 characters" | tee --append $sfb_log
         #echo "---end of summary section of 140K bytes---" >> $file"_pp_summary.txt"
         #echo "---end of summary section of 140K bytes---" >> $file"_summary.txt"
         cat $file"_pp_summary.txt" >>  "$TMPDIR"$uuid/pp_summary.txt
         cat $file"_summary.txt" >>  "$TMPDIR"$uuid/summary.txt
-        #sleep 3
         done
+
         ls  "$TMPDIR"$uuid/xtarget.*nouns* >  "$TMPDIR"$uuid/testnouns
         cat  "$TMPDIR"$uuid/xtarget.*nouns* >  "$TMPDIR"$uuid/all_nouns.txt
         sort --ignore-case  "$TMPDIR"$uuid/all_nouns.txt | uniq >  "$TMPDIR"$uuid/sorted_uniqs.txt
@@ -904,6 +930,7 @@ fi
         else
 	        cp  "$TMPDIR"$uuid/pp_summary.txt  "$TMPDIR"$uuid/summary.md
         fi
+
 fi
 	# assemble back matter
 	echo "" >>   "$TMPDIR"$uuid/backmatter.md
@@ -950,7 +977,12 @@ if [ "$shortform" = "no" ] ;then
 	echo " " >>  "$TMPDIR"$uuid/backmatter.md
 
 	echo "# Also from $imprintname" >>   "$TMPDIR"$uuid/backmatter.md
-	uniq "$LOCAL_DATA"bibliography/imprints/"$imprint"/$imprint"_titles.txt" >>  "$TMPDIR"$uuid/backmatter.md # imprint pubs are not alpha
+	if [ "add_imprint_biblio" = "yes" ] ; then
+			uniq "$LOCAL_DATA"bibliography/imprints/"$imprint"/$imprint"_titles.txt" >>  "$TMPDIR"$uuid/backmatter.md # imprint pubs are not alpha
+	else
+		 	true
+			# commenting out imprint bibliography because data is too messy right now
+  fi
 
 	echo "" >> "$TMPDIR"$uuid"/backmatter.md"
 	echo "" >> "$TMPDIR"$uuid"/backmatter.md"

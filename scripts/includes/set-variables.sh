@@ -1,6 +1,7 @@
 
 abstracts="both"
 add_corpora="no"
+add_imprint_biblio="yes"
 add_this_content_part_name="User-Provided Content"
 add_this_content="none"
 analyze_url="no"

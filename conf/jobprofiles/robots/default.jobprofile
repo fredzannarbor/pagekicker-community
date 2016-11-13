@@ -10,3 +10,4 @@ rows="99"
 fetched_document_format="html"
 mylibrary="yes"
 sigfile="default.jpg"
+add_imprint_biblio="no" #data too messy for right now
