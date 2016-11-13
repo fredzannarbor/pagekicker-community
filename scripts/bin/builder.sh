@@ -377,45 +377,15 @@ else
 	mkdir -p -m 777  "$TMPDIR"$uuid
 fi
 
---two1)
-two1=$2
-shift 2
-;;
---two1=*)
-two1=${1#*=}
-shift
-;;
-
 if [ -z "$covercolor" ]; then
 	covercolor="RosyBrown"
-	echo "no cover color in command line so I set --two1)
-two1=$2
-shift 2
-;;
---two1=*)
-two1=${1#*=}
-shift
-;;it to "$covercolor
+	echo "no cover color in command line so I set it to "$covercolor
 else
-	echo "cover color is $covercolor"--two1)
-two1=$2
-shift 2
-;;
---two1=*)
-two1=${1#*=}
-shift
-;;
+	echo "cover color is $covercolor"
 fi
 
 if [ -z "$coverfont" ]; then
-	coverfont="Minion"--two1)
-two1=$2
-shift 2
-;;
---two1=*)
-two1=${1#*=}
-shift
-;;
+	coverfont="Minion"
 	echo "no cover font in command line so I set it to "$coverfont
 else
 	echo "cover font is $coverfont"
@@ -629,7 +599,7 @@ else
 	echo "zero data returned from wiki, exiting with error message"
 	sendemail -t "$customer_email" \
 		-u "Your submission [ $booktitle ] has not been added to the catalog" \
-		-m "The system was not able to find any valid seed terms in your submission. Make sure that you have provided several keyphrases and that the words are spelled correctly.  Please let us know by replying to this message if you need assistance." \
+		-m "The system was not able to find any valid seed terms in your subcat $TMPDIR$uuid"/add_this_content.md" >> $TMPDIR$uuid/tmpbody.mdmission. Make sure that you have provided several keyphrases and that the words are spelled correctly.  Please let us know by replying to this message if you need assistance." \
 		-f "$GMAIL_ID" \
 		-cc "$GMAIL_ID" \
 		-xu "$GMAIL_ID" \
@@ -751,9 +721,6 @@ convert  "$TMPDIR"$uuid/cover/cover.png -border 36 -bordercolor white  "$TMPDIR"
 cp  "$TMPDIR"$uuid/cover/bordercover.png  "$TMPDIR"$uuid/cover/$sku"ebookcover.jpg"
 cp  "$TMPDIR"$uuid/cover/bordercover.png  "$TMPDIR"$uuid/ebookcover.jpg
 
-
-
-
 if [ "$shortform" = "no" ]; then
 
 	# building front matter
@@ -775,7 +742,7 @@ if [ "$shortform" = "no" ]; then
 	echo "This book was created with revision "$SFB_VERSION "on branch" `git rev-parse --abbrev-ref HEAD` "of the PageKicker software running on  the server $environment. " >>  "$TMPDIR"$uuid/robo_ack.md
 	echo "  " >>  "$TMPDIR"$uuid/robo_ack.md
 	echo "  " >>  "$TMPDIR"$uuid/robo_ack.md
-	appurl = 'https://21.co/pagekicker/app/term-paper-factory/'
+
 	if [ "$two1" = "yes" ] ; then
 		echo "This book was purchased via the machine-payable web on the 21.co platform. The app is available at " 'https://21.co/pagekicker/app/term-paper-factory/'"." >>  "$TMPDIR"$uuid/robo_ack.md
 	else
@@ -787,7 +754,6 @@ if [ "$shortform" = "no" ]; then
 	echo "  " >>  "$TMPDIR"$uuid/robo_ack.md
 	echo "  " >>  "$TMPDIR"$uuid/robo_ack.md
 	echo '![Robot author photo]'"($sigfile)" >>  "$TMPDIR"$uuid/robo_ack.md
-
 
 	# assemble front matter
 
@@ -825,11 +791,7 @@ if [ "$shortform" = "no" ]; then
 		echo "  " >>  "$TMPDIR"$uuid/tmpfrontmatter.md
 		echo "  " >>  "$TMPDIR"$uuid/tmpfrontmatter.md
 		cat "$TMPDIR"$uuid"/wiki/wikisummaries.md" | sed -e 's/#/##/' >>  "$TMPDIR"$uuid/tmpfrontmatter.md
-		echo "  " >  "$TMPDIR"$uuid/tmpbody.md
 		echo "  " >>  "$TMPDIR"$uuid/tmpbody.md
-		echo "# Chapters" >>  "$TMPDIR"$uuid/tmpbody.md
-		cat "$TMPDIR"$uuid"/wiki/wikipages.md" | sed -e 's/#/##/' >>  "$TMPDIR"$uuid/wiki/tmpbody.md
-		echo "  " >  "$TMPDIR"$uuid/tmpbody.md
 		echo "  " >>  "$TMPDIR"$uuid/tmpbody.md
 ;;
 	*)
@@ -838,7 +800,52 @@ if [ "$shortform" = "no" ]; then
 	esac
 
 
-	echo "assembled front matter"
+	cat "$TMPDIR"$uuid"/wiki/wiki4cloud.md"  >> $TMPDIR$uuid/tmpbody.md
+
+	# convert text so that I can add acronyms, programmatic summary, named entity recognition
+
+	pandoc -S -o "$TMPDIR"$uuid/targetfile.txt -f markdown "$TMPDIR"$uuid/tmpbody.md
+
+	split -C 50K  "$TMPDIR"$uuid/targetfile.txt "$TMPDIR"$uuid"/xtarget."
+
+for file in "$TMPDIR"$uuid"/xtarget."*
+do
+
+		"$PYTHON27_BIN" $scriptpath"bin/nerv3.py" $file $file"_nouns.txt" "$uuid"
+		echo "ran nerv3 on $file" | tee --append $sfb_log
+		cat "$TMPDIR$uuid"/Places >> "$TMPDIR"$batch_uuid"/"$sku"."$safe_product_name"_Places"
+		cat "$TMPDIR$uuid"/People >>  "$TMPDIR"$batch_uuid"/"$sku"."$safe_product_name"_People"
+		cat "$TMPDIR$uuid"/Other >>  "$TMPDIR"$batch_uuid"/"$sku"."$safe_product_name"_Other"
+
+		echo "python_bin for running PKsum is" $PYTHON_BIN "and PYTHON_BIN actually is"
+		"$PYTHON_BIN" --version
+
+		"$PYTHON_BIN" bin/PKsum.py -l "$summary_length" -o $file"_summary.txt" $file
+		sed -i 's/ \+ / /g' $file"_summary.txt"
+		cp $file"_summary.txt" $file"_pp_summary.txt"
+		echo "ran summarizer on $file" | tee --append $sfb_log
+		awk 'length>=50' $file"_pp_summary.txt" >  "$TMPDIR"$uuid/awk.tmp && mv  "$TMPDIR"$uuid/awk.tmp $file"_pp_summary.txt"
+		awk 'length<=4000' $file"_pp_summary.txt" >  "$TMPDIR"$uuid/awk.tmp && mv  "$TMPDIR"$uuid/awk.tmp $file"_pp_summary.txt"
+		#echo "---end of summary section of 140K bytes---" >> $file"_pp_summary.txt"
+		#echo "---end of summary section of 140K bytes---" >> $file"_summary.txt"
+		cat $file"_pp_summary.txt" >>  "$TMPDIR"$uuid/pp_summary.txt
+		cat $file"_summary.txt" >>  "$TMPDIR"$uuid/summary.txt
+done
+
+	sed -i '1i # Programmatically Generated Summary \'  "$TMPDIR"$uuid/pp_summary.txt
+	sed -i G  "$TMPDIR"$uuid/pp_summary.txt
+	sed -i '1i # Programmatically Generated Summary \'  "$TMPDIR"$uuid/summary.txt
+	sed -i G  "$TMPDIR"$uuid/summary.txt
+
+	if [ `wc -c <  "$TMPDIR"$uuid/pp_summary.txt` = "0" ] ; then
+	  echo using "unpostprocessed summary bc wc pp summary = 0"
+	  cat "$TMPDIR$uuid"/summary.txt >> $TMPDIR$uuid/tmpfrontmatter.md
+	else
+	  cp  "$TMPDIR"$uuid/pp_summary.txt  "$TMPDIR"$uuid/summary.md
+		cat "$TMPDIR$uuid"/summary.md >> $TMPDIR$uuid/tmpfrontmatter.md
+	fi
+
+echo "assembled front matter"
 
 else
 	echo "short form selected"
@@ -847,125 +854,84 @@ else
 
 fi
 
+# assemble body
 
-
-	# assemble body
-
-	if [ "$add_this_content" = "none" ] ; then
-		echo "not adding user content"
-	else
-		echo "adding user-provided content file $add_this_content"
-
-		echo "  " >>  "$TMPDIR"$uuid/add_this_content.md
-		echo "  " >>  "$TMPDIR"$uuid/echo "  " >>  "$TMPDIR"$uuid/add_this_content.md
-		echo "# $add_this_content_part_name" >> "$TMPDIR"$uuid"/tmpbody.md"
-		cat "$TMPDIR"$uuid"/add_this_content.md" >> "$TMPDIR"$uuid"/tmpbody.md"
-		echo "  " >> "$TMPDIR"$uuid"/tmpbody.md"
-		echo "  " >> "$TMPDIR"$uuid"/tmpbody.md"
-	fi
-
-	if [ "$summary" = "summaries_only" ] ; then
-		echo "no body"
-	else
-		echo "  " >>  "$TMPDIR"$uuid/tmpbody.md
-		echo "  " >>  "$TMPDIR"$uuid/tmpbody.md
-		echo "# Algorithmic Content" >>  "$TMPDIR"$uuid/tmpbody.md
-		cat "$TMPDIR"$uuid"/wiki/wikipages.md" | sed -e 's/#/##/' >>  "$TMPDIR"$uuid/tmpbody.md
-		echo "  " >>  "$TMPDIR"$uuid/tmpbody.md
-		echo "  " >>  "$TMPDIR"$uuid/tmpbody.md
-
-
-        # convert text so that I can add acronyms, programmatic summary, named entity recognition
-
-        pandoc -S -o "$TMPDIR"$uuid/targetfile.txt -f markdown "$TMPDIR"$uuid/tmpbody.md
-
-
-
-        # run acronym filter
-
-        $scriptpath/bin/acronym-filter.sh --txtinfile  "$TMPDIR"$uuid/targetfile.txt >  "$TMPDIR"$uuid/acronyms.txt
-
-        # external loop to run NER and summarizer on split file
-
-        split -C 50K  "$TMPDIR"$uuid/targetfile.txt "$TMPDIR"$uuid"/xtarget."
-
-        for file in "$TMPDIR"$uuid"/xtarget."*
-        do
-
-        "$PYTHON27_BIN" $scriptpath"bin/nerv3.py" $file $file"_nouns.txt" "$uuid"
-        echo "ran nerv3 on $file" | tee --append $sfb_log
-        cat "$TMPDIR$uuid"/Places >> "$TMPDIR"$batch_uuid"/"$sku"."$safe_product_name"_Places"
-        cat "$TMPDIR$uuid"/People >>  "$TMPDIR"$batch_uuid"/"$sku"."$safe_product_name"_People"
-        cat "$TMPDIR$uuid"/Other >>  "$TMPDIR"$batch_uuid"/"$sku"."$safe_product_name"_Other"
-	echo "python_bin is" $PYTHON_BIN # debug
-	"$PYTHON_BIN" --version
-	#pip freeze # debug
-
-        "$PYTHON_BIN" bin/PKsum.py -l "$summary_length" -o $file"_summary.txt" $file
-        sed -i 's/ \+ / /g' $file"_summary.txt"
-        cp $file"_summary.txt" $file"_pp_summary.txt"
-        echo "ran summarizer on $file" | tee --append $sfb_log
-        awk 'length>=50' $file"_pp_summary.txt" >  "$TMPDIR"$uuid/awk.tmp && mv  "$TMPDIR"$uuid/awk.tmp $file"_pp_summary.txt"
-        awk 'length<=4000' $file"_pp_summary.txt" >  "$TMPDIR"$uuid/awk.tmp && mv  "$TMPDIR"$uuid/awk.tmp $file"_pp_summary.txt"
-        #echo "---end of summary section of 140K bytes---" >> $file"_pp_summary.txt"
-        #echo "---end of summary section of 140K bytes---" >> $file"_summary.txt"
-        cat $file"_pp_summary.txt" >>  "$TMPDIR"$uuid/pp_summary.txt
-        cat $file"_summary.txt" >>  "$TMPDIR"$uuid/summary.txt
-        done
-
-        ls  "$TMPDIR"$uuid/xtarget.*nouns* >  "$TMPDIR"$uuid/testnouns
-        cat  "$TMPDIR"$uuid/xtarget.*nouns* >  "$TMPDIR"$uuid/all_nouns.txt
-        sort --ignore-case  "$TMPDIR"$uuid/all_nouns.txt | uniq >  "$TMPDIR"$uuid/sorted_uniqs.txt
-        sed -i '1i # Unique Proper Nouns and Key Terms \n'  "$TMPDIR"$uuid/sorted_uniqs.txt
-        sed -i '2i \'  "$TMPDIR"$uuid/sorted_uniqs.txt
-        sed -i G  "$TMPDIR"$uuid/sorted_uniqs.txt
-        cp  "$TMPDIR"$uuid/sorted_uniqs.txt  "$TMPDIR"$uuid/sorted_uniqs.md
-        sed -i '1i # Programmatically Generated Summary \'  "$TMPDIR"$uuid/pp_summary.txt
-        sed -i G  "$TMPDIR"$uuid/pp_summary.txt
-        sed -i '1i # Programmatically Generated Summary \'  "$TMPDIR"$uuid/summary.txt
-        sed -i G  "$TMPDIR"$uuid/summary.txt
-
-        if [ `wc -c <  "$TMPDIR"$uuid/pp_summary.txt` = "0" ] ; then
-	        echo using "unpostprocessed summary bc wc pp summary = 0"
-        else
-	        cp  "$TMPDIR"$uuid/pp_summary.txt  "$TMPDIR"$uuid/summary.md
-        fi
-
+## user provided content
+if [ "$add_this_content" = "none" ] ; then
+	echo "no added content"
+else
+	echo "adding user content to front matter"
+	cp "$add_this_content" "$TMPDIR"$uuid"/add_this_content_raw"
+	echo "$add_this_content"
+	"$PANDOC_BIN" -f docx -s -t markdown -o "$TMPDIR"$uuid"/add_this_content.md "$TMPDIR"$uuid/add_this_content_raw"
+	cat $TMPDIR$uuid"/add_this_content.md" >> $TMPDIR$uuid/tmpbody.md
 fi
-	# assemble back matter
+
+## algorithmic content chapters
+
+if [ "$summary" = "summaries_only" ] ; then
+	echo "no body"
+else
+	echo "  " >> $TMPDIR$uuid/chapters.md
+	echo "  " >>  "$TMPDIR"$uuid/chapters.md
+	echo "# Algorithmic Content" >>  "$TMPDIR"$uuid/chapters.md
+	cat "$TMPDIR"$uuid"/wiki/wiki4cloud.md" | sed -e 's/#/##/' >>  "$TMPDIR"$uuid/chapters.md
+	cp  "$TMPDIR"$uuid/chapters.md $TMPDIR$uuid/tmpbody.md
+	echo "  " >>  "$TMPDIR"$uuid/tmpbody.md
+	echo "  " >>  "$TMPDIR"$uuid/tmpbody.md
+fi
+
+
+# create & assemble back matter
+
+
+if [ "$shortform" = "no" ] ; then
+
+	# run acronym filter
+
+	$scriptpath/bin/acronym-filter.sh --txtinfile  "$TMPDIR"$uuid/targetfile.txt >  "$TMPDIR"$uuid/acronyms.txt
+
+	ls  "$TMPDIR"$uuid/xtarget.*nouns* >  "$TMPDIR"$uuid/testnouns
+	cat  "$TMPDIR"$uuid/xtarget.*nouns* >  "$TMPDIR"$uuid/all_nouns.txt
+	sort --ignore-case  "$TMPDIR"$uuid/all_nouns.txt | uniq >  "$TMPDIR"$uuid/sorted_uniqs.txt
+	sed -i '1i # Unique Proper Nouns and Key Terms'  "$TMPDIR"$uuid/sorted_uniqs.txt
+	sed -i '2i \'  "$TMPDIR"$uuid/sorted_uniqs.txt
+	sed -i G  "$TMPDIR"$uuid/sorted_uniqs.txt
+	cp  "$TMPDIR"$uuid/sorted_uniqs.txt  "$TMPDIR"$uuid/sorted_uniqs.md
+
 	echo "" >>   "$TMPDIR"$uuid/backmatter.md
 	echo "" >>   "$TMPDIR"$uuid/backmatter.md
 
+		cat "$TMPDIR"$uuid/sorted_uniqs.txt >>$TMPDIR$uuid/backmatter.md
 
-	if [ "$sample_tweets" = "yes" ] ; then
-		echo "adding Tweets to back matter"
-		cat  "$TMPDIR"$uuid/twitter/sample_tweets.md >>  "$TMPDIR"$uuid/backmatter.md
-	else
-		echo "no sample tweets"
-	fi
+		if [ "$sample_tweets" = "yes" ] ; then
+			echo "adding Tweets to back matter"
+			cat  "$TMPDIR"$uuid/twitter/sample_tweets.md >>  "$TMPDIR"$uuid/backmatter.md
+		else
+			echo "no sample tweets"
+		fi
 
-	if [ "$flickr" = "on" ] ; then
+		if [ "$flickr" = "on" ] ; then
 
-		cd  "$TMPDIR"$uuid/flickr
-		for file in *.md
-		do
-		       cat $file >> allflickr.md
-		       echo '\newpage' >> allflickr.md
-		       echo "" >> allflickr.md
-		done
-		cat allflickr.md >>  "$TMPDIR"$uuid/backmatter.md
-		#cp *.jpg ..
-		# cp allflickr.md ..
-		#cd ..
-		# $PANDOC -o images.pdf allflickr.md
-		# cd $scriptpath
-		# echo "converted flickr md files to pdf pages with images" | tee --append $xform_log
+			cd  "$TMPDIR"$uuid/flickr
+			for file in *.md
+			do
+			       cat $file >> allflickr.md
+			       echo '\newpage' >> allflickr.md
+			       echo "" >> allflickr.md
+			done
+			cat allflickr.md >>  "$TMPDIR"$uuid/backmatter.md
+			#cp *.jpg ..
+			# cp allflickr.md ..
+			#cd ..
+			# $PANDOC -o images.pdf allflickr.md
+			# cd $scriptpath
+			# echo "converted flickr md files to pdf pages with images" | tee --append $xform_log
 
-	else
-		echo "didn't  process flickr files"
-	fi
+		else
+			echo "didn't  process flickr files"
+		fi
 
-if [ "$shortform" = "no" ] ;then
 
 	echo "# Sources" >>  "$TMPDIR"$uuid/backmatter.md
  	cat includes/wikilicense.md >> $TMPDIR/$uuid/backmatter.md
