@@ -63,6 +63,7 @@ epublinkname="ePub"
 epublinkrichname="Pub"
 exemplar_file="none"
 exemplar_filedir_code=400 # this is the field code value used in the directory structure where magento webforms stores uploaded exemplar files -- softcoded below
+expand_seeds_to_pages="no"
 fetcharray=()
 fetched_document_format="html"
 fetchfile="fetch/fetchlist.csv"

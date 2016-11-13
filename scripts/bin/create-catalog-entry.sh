@@ -469,6 +469,22 @@ shift 2
 add_dat_run=${1#*=}
 shift
 ;;
+--two1)
+two1=$2
+shift 2
+;;
+--two1=*)
+two1=${1#*=}
+shift
+;;
+--expand_seeds_to_pages)
+expand_seeds_to_pages=$2
+shift 2
+;;
+--expand_seeds_to_pages=*)
+expand_seeds_to_pages=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -482,7 +498,6 @@ shift
             ;;
 esac
 done
-
 
 # Suppose some options are required. Check that we got them.
 
@@ -500,9 +515,7 @@ else
 
 fi
 
-
 # test values
-
 
 # create directories I will need
 
@@ -569,9 +582,6 @@ csv)
 ;;
 esac
 
-
-
-
 # assign wikilocale & stopfile based on LANG
 
 # deprecated assigning wikilocale via environment $LANG
@@ -605,7 +615,6 @@ else
         echo "imprint is $imprint"
 fi
 
-
 if [ -z "$jobprofilename" ]; then
 	jobprofilename="default"
 	. "$confdir"jobprofiles/robots/"$jobprofilename".jobprofile
@@ -617,9 +626,7 @@ human_author="$editedby"
 
 # verbose logging
 
-
 # APIs
-
 
 . includes/api-manager.sh
 
@@ -679,9 +686,13 @@ cat "$TMPDIR$uuid/seeds/sorted.seedfile" > "$LOCAL_DATA"seeds/history/"$sku".see
 
 #expand seeds to valid wiki pages
 
-
-"$PYTHON_BIN" bin/wiki_seeds_2_pages.py --infile "$TMPDIR$uuid/seeds/sorted.seedfile" --pagehits "$TMPDIR$uuid/seeds/pagehits"
-
+if [ "$expand_seeds_to_pages" = "yes" ] ; then
+		echo "$expand_seeds_to_pages"
+		"$PYTHON27_BIN" bin/wiki_seeds_2_pages.py --infile "$TMPDIR"$uuid"/seeds/sorted.seedfile" --pagehits "$TMPDIR"$uuid"/seeds/pagehits"
+else
+		echo "not expanding seeds to pages"
+		cp "$TMPDIR"$uuid"/seeds/sorted.seedfile" "$TMPDIR"$uuid"/seeds/pagehits"
+fi
 
 # filter pagehits
 

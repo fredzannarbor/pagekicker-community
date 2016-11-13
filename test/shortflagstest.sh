@@ -1,7 +1,6 @@
 #!/bin/bash
 pwd
 echo "**** BOOK BUILDER ***"
-
 if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
 	echo "config file not found, creating /home/<user>/.pagekicker, put config file there"
 	mkdir -p -m 755 "$HOME"/.pagekicker
@@ -19,7 +18,6 @@ pwd
 if [ ! "$passuuid" ] ; then
 	#echo "creating uuid"
 	uuid=$("$PYTHON_BIN"  -c 'import uuid; print(uuid.uuid1())')
-
 	echo "uuid is" $uuid
 	mkdir -p -m 777 $TMPDIR$uuid
 else
@@ -28,7 +26,8 @@ else
 	mkdir -p -m 777 $TMPDIR$uuid
 fi
 
-$scriptpath"bin/builder.sh" "$@" --passuuid $uuid
+#echo "$@"
+$scriptpath"bin/builder.sh" -T "booktitle" -J "default" -S "Paella" --passuuid "$uuid"
 cp $TMPDIR$uuid/*.epub $TMPDIR"/delivery.epub"
 cp $TMPDIR$uuid/4stdout.txt $TMPDIR"/4stdout.txt"
 if [ ! -f "$TMPDIR$uuid/ebookcover.jpg" ]; then
