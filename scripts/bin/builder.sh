@@ -574,6 +574,7 @@ esac
 
 if [ "$add_this_content" = "none" ] ; then
 	echo "no added content"
+	touch "$TMPDIR"$uuid/add_this_content.md
 else
 	echo "adding user content to cover cloud"
 	cp "$add_this_content" "$TMPDIR"$uuid"/add_this_content_raw"
@@ -723,14 +724,16 @@ cp  "$TMPDIR"$uuid/cover/bordercover.png  "$TMPDIR"$uuid/ebookcover.jpg
 
 if [ "$shortform" = "no" ]; then
 
-	# building front matter
-	# removed title page b/c Pandoc already builds it
+	# build front matter page by page
+
 	echo "  " >>  "$TMPDIR"$uuid/titlepage.md
 	echo "  " >>  "$TMPDIR"$uuid/titlepage.md
 	echo "# About $editedby" >>  "$TMPDIR"$uuid/titlepage.md
 	cat "$authorbio" >>  "$TMPDIR"$uuid/titlepage.md
 	echo "  " >>  "$TMPDIR"$uuid/titlepage.md
 	echo "  " >>  "$TMPDIR"$uuid/titlepage.md
+
+#acknowledgments
 
 	cp $scriptpath"assets/rebuild.md"  "$TMPDIR"$uuid/rebuild.md
 	cp $confdir"jobprofiles/signatures/"$sigfile  "$TMPDIR"$uuid/$sigfile
@@ -755,50 +758,50 @@ if [ "$shortform" = "no" ]; then
 	echo "  " >>  "$TMPDIR"$uuid/robo_ack.md
 	echo '![Robot author photo]'"($sigfile)" >>  "$TMPDIR"$uuid/robo_ack.md
 
-	# assemble front matter
-
-	cat  "$TMPDIR"$uuid/titlepage.md  "$TMPDIR"$uuid/robo_ack.md  "$TMPDIR"$uuid/rebuild.md >  "$TMPDIR"$uuid/tmpfrontmatter.md
+#tldr
 
 	if [ -z "$tldr" ]; then
-		echo "no tl;dr"
+	  echo "  " >>  "$TMPDIR"$uuid/tldr.md
+	  echo "  " >>  "$TMPDIR"$uuid/tldr.md
+	  echo "# Programmatic TL;DR:" >>  "$TMPDIR"$uuid/tldr.md
+	  #cat $TMPDIR$uuid/shortest_summary.md >>  "$TMPDIR"$uuid/tldr.md
 	else
-		echo "  " >>  "$TMPDIR"$uuid/tmpfrontmatter.md
-		echo "  " >>  "$TMPDIR"$uuid/tmpfrontmatter.md
-		echo "# TL;DR:" >>  "$TMPDIR"$uuid/tmpfrontmatter.md
-		echo "$tldr" >>  "$TMPDIR"$uuid/tmpfrontmatter.md
+	  echo "  " >>  "$TMPDIR"$uuid/tldr.md
+	  echo "  " >>  "$TMPDIR"$uuid/tldr.md
+	  echo "# TL;DR:" >>  "$TMPDIR"$uuid/tldr.md
+	  echo "$tldr" >>  "$TMPDIR"$uuid/tldr.md
 	fi
 
-	# assemble summary section (wiki human written)
+	# Abstracts
 
 	case $summary in
 	summaries_only)
-		echo "  " >>  "$TMPDIR"$uuid/tmpfrontmatter.md
-		echo "  " >>  "$TMPDIR"$uuid/tmpfrontmatter.md
-		echo "# Abstracts" >>  "$TMPDIR"$uuid/tmpfrontmatter.md
-		echo "  " >>  "$TMPDIR"$uuid/tmpfrontmatter.md
-		echo "  " >>  "$TMPDIR"$uuid/tmpfrontmatter.md
-		cat "$TMPDIR"$uuid"/wiki/wikisummaries.md" | sed -e 's/#/##/' >>  "$TMPDIR"$uuid/tmpfrontmatter.md
-		echo "  " >>  "$TMPDIR"$uuid/tmpfrontmatter.md
-		echo "  " >>  "$TMPDIR"$uuid/tmpfrontmatter.md
+		echo "  " >>  "$TMPDIR"$uuid/humansummary.md
+		echo "  " >>  "$TMPDIR"$uuid/humansummary.md
+		echo "# Abstracts" >>  "$TMPDIR"$uuid/humansummary.md
+		echo "  " >>  "$TMPDIR"$uuid/humansummary.md
+		echo "  " >>  "$TMPDIR"$uuid/humansummary.md
+		cat "$TMPDIR"$uuid"/wiki/wikisummaries.md" | sed -e 's/#/##/' >>  "$TMPDIR"$uuid/humansummary.md
+		echo "  " >>  "$TMPDIR"$uuid/humansummary.md
+		echo "  " >>  "$TMPDIR"$uuid/humansummary.md
 		;;
 	complete_pages_only)
 		echo "using complete pages only for main body"
 		;;
 	both)
-		echo "  " >>  "$TMPDIR"$uuid/tmpfrontmatter.md
-		echo "  " >>  "$TMPDIR"$uuid/tmpfrontmatter.md
-		echo "# Abstracts" >>  "$TMPDIR"$uuid/tmpfrontmatter.md
-		echo "  " >>  "$TMPDIR"$uuid/tmpfrontmatter.md
-		echo "  " >>  "$TMPDIR"$uuid/tmpfrontmatter.md
-		cat "$TMPDIR"$uuid"/wiki/wikisummaries.md" | sed -e 's/#/##/' >>  "$TMPDIR"$uuid/tmpfrontmatter.md
-		echo "  " >>  "$TMPDIR"$uuid/tmpbody.md
-		echo "  " >>  "$TMPDIR"$uuid/tmpbody.md
+		echo "  " >>  "$TMPDIR"$uuid/humansummary.md
+		echo "  " >>  "$TMPDIR"$uuid/humansummary.md
+		echo "# Abstracts" >>  "$TMPDIR"$uuid/humansummary.md
+		echo "  " >>  "$TMPDIR"$uuid/humansummary.md
+		echo "  " >>  "$TMPDIR"$uuid/humansummary.md
+		cat "$TMPDIR"$uuid"/wiki/wikisummaries.md" | sed -e 's/#/##/' >>  "$TMPDIR"$uuid/humansummary.md
+		echo "  " >>  "$TMPDIR"$uuid/humansummary.md
+		echo "  " >>  "$TMPDIR"$uuid/humansummary.md
 ;;
 	*)
 		echo "unrecognized summary option"
 	;;
 	esac
-
 
 	cat "$TMPDIR"$uuid"/wiki/wiki4cloud.md"  >> $TMPDIR$uuid/tmpbody.md
 
@@ -840,18 +843,18 @@ done
 
 	if [ `wc -c <  "$TMPDIR"$uuid/pp_summary.txt` = "0" ] ; then
 	  echo using "unpostprocessed summary bc wc pp summary = 0"
-	  cat "$TMPDIR$uuid"/summary.txt >> $TMPDIR$uuid/tmpfrontmatter.md
+	  cat "$TMPDIR$uuid"/summary.txt >> $TMPDIR$uuid/programmaticsummary.md
 	else
 	  cp  "$TMPDIR"$uuid/pp_summary.txt  "$TMPDIR"$uuid/summary.md
-		cat "$TMPDIR$uuid"/summary.md >> $TMPDIR$uuid/tmpfrontmatter.md
+		cat "$TMPDIR$uuid"/summary.md >> $TMPDIR$uuid/programmaticsummary.md
 	fi
 
 echo "assembled front matter"
 
 else
 	echo "short form selected"
-	echo '![cover image]'"(ebookcover.jpg)" >  "$TMPDIR"$uuid/tmpfrontmatter.md
-	echo '!['"$imprintname"']'"(""$imprintlogo"")" >>  "$TMPDIR"$uuid/tmpfrontmatter.md
+	echo '![cover image]'"(ebookcover.jpg)" >  "$TMPDIR"$uuid/titlepage.md
+	echo '!['"$imprintname"']'"(""$imprintlogo"")" >>  "$TMPDIR"$uuid/titlepage.md
 
 fi
 
@@ -860,6 +863,7 @@ fi
 ## user provided content
 if [ "$add_this_content" = "none" ] ; then
 	echo "no added content"
+	touch $TMPDIR$uuid/add_this_content.
 else
 	echo "adding user content to front matter"
 	cp "$add_this_content" "$TMPDIR"$uuid"/add_this_content_raw"
@@ -872,122 +876,110 @@ fi
 
 if [ "$summary" = "summaries_only" ] ; then
 	echo "no body"
+	touch $TMPDIR$uuid/chapters.md
 else
 	echo "  " >> $TMPDIR$uuid/chapters.md
 	echo "  " >>  "$TMPDIR"$uuid/chapters.md
 	echo "# Algorithmic Content" >>  "$TMPDIR"$uuid/chapters.md
 	cat "$TMPDIR"$uuid"/wiki/wiki4cloud.md" | sed -e 's/#/##/' >>  "$TMPDIR"$uuid/chapters.md
-	cp  "$TMPDIR"$uuid/chapters.md $TMPDIR$uuid/tmpbody.md
-	echo "  " >>  "$TMPDIR"$uuid/tmpbody.md
-	echo "  " >>  "$TMPDIR"$uuid/tmpbody.md
+	echo "  " >>  "$TMPDIR"$uuid/chapters.md
+	echo "  " >>  "$TMPDIR"$uuid/chapters.md
 fi
 
+# acronyms
 
-# create & assemble back matter
+echo "# Acronyms" > $TMPDIR$uuid/tmpacronyms.md
+echo " " >> $TMPDIR$uuid/tmpacronyms.md
+echo " " >> $TMPDIR$uuid/tmpacronyms.md
+$scriptpath/bin/acronym-filter.sh --txtinfile  "$TMPDIR"$uuid/targetfile.txt > "$TMPDIR"$uuid/acronyms.txt
+sed G $TMPDIR$uuid/acronyms.txt >> $TMPDIR$uuid/acronyms.md
+cat $TMPDIR$uuid/acronyms.md >> $TMPDIR$uuid/tmpacronyms.md
+cp $TMPDIR$uuid/tmpacronyms.md $TMPDIR$uuid/acronyms.md
 
+# Unique nouns
 
-if [ "$shortform" = "no" ] ; then
+ls  "$TMPDIR"$uuid/xtarget.*nouns* >  "$TMPDIR"$uuid/testnouns
+cat  "$TMPDIR"$uuid/xtarget.*nouns* >  "$TMPDIR"$uuid/all_nouns.txt
+sort --ignore-case  "$TMPDIR"$uuid/all_nouns.txt | uniq >  "$TMPDIR"$uuid/sorted_uniqs.txt
+sed -i '1i # Unique Proper Nouns and Key Terms'  "$TMPDIR"$uuid/sorted_uniqs.txt
+sed -i '1i \'  "$TMPDIR"$uuid/sorted_uniqs.txt
+sed -i G  "$TMPDIR"$uuid/sorted_uniqs.txt
+cp  "$TMPDIR"$uuid/sorted_uniqs.txt  "$TMPDIR"$uuid/sorted_uniqs.md
 
-	# run acronym filter
+echo "" >> "$TMPDIR"$uuid/sorted_uniqs.md
+echo "" >> "$TMPDIR"$uuid/sorted_uniqs.md
 
-	$scriptpath/bin/acronym-filter.sh --txtinfile  "$TMPDIR"$uuid/targetfile.txt >  "$TMPDIR"$uuid/acronyms.txt
-
-	ls  "$TMPDIR"$uuid/xtarget.*nouns* >  "$TMPDIR"$uuid/testnouns
-	cat  "$TMPDIR"$uuid/xtarget.*nouns* >  "$TMPDIR"$uuid/all_nouns.txt
-	sort --ignore-case  "$TMPDIR"$uuid/all_nouns.txt | uniq >  "$TMPDIR"$uuid/sorted_uniqs.txt
-	sed -i '1i # Unique Proper Nouns and Key Terms'  "$TMPDIR"$uuid/sorted_uniqs.txt
-	sed -i '1i \'  "$TMPDIR"$uuid/sorted_uniqs.txt
-	sed -i G  "$TMPDIR"$uuid/sorted_uniqs.txt
-	cp  "$TMPDIR"$uuid/sorted_uniqs.txt  "$TMPDIR"$uuid/sorted_uniqs.md
-
-	echo "" >>   "$TMPDIR"$uuid/backmatter.md
-	echo "" >>   "$TMPDIR"$uuid/backmatter.md
-
-		cat "$TMPDIR"$uuid/sorted_uniqs.txt >>$TMPDIR$uuid/backmatter.md
-
-		if [ "$sample_tweets" = "yes" ] ; then
+if [ "$sample_tweets" = "yes" ] ; then
 			echo "adding Tweets to back matter"
 			cat  "$TMPDIR"$uuid/twitter/sample_tweets.md >>  "$TMPDIR"$uuid/backmatter.md
-		else
+else
 			echo "no sample tweets"
-		fi
+			touch $TMPDIR$uuid/twitter/sample_tweets.md
+fi
 
-		if [ "$flickr" = "on" ] ; then
+	if [ "$flickr" = "on" ] ; then
 
-			cd  "$TMPDIR"$uuid/flickr
-			for file in *.md
-			do
-			       cat $file >> allflickr.md
-			       echo '\newpage' >> allflickr.md
-			       echo "" >> allflickr.md
-			done
-			cat allflickr.md >>  "$TMPDIR"$uuid/backmatter.md
-			#cp *.jpg ..
-			# cp allflickr.md ..
-			#cd ..
-			# $PANDOC -o images.pdf allflickr.md
-			# cd $scriptpath
-			# echo "converted flickr md files to pdf pages with images" | tee --append $xform_log
+		cd  "$TMPDIR"$uuid/flickr
+		for file in *.md
+		do
+		       cat $file >> allflickr.md
+		       echo '\newpage' >> allflickr.md
+		       echo "" >> allflickr.md
+		done
+		cat allflickr.md >>  "$TMPDIR"$uuid/backmatter.md
+		#cp *.jpg ..
+		# cp allflickr.md ..
+		#cd ..
+		# $PANDOC -o images.pdf allflickr.md
+		# cd $scriptpath
+		# echo "converted flickr md files to pdf pages with images" | tee --append $xform_log
 
-		else
-			echo "didn't  process flickr files"
-		fi
+	else
+		echo "didn't  process flickr files"
+		touch $TMPDIR$uuid/allflickr.md
+	fi
 
 
-	echo "# Sources" >>  "$TMPDIR"$uuid/backmatter.md
- 	cat includes/wikilicense.md >> $TMPDIR/$uuid/backmatter.md
+	echo "# Sources" >>  "$TMPDIR"$uuid/sources.md
+ 	cat includes/wikilicense.md >> $TMPDIR/$uuid/sources.md
+	echo "" >> "$TMPDIR"$uuid/sources.md
+	echo "" >> "$TMPDIR"$uuid/sources.md
 
-	echo "# Also built by PageKicker Robot $jobprofilename" >>   "$TMPDIR"$uuid/backmatter.md
+	echo "# Also built by PageKicker Robot $jobprofilename" >>   "$TMPDIR"$uuid/builtby.md
 	sort -u --ignore-case "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.txt" -o  "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.txt" # currently sort by alphabetical
-	cat "$LOCAL_DATA"/bibliography/robots/"$jobprofilename"/"$jobprofilename""_titles.txt" >>  "$TMPDIR"$uuid/backmatter.md
-	echo " ">>  "$TMPDIR"$uuid/backmatter.md
-	echo " " >>  "$TMPDIR"$uuid/backmatter.md
+	cat "$LOCAL_DATA"/bibliography/robots/"$jobprofilename"/"$jobprofilename""_titles.txt" >>  "$TMPDIR"$uuid/builtby.md
+	echo " ">>  "$TMPDIR"$uuid/builtby.md
+	echo " " >>  "$TMPDIR"$uuid/builtby.md
 
-	echo "# Also from $imprintname" >>   "$TMPDIR"$uuid/backmatter.md
+	echo "# Also from $imprintname" >>   "$TMPDIR"$uuid/byimprint.md
 	if [ "add_imprint_biblio" = "yes" ] ; then
-			uniq "$LOCAL_DATA"bibliography/imprints/"$imprint"/$imprint"_titles.txt" >>  "$TMPDIR"$uuid/backmatter.md # imprint pubs are not alpha
+			uniq "$LOCAL_DATA"bibliography/imprints/"$imprint"/$imprint"_titles.txt" >>  "$TMPDIR"$uuid/byimprint.md # imprint pubs are not alpha
+			echo "" >> "$TMPDIR"$uuid"/byimprint.md"
+			echo "" >> "$TMPDIR"$uuid"/byimprint.md"
 	else
 		 	true
+			touch $TMPDIR$uuid/byimprint.md
 			# commenting out imprint bibliography because data is too messy right now
   fi
 
-	echo "" >> "$TMPDIR"$uuid"/backmatter.md"
-	echo "" >> "$TMPDIR"$uuid"/backmatter.md"
-
 		if [ -z  ${url+x} ] ; then
-			:
+			 touch "$TMPDIR"$uuid"/analyzed_webpage.md"
 		else
+			echo "" >> "$TMPDIR"$uuid"/analyzed_webpage.md"
+			echo "" >> "$TMPDIR"$uuid"analyzed_webpage.md"
 			"$PANDOC_BIN" -s -r html "$analyze_url" -o  "$TMPDIR"$uuid"/analyzed_webpage.md"
 			"$PYTHON_BIN" bin/nerv3.py  "$TMPDIR"$uuid"/analyzed_webpage.md"  "$TMPDIR"$uuid"/analyzed_webseeds" "$uuid"
-			echo "# Webpage Analysis" >>  "$TMPDIR"$uuid/backmatter.md
-			echo "I analyzed this webpage $url. I found the following keywords on the page."
-			comm -2 -3 <(sort  "$TMPDIR"$uuid"/analyzed_webseeds") <(sort $scriptpath"locale/stopwords/webstopwords."$wikilang) >>  "$TMPDIR"$uuid"/backmatter.md
-			echo "" >> "$TMPDIR"$uuid"/backmatter.md"
-			echo "" >> "$TMPDIR"$uuid"/backmatter.md
+			echo "# Webpage Analysis" >>  "$TMPDIR"$uuid/analyzed_webpage.md
+			echo "I analyzed this webpage $url. I found the following keywords on the page."  >> "$TMPDIR"$uuid/analyzed_webpage.md"
+			comm -2 -3 <(sort  "$TMPDIR"$uuid"/analyzed_webseeds") <(sort $scriptpath"locale/stopwords/webstopwords."$wikilang) >>  "$TMPDIR"$uuid"/analyzed_webpage.md
+			echo "" >> "$TMPDIR"$uuid"/analyzed_webpage.md"
+			echo "" >> "$TMPDIR"$uuid"/analyzed_webpage.md"
 		fi
 
-	cat $confdir"jobprofiles/imprints/$imprint/""$imprint_mission_statement" >> "$TMPDIR"$uuid"/backmatter.md"
-	echo '!['"$imprintname"']'"(""$imprintlogo"")" >>  "$TMPDIR"$uuid/backmatter.md
-	echo "assembled back matter"
-
-else
-	echo "no back matter"
-
-fi
-
-
-
-# concatenate front matter, body & back matter
-
-	if [ -s "$TMPDIR"$uuid"/tmpbody.md" ] ; then
-		cat  "$TMPDIR"$uuid"/tmpbody.md" >>  "$TMPDIR"$uuid/tmpfrontmatter.md
-	else
-		echo "no body"
-	fi
-	cat  "$TMPDIR"$uuid/backmatter.md >>  "$TMPDIR"$uuid/tmpfrontmatter.md
-	cp  "$TMPDIR"$uuid/tmpfrontmatter.md  "$TMPDIR"$uuid/complete.md
-
-# create epub metadata
+	touch "$TMPDIR"$uuid/imprint_mission_statement.md
+	cat $confdir"jobprofiles/imprints/$imprint/""$imprint_mission_statement" >> "$TMPDIR"$uuid"/imprint_mission_statement.md"
+	echo '!['"$imprintname"']'"(""$imprintlogo"")" >>  "$TMPDIR"$uuid/imprint_mission_statement.md
+	echo "built back matter"
 
 my_year=`date +'%Y'`
 
@@ -1002,10 +994,11 @@ echo "publisher: $imprintname"  >>  "$TMPDIR"$uuid/yaml-metadata.md
 echo "rights:  (c) $my_year $imprintname" >>  "$TMPDIR"$uuid/yaml-metadata.md
 echo "---" >>  "$TMPDIR"$uuid/yaml-metadata.md
 
-cat "$TMPDIR"$uuid/yaml-metadata.md >>  "$TMPDIR"$uuid/complete.md
 
+# bin/partsofthebook.sh parallel construction of parts of the book
+
+bin/partsofthebook.sh
 # build ebook in epub
-
 
 bibliography_title="$booktitle"
 #echo "bibliography title is $bibliography_title"

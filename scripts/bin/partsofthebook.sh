@@ -12,9 +12,11 @@ $TMPDIR$uuid/add_this_content.md \
 $TMPDIR$uuid/chapters.md \
 $TMPDIR$uuid/sorted_uniqs.md \
 $TMPDIR$uuid/analyzed_webpage.md \
+$TMPDIR$uuid/acronyms.md \
 $TMPDIR$uuid/twitter/sample_tweets.md \
 $TMPDIR$uuid/allflickr.md \
 $TMPDIR$uuid/builtby.md \
 $TMPDIR$uuid/byimprint.md \
+$TMPDIR$uuid/imprint_mission_statement.md \
 $TMPDIR$uuid/yaml-metadata.md \
 > $TMPDIR$uuid/complete.md
