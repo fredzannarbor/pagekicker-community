@@ -804,7 +804,8 @@ if [ "$shortform" = "no" ]; then
 
 	# convert text so that I can add acronyms, programmatic summary, named entity recognition
 
-	pandoc -S -o  "$TMPDIR"$uuid/targetfile.txt -t plain -f markdown "$TMPDIR"$uuid/tmpbody.md
+
+pandoc -S -o "$TMPDIR"$uuid/targetfile.txt -t plain -f markdown "$TMPDIR"$uuid/tmpbody.md
 
 	split -C 50K  "$TMPDIR"$uuid/targetfile.txt "$TMPDIR"$uuid"/xtarget."
 
