@@ -997,7 +997,7 @@ echo "---" >>  "$TMPDIR"$uuid/yaml-metadata.md
 
 # bin/partsofthebook.sh parallel construction of parts of the book
 
-bin/partsofthebook.sh
+. bin/partsofthebook.sh
 # build ebook in epub
 
 bibliography_title="$booktitle"
