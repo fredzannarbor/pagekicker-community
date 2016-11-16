@@ -1,0 +1,7 @@
+{
+	"posseeds": {"Holocene", "Anthropology", "History"},
+	"negseeds": "movie",
+	"data set name": "seedweights",
+	"description": "Positive and negative seed terms for PageKicker Robots with numeric weightings.",
+	"updated": "2016-10-20"
+}

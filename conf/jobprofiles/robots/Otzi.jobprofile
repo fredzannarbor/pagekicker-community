@@ -1,0 +1,13 @@
+firstname=""
+middlename=""
+lastname="Ötzi"
+editedby=$firstname" "$middlename" "$lastname
+authorbio=$SFB_HOME"conf/jobprofiles/authorbios/Otzi.md"
+fortunedb="thebigbangtheory"
+LSI_import="no"
+BISAC_code="none"
+rows="99"
+fetched_document_format="html"
+mylibrary="yes"
+sigfile="Otzi.png"
+seedweights="Otzi.png"
