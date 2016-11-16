@@ -997,7 +997,7 @@ echo "---" >>  "$TMPDIR"$uuid/yaml-metadata.md
 
 # bin/partsofthebook.sh parallel construction of parts of the book
 
-bin/partsofthebook.sh
+. bin/partsofthebook.sh
 # build ebook in epub
 
 bibliography_title="$booktitle"
@@ -1008,6 +1008,7 @@ cd  "$TMPDIR"$uuid
 "$PANDOC_BIN" -o "$TMPDIR"$uuid/$sku"."$safe_product_name".docx"   "$TMPDIR"$uuid/complete.md
 "$PANDOC_BIN" -o "$TMPDIR"$uuid/$sku"."$safe_product_name".txt"   "$TMPDIR"$uuid/complete.md
 cp "$TMPDIR"$uuid/$sku"."$safe_product_name".txt" "$TMPDIR"$uuid/4stdout".txt"
+cp "$TMPDIR"$uuid/$sku"."$safe_product_name".txt" "$TMPDIR"4stdout".txt"
 cd $scriptpath
 lib/KindleGen/kindlegen "$TMPDIR"$uuid/$sku."$safe_product_name"".epub" -o "$sku.$safe_product_name"".mobi" 1> /dev/null
 #ls -lart  "$TMPDIR"$uuid
@@ -1054,7 +1055,7 @@ echo "checking that buildtarget exists"
 
 esac
 
-cp "$TMPDIR"$uuid/$sku.$safe_product_name".epub" /tmp/pagekicker/test.epub
+cp "$TMPDIR"$uuid/$sku.$safe_product_name".epub" /tmp/pagekicker/delivery.epub
 cp "$TMPDIR"$uuid/$sku.$safe_product_name".docx" /tmp/pagekicker/delivery.docx
 # housekeeping
 

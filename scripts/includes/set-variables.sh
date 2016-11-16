@@ -46,6 +46,7 @@ description="test"
 docsandabstracts="'<b>Document titles and abstracts:</b><p>'"
 docxlinkname="Microsoft_Word_docx"
 docxname="Microsoft_Word_docx"
+dontcleanupseeds="no"
 dq='"'
 ebookformat="epub"
 ebookintro="includes/ebook.intro.html"
