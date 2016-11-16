@@ -1055,7 +1055,7 @@ echo "checking that buildtarget exists"
 
 esac
 
-cp "$TMPDIR"$uuid/$sku.$safe_product_name".epub" /tmp/pagekicker/test.epub
+cp "$TMPDIR"$uuid/$sku.$safe_product_name".epub" /tmp/pagekicker/delivery.epub
 cp "$TMPDIR"$uuid/$sku.$safe_product_name".docx" /tmp/pagekicker/delivery.docx
 # housekeeping
 
