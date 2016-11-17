@@ -611,8 +611,6 @@ else
 	exit 73
 fi
 
-
-
 # build cover
 
 cp $scriptpath"assets/pk35pc.jpg"  "$TMPDIR"$uuid/pk35pc.jpg
@@ -735,125 +733,43 @@ if [ "$shortform" = "no" ]; then
 
 #acknowledgments
 
-	cp $scriptpath"assets/rebuild.md"  "$TMPDIR"$uuid/rebuild.md
-	cp $confdir"jobprofiles/signatures/"$sigfile  "$TMPDIR"$uuid/$sigfile
-	echo "# Acknowledgements from the PageKicker Robot Author" >>  "$TMPDIR"$uuid/robo_ack.md
-	echo "I would like to thank PageKicker for the opportunity to write this book." >>  "$TMPDIR"$uuid/robo_ack.md
-	echo "  " >>  "$TMPDIR"$uuid/robo_ack.md
-	echo "  " >>  "$TMPDIR"$uuid/robo_ack.md
-	cat $scriptpath/assets/robo_ack.md >>  "$TMPDIR"$uuid/robo_ack.md
-	echo "This book was created with revision "$SFB_VERSION "on branch" `git rev-parse --abbrev-ref HEAD` "of the PageKicker software running on  the server $environment. " >>  "$TMPDIR"$uuid/robo_ack.md
-	echo "  " >>  "$TMPDIR"$uuid/robo_ack.md
-	echo "  " >>  "$TMPDIR"$uuid/robo_ack.md
+. includes/acknowledgments.sh
 
-#settings
-echo " " >> $TMPDIR$uuid/settings.md
-echo " " >> $TMPDIR$uuid/settings.md
-echo "# Settings" >> $TMPDIR$uuid/settings.md
-echo "When I build a book there are many parameters that guide my authoring strategy.  A few of the key ones are listed below." >> $TMPDIR$uuid/settings.md
-echo " "  >> $TMPDIR$uuid/settings.md
-echo "**Search seeds I used after screening and deduplication:**" >> $TMPDIR$uuid/settings.md
-echo " " >> $TMPDIR$uuid/settings.md
-cat $TMPDIR$uuid/seeds/sorted.seedfile | sed G >> $TMPDIR$uuid/settings.md
-echo " " >> $TMPDIR$uuid/settings.md
-echo "**Expand seeds via page title strategy?**" $expand_seeds_to_pages >> $TMPDIR$uuid/settings.md
-echo " " >> $TMPDIR$uuid/settings.md
-echo " " >> $TMPDIR$uuid/settings.md
-
-	if [ "$two1" = "yes" ] ; then
-		echo "This book was purchased via the machine-payable web on the 21.co platform. The app is available at " 'https://21.co/pagekicker/app/term-paper-factory/'"." >>  "$TMPDIR"$uuid/robo_ack.md
-	else
-		true
-	fi
-	echo "  " >>  "$TMPDIR"$uuid/robo_ack.md
-	echo "  " >>  "$TMPDIR"$uuid/robo_ack.md
-	echo '<i>'"Ann Arbor, Michigan, USA"'</i>' >>  "$TMPDIR"$uuid/robo_ack.md
-	echo "  " >>  "$TMPDIR"$uuid/robo_ack.md
-	echo "  " >>  "$TMPDIR"$uuid/robo_ack.md
-	echo '![Robot author photo]'"($sigfile)" >>  "$TMPDIR"$uuid/robo_ack.md
+	# describe the key settings used in book
+	. includes/settings.sh
 
 #tldr
 
-	if [ -z "$tldr" ]; then
-	  echo "  " >>  "$TMPDIR"$uuid/tldr.md
-	  echo "  " >>  "$TMPDIR"$uuid/tldr.md
-	  echo "# Programmatic TL;DR:" >>  "$TMPDIR"$uuid/tldr.md
-	  #cat $TMPDIR$uuid/shortest_summary.md >>  "$TMPDIR"$uuid/tldr.md
-	else
-	  echo "  " >>  "$TMPDIR"$uuid/tldr.md
-	  echo "  " >>  "$TMPDIR"$uuid/tldr.md
-	  echo "# TL;DR:" >>  "$TMPDIR"$uuid/tldr.md
-	  echo "$tldr" >>  "$TMPDIR"$uuid/tldr.md
-	fi
+. includes/tldr.sh
 
 	# Abstracts
 
-	case $summary in
-	summaries_only)
-		echo "  " >>  "$TMPDIR"$uuid/humansummary.md
-		echo "  " >>  "$TMPDIR"$uuid/humansummary.md
-		echo "# Abstracts" >>  "$TMPDIR"$uuid/humansummary.md
-		echo "  " >>  "$TMPDIR"$uuid/humansummary.md
-		echo "  " >>  "$TMPDIR"$uuid/humansummary.md
-		cat "$TMPDIR"$uuid"/wiki/wikisummaries.md" | sed -e 's/#/##/' >>  "$TMPDIR"$uuid/humansummary.md
-		echo "  " >>  "$TMPDIR"$uuid/humansummary.md
-		echo "  " >>  "$TMPDIR"$uuid/humansummary.md
-		;;
-	complete_pages_only)
-		echo "using complete pages only for main body"
-		;;
-	both)
-		echo "  " >>  "$TMPDIR"$uuid/humansummary.md
-		echo "  " >>  "$TMPDIR"$uuid/humansummary.md
-		echo "# Abstracts" >>  "$TMPDIR"$uuid/humansummary.md
-		echo "  " >>  "$TMPDIR"$uuid/humansummary.md
-		echo "  " >>  "$TMPDIR"$uuid/humansummary.md
-		cat "$TMPDIR"$uuid"/wiki/wikisummaries.md" | sed -e 's/#/##/' >>  "$TMPDIR"$uuid/humansummary.md
-		echo "  " >>  "$TMPDIR"$uuid/humansummary.md
-		echo "  " >>  "$TMPDIR"$uuid/humansummary.md
-;;
-	*)
-		echo "unrecognized summary option"
-	;;
-	esac
+	# decide whether to get human abstracts from Wiki, full docs only, or both
+
+. includes/abstracts.sh
+
+# move cover files into position
 
 	cat "$TMPDIR"$uuid"/wiki/wiki4cloud.md"  >> $TMPDIR$uuid/tmpbody.md
 
 	# convert text so that I can add acronyms, programmatic summary, named entity recognition
 
-
 pandoc -S -o "$TMPDIR"$uuid/targetfile.txt -t plain -f markdown "$TMPDIR"$uuid/tmpbody.md
+
+#split into chunks that can be handled in memory
 
 	split -C 50K  "$TMPDIR"$uuid/targetfile.txt "$TMPDIR"$uuid"/xtarget."
 
-for file in "$TMPDIR"$uuid"/xtarget."*
-do
+. includes/transect_summarize_ner.sh
 
-		"$PYTHON27_BIN" $scriptpath"bin/nerv3.py" $file $file"_nouns.txt" "$uuid"
-		echo "ran nerv3 on $file" | tee --append $sfb_log
-		cat "$TMPDIR$uuid"/Places >> "$TMPDIR"$batch_uuid"/"$sku"."$safe_product_name"_Places"
-		cat "$TMPDIR$uuid"/People >>  "$TMPDIR"$batch_uuid"/"$sku"."$safe_product_name"_People"
-		cat "$TMPDIR$uuid"/Other >>  "$TMPDIR"$batch_uuid"/"$sku"."$safe_product_name"_Other"
-
-		echo "python_bin for running PKsum is" $PYTHON_BIN "and PYTHON_BIN actually is"
-		"$PYTHON_BIN" --version
-
-		"$PYTHON_BIN" bin/PKsum.py -l "$summary_length" -o $file"_summary.txt" $file
-		sed -i 's/ \+ / /g' $file"_summary.txt"
-		cp $file"_summary.txt" $file"_pp_summary.txt"
-		echo "ran summarizer on $file" | tee --append $sfb_log
-		awk 'length>=50' $file"_pp_summary.txt" >  "$TMPDIR"$uuid/awk.tmp && mv  "$TMPDIR"$uuid/awk.tmp $file"_pp_summary.txt"
-		awk 'length<=4000' $file"_pp_summary.txt" >  "$TMPDIR"$uuid/awk.tmp && mv  "$TMPDIR"$uuid/awk.tmp $file"_pp_summary.txt"
-		#echo "---end of summary section of 140K bytes---" >> $file"_pp_summary.txt"
-		#echo "---end of summary section of 140K bytes---" >> $file"_summary.txt"
-		cat $file"_pp_summary.txt" >>  "$TMPDIR"$uuid/pp_summary.txt
-		cat $file"_summary.txt" >>  "$TMPDIR"$uuid/summary.txt
-done
+# clean up both unprocessed and postprocessed summary text
 
 	sed -i '1i # Programmatically Generated Summary \'  "$TMPDIR"$uuid/pp_summary.txt
 	sed -i G  "$TMPDIR"$uuid/pp_summary.txt
 	sed -i '1i # Programmatically Generated Summary \'  "$TMPDIR"$uuid/summary.txt
 	sed -i G  "$TMPDIR"$uuid/summary.txt
+
+	# throw away unpreprocessed summary text if zero size
 
 	if [ `wc -c <  "$TMPDIR"$uuid/pp_summary.txt` = "0" ] ; then
 	  echo using "unpostprocessed summary bc wc pp summary = 0"
@@ -862,8 +778,6 @@ done
 	  cp  "$TMPDIR"$uuid/pp_summary.txt  "$TMPDIR"$uuid/summary.md
 		cat "$TMPDIR$uuid"/summary.md >> $TMPDIR$uuid/programmaticsummary.md
 	fi
-
-echo "assembled front matter"
 
 else
 	echo "short form selected"
@@ -875,16 +789,6 @@ fi
 # assemble body
 
 ## user provided content
-if [ "$add_this_content" = "none" ] ; then
-	echo "no added content"
-	touch $TMPDIR$uuid/add_this_content.
-else
-	echo "adding user content to front matter"
-	cp "$add_this_content" "$TMPDIR"$uuid"/add_this_content_raw"
-	echo "$add_this_content"
-	"$PANDOC_BIN" -f docx -s -t markdown -o "$TMPDIR"$uuid"/add_this_content.md "$TMPDIR"$uuid/add_this_content_raw"
-	cat $TMPDIR$uuid"/add_this_content.md" >> $TMPDIR$uuid/tmpbody.md
-fi
 
 ## algorithmic content chapters
 
