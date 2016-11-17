@@ -4,6 +4,7 @@ TMPDIR="/tmp/pagekicker/"
 cat \
 $TMPDIR$uuid/titlepage.md \
 $TMPDIR$uuid/robo_ack.md \
+$TMPDIR$uuid/settings.md \
 $TMPDIR$uuid/rebuild.md \
 $TMPDIR$uuid/tldr.md \
 $TMPDIR$uuid/humansummary.md \

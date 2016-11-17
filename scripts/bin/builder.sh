@@ -746,6 +746,20 @@ if [ "$shortform" = "no" ]; then
 	echo "  " >>  "$TMPDIR"$uuid/robo_ack.md
 	echo "  " >>  "$TMPDIR"$uuid/robo_ack.md
 
+#settings
+echo " " >> $TMPDIR$uuid/settings.md
+echo " " >> $TMPDIR$uuid/settings.md
+echo "# Settings" >> $TMPDIR$uuid/settings.md
+echo "When I build a book there are many parameters that guide my authoring strategy.  A few of the key ones are listed below." >> $TMPDIR$uuid/settings.md
+echo " "  >> $TMPDIR$uuid/settings.md
+echo "**Search seeds I used after screening and deduplication:**" >> $TMPDIR$uuid/settings.md
+echo " " >> $TMPDIR$uuid/settings.md
+cat $TMPDIR$uuid/seeds/sorted.seedfile | sed G >> $TMPDIR$uuid/settings.md
+echo " " >> $TMPDIR$uuid/settings.md
+echo "**Expand seeds via page title strategy?**" $expand_seeds_to_pages >> $TMPDIR$uuid/settings.md
+echo " " >> $TMPDIR$uuid/settings.md
+echo " " >> $TMPDIR$uuid/settings.md
+
 	if [ "$two1" = "yes" ] ; then
 		echo "This book was purchased via the machine-payable web on the 21.co platform. The app is available at " 'https://21.co/pagekicker/app/term-paper-factory/'"." >>  "$TMPDIR"$uuid/robo_ack.md
 	else
