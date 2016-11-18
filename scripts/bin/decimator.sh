@@ -30,6 +30,8 @@ else
 	echo "read config file from nonlogin shell /home/$(whoami)/.pagekicker/config.txt"
 fi
 
+
+
 . includes/set-variables.sh
 
 echo "running $environment "
@@ -47,9 +49,6 @@ reporttitle="Gist"
 pdfinfile="no"
 pagekicker_tat_url="http://www.pagekicker.com/index.php/tat"
 tldr="none"
-toplabelfontname="WatersTitlingPro-Bd"
-toplabelfont="$toplabelfontname" # must be available font
-bodyfont="ACaslonPro-Bold"
 
 # command line processing
 
@@ -132,7 +131,7 @@ fi
 
 if [ ! "$passuuid" ] ; then
 	echo "creating uuid"
-	uuid=$(python  -c 'import uuid; print uuid.uuid1()')
+	uuid=$(python  -c 'import uuid; print(uuid.uuid1())')
 	echo "uuid is" $uuid | tee --append $xform_log
 	mkdir -p -m 755 $TMPDIR$uuid
 else
@@ -249,7 +248,7 @@ cp $TMPDIR$uuid/dl-0.jpg $TMPDIR$uuid/dl_top_pane.png
 	echo "TL;DR: ""$tldr" > $TMPDIR$uuid/tldr.txt
 	convert -background blue -fill Yellow -gravity west -size 3300x200 -font "$toplabelfont"  caption:"TL;DR" $TMPDIR$uuid/toplabel2.png
 	convert xc:blue -size 3300x200 $TMPDIR$uuid/bottomlabel2.png
-	convert -background white -fill black -gravity west -size 1000x2000 -font "$bodyfont" -pointsize "96" caption:@$TMPDIR$uuid/tldr.txt $TMPDIR$uuid/tldr.png
+	convert -background white -fill black -gravity west -size 1000x2000 -font "$slidebodyfont" -pointsize "96" caption:@$TMPDIR$uuid/tldr.txt $TMPDIR$uuid/tldr.png
 
 
 # create montage of sample image + TLDR
@@ -295,7 +294,7 @@ echo "" >> $TMPDIR$uuid/sumall3.txt
 sed -n 2p $TMPDIR$uuid/pp_summary_all.txt | cut -c 1-450 >> $TMPDIR$uuid/sumall3.txt
 echo "" >> $TMPDIR$uuid/sumall3.txt
 sed -n 3p $TMPDIR$uuid/pp_summary_all.txt | cut -c 1-450 >> $TMPDIR$uuid/sumall3.txt
-convert -background white -fill black -gravity west -size 2000x2000 -font "$bodyfont" -pointsize "64" caption:@$TMPDIR$uuid/sumall3.txt $TMPDIR$uuid/sumall3.png
+convert -background white -fill black -gravity west -size 2000x2000 -font "$slidebodyfont" -pointsize "64" caption:@$TMPDIR$uuid/sumall3.txt $TMPDIR$uuid/sumall3.png
 
 convert -units pixelsperinch -density 300  -background blue -fill Yellow -gravity west -size 3300x200 -font "$toplabelfont"  -pointsize 30 label:"Summary Sentences" $TMPDIR$uuid/sumtop3.png
 convert -units pixelsperinch -density 300 -size 3300x200 xc:blue $TMPDIR$uuid/sumbot3.png
@@ -354,9 +353,9 @@ cat $TMPDIR$uuid/others >> $TMPDIR$uuid/others.txt
 
 echo "(more ...)" | tee --append $TMPDIR$uuid/peoples.txt $TMPDIR$uuid/places.txt $TMPDIR$uuid/others.txt
 
-convert -units pixelsperinch -density 300 -background white -fill black -gravity west -size 800x2000 -font "$bodyfont" -pointsize 22  caption:@$TMPDIR$uuid/peoples.txt $TMPDIR$uuid/people.png
-convert -units pixelsperinch -density 300  -background white -fill black -gravity west -size 800x2000 -font "$bodyfont" -pointsize 22 caption:@$TMPDIR$uuid/places.txt $TMPDIR$uuid/places.png
-convert -units pixelsperinch -density 300 -background white -fill black -gravity west -size 800x2000 -font "$bodyfont" -pointsize 22 caption:@$TMPDIR$uuid/others.txt $TMPDIR$uuid/others.png
+convert -units pixelsperinch -density 300 -background white -fill black -gravity west -size 800x2000 -font "$slidebodyfont" -pointsize 22  caption:@$TMPDIR$uuid/peoples.txt $TMPDIR$uuid/people.png
+convert -units pixelsperinch -density 300  -background white -fill black -gravity west -size 800x2000 -font "$slidebodyfont" -pointsize 22 caption:@$TMPDIR$uuid/places.txt $TMPDIR$uuid/places.png
+convert -units pixelsperinch -density 300 -background white -fill black -gravity west -size 800x2000 -font "$slidebodyfont" -pointsize 22 caption:@$TMPDIR$uuid/others.txt $TMPDIR$uuid/others.png
 
 montage $TMPDIR$uuid/people.png $TMPDIR$uuid/places.png $TMPDIR$uuid/others.png -geometry 800x1600+100+100 -tile 3x1 $TMPDIR$uuid/keywords.png
 

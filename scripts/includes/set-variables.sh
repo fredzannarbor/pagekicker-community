@@ -1,4 +1,3 @@
-
 abstracts="both"
 add_corpora="no"
 add_imprint_biblio="yes"
@@ -131,6 +130,7 @@ singleseed="no"
 singleseedwebformid='"/item/singleseed"'
 sku=`tail -1 < "$LOCAL_DATA""SKUs/sku_list"`
 slash="/"
+slidebodyfont="ACaslonPro-Semibold"  #Decimator
 special_lasts_minutes="43200"
 special_price="0"
 special_to_buffer="2592000"
@@ -150,6 +150,8 @@ thumbxsize=120 #default
 thumbysize=120 #default
 tldr="No tldr"
 top_q="20" # number of nerv lines used divided by 2
+toplabelfont="WatersTitlingPro-Bd" #  #Decimator must be available font
+toplabelfontname="WatersTitlingPro-Bd" #Decimator
 txtformatname=".txt"
 txtwildcard="*.txt"
 type="downloadable"
