@@ -49,6 +49,7 @@ pagekicker_tat_url="http://www.pagekicker.com/index.php/tat"
 tldr="none"
 toplabelfontname="WatersTitlingPro-Bd"
 toplabelfont="$toplabelfontname" # must be available font
+bodyfont="ACaslonPro-Bold"
 
 # command line processing
 
@@ -248,7 +249,7 @@ cp $TMPDIR$uuid/dl-0.jpg $TMPDIR$uuid/dl_top_pane.png
 	echo "TL;DR: ""$tldr" > $TMPDIR$uuid/tldr.txt
 	convert -background blue -fill Yellow -gravity west -size 3300x200 -font "$toplabelfont"  caption:"TL;DR" $TMPDIR$uuid/toplabel2.png
 	convert xc:blue -size 3300x200 $TMPDIR$uuid/bottomlabel2.png
-	convert -background white -fill black -gravity west -size 1000x2000 -pointsize "96" caption:@$TMPDIR$uuid/tldr.txt $TMPDIR$uuid/tldr.png
+	convert -background white -fill black -gravity west -size 1000x2000 -font "$bodyfont" -pointsize "96" caption:@$TMPDIR$uuid/tldr.txt $TMPDIR$uuid/tldr.png
 
 
 # create montage of sample image + TLDR
@@ -289,38 +290,20 @@ fi
 
 # create summary sentence slides
 
-sed -n 1p $TMPDIR$uuid/pp_summary_all.txt | cut -c 1-450 >> $TMPDIR$uuid/sum1.txt
-sed -n 2p $TMPDIR$uuid/pp_summary_all.txt | cut -c 1-450 >> $TMPDIR$uuid/sum2.txt
-sed -n 3p $TMPDIR$uuid/pp_summary_all.txt | cut -c 1-450 >> $TMPDIR$uuid/sum3.txt
-echo -n "..." | tee --append $TMPDIR$uuid/sum1.txt $TMPDIR$uuid/sum2.txt $TMPDIR$uuid/sum3.txt
+sed -n 1p $TMPDIR$uuid/pp_summary_all.txt | cut -c 1-450 >> $TMPDIR$uuid/sumall3.txt
+echo "" >> $TMPDIR$uuid/sumall3.txt
+sed -n 2p $TMPDIR$uuid/pp_summary_all.txt | cut -c 1-450 >> $TMPDIR$uuid/sumall3.txt
+echo "" >> $TMPDIR$uuid/sumall3.txt
+sed -n 3p $TMPDIR$uuid/pp_summary_all.txt | cut -c 1-450 >> $TMPDIR$uuid/sumall3.txt
+convert -background white -fill black -gravity west -size 2000x2000 -font "$bodyfont" -pointsize "64" caption:@$TMPDIR$uuid/sumall3.txt $TMPDIR$uuid/sumall3.png
 
-convert -background white -fill black -gravity west -size 2000x2000 -pointsize "64" caption:@$TMPDIR$uuid/sum1.txt $TMPDIR$uuid/sum1.png
-convert -background white -fill black -gravity west -size 2000x2000  caption:@$TMPDIR$uuid/sum2.txt $TMPDIR$uuid/sum2.png
-convert -background white -fill black -gravity west -size 2000x2000  -pointsize "64" caption:@$TMPDIR$uuid/sum3.txt $TMPDIR$uuid/sum3.png
-
-convert -units pixelsperinch -density 300  -background blue -fill Yellow -gravity west -size 3300x200 -font "$toplabelfont" -pointsize 30 label:"Sample Sentence 1 of 3" $TMPDIR$uuid/sumtop1.png
-convert -units pixelsperinch -density 300 -size 3300x200 xc:blue $TMPDIR$uuid/sumbot1.png
-convert -units pixelsperinch -density 300 $TMPDIR$uuid/canvas.png \
-$TMPDIR$uuid/sumtop1.png -gravity north -composite \
-$TMPDIR$uuid/sum1.png -gravity center -composite \
-$TMPDIR$uuid/sumbot1.png -gravity south -composite \
-$TMPDIR$uuid/sum1.png
-
-convert -units pixelsperinch -density 300  -background blue -fill Yellow -gravity west -size 3300x200  -font "$toplabelfont" -pointsize 30 label:"Sample Sentence 2 of 3" $TMPDIR$uuid/sumtop2.png
-convert -units pixelsperinch -density 300 -size 3300x200 xc:blue $TMPDIR$uuid/sumbot2.png
-convert -units pixelsperinch -density 300 $TMPDIR$uuid/canvas.png \
-$TMPDIR$uuid/sumtop2.png -gravity north -composite \
-$TMPDIR$uuid/sum2.png -gravity center -composite \
-$TMPDIR$uuid/sumbot2.png -gravity south -composite \
-$TMPDIR$uuid/sum2.png
-
-convert -units pixelsperinch -density 300  -background blue -fill Yellow -gravity west -size 3300x200 -font "$toplabelfont"  -pointsize 30 label:"Sample Sentence 3 of 3" $TMPDIR$uuid/sumtop3.png
+convert -units pixelsperinch -density 300  -background blue -fill Yellow -gravity west -size 3300x200 -font "$toplabelfont"  -pointsize 30 label:"Summary Sentences" $TMPDIR$uuid/sumtop3.png
 convert -units pixelsperinch -density 300 -size 3300x200 xc:blue $TMPDIR$uuid/sumbot3.png
 convert -units pixelsperinch -density 300 $TMPDIR$uuid/canvas.png \
 $TMPDIR$uuid/sumtop3.png -gravity north -composite \
-$TMPDIR$uuid/sum3.png -gravity center -composite \
+$TMPDIR$uuid/sumall3.png -gravity center -composite \
 $TMPDIR$uuid/sumbot3.png -gravity south -composite \
-$TMPDIR$uuid/sum3.png
+$TMPDIR$uuid/sumall3.png
 
 # burst slide
 
@@ -336,7 +319,6 @@ $TMPDIR$uuid/burst_top.png -gravity north -composite \
 $TMPDIR$uuid/big_burst.png -gravity center -composite \
 $TMPDIR$uuid/burst_bot.png -gravity south -composite \
 $TMPDIR$uuid/pageburst.png
-
 
 # sample pages slide
 
@@ -372,9 +354,9 @@ cat $TMPDIR$uuid/others >> $TMPDIR$uuid/others.txt
 
 echo "(more ...)" | tee --append $TMPDIR$uuid/peoples.txt $TMPDIR$uuid/places.txt $TMPDIR$uuid/others.txt
 
-convert -units pixelsperinch -density 300 -background white -fill black -gravity west -size 800x1600 -pointsize 22  caption:@$TMPDIR$uuid/peoples.txt $TMPDIR$uuid/people.png
-convert -units pixelsperinch -density 300  -background white -fill black -gravity west -size 800x1600 -pointsize 22 caption:@$TMPDIR$uuid/places.txt $TMPDIR$uuid/places.png
-convert -units pixelsperinch -density 300 -background white -fill black -gravity west -size 800x1600 -pointsize 22 caption:@$TMPDIR$uuid/others.txt $TMPDIR$uuid/others.png
+convert -units pixelsperinch -density 300 -background white -fill black -gravity west -size 800x2000 -font "$bodyfont" -pointsize 22  caption:@$TMPDIR$uuid/peoples.txt $TMPDIR$uuid/people.png
+convert -units pixelsperinch -density 300  -background white -fill black -gravity west -size 800x2000 -font "$bodyfont" -pointsize 22 caption:@$TMPDIR$uuid/places.txt $TMPDIR$uuid/places.png
+convert -units pixelsperinch -density 300 -background white -fill black -gravity west -size 800x2000 -font "$bodyfont" -pointsize 22 caption:@$TMPDIR$uuid/others.txt $TMPDIR$uuid/others.png
 
 montage $TMPDIR$uuid/people.png $TMPDIR$uuid/places.png $TMPDIR$uuid/others.png -geometry 800x1600+100+100 -tile 3x1 $TMPDIR$uuid/keywords.png
 
@@ -416,9 +398,20 @@ echo "  " >> $TMPDIR$uuid/moreinfo.md
 echo "[Additional analysis tools at "$pagekicker_tat_url"]($pagekicker_tat_url)" >> $TMPDIR$uuid/moreinfo.md
 "$PANDOC_BIN" -t beamer -V theme:AnnArbor --latex-engine=xelatex $TMPDIR$uuid/moreinfo.md -o $TMPDIR$uuid/moreinfo.pdf
 
+# convert images into slide deck
 
-convert -units pixelsperinch -density 300 $TMPDIR$uuid/home.png  $TMPDIR$uuid/wordcloudslide.png $TMPDIR$uuid/sum1.png $TMPDIR$uuid/sum2.png $TMPDIR$uuid/sum3.png $TMPDIR$uuid/pageburst.png $TMPDIR$uuid/pages.png $TMPDIR$uuid/montage.png $TMPDIR$uuid/keywords.png $TMPDIR$uuid/rrslide.png  -size 3300x2550 $TMPDIR$uuid/slidedeck.pdf
+convert -units pixelsperinch -density 300 \
+$TMPDIR$uuid/home.png  $TMPDIR$uuid/wordcloudslide.png \
+ $TMPDIR$uuid/pages.png \
+ $TMPDIR$uuid/pageburst.png \
+ $TMPDIR$uuid/montage.png \
+ $TMPDIR$uuid/sumall3.png \
+ $TMPDIR$uuid/keywords.png \
+ $TMPDIR$uuid/rrslide.png  \
+ -size 3300x2550 \
+ $TMPDIR$uuid/slidedeck.pdf
 
+# add
 pdftk $TMPDIR$uuid/slidedeck.pdf $TMPDIR$uuid/moreinfo.pdf cat output $TMPDIR$uuid/slides.pdf
 
 
