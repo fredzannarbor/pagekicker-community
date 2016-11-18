@@ -8,7 +8,7 @@
 # output: unique jpgs, zip, montage
 
 if shopt -q  login_shell ; then
-	
+
 	if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
 		echo "config file not found, creating /home/<user>/.pagekicker, put config file there"
 		mkdir -p -m 755 "$HOME"/.pagekicker
@@ -19,7 +19,7 @@ if shopt -q  login_shell ; then
 		echo "read config file from $HOME""/.pagekicker/config.txt"
 	fi
 else
-	. /home/$(whoami)/.pagekicker/config.txt #hard-coding /home is a hack 
+	. /home/$(whoami)/.pagekicker/config.txt #hard-coding /home is a hack
 	echo "read config file from /home/$(whoami)/.pagekicker/config.txt"
 fi
 
@@ -137,6 +137,7 @@ if [ ! "$passuuid" ] ; then
 else
 	uuid=$passuuid
 	echo "received uuid " $uuid
+	mkdir -p -m 755 $TMPDIR$uuid/montageur
 fi
 
 stopimagefolder="none" #default
@@ -153,7 +154,7 @@ if [ ls *.pbm &> /dev/null ] ; then
 	for f in $TMPDIR$uuid/"$montageurdir"/extracted_images*.pbm; do
 	  convert ./"$f" ./"${f%.pbm}.ppm"
 	done
-else 
+else
 	echo "no pbm files" | tee --append $xform_log
 fi
 
@@ -176,7 +177,7 @@ echo "removing ppm files"
  if [ ls *.pbm &> /dev/null ] ; then
 	echo "removing pbm files"
 	# rm $TMPDIR$uuid/"$montageurdir"/extracted_images*.pbm
-else 
+else
 	echo "no pbm files" | tee --append $xform_log
 fi
 
@@ -228,7 +229,7 @@ else
 
 fi
 
-zip $TMPDIR$uuid/"$montageurdir"/extracted_images.zip $TMPDIR$uuid/"$montageurdir"/extracted_images*.jpg 
+zip $TMPDIR$uuid/"$montageurdir"/extracted_images.zip $TMPDIR$uuid/"$montageurdir"/extracted_images*.jpg
 
 echo "$pdfinfile is pdfinfile"
 ls -la $TMPDIR$uuid
@@ -240,7 +241,7 @@ pdftk "$pdfinfile" dump_data output | grep -E "Figure*|Table*|Map*|Illustration*
 montage -density 300 -units pixelsperinch $TMPDIR$uuid/"$montageurdir"/extracted_images*.jpg -geometry '800x800>+4+3' $TMPDIR$uuid/"$montageurdir"/$outfile
 cp $TMPDIR$uuid/"$montageurdir"/$outfile $TMPDIR$uuid/$outfile
 
-montage -density 300 -units pixelsperinch $TMPDIR$uuid/"$montageurdir"/extracted_images*.jpg -tile 3x4 -geometry '800x800>+3+4' $TMPDIR$uuid/"$montageurdir"/portrait_%d.jpg 
+montage -density 300 -units pixelsperinch $TMPDIR$uuid/"$montageurdir"/extracted_images*.jpg -tile 3x4 -geometry '800x800>+3+4' $TMPDIR$uuid/"$montageurdir"/portrait_%d.jpg
 cp -R $TMPDIR$uuid/"$montageurdir"/portrait* $TMPDIR$uuid
 
 # build optional top N images montage
@@ -258,10 +259,9 @@ if [ "$maximages" != "no" ] ; then
 
 	montage -density 300 -units pixelsperinch $TMPDIR$uuid/montageurtopn/extracted_images*.jpg -geometry '2150x900>+4+3' -tile 1x"$maximages" $TMPDIR$uuid/montageurtopn/montagetopn.jpg
 
-else 
+else
 	echo "not building top N images montage" | tee --append $xform_log
 
 fi
 
 echo "montageur complete"  | tee --append $xform_log
-
