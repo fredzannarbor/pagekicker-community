@@ -245,11 +245,15 @@ cp $TMPDIR$uuid/dl-0.jpg $TMPDIR$uuid/dl_top_pane.png
 
 # tldr
 
+if [ -z "$tldr"] ; then
+	echo "no tldr supplied, generate automatically"
+else
+	echo "operator supplied tldr"
 	echo "TL;DR: ""$tldr" > $TMPDIR$uuid/tldr.txt
 	convert -background blue -fill Yellow -gravity west -size 3300x200 -font "$toplabelfont"  caption:"TL;DR" $TMPDIR$uuid/toplabel2.png
 	convert xc:blue -size 3300x200 $TMPDIR$uuid/bottomlabel2.png
 	convert -background white -fill black -gravity west -size 1000x2000 -font "$slidebodyfont" -pointsize "96" caption:@$TMPDIR$uuid/tldr.txt $TMPDIR$uuid/tldr.png
-
+fi
 
 # create montage of sample image + TLDR
 
@@ -353,11 +357,11 @@ cat $TMPDIR$uuid/others >> $TMPDIR$uuid/others.txt
 
 echo "(more ...)" | tee --append $TMPDIR$uuid/peoples.txt $TMPDIR$uuid/places.txt $TMPDIR$uuid/others.txt
 
-convert -units pixelsperinch -density 300 -background white -fill black -gravity west -size 800x2000 -font "$slidebodyfont" -pointsize 22  caption:@$TMPDIR$uuid/peoples.txt $TMPDIR$uuid/people.png
-convert -units pixelsperinch -density 300  -background white -fill black -gravity west -size 800x2000 -font "$slidebodyfont" -pointsize 22 caption:@$TMPDIR$uuid/places.txt $TMPDIR$uuid/places.png
-convert -units pixelsperinch -density 300 -background white -fill black -gravity west -size 800x2000 -font "$slidebodyfont" -pointsize 22 caption:@$TMPDIR$uuid/others.txt $TMPDIR$uuid/others.png
+convert -units pixelsperinch -density 300 -background white -fill black -gravity northwest -size 800x2000 -font "$slidebodyfont" -pointsize 22  caption:@$TMPDIR$uuid/peoples.txt $TMPDIR$uuid/people.png
+convert -units pixelsperinch -density 300  -background white -fill black -gravity northwest -size 800x2000 -font "$slidebodyfont" -pointsize 22 caption:@$TMPDIR$uuid/places.txt $TMPDIR$uuid/places.png
+convert -units pixelsperinch -density 300 -background white -fill black -gravity northwest -size 800x2000 -font "$slidebodyfont" -pointsize 22 caption:@$TMPDIR$uuid/others.txt $TMPDIR$uuid/others.png
 
-montage $TMPDIR$uuid/people.png $TMPDIR$uuid/places.png $TMPDIR$uuid/others.png -geometry 800x1600+100+100 -tile 3x1 $TMPDIR$uuid/keywords.png
+montage $TMPDIR$uuid/people.png $TMPDIR$uuid/places.png $TMPDIR$uuid/others.png -gravity north -geometry 800x1600+100+100 -tile 3x1 $TMPDIR$uuid/keywords.png
 
 
 convert -units pixelsperinch -density 300  -background blue -fill Yellow -gravity west -size 3300x200  -font "$toplabelfont" -pointsize 30 label:"Keywords" $TMPDIR$uuid/keytop.png
