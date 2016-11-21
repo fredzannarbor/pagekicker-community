@@ -245,11 +245,15 @@ cp $TMPDIR$uuid/dl-0.jpg $TMPDIR$uuid/dl_top_pane.png
 
 # tldr
 
+if [ -z "$tldr" ] ; then
+	echo "no tldr supplied, generate automatically"
+else
+	echo "operator supplied tldr"
 	echo "TL;DR: ""$tldr" > $TMPDIR$uuid/tldr.txt
 	convert -background blue -fill Yellow -gravity west -size 3300x200 -font "$toplabelfont"  caption:"TL;DR" $TMPDIR$uuid/toplabel2.png
 	convert xc:blue -size 3300x200 $TMPDIR$uuid/bottomlabel2.png
 	convert -background white -fill black -gravity west -size 1000x2000 -font "$slidebodyfont" -pointsize "96" caption:@$TMPDIR$uuid/tldr.txt $TMPDIR$uuid/tldr.png
-
+fi
 
 # create montage of sample image + TLDR
 
@@ -289,12 +293,8 @@ fi
 
 # create summary sentence slides
 
-sed -n 1p $TMPDIR$uuid/pp_summary_all.txt | cut -c 1-450 >> $TMPDIR$uuid/sumall3.txt
-echo "" >> $TMPDIR$uuid/sumall3.txt
-sed -n 2p $TMPDIR$uuid/pp_summary_all.txt | cut -c 1-450 >> $TMPDIR$uuid/sumall3.txt
-echo "" >> $TMPDIR$uuid/sumall3.txt
-sed -n 3p $TMPDIR$uuid/pp_summary_all.txt | cut -c 1-450 >> $TMPDIR$uuid/sumall3.txt
-convert -background white -fill black -gravity west -size 2000x2000 -font "$slidebodyfont" -pointsize "64" caption:@$TMPDIR$uuid/sumall3.txt $TMPDIR$uuid/sumall3.png
+sed -n 1,5p $TMPDIR$uuid/pp_summary_all.txt | cut -c 1-450 >> $TMPDIR$uuid/sumall.txt
+convert -background white -fill black -gravity west -size 2000x2000 -font "$slidebodyfont" -pointsize "64" caption:@$TMPDIR$uuid/sumall.txt $TMPDIR$uuid/sumall3.png
 
 convert -units pixelsperinch -density 300  -background blue -fill Yellow -gravity west -size 3300x200 -font "$toplabelfont"  -pointsize 30 label:"Summary Sentences" $TMPDIR$uuid/sumtop3.png
 convert -units pixelsperinch -density 300 -size 3300x200 xc:blue $TMPDIR$uuid/sumbot3.png
@@ -339,9 +339,9 @@ $TMPDIR$uuid/pages.png
 
 #clean up markdown of keyword files
 
-sed '/^$/d' $TMPDIR$uuid/People | sed 's/^/-/' | head -8  > $TMPDIR$uuid/peoples
-sed '/^$/d' $TMPDIR$uuid/Places | sed 's/^/-/' | head -8 > $TMPDIR$uuid/places
-sed '/^$/d' $TMPDIR$uuid/Other | sed 's/^/-/' | head -8 > $TMPDIR$uuid/others
+sed '/^$/d' $TMPDIR$uuid/People | sed 's/^/-/' | head -12  > $TMPDIR$uuid/peoples
+sed '/^$/d' $TMPDIR$uuid/Places | sed 's/^/-/' | head -12 > $TMPDIR$uuid/places
+sed '/^$/d' $TMPDIR$uuid/Other | sed 's/^/-/' | head -12 > $TMPDIR$uuid/others
 
 echo "People:" >> $TMPDIR$uuid/peoples.txt
 echo "Places:" >> $TMPDIR$uuid/places.txt
@@ -353,11 +353,11 @@ cat $TMPDIR$uuid/others >> $TMPDIR$uuid/others.txt
 
 echo "(more ...)" | tee --append $TMPDIR$uuid/peoples.txt $TMPDIR$uuid/places.txt $TMPDIR$uuid/others.txt
 
-convert -units pixelsperinch -density 300 -background white -fill black -gravity west -size 800x2000 -font "$slidebodyfont" -pointsize 22  caption:@$TMPDIR$uuid/peoples.txt $TMPDIR$uuid/people.png
-convert -units pixelsperinch -density 300  -background white -fill black -gravity west -size 800x2000 -font "$slidebodyfont" -pointsize 22 caption:@$TMPDIR$uuid/places.txt $TMPDIR$uuid/places.png
-convert -units pixelsperinch -density 300 -background white -fill black -gravity west -size 800x2000 -font "$slidebodyfont" -pointsize 22 caption:@$TMPDIR$uuid/others.txt $TMPDIR$uuid/others.png
-
-montage $TMPDIR$uuid/people.png $TMPDIR$uuid/places.png $TMPDIR$uuid/others.png -geometry 800x1600+100+100 -tile 3x1 $TMPDIR$uuid/keywords.png
+convert -units pixelsperinch -density 300 -background white -fill black -gravity northwest -size 1000x1850 -pointsize 24  -font "$slidebodyfont" caption:@$TMPDIR$uuid/peoples.txt $TMPDIR$uuid/people.png
+convert -units pixelsperinch -density 300  -background white -fill black -gravity northwest -size 1000x1850 -pointsize 24 -font "$slidebodyfont"  caption:@$TMPDIR$uuid/places.txt $TMPDIR$uuid/places.png
+convert -units pixelsperinch -density 300 -background white -fill black -gravity northwest -size 1000x1850 -pointsize 24 -font "$slidebodyfont" caption:@$TMPDIR$uuid/others.txt $TMPDIR$uuid/others.png
+convert -units pixelsperinch -density 300 -background white -fill black -gravity west +append $TMPDIR$uuid/people.png $TMPDIR$uuid/places.png $TMPDIR$uuid/others.png $TMPDIR$uuid/keywords.png
+#montage $TMPDIR$uuid/people.png $TMPDIR$uuid/places.png $TMPDIR$uuid/others.png -gravity north -geometry 800x1900+1+1 -tile 3x1 $TMPDIR$uuid/keywords.png
 
 
 convert -units pixelsperinch -density 300  -background blue -fill Yellow -gravity west -size 3300x200  -font "$toplabelfont" -pointsize 30 label:"Keywords" $TMPDIR$uuid/keytop.png
@@ -381,21 +381,16 @@ cat $TMPDIR$uuid/rr.txt >> $TMPDIR$uuid/rr.md
 cat assets/rr_decimator_explanation.md >> $TMPDIR$uuid/rr.md
 sed -i G $TMPDIR$uuid/rr.md
 "$PANDOC_BIN" $TMPDIR$uuid/rr.md -o $TMPDIR$uuid/rr.txt
-convert -units pixelsperinch -density 300 -size 3100x2000 -background white -fill black label:@$TMPDIR$uuid/rr.txt $TMPDIR$uuid/rr.png
-convert -units pixelsperinch -density 300  -background blue -fill Yellow -gravity west -size 3300x200 -font "$toplabelfont" -pointsize 30 caption:"Readability Report" $TMPDIR$uuid/toplabel9.png
+convert -background white -fill black -gravity west -size 2000x2000 -font "$slidebodyfont" -pointsize "64" caption:@$TMPDIR$uuid/rr.txt $TMPDIR$uuid/rr.png
+convert -units pixelsperinch -density 300  -background blue -fill Yellow -gravity west\
+  -size 3300x200 -font "$toplabelfont" -pointsize 30 caption:"Readability Report" \
+	$TMPDIR$uuid/toplabel9.png
 convert -units pixelsperinch -density 300 xc:blue -size 3300x200 $TMPDIR$uuid/bottomlabel9.png
 convert -units pixelsperinch -density 300 $TMPDIR$uuid/canvas.png \
 $TMPDIR$uuid/toplabel9.png -gravity north -composite \
 $TMPDIR$uuid/rr.png -gravity center -composite \
 $TMPDIR$uuid/bottomlabel9.png -gravity south -composite \
 $TMPDIR$uuid/rrslide.png
-
-
-echo "# Bonus Slide: Learn More About This PDF" >> $TMPDIR$uuid/moreinfo.md
-echo " Read the full text at ["$pdfurl"]("$pdfurl')' >> $TMPDIR$uuid/moreinfo.md
-echo "  " >> $TMPDIR$uuid/moreinfo.md
-echo "[Additional analysis tools at "$pagekicker_tat_url"]($pagekicker_tat_url)" >> $TMPDIR$uuid/moreinfo.md
-"$PANDOC_BIN" -t beamer -V theme:AnnArbor --latex-engine=xelatex $TMPDIR$uuid/moreinfo.md -o $TMPDIR$uuid/moreinfo.pdf
 
 # convert images into slide deck
 
@@ -409,9 +404,5 @@ $TMPDIR$uuid/home.png  $TMPDIR$uuid/wordcloudslide.png \
  $TMPDIR$uuid/rrslide.png  \
  -size 3300x2550 \
  $TMPDIR$uuid/slidedeck.pdf
-
-# add
-pdftk $TMPDIR$uuid/slidedeck.pdf $TMPDIR$uuid/moreinfo.pdf cat output $TMPDIR$uuid/slides.pdf
-
 
 # publish this slide to slideshare?

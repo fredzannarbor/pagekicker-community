@@ -1,2 +1,3 @@
 #!/bin/bash
-bin/decimator.sh --pdfinfile ../test/data/mid_century_strategy_report-final.pdf --outdir scr --tldr "Last gasp for Obama admin"
+# usage  decimator.sh "$1" "$2"
+bin/decimator.sh --pdfinfile "$1" --outdir scr --tldr "$2"
