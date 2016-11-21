@@ -405,4 +405,15 @@ $TMPDIR$uuid/home.png  $TMPDIR$uuid/wordcloudslide.png \
  -size 3300x2550 \
  $TMPDIR$uuid/slidedeck.pdf
 
+ sendemail -t "$customer_email" \
+ -u "Decimator Result" \
+ -m "PageKicker's Document Analysis Robots living on "$MACHINE_NAME "and using version " $SFB_VERSION " of the PageKicker software have analyzed your file " $uploaded_tat_file " in job" $uuid \
+ 		 ".  The Decimator slide deck is attached here."  \
+ -f "$GMAIL_ID" \
+ -cc "$GMAIL_ID" \
+ -xu "$GMAIL_ID" \
+ -xp "$GMAIL_PASSWORD" \
+ -s smtp.gmail.com:587 \
+ -o tls=yes \
+ -a $TMPDIR$uuid/slidedeck.pdf
 # publish this slide to slideshare?
