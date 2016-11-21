@@ -12,7 +12,7 @@
 #defaults before command line
 
 if shopt -q  login_shell ; then
-	
+
 	if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
 		echo "config file not found, creating /home/<user>/.pagekicker, put config file there"
 		mkdir -p -m 755 "$HOME"/.pagekicker
@@ -23,7 +23,7 @@ if shopt -q  login_shell ; then
 		echo "read config file from login shell $HOME""/.pagekicker/config.txt"
 	fi
 else
-	. /home/$(whoami)/.pagekicker/config.txt #hard-coding /home is a hack 
+	. /home/$(whoami)/.pagekicker/config.txt #hard-coding /home is a hack
 	echo "read config file from nonlogin shell /home/$(whoami)/.pagekicker/config.txt"
 fi
 
@@ -275,18 +275,19 @@ echo "positive_seed_weight was" $positive_seed_weight| tee --append $sfb_log
 echo "negative_seeds were" $negative_seeds| tee --append $sfb_log
 echo "negative_seed_weight was "$negative_seed_weight| tee --append $sfb_log
 echo "summarizer_ngram_threshold was" $summarizer_ngram_threshold| tee --append $sfb_log
-echo "url to fetch is" $url | tee --append $sfb_log        
+echo "url to fetch is" $url | tee --append $sfb_log
+echo "decimator_requested is " $decimator_requested
 imagekeyword=$(xmlstarlet sel -t -v "/item/imagekeyword" "$xmlfilename")
 
-. "$confdir"jobprofiles/robots/"$jobprofilename"".jobprofile"
-. "$confdir"jobprofiles/imprints/$imprint/$imprint".imprint"
+#. "$confdir"jobprofiles/robots/"$jobprofilename"".jobprofile"
+#. "$confdir"jobprofiles/imprints/$imprint/$imprint".imprint"
 echo "$jobprofile"
 echo "$imprint"
 echo $WEBFORMSXML_HOME
 
 export LANG
 
-if [ -n "$url" ] ; then 
+if [ -n "$url" ] ; then
 	echo "downloading file" $url " from Internet" | tee --append $sfb_log
 	wget --tries=45 "$url" -O $TMPDIR$uuid/downloaded_wget_file.pdf
 
@@ -295,15 +296,28 @@ else
 	echo "uploaded file" $uploaded_tat_file "from user's computer" | tee --append $sfb_log
 
 fi
+echo "checking $decimator_requested"
+
+if [ "$decimator_requested" = "Decimator only" ] ; then
+	upload_tat_field_code="521" # hard bound to PK magento production installation - fix
+  echo $upload_tat_field_code
+elif [ "$decimator_requested" = "Include Decimator" ] ; then
+	upload_tat_field_code="300"
+else
+	upload_tat_field_code="300"
+fi
 
 a=$submissionid
 submissionid_base="${a%.*}"
 echo "submissionid_base is" $submissionid_base
+echo "uploaded_tat_file is "$uploaded_tat_file
+
+
 if  [ -z "$url" ] ; then
 	echo "WEBFORMSHOME is" $WEBFORMSHOME
 
-	cp $WEBFORMSHOME$submissionid_base/300/*/$uploaded_tat_file $TMPDIR$uuid/$uploaded_tat_file 
-	cp $WEBFORMSHOME$submissionid_base/300/*/$uploaded_tat_file $scriptpath/scr/debug
+	cp $WEBFORMSHOME$submissionid_base/$upload_tat_field_code/*/$uploaded_tat_file $TMPDIR$uuid/$uploaded_tat_file
+	cp $WEBFORMSHOME$submissionid_base/$upload_tat_field_code/*/$uploaded_tat_file $scriptpath/scr/debug
 
 else
 
@@ -312,10 +326,12 @@ else
 
 fi
 
+
+
 if [ "$decimator_requested" = "Decimator only" ] ; then
 	echo "running Decimator only"
 	mkdir -p -m 755 $TMPDIR$uuid/decimator
-	bin/decimator.sh --pdffile "$TMPDIR$uuid/$uploaded_tat_file" --outdir "$TMPDIR$uuid/decimator" --passuuid "$uuid" --tldr "$tldr"
+	bin/decimator.sh --pdfinfile "$TMPDIR$uuid/$uploaded_tat_file" --outdir "$TMPDIR$uuid/decimator" --passuuid "$uuid" --tldr "$tldr"
 	sendemail -t "$customer_email" \
 	-u "Decimator Result" \
 	-m "PageKicker's Document Analysis Robots living on "$MACHINE_NAME "and using version " $SFB_VERSION " of the PageKicker software have analyzed your file " $uploaded_tat_file " in job" $uuid \
@@ -331,7 +347,7 @@ if [ "$decimator_requested" = "Decimator only" ] ; then
 	exit 0
 elif [ "$decimator_requested" = "Include Decimator" ] ; then
 	echo "running Decimator,then rest of TAT"
-	bin/decimator.sh --pdffile "$TMPDIR$uuid/$uploaded_tat_file" --outdir "$TMPDIR$uuid/decimator"
+	bin/decimator.sh --pdfinfile "$TMPDIR$uuid/$uploaded_tat_file" --outdir "$TMPDIR$uuid/decimator"
 else
 	echo "Decimator off, proceeding with TAT"
 fi
@@ -537,7 +553,7 @@ fi
 cp assets/PageKicker_cmyk300dpi.png $TMPDIR$uuid/PageKicker_cmyk300dpi.png
 cp "$confdir"jobprofiles/imprints/$imprint/$imprintlogo $TMPDIR$uuid/$imprintlogo
 
-if [ "$frontmatter" = "off" ] ; then 
+if [ "$frontmatter" = "off" ] ; then
 
 	echo "not building front matter" | tee --append $sfb_log
 else
@@ -555,7 +571,7 @@ else
 # build wordcloud page
 
 
-	convert -size 2550x3300 xc:white $TMPDIR$uuid/wc_canvas.jpg 
+	convert -size 2550x3300 xc:white $TMPDIR$uuid/wc_canvas.jpg
 	convert $TMPDIR$uuid/wc_canvas.jpg $TMPDIR$uuid/wc_front.png -resize 2550x3300 -density 300 -gravity center -composite $TMPDIR$uuid/wordcloud.pdf
 
 	echo "about to build title page"
@@ -564,8 +580,8 @@ else
 	echo "# "$editedby >> $TMPDIR$uuid/titlepage.md
 	echo "# Enhanced with Text Analytics by PageKicker Robot" $jobprofilename >> $TMPDIR$uuid/titlepage.md
 
-	#if [ -z ${tldr+x} ]; 
-	#	then echo "tldr is unset"; 
+	#if [ -z ${tldr+x} ];
+	#	then echo "tldr is unset";
 	#else
 	#	echo "# " 'TL;DR:' "$tldr" >> $TMPDIR$uuid/titlepage.md
 	#fi
@@ -614,18 +630,18 @@ else
 	# add wordcloud page to front matter
 
 
-	if [ "$montageur_success" = 0 ] ; then 
+	if [ "$montageur_success" = 0 ] ; then
 
 		pdftk $TMPDIR$uuid/textfrontmatter.pdf $TMPDIR$uuid/wordcloud.pdf  output $TMPDIR$uuid/$uuid"_frontmatter.pdf"
 	# temporarily removed $TMPDIR$uuid/portraits.pdf from front matter as does not seem overly useful
-  
+
 	else
 
 		pdftk $TMPDIR$uuid/textfrontmatter.pdf $TMPDIR$uuid/wordcloud.pdf output $TMPDIR$uuid/$uuid"_frontmatter.pdf"
 
 	fi
 
-	echo "appended PDF wordcloud page to PDF front matter"	
+	echo "appended PDF wordcloud page to PDF front matter"
 
 	# add front matter to complete text
 
@@ -641,7 +657,7 @@ if [ "$backmatter" = "off" ] ; then
 	echo "not building back matter" | tee --append $sfb_log
 else
 
-	# build back matter beginning with flickr 
+	# build back matter beginning with flickr
 
 	if [ "$flickr" = "on" ] ; then
 
@@ -658,7 +674,7 @@ else
 		"$PANDOC_BIN" -o images.pdf allflickr.md
 		cd $scriptpath
 		echo "converted flickr md files to pdf pages with images" | tee --append $sfb_log
-		
+
 	else
 		echo "didn't  process flickr files" | tee --append $sfb_log
 	fi
@@ -669,7 +685,7 @@ else
 
 		sed sed -e '/^$/d' -e '/^[0-9#@]/d' $TMPDIR$uuid/all_nouns.txt | sort | uniq -i > $TMPDIR$uuid/seeds #filters out numeric
 		"$PYTHON_BIN" bin/wikifetcher.py --infile "$TMPDIR$uuid/seeds" --outfile "$TMPDIR$uuid/wikisummaries.md" --lang "en" 1> /dev/null
-		cp $TMPDIR$uuid/wikisummaries.md $TMPDIR$uuid/original.md 
+		cp $TMPDIR$uuid/wikisummaries.md $TMPDIR$uuid/original.md
 		sed -e s/\=\=\=\=/xyxyxyxy/g -e s/\=\=\=/xyxyxy/g -e s/\=\=/xyxy/g -e s/xyxyxyxy/\#\#\#\#/g -e s/xyxyxy/\#\#\#/g -e s/xyxy/\#\#/g $TMPDIR$uuid/wikisummaries.md > $TMPDIR$uuid/wikiall.md
 		grep -v '\\x' $TMPDIR$uuid/wikiall.md > $TMPDIR$uuid/wikisafe.md # stripping certain escape characters
 		cp $TMPDIR$uuid/wikisafe.md $TMPDIR$uuid/wikisummaries.md
@@ -719,8 +735,8 @@ if [ "$getwiki" = "yes" ] ; then
 	sorted_uniqs.md \
 	wikisummaries.md
 
-else 
-  
+else
+
 	"$PANDOC_BIN" -s -S -o research_report.docx titlepage.md \
 	"$imprintcopyrightpage" \
 	robot_author.md \
@@ -772,9 +788,9 @@ cat includes/builder-metadata-header.csv > $metadatatargetpath$uuid/"current-imp
 # take a number if you are planning to import
 
 import="yes"
-if [ "$import" = "yes" ] ; then 
+if [ "$import" = "yes" ] ; then
 
-	echo "adding import job to the manifest" 
+	echo "adding import job to the manifest"
 
 	echo "$uuid" >> import_status/manifest.csv
 
@@ -783,7 +799,7 @@ if [ "$import" = "yes" ] ; then
 
 else
 
-	echo "not importing this job" 
+	echo "not importing this job"
 
 fi
 
@@ -851,7 +867,7 @@ sendemail -t "$customer_email" \
 	-a $TMPDIR$uuid/montage.jpg \
 	-a $TMPDIR$uuid/montagetopn.jpg
 
-else	
+else
 
 sendemail -t "$customer_email" \
 	-u "Document Analysis Tools Result" \
@@ -870,7 +886,7 @@ sendemail -t "$customer_email" \
 	-a $TMPDIR$uuid/acronyms.txt \
 	-a $logdir$uuid/xform_log \
 	-a $TMPDIR$uuid/research_report.docx \
-	-a $TMPDIR$uuid/rr.md 
+	-a $TMPDIR$uuid/rr.md
 
 
 fi

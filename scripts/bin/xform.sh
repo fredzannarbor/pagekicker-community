@@ -1,13 +1,13 @@
  #!/bin/bash
 
-# file path for file attachments must be hard coded 
+# file path for file attachments must be hard coded
 # to match the magento file structure & specifically webform field #
 
 # requires inotify to alert that xml file has been created by the Magento webforms plugin and deposited in the correct directory
 # which is set by incrontab command for the bitnami user
 
 if shopt -q  login_shell ; then
-	
+
 	if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
 		echo "config file not found, creating /home/<user>/.pagekicker, put config file there"
 		mkdir -p -m 755 "$HOME"/.pagekicker
@@ -18,7 +18,7 @@ if shopt -q  login_shell ; then
 		echo "read config file from $HOME""/.pagekicker/config.txt"
 	fi
 else
-	. /home/$(whoami)/.pagekicker/config.txt #hard-coding /home is a hack 
+	. /home/$(whoami)/.pagekicker/config.txt #hard-coding /home is a hack
 	echo "read config file from /home/$(whoami)/.pagekicker/config.txt"
 fi
 
@@ -27,16 +27,16 @@ datenow=$(date -R)
 
 # parse the command-line very stupidly
 
-xmldirectoryname=$1 
-xmlbasefile=$2 
+xmldirectoryname=$1
+xmlbasefile=$2
 echo "parameter 1 is" $1
 echo  "parameter 2 is" $2
 xmlfilename=$xmldirectoryname/$xmlbasefile
 
-echo "loaded" $environment "config file at " $datenow  
+echo "loaded" $environment "config file at " $datenow
 
 uuid=$("$PYTHON_BIN"  -c 'import uuid; print(uuid.uuid1())')
-mkdir -p -m 755 $logdir$uuid 
+mkdir -p -m 755 $logdir$uuid
 xform_log=$logdir$uuid/"xform_log"
 echo "XXXXXXXXXX" | tee --append $xform_log
 echo "xmlfilename provided by webforms is" $xmlfilename | tee --append $xform_log
@@ -52,7 +52,7 @@ echo "sku" $sku | tee --append $xform_log
 echo "$0 version in $environment" "is" $SFB_VERSION | tee --append $xform_log
 
 cd $scriptpath
-echo "scriptpath is" $scriptpath 
+echo "scriptpath is" $scriptpath
 
 # echo "PATH is" $PATH | tee --append $xform_log
 
@@ -82,10 +82,10 @@ case $webform_id in
 
 $scriptpath"bin/create-catalog-entry.sh" --xmlfilename "$xmlbasefile" --passuuid "$uuid" --format "xml" --builder "yes" --summary "both"
 
-echo "launched $0 from" $environment 
+echo "launched $0 from" $environment
 ;;
 
-21) 
+21)
 
 echo "running create your robot form 21" | tee --append $xform_log
 $scriptpath"bin/robot-builder.sh" --xmldirectoryname "$xmldirectoryname" --xmlbasefile "$xmlbasefile"  --passuuid "$uuid"
@@ -95,7 +95,7 @@ $scriptpath"bin/robot-builder.sh" --xmldirectoryname "$xmldirectoryname" --xmlba
 23)
 
 # echo "running dat.sh with xml file from webform"
-$scriptpath"bin/dat.sh" --xmldirectoryname "$xmldirectoryname" --xmlbasefile "$xmlbasefile"  --passuuid "$uuid" 
+$scriptpath"bin/dat.sh" --xmldirectoryname "$xmldirectoryname" --xmlbasefile "$xmlbasefile"  --passuuid "$uuid"
 ;;
 
 
@@ -121,7 +121,7 @@ $scriptpath"bin/dat.sh" --xmldirectoryname "$xmldirectoryname" --xmlbasefile "$x
         editedby=$(xmlstarlet sel -t -v "/item/editedby" "$xmlfilename")
 	pdfx1a=$(xmlstarlet sel -t -v "/item/pdfx1a" "$xmlfilename")
 	echo "pdffilename is" $pdffilename
-	pdfbase=$WEBFORMSXML_HOME$submissionid	
+	pdfbase=$WEBFORMSXML_HOME$submissionid
 	echo  "pdf base is" $WEBFORMSXML_HOME$submissionid
 	pdfsecuredir=`ls $pdfbase/*`
 	pdffullpath=$pdfbase"/356/"$pdfsecuredir"/"
@@ -158,7 +158,7 @@ $scriptpath"bin/dat.sh" --xmldirectoryname "$xmldirectoryname" --xmlbasefile "$x
        ;;
 
 
-27) 
+27)
 
         echo "Feed the Robot" | tee --append $xform_log
         mkdir -p -m 755 $TMPDIR$uuid
@@ -169,10 +169,16 @@ $scriptpath"bin/dat.sh" --xmldirectoryname "$xmldirectoryname" --xmlbasefile "$x
         curl 'http://localhost:8983/solr/update/extract?literal.id=exid'$uuid"&commit=true" -F "myfile=@tmp/"$uuid"/"$filename
         echo "committed file "$filename "to Solr" | tee --append $xform_log
 ;;
-34) 
+34)
 
 echo "running create your imprint webform id 34" | tee --append $xform_log
 $scriptpath"bin/imprint-builder.sh" --xmldirectoryname "$xmldirectoryname" --xmlbasefile "$xmlbasefile"  --passuuid "$uuid"
+
+;;
+35)
+
+echo "running Decimator id 35" | tee --append $xform_log
+$scriptpath"bin/dat.sh" --xmldirectoryname "$xmldirectoryname" --xmlbasefile "$xmlbasefile"  --passuuid "$uuid"
 
 ;;
 *)
