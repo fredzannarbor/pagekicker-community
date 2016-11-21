@@ -342,7 +342,7 @@ if [ "$decimator_requested" = "Decimator only" ] ; then
 	-xp "VnenKBENvGa9" \
 	-s smtp.gmail.com:587 \
 	-o tls=yes \
-	-a $TMPDIR$uuid/slides.pdf
+	-a $TMPDIR$uuid/slidedeck.pdf
 
 	exit 0
 elif [ "$decimator_requested" = "Include Decimator" ] ; then
