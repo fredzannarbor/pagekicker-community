@@ -166,8 +166,6 @@ ls -lart $TMPDIR$uuid/targetfile.txt
 # slide 1 cover
 # pdftk "$pdfinfile" cat 1 output $TMPDIR$uuid/outdir/1.pdf
 
-
-
 convert \
 -colorspace RGB \
 -density 300 \
@@ -183,7 +181,6 @@ $TMPDIR$uuid/titlepage.pdf
 bin/wordcloudwrapper.sh --txtinfile $TMPDIR$uuid/targetfile.txt --wordcloud_width 3000 --wordcloud_height 2100 --outfile $TMPDIR$uuid/wordcloud
 
 # 3-5 summary slides
-
 
 split -C 100K $TMPDIR$uuid/targetfile.txt $TMPDIR$uuid/xtarget.
 echo $PYTHON_BIN
@@ -217,7 +214,6 @@ fi
 cd $scriptpath
 echo $(pwd)
 
-
 # final summary (human provided)
 
 # create slide background
@@ -234,37 +230,7 @@ convert -units pixelsperinch -density 300 -background blue -fill Yellow -gravity
 
 mkdir -p -m 755 $TMPDIR$uuid/pdf
 convert -units pixelsperinch -resize 1000x2000  -density 300 $TMPDIR$uuid/downloaded.pdf[0] $TMPDIR$uuid/dl-0.jpg
-# convert $TMPDIR$uuid/dl-0.jpg -bordercolor linen -border 8x8 \
-#           -background Linen  -gravity SouthEast -splice 10x10+0+0 \
-#           \( +clone -alpha extract -virtual-pixel black \
-#              -spread 50 -blur 0x3 -threshold 50% -spread 5 -blur 0x.7 \) \
-#           -alpha off -compose Copy_Opacity -composite \
-#           -gravity SouthEast -chop 10x10   $TMPDIR$uuid/dl_torn.png
-# convert $TMPDIR$uuid/dl_torn.png -resize 1000x2000 $TMPDIR$uuid/dl_top_pane.png
 cp $TMPDIR$uuid/dl-0.jpg $TMPDIR$uuid/dl_top_pane.png
-
-# tldr
-
-if [ -z "$tldr" ] ; then
-	echo "no tldr supplied, generate automatically"
-else
-	echo "operator supplied tldr"
-	echo "TL;DR: ""$tldr" > $TMPDIR$uuid/tldr.txt
-	convert -background blue -fill Yellow -gravity west -size 3300x200 -font "$toplabelfont"  caption:"TL;DR" $TMPDIR$uuid/toplabel2.png
-	convert xc:blue -size 3300x200 $TMPDIR$uuid/bottomlabel2.png
-	convert -background white -fill black -gravity west -size 1000x2000 -font "$slidebodyfont" -pointsize "96" caption:@$TMPDIR$uuid/tldr.txt $TMPDIR$uuid/tldr.png
-fi
-
-# create montage of sample image + TLDR
-
-montage  -units pixelsperinch -density 300 -size 3300x2100 $TMPDIR$uuid/dl-0.jpg $TMPDIR$uuid/tldr.png $TMPDIR$uuid/p1_montage.png
-montage $TMPDIR$uuid/dl_top_pane.png $TMPDIR$uuid/tldr.png -geometry 1500x2000\>+100+100 $TMPDIR$uuid/p1_montage.png
-convert -units pixelsperinch -density 300 xc:blue -size 3300x200  $TMPDIR$uuid/bottomlabel1.png
-convert -units pixelsperinch -density 300 $TMPDIR$uuid/canvas.png \
-$TMPDIR$uuid/toplabel1.png -gravity north -composite \
-$TMPDIR$uuid/p1_montage.png -gravity center -composite \
-$TMPDIR$uuid/bottomlabel1.png -gravity south -composite \
-$TMPDIR$uuid/home.png
 
 #create word cloud slide
 
@@ -391,6 +357,34 @@ $TMPDIR$uuid/toplabel9.png -gravity north -composite \
 $TMPDIR$uuid/rr.png -gravity center -composite \
 $TMPDIR$uuid/bottomlabel9.png -gravity south -composite \
 $TMPDIR$uuid/rrslide.png
+
+# tldr
+
+if [ -z "$tldr" ] ; then
+	echo "no tldr supplied, generate automatically"
+	echo "TL;DR: ""$tldr" > $TMPDIR$uuid/tldr.txt
+	sed -n 1p $TMPDIR$uuid/pp_summary_all.txt | cut -c 1-60 >> $TMPDIR$uuid/tldr.txt
+	echo "..." >> $TMPDIR$uuid/tldr.txt
+else
+	echo "user supplied tldr"
+	echo "TL;DR: ""$tldr" > $TMPDIR$uuid/tldr.txt
+
+fi
+
+convert -background blue -fill Yellow -gravity west -size 3300x200 -font "$toplabelfont"  caption:"TL;DR" $TMPDIR$uuid/toplabel2.png
+convert xc:blue -size 3300x200 $TMPDIR$uuid/bottomlabel2.png
+convert -background white -fill black -gravity west -size 1000x2000 -font "$slidebodyfont" -pointsize "96" caption:@$TMPDIR$uuid/tldr.txt $TMPDIR$uuid/tldr.png
+
+# create montage of sample image + TLDR
+
+montage  -units pixelsperinch -density 300 -size 3300x2100 $TMPDIR$uuid/dl-0.jpg $TMPDIR$uuid/tldr.png $TMPDIR$uuid/p1_montage.png
+montage $TMPDIR$uuid/dl_top_pane.png $TMPDIR$uuid/tldr.png -geometry 1500x2000\>+100+100 $TMPDIR$uuid/p1_montage.png
+convert -units pixelsperinch -density 300 xc:blue -size 3300x200  $TMPDIR$uuid/bottomlabel1.png
+convert -units pixelsperinch -density 300 $TMPDIR$uuid/canvas.png \
+$TMPDIR$uuid/toplabel1.png -gravity north -composite \
+$TMPDIR$uuid/p1_montage.png -gravity center -composite \
+$TMPDIR$uuid/bottomlabel1.png -gravity south -composite \
+$TMPDIR$uuid/home.png
 
 # convert images into slide deck
 
