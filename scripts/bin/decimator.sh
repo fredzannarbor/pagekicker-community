@@ -360,16 +360,7 @@ $TMPDIR$uuid/rrslide.png
 
 # tldr
 
-if [ -z "$tldr" ] ; then
-	echo "no tldr supplied, generate automatically"
-	echo "TL;DR: ""$tldr" > $TMPDIR$uuid/tldr.txt
-	sed -n 1p $TMPDIR$uuid/pp_summary_all.txt | cut -c 1-60 >> $TMPDIR$uuid/tldr.txt
-	echo "..." >> $TMPDIR$uuid/tldr.txt
-else
-	echo "user supplied tldr"
-	echo "TL;DR: ""$tldr" > $TMPDIR$uuid/tldr.txt
-
-fi
+. includes/tldr_auto.sh #returns tldr.txt
 
 convert -background blue -fill Yellow -gravity west -size 3300x200 -font "$toplabelfont"  caption:"TL;DR" $TMPDIR$uuid/toplabel2.png
 convert xc:blue -size 3300x200 $TMPDIR$uuid/bottomlabel2.png

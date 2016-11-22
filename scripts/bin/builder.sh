@@ -738,9 +738,7 @@ if [ "$shortform" = "no" ]; then
 	# describe the key settings used in book
 	. includes/settings.sh
 
-#tldr
 
-. includes/tldr.sh
 
 	# Abstracts
 
@@ -769,6 +767,8 @@ pandoc -S -o "$TMPDIR"$uuid/targetfile.txt -t plain -f markdown "$TMPDIR"$uuid/t
 	sed -i '1i # Programmatically Generated Summary \'  "$TMPDIR"$uuid/summary.txt
 	sed -i G  "$TMPDIR"$uuid/summary.txt
 
+	sed -n 3p $TMPDIR$uuid/pp_summary.txt > $TMPDIR$uuid/pp_summary_all.txt # for tldr
+
 	# throw away unpreprocessed summary text if zero size
 
 	if [ `wc -c <  "$TMPDIR"$uuid/pp_summary.txt` = "0" ] ; then
@@ -779,12 +779,17 @@ pandoc -S -o "$TMPDIR"$uuid/targetfile.txt -t plain -f markdown "$TMPDIR"$uuid/t
 		cat "$TMPDIR$uuid"/summary.md >> $TMPDIR$uuid/programmaticsummary.md
 	fi
 
+
 else
 	echo "short form selected"
 	echo '![cover image]'"(ebookcover.jpg)" >  "$TMPDIR"$uuid/titlepage.md
 	echo '!['"$imprintname"']'"(""$imprintlogo"")" >>  "$TMPDIR"$uuid/titlepage.md
 
 fi
+
+#tldr
+
+. includes/tldr_auto.sh #returns tldr.txt and tldr.md
 
 # assemble body
 
@@ -856,7 +861,6 @@ fi
 		echo "didn't  process flickr files"
 		touch $TMPDIR$uuid/allflickr.md
 	fi
-
 
 	echo "# Sources" >>  "$TMPDIR"$uuid/sources.md
  	cat includes/wikilicense.md >> $TMPDIR/$uuid/sources.md
