@@ -107,6 +107,14 @@ shift 2
 passuuid=${1#*=}
 shift
 ;;
+--skyscraper)
+skyscraper=$2
+shift 2
+;;
+--skyscraper=*)
+skyscraper={1#*=}
+shift
+;;
   --) # End of all options
 	    shift
 	    break
@@ -390,6 +398,11 @@ $TMPDIR$uuid/home.png  $TMPDIR$uuid/wordcloudslide.png \
  -size 3300x2550 \
  $TMPDIR$uuid/slidedeck.pdf
 
+# convert images into skyscraper infographic
+
+montage $TMPDIR$uuid"/montage.png" $TMPDIR$uuid"/burst.png" $TMPDIR$uuid"/wordcloud.png" -geometry 1000x5000 -tile 1x10 -mode concatenate $TMPDIR$uuid/skyscraper.png
+# convert --units pixelsperinch -density 300 -size 1000x5000 \
+
  sendemail -t "$customer_email" \
  -u "Decimator Result" \
  -m "PageKicker's Document Analysis Robots living on "$MACHINE_NAME "and using version " $SFB_VERSION " of the PageKicker software have analyzed your file " $uploaded_tat_file " in job" $uuid \
@@ -400,5 +413,7 @@ $TMPDIR$uuid/home.png  $TMPDIR$uuid/wordcloudslide.png \
  -xp "$GMAIL_PASSWORD" \
  -s smtp.gmail.com:587 \
  -o tls=yes \
- -a $TMPDIR$uuid/slidedeck.pdf
+ -a $TMPDIR$uuid/slidedeck.pdf \
+ -a $TMPDIR$uuid/skyscraper.png
+
 # publish this slide to slideshare?
