@@ -23,7 +23,8 @@ fi
 cd $scriptpath
 
 . includes/set-variables.sh
- ls -lart "$seedfile"
+
+ #ls -lart "$seedfile"
 
 echo "shortform is $shortform"
 
@@ -361,7 +362,7 @@ echo "add_this_content is $add_this_content"
 echo "imprint is $imprint" #debug
 echo "editedby is $editedby" #debug
 echo "jobprofilename is $jobprofilename" #debug
-ls -lart $seedfile
+
 
 human_author="$editedby"
 # Suppose some options are required. Check that we got them.
@@ -1042,7 +1043,7 @@ if [ "$dontcleanupseeds" = "yes" ]; then
 else
 	echo "removing seedfile"
 	rm "$seedfile"
-	ls -la "$seedfile"
+  #	ls -la "$seedfile"
 fi
 
 echo "appending & sorting new bibliography entries"
