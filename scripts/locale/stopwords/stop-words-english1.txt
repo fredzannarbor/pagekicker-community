@@ -136,6 +136,7 @@ downwards
 during
 each
 edu
+e.g.
 eg
 eight
 eighty
