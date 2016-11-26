@@ -340,6 +340,14 @@ shift 2
 expand_seeds_to_pages=${1#*=}
 shift
 ;;
+--skyscraper)
+skyscraper=$2
+shift 2
+;;
+--skyscraper=*)
+skyscraper=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -769,6 +777,10 @@ pandoc -S -o "$TMPDIR"$uuid/targetfile.txt -t plain -f markdown "$TMPDIR"$uuid/t
 	sed -i G  "$TMPDIR"$uuid/summary.txt
 
 	sed -n 3p $TMPDIR$uuid/pp_summary.txt > $TMPDIR$uuid/pp_summary_all.txt # for tldr
+	echo '\pagenumbering{gobble}' > $TMPDIR$uuid/pp_summary_sky.txt
+	echo "  "  >> $TMPDIR$uuid/pp_summary_sky.txt
+  sed -n 1,15p $TMPDIR$uuid/pp_summary.txt >> $TMPDIR$uuid/pp_summary_sky.txt # for skyscraper
+  cp $TMPDIR$uuid/pp_summary_sky.txt $TMPDIR$uuid/pp_summary_sky.md
 
 	# throw away unpreprocessed summary text if zero size
 
@@ -828,7 +840,11 @@ sort --ignore-case  "$TMPDIR"$uuid/all_nouns.txt | uniq >  "$TMPDIR"$uuid/sorted
 sed -i '1i # Unique Proper Nouns and Key Terms'  "$TMPDIR"$uuid/sorted_uniqs.txt
 sed -i '1i \'  "$TMPDIR"$uuid/sorted_uniqs.txt
 sed -i G  "$TMPDIR"$uuid/sorted_uniqs.txt
+echo '\pagenumbering{gobble}' > $TMPDIR$uuid/sorted_uniqs_sky.txt
+echo "  " >> $TMPDIR$uuid/sorted_uniqs_sky.txt
+sed -n 1,25p $TMPDIR$uuid/sorted_uniqs.txt >> $TMPDIR$uuid/sorted_uniqs_sky.txt
 cp  "$TMPDIR"$uuid/sorted_uniqs.txt  "$TMPDIR"$uuid/sorted_uniqs.md
+cp  "$TMPDIR"$uuid/sorted_uniqs_sky.txt  "$TMPDIR"$uuid/sorted_uniqs_sky.md
 
 echo "" >> "$TMPDIR"$uuid/sorted_uniqs.md
 echo "" >> "$TMPDIR"$uuid/sorted_uniqs.md
@@ -921,11 +937,12 @@ echo "---" >>  "$TMPDIR"$uuid/yaml-metadata.md
 # bin/partsofthebook.sh parallel construction of parts of the book
 
 . bin/partsofthebook.sh
+
 # build ebook in epub
 
-bibliography_title="$booktitle"
-#echo "bibliography title is $bibliography_title"
 safe_product_name=$(echo "$booktitle" | sed -e 's/[^A-Za-z0-9._-]/_/g')
+bibliography_title="$booktitle"
+
 cd  "$TMPDIR"$uuid
 "$PANDOC_BIN" -o "$TMPDIR"$uuid/$sku"."$safe_product_name".epub" --epub-cover-image="$TMPDIR"$uuid/cover/$sku"ebookcover.jpg"  "$TMPDIR"$uuid/complete.md
 "$PANDOC_BIN" -o "$TMPDIR"$uuid/$sku"."$safe_product_name".docx"   "$TMPDIR"$uuid/complete.md
@@ -980,10 +997,26 @@ esac
 
 cp "$TMPDIR"$uuid/$sku.$safe_product_name".epub" /tmp/pagekicker/delivery.epub
 cp "$TMPDIR"$uuid/$sku.$safe_product_name".docx" /tmp/pagekicker/delivery.docx
+
+# build skyscraper image
+
+if [ -z "$skyscraper" ]; then
+	echo "no skyscraper"
+else
+	pandoc $TMPDIR$uuid/pp_summary_sky.md --latex-engine=xelatex --template=$confdir"pandoc_templates/nonumtemplate.tex" -o $TMPDIR$uuid/pp_summary_sky.pdf
+	pandoc $TMPDIR$uuid/sorted_uniqs_sky.md --latex-engine=xelatex -o $TMPDIR$uuid/sorted_uniqs_sky.pdf
+	convert -density 400 $TMPDIR$uuid/pp_summary_sky.pdf -trim $TMPDIR$uuid/pp_summary_sky.png
+	convert $TMPDIR$uuid/pp_summary_sky.png -border 30 $TMPDIR$uuid/pp_summary_sky.png
+	convert -density 400 $TMPDIR$uuid/sorted_uniqs_sky.pdf -trim $TMPDIR$uuid/sorted_uniqs_sky.png
+	convert $TMPDIR$uuid/sorted_uniqs_sky.png -border 30 $TMPDIR$uuid/sorted_uniqs_sky.png
+	montage $TMPDIR$uuid"/pp_summary_sky.png" $TMPDIR$uuid"/cover/wordcloudcover.png" $TMPDIR$uuid"/sorted_uniqs_sky.png"  -geometry 1000x2000 -tile 1x10 -mode concatenate $TMPDIR$uuid/skyscraper.png
+	convert $TMPDIR$uuid"/skyscraper.png" -trim -border 30 $TMPDIR$uuid/skyscraper.png
+	echo "built skyscraper"
+fi
+
 # housekeeping
 
 unique_seed_string=$(sed -e 's/[^A-Za-z0-9._-]//g' <  "$TMPDIR"$uuid/seeds/sorted.seedfile | tr --delete '\n')
-
 
 #checking if seedstring already in imprint corpus
 
