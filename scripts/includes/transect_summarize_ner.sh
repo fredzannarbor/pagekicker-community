@@ -18,6 +18,6 @@ do
 		awk 'length<=4000' $file"_pp_summary.txt" >  "$TMPDIR"$uuid/awk.tmp && mv  "$TMPDIR"$uuid/awk.tmp $file"_pp_summary.txt"
 		#echo "---end of summary section of 140K bytes---" >> $file"_pp_summary.txt"
 		#echo "---end of summary section of 140K bytes---" >> $file"_summary.txt"
-		cat $file"_pp_summary.txt" >>  "$TMPDIR"$uuid/pp_summary.txt
-		cat $file"_summary.txt" >>  "$TMPDIR"$uuid/summary.txt
+		cat $file"_pp_summary.txt" | uniq >>  "$TMPDIR"$uuid/pp_summary.txt
+		cat $file"_summary.txt" | uniq >>  "$TMPDIR"$uuid/summary.txt
 done
