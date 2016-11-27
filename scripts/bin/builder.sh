@@ -747,8 +747,6 @@ if [ "$shortform" = "no" ]; then
 	# describe the key settings used in book
 	. includes/settings.sh
 
-
-
 	# Abstracts
 
 	# decide whether to get human abstracts from Wiki, full docs only, or both
@@ -836,6 +834,9 @@ cp $TMPDIR$uuid/tmpacronyms.md $TMPDIR$uuid/acronyms.md
 
 ls  "$TMPDIR"$uuid/xtarget.*nouns* >  "$TMPDIR"$uuid/testnouns
 cat  "$TMPDIR"$uuid/xtarget.*nouns* >  "$TMPDIR"$uuid/all_nouns.txt
+
+
+
 sort --ignore-case  "$TMPDIR"$uuid/all_nouns.txt | uniq >  "$TMPDIR"$uuid/sorted_uniqs.txt
 sed -i '1i # Unique Proper Nouns and Key Terms'  "$TMPDIR"$uuid/sorted_uniqs.txt
 sed -i '1i \'  "$TMPDIR"$uuid/sorted_uniqs.txt
@@ -1003,13 +1004,22 @@ cp "$TMPDIR"$uuid/$sku.$safe_product_name".docx" /tmp/pagekicker/delivery.docx
 if [ -z "$skyscraper" ]; then
 	echo "no skyscraper"
 else
+
+	sed -i '1i # Unique Proper Nouns and Key Terms'  "$TMPDIR"$uuid/all_nouns.txt
+	sed -i '1i \'  "$TMPDIR"$uuid/all_nouns.txt
+	sed -i G  "$TMPDIR"$uuid/all_nouns.txt
+	echo '\pagenumbering{gobble}' > $TMPDIR$uuid/all_nouns_sky.txt
+	echo "  " >> $TMPDIR$uuid/all_nouns_sky.txt
+	sed -n 1,25p $TMPDIR$uuid/all_nouns.txt >> $TMPDIR$uuid/all_nouns_sky.txt
+	cp  "$TMPDIR"$uuid/all_nouns.txt  "$TMPDIR"$uuid/all_nouns.md
+	cp  "$TMPDIR"$uuid/all_nouns_sky.txt  "$TMPDIR"$uuid/all_nouns_sky.md
+	pandoc $TMPDIR$uuid/all_nouns_sky.md --latex-engine=xelatex --template=$confdir"pandoc_templates/nonumtemplate.tex" -o $TMPDIR$uuid/all_nouns_sky.pdf
 	pandoc $TMPDIR$uuid/pp_summary_sky.md --latex-engine=xelatex --template=$confdir"pandoc_templates/nonumtemplate.tex" -o $TMPDIR$uuid/pp_summary_sky.pdf
-	pandoc $TMPDIR$uuid/sorted_uniqs_sky.md --latex-engine=xelatex -o $TMPDIR$uuid/sorted_uniqs_sky.pdf
 	convert -density 400 $TMPDIR$uuid/pp_summary_sky.pdf -trim $TMPDIR$uuid/pp_summary_sky.png
 	convert $TMPDIR$uuid/pp_summary_sky.png -border 30 $TMPDIR$uuid/pp_summary_sky.png
-	convert -density 400 $TMPDIR$uuid/sorted_uniqs_sky.pdf -trim $TMPDIR$uuid/sorted_uniqs_sky.png
-	convert $TMPDIR$uuid/sorted_uniqs_sky.png -border 30 $TMPDIR$uuid/sorted_uniqs_sky.png
-	montage $TMPDIR$uuid"/pp_summary_sky.png" $TMPDIR$uuid"/cover/wordcloudcover.png" $TMPDIR$uuid"/sorted_uniqs_sky.png"  -geometry 1000x2000 -tile 1x10 -mode concatenate $TMPDIR$uuid/skyscraper.png
+	convert -density 400 $TMPDIR$uuid/all_nouns_sky.pdf -trim $TMPDIR$uuid/all_nouns_sky.png
+	convert $TMPDIR$uuid/all_nouns_sky.png -border 30 $TMPDIR$uuid/all_nouns_sky.png
+	montage $TMPDIR$uuid"/pp_summary_sky.png" $TMPDIR$uuid"/cover/wordcloudcover.png" $TMPDIR$uuid"/all_nouns_sky.png"  -geometry 1000x2000 -tile 1x10 -mode concatenate $TMPDIR$uuid/skyscraper.png
 	convert $TMPDIR$uuid"/skyscraper.png" -trim -border 30 $TMPDIR$uuid/skyscraper.png
 	echo "built skyscraper"
 fi
