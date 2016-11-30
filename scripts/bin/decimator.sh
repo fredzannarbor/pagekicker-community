@@ -205,8 +205,8 @@ do
         echo "postprocessor threw away summary lines shorter than 50 characters" | tee --append $xform_log
 	awk 'length<=4000' $file"_pp_summary.txt" > $TMPDIR$uuid/awk.tmp && mv $TMPDIR$uuid/awk.tmp $file"_pp_summary.txt"
         echo "postprocessor threw away summary lines longer than 4000 characters" | tee --append $xform_log
-	cat $file"_pp_summary.txt" >> $TMPDIR$uuid/pp_summary_all.txt
-	cat $file"_summary.txt" >> $TMPDIR$uuid/summary_all.txt
+	cat $file"_pp_summary.txt" | awk '!x[$0]++' >> $TMPDIR$uuid/pp_summary_all.txt
+	cat $file"_summary.txt" | awk '!x[$0]++' >> $TMPDIR$uuid/summary_all.txt
         done
 
 # image montage
