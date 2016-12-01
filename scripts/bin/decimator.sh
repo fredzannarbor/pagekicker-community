@@ -41,6 +41,8 @@ echo "version is " $SFB_VERSION
 cd $scriptpath
 echo "scriptpath is" $scriptpath
 
+
+
 export PATH=$PATH:$JAVA_BIN
 
 pdfconverter="pdftotext"
@@ -147,6 +149,9 @@ else
 	echo "received uuid " $uuid
 fi
 
+mkdir -p -m 755 $TMPDIR$uuid/pdf
+mkdir -p -m 755 $TMPDIR$uuid/decrypted
+
 # file processing begins
 
 if [ "$pdfinfile" = "no" ]; then
@@ -159,6 +164,10 @@ else
 	echo `ls -l $TMPDIR$uuid/downloaded.pdf`
 	echo "fetched file from local file system"
 fi
+
+# decrypts PDF
+qpdf --decrypt $TMPDIR$uuid/downloaded.pdf $TMPDIR$uuid/decrypted/temp.pdf
+cp $TMPDIR$uuid/decrypted/temp.pdf $TMPDIR$uuid/downloaded.pdf
 
 if [ "$pdfconverter" = "pdftotext" ] ; then
 
@@ -236,7 +245,7 @@ convert -units pixelsperinch -density 300 -background blue -fill Yellow -gravity
 
 # sample image
 
-mkdir -p -m 755 $TMPDIR$uuid/pdf
+
 convert -units pixelsperinch -resize 1000x2000  -density 300 $TMPDIR$uuid/downloaded.pdf[0] $TMPDIR$uuid/dl-0.jpg
 cp $TMPDIR$uuid/dl-0.jpg $TMPDIR$uuid/dl_top_pane.png
 
@@ -389,18 +398,18 @@ $TMPDIR$uuid/home.png
 
 convert -units pixelsperinch -density 300 \
 $TMPDIR$uuid/home.png  $TMPDIR$uuid/wordcloudslide.png \
+$TMPDIR$uuid/sumall3.png \
  $TMPDIR$uuid/pages.png \
- $TMPDIR$uuid/pageburst.png \
- $TMPDIR$uuid/montage.png \
- $TMPDIR$uuid/sumall3.png \
  $TMPDIR$uuid/keywords.png \
  $TMPDIR$uuid/rrslide.png  \
+ $TMPDIR$uuid/pageburst.png \
+ $TMPDIR$uuid/montage.png \
  -size 3300x2550 \
  $TMPDIR$uuid/slidedeck.pdf
 
 # convert images into skyscraper infographic
 
-montage $TMPDIR$uuid"/montage.png" $TMPDIR$uuid"/burst.png" $TMPDIR$uuid"/wordcloud.png" -geometry 1000x5000 -tile 1x10 -mode concatenate $TMPDIR$uuid/skyscraper.png
+montage  $TMPDIR$uuid/wordcloudslide.png $TMPDIR$uuid/sumall3.png $TMPDIR$uuid/keywords.png $TMPDIR$uuid/pages.png $TMPDIR$uuid"/montage.png" $TMPDIR$uuid"/pageburst.png"  -geometry 1000x5000 -tile 1x10 -mode concatenate $TMPDIR$uuid/skyscraper.png
 # convert --units pixelsperinch -density 300 -size 1000x5000 \
 
  sendemail -t "$customer_email" \
