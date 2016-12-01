@@ -1,4 +1,4 @@
-convert -units pixelsperinch -density 300 -background blue -fill Yellow -gravity west -size 1000x100 -font "$toplabelfont" caption:"$booktitle" $TMPDIR$uuid/toplabel1.png
+convert -units pixelsperinch -density 300 -background blue -fill Yellow -gravity center -geometry 1000x -font "$toplabelfont" caption:"$booktitle" $TMPDIR$uuid/toplabel1.png
 
 sed -i '1i # Important Proper Nouns and Key Terms'  "$TMPDIR"$uuid/all_nouns.txt
 sed -i '1i \'  "$TMPDIR"$uuid/all_nouns.txt
@@ -27,5 +27,5 @@ convert $TMPDIR$uuid/sources.png -border 30 $TMPDIR$uuid/sources.png
 convert $scriptpath"assets/pk35pc.jpg" -resize 50% $TMPDIR$uuid/pksmall.jpg
 convert $TMPDIR$uuid"/pksmall.jpg" -gravity center -background white -extent 1000x108 $TMPDIR$uuid/skyscraperlogo.png
 # make skyscraper
-montage $TMPDIR$uuid/toplabel1.png $TMPDIR$uuid"/cover/wordcloudcover.png" $TMPDIR$uuid"/pp_summary_sky.png" $TMPDIR$uuid/sources.png $TMPDIR$uuid/skyscraperlogo.png  -geometry 1000x3000 -tile 1x10 -mode concatenate $TMPDIR$uuid/skyscraper.png
+montage $TMPDIR$uuid/toplabel1.png $TMPDIR$uuid"/cover/wordcloudcover.png" $TMPDIR$uuid"/pp_summary_sky.png" $TMPDIR$uuid/sources.png $TMPDIR$uuid/skyscraperlogo.png  -geometry 1000x5000 -border 10 -tile 1x10 -mode concatenate $TMPDIR$uuid/skyscraper.png
 convert $TMPDIR$uuid"/skyscraper.png" -trim -border 30 $TMPDIR$uuid/"$safe_product_name".skyscraper.png
