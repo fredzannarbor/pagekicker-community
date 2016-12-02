@@ -45,11 +45,11 @@ xformlog="$logdir$uuid"/xform_log
 echo "-D-D-D-D-D-D-D-D" | tee --append $sfb_logdat
 echo "starting Document Analysis Tools Stand-alone"
 
-dat="yes"
+
 # default values
+dat="yes"
 
-
-
+# checking parameter passing
 
 echo "parameter 1 is " $1
 echo "parameter 2 is" $2
@@ -221,6 +221,7 @@ else
 	mkdir -p -m 755 $TMPDIR$uuid
 fi
 
+mkdir -p -m 755 $TMPDIR$uuid/decrypted
 
 #$export PATH=$PATH:/opt/bitnami/java/bin
 
@@ -388,6 +389,9 @@ elif [ "$extension" = "epub" ] ; then
 	echo "converted epub to txt" | tee --append $sfb_log
 
 elif [ "$extension" = "pdf" ] ; then
+
+	qpdf --decrypt $TMPDIR$uuid/$uploaded_tat_file $TMPDIR$uuid/decrypted/temp.pdf
+	cp $TMPDIR$uuid/decrypted/temp.pdf $TMPDIR$uuid/$uploaded_tat_file
 	pdftotext $TMPDIR$uuid/$uploaded_tat_file  $TMPDIR$uuid/targetfile.txt
 	cp $TMPDIR$uuid/$uploaded_tat_file $TMPDIR$uuid/target.pdf
 	echo "ran pdftotext and copied $TMPDIR$uuid/target.pdf" | tee --append $sfb_log

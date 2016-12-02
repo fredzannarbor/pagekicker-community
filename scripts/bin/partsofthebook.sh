@@ -16,6 +16,7 @@ $TMPDIR$uuid/analyzed_webpage.md \
 $TMPDIR$uuid/acronyms.md \
 $TMPDIR$uuid/twitter/sample_tweets.md \
 $TMPDIR$uuid/allflickr.md \
+$TMPDIR$uuid/changelog.md \
 $TMPDIR$uuid/builtby.md \
 $TMPDIR$uuid/byimprint.md \
 $TMPDIR$uuid/imprint_mission_statement.md \

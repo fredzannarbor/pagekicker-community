@@ -709,7 +709,7 @@ if [ "$yourname" = "yes" ] ; then
 else
 	echo "robot name on cover"
 fi
-editedby="PageKicker"
+#editedby="PageKicker"
 echo "editedby is" $editedby
 convert  -background "$covercolor"  -fill "$coverfontcolor" -gravity south -size 1800x394 \
  -font "$coverfont"  caption:"$editedby" \
@@ -752,6 +752,10 @@ if [ "$shortform" = "no" ]; then
 	# decide whether to get human abstracts from Wiki, full docs only, or both
 
 . includes/abstracts.sh
+
+# changelog
+
+. includes/changelog.sh
 
 # move cover files into position
 
@@ -836,8 +840,6 @@ cp $TMPDIR$uuid/tmpacronyms.md $TMPDIR$uuid/acronyms.md
 
 ls  "$TMPDIR"$uuid/xtarget.*nouns* >  "$TMPDIR"$uuid/testnouns
 cat  "$TMPDIR"$uuid/xtarget.*nouns* >  "$TMPDIR"$uuid/all_nouns.txt
-
-
 
 sort --ignore-case  "$TMPDIR"$uuid/all_nouns.txt | uniq >  "$TMPDIR"$uuid/sorted_uniqs.txt
 sed -i '1i # Unique Proper Nouns and Key Terms'  "$TMPDIR"$uuid/sorted_uniqs.txt
