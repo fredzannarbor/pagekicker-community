@@ -753,6 +753,10 @@ if [ "$shortform" = "no" ]; then
 
 . includes/abstracts.sh
 
+# changelog
+
+. includes/changelog.sh
+
 # move cover files into position
 
 	cat "$TMPDIR"$uuid"/wiki/wiki4cloud.md"  >> $TMPDIR$uuid/tmpbody.md
@@ -836,8 +840,6 @@ cp $TMPDIR$uuid/tmpacronyms.md $TMPDIR$uuid/acronyms.md
 
 ls  "$TMPDIR"$uuid/xtarget.*nouns* >  "$TMPDIR"$uuid/testnouns
 cat  "$TMPDIR"$uuid/xtarget.*nouns* >  "$TMPDIR"$uuid/all_nouns.txt
-
-
 
 sort --ignore-case  "$TMPDIR"$uuid/all_nouns.txt | uniq >  "$TMPDIR"$uuid/sorted_uniqs.txt
 sed -i '1i # Unique Proper Nouns and Key Terms'  "$TMPDIR"$uuid/sorted_uniqs.txt
