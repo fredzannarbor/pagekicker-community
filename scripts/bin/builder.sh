@@ -747,11 +747,15 @@ if [ "$shortform" = "no" ]; then
 	# describe the key settings used in book
 	. includes/settings.sh
 
-	# Abstracts
-
-	# decide whether to get human abstracts from Wiki, full docs only, or both
+	# human-written abstracts
 
 . includes/abstracts.sh
+
+# parses list of chapters into simple ToC and runon sentence
+
+. includes/listofpages.sh
+
+. includes/topics_covered_runon.sh
 
 # changelog
 
@@ -783,7 +787,7 @@ pandoc -S -o "$TMPDIR"$uuid/targetfile.txt -t plain -f markdown "$TMPDIR"$uuid/t
 	#echo "  " >>
 	#echo '\pagecolor{yellow!30}' >> $TMPDIR$uuid/pp_summary_sky.txt
 	echo "  "  >> $TMPDIR$uuid/pp_summary_sky.txt
-  sed -n 1,15p $TMPDIR$uuid/pp_summary.txt >> $TMPDIR$uuid/pp_summary_sky.txt # for skyscraper
+  sed -n 1,35p $TMPDIR$uuid/pp_summary.txt >> $TMPDIR$uuid/pp_summary_sky.txt # for skyscraper
   cp $TMPDIR$uuid/pp_summary_sky.txt $TMPDIR$uuid/pp_summary_sky.md
 
 	# throw away unpreprocessed summary text if zero size

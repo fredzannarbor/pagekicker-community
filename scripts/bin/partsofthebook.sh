@@ -7,6 +7,7 @@ $TMPDIR$uuid/robo_ack.md \
 $TMPDIR$uuid/settings.md \
 $TMPDIR$uuid/rebuild.md \
 $TMPDIR$uuid/tldr.md \
+$TMPDIR$uuid/listofpages.md \
 $TMPDIR$uuid/humansummary.md \
 $TMPDIR$uuid/programmaticsummary.md \
 $TMPDIR$uuid/add_this_content.md \
