@@ -340,7 +340,7 @@ if [ "$decimator_requested" = "Decimator only" ] ; then
 	-f "$GMAIL_ID" \
 	-cc "$GMAIL_ID" \
 	-xu "$GMAIL_ID" \
-	-xp "VnenKBENvGa9" \
+	-xp "GMAIL_PASSWORD" \
 	-s smtp.gmail.com:587 \
 	-o tls=yes \
 	-a $TMPDIR$uuid/slidedeck.pdf
