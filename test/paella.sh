@@ -36,4 +36,4 @@ fi
 
 # if error log is empty then PASS
 echo -e "\n"
-echo "PASS" "  $uuid"  "paella.sh" | tee -a $LOCAL_DATA/logs/testlog
+echo "PASS" "  $uuid"  "$0" | tee -a $LOCAL_DATA/logs/testlog
