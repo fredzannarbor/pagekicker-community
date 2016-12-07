@@ -1,6 +1,6 @@
 # Test plan
 
-1. Create-catalog and builder from command line on git-pk-production throwing no stderr, creating ebooks properly in /tmp/pagekicker.
+1. Create-catalog and builder from command line as bitnami on git-pk-production throwing no stderr, creating ebooks properly in /tmp/pagekicker.
 2. Decimator from command line on git-pk-production throwing no stderr, creating ebooks properly in /tmp/pagekicker & delivering via email.
 3. DAT from command line on git-pk-production. throwing no stderr, creating ebooks properly in /tmp/pagekicker.
 4.  create-catalog and builder with import = "yes" in git-pk-production successfully creating catalog entries.
