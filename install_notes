@@ -15,7 +15,7 @@ APT-GET INSTALLATIONS
 
 IMAGEMAGICK REQUIREMENTS
 
-	Version 6.6.9 or higher.
+	Version 6.8.9 or higher.
 
 	You must move conf/colors.xml to the imagemagick configuration directory, which is ~/.magick in my system
 
@@ -24,6 +24,8 @@ IMAGEMAGICK REQUIREMENTS
 	To extract all available system fonts from type xml, run this xmlstarlet command:
 
 	host:~/.magick$ xmlstarlet sel -t -m //type -v @name --nl type.xml | sort > $SFB_HOME/conf/allfonts.txt
+
+	if builder issues "delegates not available" warning, you must fix this problem with IM--hints are in the comments for includes/1000x3000skyscraper.sh
 
 FONT REQUIREMENTS
 
