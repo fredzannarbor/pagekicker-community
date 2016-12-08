@@ -7,6 +7,7 @@ Please submit pull requests!
  - Experts may be repeated in mutliple fields if they represent multiple fields. Submit a separate link for each subfield.
  - Good writers are preferred.
  - Detailed writers are preferred.
+ - Writers who make effort to spread knowledge are preferred.
  - Active writers are preferred (inactive writers may be included, but will be placed in a separate archival location)
 
 I get the final say in what is included. If you don't like my guidelines, you're welcome to fork :)
