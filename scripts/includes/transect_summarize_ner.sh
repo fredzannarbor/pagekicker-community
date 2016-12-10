@@ -3,9 +3,9 @@ do
 
 		"$PYTHON27_BIN" $scriptpath"bin/nerv3.py" $file $file"_nouns.txt" "$uuid"
 		echo "ran nerv3 on $file" | tee --append $sfb_log
-		cat "$TMPDIR$uuid"/Places >> "$TMPDIR"$batch_uuid"/"$sku"."$safe_product_name"_Places"
-		cat "$TMPDIR$uuid"/People >>  "$TMPDIR"$batch_uuid"/"$sku"."$safe_product_name"_People"
-		cat "$TMPDIR$uuid"/Other >>  "$TMPDIR"$batch_uuid"/"$sku"."$safe_product_name"_Other"
+		cat "$TMPDIR$uuid"/Places >> "$TMPDIR"$uuid"/"$sku"."$safe_product_name"_Places"
+		cat "$TMPDIR$uuid"/People >>  "$TMPDIR"$uuid"/"$sku"."$safe_product_name"_People"
+		cat "$TMPDIR$uuid"/Other >>  "$TMPDIR"$uuid"/"$sku"."$safe_product_name"_Other"
 
 		echo "python_bin for running PKsum is" $PYTHON_BIN "and PYTHON_BIN actually is"
 		"$PYTHON_BIN" --version
