@@ -2,6 +2,8 @@
 TMPDIR="/tmp/pagekicker/"
 uuid="bloviate1"
 confdir="/home/fred/pagekicker-community/conf/"
+memewidth=1200
+memeheight=630
 #USAGE age: $1 is input markdownfile $2 is tldr
 
 convert -units pixelsperinch -density 300 -size 1000x100 -background blue -fill Yellow -gravity center  caption:"$2" $TMPDIR$uuid/toplabel1.png
@@ -29,7 +31,7 @@ convert $TMPDIR$uuid"/pksmall.jpg" -gravity center -background white -extent 102
 montage $TMPDIR$uuid/toplabel1.png \
 $TMPDIR$uuid"/memecard.png" \
 $TMPDIR$uuid/memecardlogo.png  \
--geometry 1024x768 -border 10 -tile 1x10 -mode concatenate \
+-geometry "$memewidth"x"$memeheight" -border 10 -tile 1x10 -mode concatenate \
 $TMPDIR$uuid/memecard.png
 
 convert $TMPDIR$uuid"/memecard.png" -trim -border 30 $TMPDIR$uuid/memecard2.png
