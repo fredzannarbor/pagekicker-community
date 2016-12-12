@@ -171,7 +171,7 @@ cp $TMPDIR$uuid/decrypted/temp.pdf $TMPDIR$uuid/downloaded.pdf
 
 if [ "$pdfconverter" = "pdftotext" ] ; then
 
-echo $pdfconverter
+echo "pdfconverter is" $pdfconverter
 	pdftotext -layout $TMPDIR$uuid/downloaded.pdf $TMPDIR$uuid/targetfile.txt
 else
 	ebook-convert $TMPDIR$uuid/downloaded.pdf $TMPDIR$uuid/targetfile.txt --no-images --new-pdf-engine

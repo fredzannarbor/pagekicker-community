@@ -19,7 +19,7 @@ configfile="$scriptpath"lib/IBMcloud/examples/configuration.txt
 wordcloud_height=5100
 wordcloud_width=6600
 outfile="wordcloud" # if multiple wordclouds are run this is the basename
-
+stopfile="$scriptpath"lib/IBMcloud/examples/pk-stopwords.txt
 
 while :
 do
@@ -103,11 +103,12 @@ echo "configfile is" $configfile
 
 # rotate stopwordfile in and out
 
-cp "$stopfile" $scriptpath"lib/IBMcloud/examples/pk-stopwords.txt"
+echo "current stopfile is" $stopfile
+cp -u "$stopfile" $scriptpath"lib/IBMcloud/examples/pk-stopwords.txt"
 echo "running stopfile $stopfile"
 
 $JAVA_BIN -jar $scriptpath"lib/IBMcloud/ibm-word-cloud.jar" -c $configfile -h "$wordcloud_height" -w "$wordcloud_width" < $txtinfile > $outfile".png"
 
-cp $scriptpath"lib/IBMcloud/examples/restore-pk-stopwords.txt"  $scriptpath"lib/IBMcloud/examples/pk-stopwords.txt" 
+cp $scriptpath"lib/IBMcloud/examples/restore-pk-stopwords.txt"  $scriptpath"lib/IBMcloud/examples/pk-stopwords.txt"
 
 exit 0
