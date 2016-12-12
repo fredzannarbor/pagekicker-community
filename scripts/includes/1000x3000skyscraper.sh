@@ -21,22 +21,31 @@ echo "if error issued here see comments in includes/1000x3000skyscraper.sh for c
 # that configuration file for delegates is missing.  if the command is
 # working correctly to produce trimmed infocard you can ignore
 # the warning--this means that the correct delegate program is already
-# on the system.  if the command is not producing the trimmed infocard 
+# on the system.  if the command is not producing the trimmed infocard
 # you need to fix the problem with ImageMagick.  There are a number o
 # ways you can do this -- Google is your friend --  change convert to hard
 # code to a version of IM that works -- fix the IM configuration -- or
 # specify the delegate in the IM command line.
 
-convert $TMPDIR$uuid/infocard.png -border 30 $TMPDIR$uuid/infocard.png
+if [ -z "$add_this_image" ]; then
+  echo "using wordcloud image"
+  cp $TMPDIR$uuid"/cover/wordcloudcover.png" $TMPDIR$uuid/skyscraperimage.png
+  convert $TMPDIR$uuid/skyscraperimage.png $TMPDIR$uuid/skyscraperimage.jpg
+else
+  echo "using user provided image"
+  convert "$add_this_image" $TMPDIR$uuid/skyscraperimage.jpg
+fi
+
+convert $TMPDIR$uuid/infocard.png -border 5 $TMPDIR$uuid/infocard.png
 # put logo on 1000 px wide & trim
 convert $scriptpath"assets/pk35pc.jpg" -resize 50% $TMPDIR$uuid/pksmall.jpg
 convert $TMPDIR$uuid"/pksmall.jpg" -gravity center -background white -extent 1000x108 $TMPDIR$uuid/skyscraperlogo.png
 # make skyscraper
 montage $TMPDIR$uuid/toplabel1.png \
-$TMPDIR$uuid"/cover/wordcloudcover.png" \
+$TMPDIR$uuid/skyscraperimage.jpg \
 $TMPDIR$uuid"/infocard.png" \
 $TMPDIR$uuid/skyscraperlogo.png  \
 -geometry 1000x5000 -border 10 -tile 1x10 -mode concatenate \
-$TMPDIR$uuid/skyscraper.png
+$TMPDIR$uuid/skyscraper.jpg
 
-convert $TMPDIR$uuid"/skyscraper.png" -trim -border 30 $TMPDIR$uuid/"$safe_product_name".skyscraper.png
+convert $TMPDIR$uuid"/skyscraper.jpg" -trim -border 30 $TMPDIR$uuid/"$safe_product_name".skyscraper.jpg
