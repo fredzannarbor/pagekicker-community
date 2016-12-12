@@ -348,6 +348,22 @@ shift 2
 skyscraper=${1#*=}
 shift
 ;;
+--add_this_image)
+add_this_image=$2
+shift 2
+;;
+--add_this_image=*)
+add_this_image=${1#*=}
+shift
+;;
+--add_this_image_name)
+add_this_image_name=$2
+shift 2
+;;
+--add_this_image_name=*)
+add_this_image_name=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
