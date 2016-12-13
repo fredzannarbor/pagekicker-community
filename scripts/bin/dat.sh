@@ -467,7 +467,7 @@ split -C 50K $TMPDIR$uuid/targetfile.txt "$TMPDIR$uuid/xtarget."
 for file in "$TMPDIR$uuid/xtarget."*
 do
 
-"$PYTHON_BIN" $scriptpath"bin/nerv3.py" $file $file"_nouns.txt" $uuid
+"$PYTHON27_BIN" $scriptpath"bin/nerv3.py" $file $file"_nouns.txt" $uuid
 echo "ran nerv3 on $file" | tee --append $sfb_log
 "$PYTHON_BIN" bin/PKsum.py -l "$summary_length" -o $file"_summary.txt" $file
 sed -i 's/ \+ / /g' $file"_summary.txt"
