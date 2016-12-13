@@ -192,6 +192,14 @@ shift 2
 getwiki={1#*=}
 shift
 ;;
+--import)
+import=$2
+shift 2
+;;
+--import=*)
+import={1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -280,8 +288,8 @@ echo "url to fetch is" $url | tee --append $sfb_log
 echo "decimator_requested is " $decimator_requested
 imagekeyword=$(xmlstarlet sel -t -v "/item/imagekeyword" "$xmlfilename")
 
-#. "$confdir"jobprofiles/robots/"$jobprofilename"".jobprofile"
-#. "$confdir"jobprofiles/imprints/$imprint/$imprint".imprint"
+. "$confdir"jobprofiles/robots/"$jobprofilename"".jobprofile"
+. "$confdir"jobprofiles/imprints/$imprint/$imprint".imprint"
 echo "$jobprofile"
 echo "$imprint"
 echo $WEBFORMSXML_HOME
@@ -554,8 +562,9 @@ else
 
 fi
 
+echo "$confdir"jobprofiles/imprints/$imprint/"$imprintlogo"
 cp assets/PageKicker_cmyk300dpi.png $TMPDIR$uuid/PageKicker_cmyk300dpi.png
-cp "$confdir"jobprofiles/imprints/$imprint/$imprintlogo $TMPDIR$uuid/$imprintlogo
+cp "$confdir"jobprofiles/imprints/$imprint/"$imprintlogo" $TMPDIR$uuid/$imprintlogo
 
 if [ "$frontmatter" = "off" ] ; then
 
@@ -584,12 +593,14 @@ else
 	echo "# "$editedby >> $TMPDIR$uuid/titlepage.md
 	echo "# Enhanced with Text Analytics by PageKicker Robot" $jobprofilename >> $TMPDIR$uuid/titlepage.md
 
-	#if [ -z ${tldr+x} ];
-	#	then echo "tldr is unset";
-	#else
-	#	echo "# " 'TL;DR:' "$tldr" >> $TMPDIR$uuid/titlepage.md
-	#fi
-	# echo '![imprint logo]'($imprintlogo)'\' >> $TMPDIR$uuid/titlepage.md
+	if [ -z ${tldr+x} ];
+		then echo "tldr is unset"
+	else
+		echo "# " 'TL;DR:' "$tldr" >> $TMPDIR$uuid/titlepage.md
+	fi
+
+
+	echo '![imprint logo]'"($imprintlogo)"'\' >> $TMPDIR$uuid/titlepage.md
 	echo '\pagenumbering{roman}' >> $TMPDIR$uuid/titlepage.md
 	echo '\newpage' >> $TMPDIR$uuid/titlepage.md
 	# build "also by this Robot Author"
@@ -599,6 +610,7 @@ else
 	cat $LOCAL_DATA/bibliography/robots/$jobprofilename/$jobprofilename"_titles.txt" >> $TMPDIR$uuid/titlepage.md
 	echo "  " >> $TMPDIR$uuid/titlepage.md
 	echo "  " >> $TMPDIR$uuid/titlepage.md
+	cd $TMPDIR$uuid
 	"$PANDOC_BIN" $TMPDIR$uuid/titlepage.md -o $TMPDIR$uuid/titlepage.pdf --variable fontsize=12pt --latex-engine=xelatex
 	cd $scriptpath
 
@@ -623,8 +635,6 @@ else
 	echo "built acknowledgments"
 
 	# assemble front matter
-
-
 
 	cat $TMPDIR$uuid/titlepage.md assets/newpage.md $TMPDIR$uuid/$imprintcopyrightpage assets/newpage.md $TMPDIR$uuid/robot_author.md assets/newpage.md $TMPDIR$uuid/acknowledgements.md assets/newpage.md $TMPDIR$uuid/summary.md assets/newpage.md $TMPDIR$uuid/rr.md assets/newpage.md $TMPDIR$uuid/sorted_uniqs.md > $TMPDIR$uuid/textfrontmatter.md
 	cd $TMPDIR$uuid; "$PANDOC_BIN" textfrontmatter.md --latex-engine=xelatex -o textfrontmatter.pdf ; cd $scriptpath
@@ -687,7 +697,7 @@ else
 
 	if [ "$getwiki" = "yes" ] ; then
 
-		sed sed -e '/^$/d' -e '/^[0-9#@]/d' $TMPDIR$uuid/all_nouns.txt | sort | uniq -i > $TMPDIR$uuid/seeds #filters out numeric
+		sed -e '/^$/d' -e '/^[0-9#@]/d' $TMPDIR$uuid/all_nouns.txt | sort | uniq -i > $TMPDIR$uuid/seeds #filters out numeric
 		"$PYTHON_BIN" bin/wikifetcher.py --infile "$TMPDIR$uuid/seeds" --outfile "$TMPDIR$uuid/wikisummaries.md" --lang "en" 1> /dev/null
 		cp $TMPDIR$uuid/wikisummaries.md $TMPDIR$uuid/original.md
 		sed -e s/\=\=\=\=/xyxyxyxy/g -e s/\=\=\=/xyxyxy/g -e s/\=\=/xyxy/g -e s/xyxyxyxy/\#\#\#\#/g -e s/xyxyxy/\#\#\#/g -e s/xyxy/\#\#/g $TMPDIR$uuid/wikisummaries.md > $TMPDIR$uuid/wikiall.md
@@ -755,7 +765,7 @@ cd $scriptpath
 # deliver epub to Magento download builder
 
 ls -la $TMPDIR$uuid/full*
-cp $TMPDIR$uuid/full_wtoc.epub "$buildtarget"/full_wtoc.epub
+cp $TMPDIR$uuid/full_wtoc.epub "$buildtarget"full_wtoc.epub
 
 ls -la $buildtarget"f*"
 
@@ -788,10 +798,12 @@ fi
 echo  "product name is "$productname
 mkdir -p -m  755 "$metadatatargetpath$uuid"
 cat includes/builder-metadata-header.csv > $metadatatargetpath$uuid/"current-import.csv"
-. includes/builder-metadata-footer.sh
-# take a number if you are planning to import
 
-import="yes"
+. includes/builder-metadata-footer.sh # why is this not dat-metadata?
+# prev line is responsible for cat warnings
+# to stderr - footer needs tldr.txt and sorted.seefile to complete its metadata
+
+# take a number if you are planning to import
 if [ "$import" = "yes" ] ; then
 
 	echo "adding import job to the manifest"
@@ -799,7 +811,6 @@ if [ "$import" = "yes" ] ; then
 	echo "$uuid" >> import_status/manifest.csv
 
 	$scriptpath/bin/receiving_dock.sh
-
 
 else
 
@@ -845,8 +856,6 @@ fi
 dat_catalog_url="http://www.pagekicker.com/index.php/catalog/document-analysis-results/"$prevsku".html" #prevsku is bug
 echo $dat_catalog_url
 
-echo "gmail id is" $GMAIL_ID
-echo "gmail pw is " $GMAIL_PASSWORD
 
 if [ "$montageur_success" = 0 ] ; then
 
@@ -876,7 +885,7 @@ else
 sendemail -t "$customer_email" \
 	-u "Document Analysis Tools Result" \
 	-m "PageKicker's Document Analysis Robots living on "$MACHINE_NAME "and using version " $SFB_VERSION " of the PageKicker software have analyzed your file " $uploaded_tat_file " in job" $uuid \
-       ".  A word cloud, an image montage, a list of proper nouns, and a list of possible acronyms have been placed in the PageKicker catalog at" $dat_catalog_url ". Additional files, including a programmatic summary, are attached here."  \
+       ".  A word cloud, an image montage, a list of proper nouns, a list of possible acronyms and a programmatic summary, are attached."  \
 	-f "$GMAIL_ID" \
 	-cc "$GMAIL_ID" \
 	-xu "$GMAIL_ID" \
