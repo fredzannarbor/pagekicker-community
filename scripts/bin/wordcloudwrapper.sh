@@ -104,7 +104,7 @@ echo "configfile is" $configfile
 # rotate stopwordfile in and out
 
 echo "current stopfile is" $stopfile
-cp -u "$stopfile" $scriptpath"lib/IBMcloud/examples/pk-stopwords.txt"
+cp "$stopfile" $scriptpath"lib/IBMcloud/examples/pk-stopwords.txt"
 echo "running stopfile $stopfile"
 
 $JAVA_BIN -jar $scriptpath"lib/IBMcloud/ibm-word-cloud.jar" -c $configfile -h "$wordcloud_height" -w "$wordcloud_width" < $txtinfile > $outfile".png"
