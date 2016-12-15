@@ -26,4 +26,5 @@ cd $scriptpath
 . includes/set-variables.sh
 
 . ../test/paella.sh
+. ../test/decimator-test.sh ../test/data/Zalasiewicz_Technosphere_2016.pdf "pioneering metrics and inventory"
 . ../test/dat-mettan-test.sh
