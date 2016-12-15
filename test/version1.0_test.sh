@@ -26,3 +26,4 @@ cd $scriptpath
 . includes/set-variables.sh
 
 . ../test/paella.sh
+. ../test/dat-mettan-test.sh
