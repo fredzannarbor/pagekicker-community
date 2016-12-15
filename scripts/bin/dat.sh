@@ -862,7 +862,7 @@ if [ "$montageur_success" = 0 ] ; then
 sendemail -t "$customer_email" \
 	-u "Document Analysis Tools Result" \
 	-m "PageKicker's Document Analysis Robots living on "$MACHINE_NAME "and using version " $SFB_VERSION " of the PageKicker software have analyzed your file " $uploaded_tat_file " in job" $uuid \
-       ".  A word cloud, an image montage, a list of proper nouns, and a list of possible acronyms have been placed in the PageKicker catalog at" $dat_catalog_url ". Additional files, including a programmatic summary, are attached here." \
+       ".  A word cloud, an image montage, a list of proper nouns, a programmatic summary, a list of acronyms, and additional files are attached." \
 	-f "$GMAIL_ID" \
 	-cc "$GMAIL_ID" \
 	-xu "$GMAIL_ID" \
