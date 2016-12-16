@@ -184,14 +184,6 @@ shift 2
 buildtarget=${1#*=}
 shift
 ;;
---getwiki)
-getwiki=$2
-shift 2
-;;
---getwiki=*)
-getwiki={1#*=}
-shift
-;;
 --import)
 import=$2
 shift 2
@@ -599,7 +591,6 @@ else
 		echo "# " 'TL;DR:' "$tldr" >> $TMPDIR$uuid/titlepage.md
 	fi
 
-
 	echo '![imprint logo]'"($imprintlogo)"'\' >> $TMPDIR$uuid/titlepage.md
 	echo '\pagenumbering{roman}' >> $TMPDIR$uuid/titlepage.md
 	echo '\newpage' >> $TMPDIR$uuid/titlepage.md
@@ -664,9 +655,11 @@ else
 	# gs -sDEVICE=pdfwrite -sPAPERSIZE=letter -dFIXEDMEDIA -dPDFFitPage -dCompatibilityLevel=1.4 -o  $TMPDIR$uuid/lettersize_upload.pdf $TMPDIR$uuid/$uploaded_tat_file
 	cp $TMPDIR$uuid/$uploaded_tat_file $TMPDIR$uuid/lettersize_upload.pdf
 
-	pdftk $TMPDIR$uuid/$uuid"_frontmatter.pdf" $TMPDIR$uuid/lettersize_upload.pdf output $TMPDIR$uuid/$uuid"_front_body.pdf"
+ pdftk $TMPDIR$uuid/$uuid"_frontmatter.pdf" $TMPDIR$uuid/lettersize_upload.pdf output $TMPDIR$uuid/$uuid"_front_body.pdf"
 
 fi
+
+
 if [ "$backmatter" = "off" ] ; then
 	echo "not building back matter" | tee --append $sfb_log
 else
@@ -692,93 +685,13 @@ else
 	else
 		echo "didn't  process flickr files" | tee --append $sfb_log
 	fi
-
-	# assemble keyword reference appendix
-
-	if [ "$getwiki" = "yes" ] ; then
-
-		sed -e '/^$/d' -e '/^[0-9#@]/d' $TMPDIR$uuid/all_nouns.txt | sort | uniq -i > $TMPDIR$uuid/seeds #filters out numeric
-		"$PYTHON_BIN" bin/wikifetcher.py --infile "$TMPDIR$uuid/seeds" --outfile "$TMPDIR$uuid/wikisummaries.md" --lang "en" 1> /dev/null
-		cp $TMPDIR$uuid/wikisummaries.md $TMPDIR$uuid/original.md
-		sed -e s/\=\=\=\=/xyxyxyxy/g -e s/\=\=\=/xyxyxy/g -e s/\=\=/xyxy/g -e s/xyxyxyxy/\#\#\#\#/g -e s/xyxyxy/\#\#\#/g -e s/xyxy/\#\#/g $TMPDIR$uuid/wikisummaries.md > $TMPDIR$uuid/wikiall.md
-		grep -v '\\x' $TMPDIR$uuid/wikiall.md > $TMPDIR$uuid/wikisafe.md # stripping certain escape characters
-		cp $TMPDIR$uuid/wikisafe.md $TMPDIR$uuid/wikisummaries.md
-		"$PANDOC_BIN" -o $TMPDIR$uuid/wikisummaries.pdf $TMPDIR$uuid/wikisummaries.md --latex-engine=xelatex
-
-	else
-		# getwiki =no speeds up performance a lot since fetcher need not run
-		touch $TMPDIR$uuid/wikisummaries.md
-	fi
-
-	# assemble back matter
-	cp $TMPDIR$uuid/wikisummaries.pdf $TMPDIR$uuid/backmatter.pdf
-
-	# flick photos
-
-	# indexes
-
-	# appendixes
-
-	# cp $TMPDIR$uuid/images.pdf $TMPDIR$uuid/backmatter.pdf # temporary, just until more back matter parts are added
-
-	pdftk $TMPDIR$uuid/$uuid"_front_body.pdf" $TMPDIR$uuid/backmatter.pdf output $TMPDIR$uuid/$uuid"_all.pdf"
 fi
 
-#build epub with TOC
 
-cd $TMPDIR$uuid
-"$PANDOC_BIN" -S -o full_wtoc.epub titlepage.md \
-"$imprintcopyrightpage" \
-robot_author.md \
-summary.md \
-rr.md \
-sorted_uniqs.md \
-body.md \
-wikisummaries.md
-# temporarily removed flickr/all.md
-
-echo "getwiki is" $getwiki
-
-if [ "$getwiki" = "yes" ] ; then
-
-	"$PANDOC_BIN" -s -S -o research_report.docx titlepage.md \
-	"$imprintcopyrightpage" \
-	robot_author.md \
-	summary.md \
-	rr.md \
-	sorted_uniqs.md \
-	wikisummaries.md
-
-else
-
-	"$PANDOC_BIN" -s -S -o research_report.docx titlepage.md \
-	"$imprintcopyrightpage" \
-	robot_author.md \
-	summary.md \
-	rr.md \
-	sorted_uniqs.md \
-
-fi
-
-cd $scriptpath
-
-# deliver epub to Magento download builder
-
-ls -la $TMPDIR$uuid/full*
-cp $TMPDIR$uuid/full_wtoc.epub "$buildtarget"full_wtoc.epub
-
-ls -la $buildtarget"f*"
-
-#deliver *Metadata files* to Magento
-
-mkdir -p -m 755 $mediatargetpath$uuid
-cp $TMPDIR$uuid/wordcloudbig.png $mediatargetpath$uuid/$sku"wordcloudbig.png"
-cp $TMPDIR$uuid/summary.txt $mediatargetpath$uuid/$sku"summary.txt"
-cp $TMPDIR$uuid/all_nouns.txt $mediatargetpath$uuid/$sku"all_nouns.txt"
-cp $TMPDIR$uuid/rr.pdf $mediatargetpath$uuid/$sku"rr.pdf"
-cp $TMPDIR$uuid/acronyms.txt $mediatargetpath$uuid/$sku"acronyms.txt"
+mkdir -p 755 $mediatargetpath$uuid
 
 if [ "$montageur_success" = 0 ] ; then
+
 	cp $TMPDIR$uuid/montage.jpg $mediatargetpath$uuid/$sku"montage.jpg"
 	cp $TMPDIR$uuid/montagetopn.jpg $mediatargetpath$uuid/$sku"montagetopn.jpg"
 else
@@ -789,38 +702,6 @@ fi
 cat $TMPDIR$uuid/textfrontmatter.md $TMPDIR$uuid/body.md  > $TMPDIR$uuid/complete.md
 
 # create metadata
-
-if [[ -z "$customtitle" ]] ; then
-	productname=`echo "$uploaded_tat_file" | colrm 30`
-else
-	productname="$customtitle"
-fi
-echo  "product name is "$productname
-mkdir -p -m  755 "$metadatatargetpath$uuid"
-cat includes/builder-metadata-header.csv > $metadatatargetpath$uuid/"current-import.csv"
-
-. includes/builder-metadata-footer.sh # why is this not dat-metadata?
-# prev line is responsible for cat warnings
-# to stderr - footer needs tldr.txt and sorted.seefile to complete its metadata
-
-# take a number if you are planning to import
-if [ "$import" = "yes" ] ; then
-
-	echo "adding import job to the manifest"
-
-	echo "$uuid" >> import_status/manifest.csv
-
-	$scriptpath/bin/receiving_dock.sh
-
-else
-
-	echo "not importing this job"
-
-fi
-
-echo "put docs on webserver where they are available" | tee --append $sfb_log
-
-# share
 
 twitter_announcement="no"
 
@@ -851,11 +732,6 @@ else
         echo "no fb notification" | tee --append $sfb_log
 fi
 
- # deliver via e-mail
-
-dat_catalog_url="http://www.pagekicker.com/index.php/catalog/document-analysis-results/"$prevsku".html" #prevsku is bug
-echo $dat_catalog_url
-
 
 if [ "$montageur_success" = 0 ] ; then
 
@@ -876,7 +752,6 @@ sendemail -t "$customer_email" \
 	-a $TMPDIR$uuid/acronyms.txt \
 	-a $logdir$uuid"/xform_log" \
 	-a $TMPDIR$uuid/rr.md \
-	-a $TMPDIR$uuid/research_report.docx \
 	-a $TMPDIR$uuid/montage.jpg \
 	-a $TMPDIR$uuid/montagetopn.jpg
 
@@ -901,7 +776,4 @@ sendemail -t "$customer_email" \
 	-a $TMPDIR$uuid/research_report.docx \
 	-a $TMPDIR$uuid/rr.md
 
-
 fi
-
-# not sending montageur_success correctly I think
