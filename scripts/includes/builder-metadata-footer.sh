@@ -194,7 +194,7 @@ echo -n "," >> $metadatatargetpath$uuid"/current-import.csv"
 
 # status
 
-echo -n "$status," >> $metadatatargetpath$uuid"/current-import.csv" 
+echo -n '"'$status'"', >> $metadatatargetpath$uuid"/current-import.csv" 
 
 # visibility
 
