@@ -922,8 +922,8 @@ if [ "$import" = "yes" ] ; then
 
 	echo "adding import job to the manifest"
 
-	echo $uuid >> import_status/manifest.csv
-
+	echo "$uuid" >> $scriptpath/import_status/manifest.csv
+  ls -lart $scriptpath/import_status/manifest.csv
 	$scriptpath"bin/receiving_dock.sh"
 
 else

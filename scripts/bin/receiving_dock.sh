@@ -6,7 +6,7 @@
 # get configuration variables
 
 if shopt -q  login_shell ; then
-	
+
 	if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
 		echo "config file not found, creating /home/<user>/.pagekicker, put config file there"
 		mkdir -p -m 755 "$HOME"/.pagekicker
@@ -17,7 +17,7 @@ if shopt -q  login_shell ; then
 		echo "read config file from login shell $HOME""/.pagekicker/config.txt"
 	fi
 else
-	. /home/$(whoami)/.pagekicker/config.txt #hard-coding /home is a hack 
+	. /home/$(whoami)/.pagekicker/config.txt #hard-coding /home is a hack
 	echo "read config file from nonlogin shell /home/$(whoami)/.pagekicker/config.txt"
 fi
 
@@ -28,11 +28,10 @@ fi
 while read backofthetruck
 do
 
-	echo "wheeling job #" $backofthetruck "onto the receiving dock"| tee --append "$logdir"import_log.txt
+	echo "wheeling job #" $backofthetruck "onto the receiving dock"
 
 	echo "metadatarget path is" $metadatatargetpath
 	cp $metadatatargetpath$backofthetruck/current-import.csv $metadatatargetpath"current-import.csv"
-
 	echo "lifting the boxes off the truck and putting them on the conveyor belt"
 
 	# echo "opening the pod bay door"
@@ -53,7 +52,3 @@ rm $scriptpath"import_status/manifest.csv"
 echo "the empty truck has pulled away from the dock, we are waiting for the next truck to arrive"  | tee --append "$logdir"import_log.txt
 
 exit
-
-
-
-
