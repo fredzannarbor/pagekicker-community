@@ -26,7 +26,7 @@ fi
 
 
 bin/create-catalog-entry.sh --builder "yes" --booktitle "Paella" --yourname "Manuel" --jobprofilename "default" --import "no" --passuuid "$uuid" --seedfile "seeds/paella" --imprint "pagekicker"  \
---analyze_url "none" --summary "both" --import "yes" --skyscraper "yes"
+--analyze_url "none" --summary "both" --import "yes" --skyscraper "yes" --status "Disabled"
 
 # tests begin here
 
