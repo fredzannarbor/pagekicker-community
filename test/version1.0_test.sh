@@ -29,3 +29,4 @@ cd $scriptpath
 . ../test/decimator-test.sh ../test/data/Zalasiewicz_Technosphere_2016.pdf "pioneering metrics and inventory"
 . ../test/dat-mettan-test.sh
 . ../test/import-paella.sh
+bin/memecard.sh --infile  ../test/data/FBadvisory.md --tldr "Addicted to Facebook?" 
