@@ -1,18 +1,25 @@
 #!/bin/bash
 TMPDIR="/tmp/pagekicker/"
-uuid="bloviate1"
+uuid="memecard"  && mkdir -p $TMPDIR"$uuid"
 confdir="/home/fred/pagekicker-community/conf/"
 memewidth=1200
 memeheight=630
 #USAGE age: $1 is input markdownfile $2 is tldr
+backgroundcolor="white"
+fillcolor="black"
+headlinefont="GillSansStd"
 
-convert -units pixelsperinch -density 300 -size 1000x100 -background blue -fill Yellow -gravity center  caption:"$2" $TMPDIR$uuid/toplabel1.png
+# create title bar
 
-echo -e '\pagenumbering{gobble}\n' | cat - $1 > /tmp/out && mv /tmp/out $1
+convert -units pixelsperinch -density 300 -size 1000x50 -border 5 -background "$backgroundcolor" -font "$headlinefont" -fill "$fillcolor" -gravity center  caption:"$2" $TMPDIR$uuid/toplabel1.png
+
+# prepend pagenumbering to tmp file
+
+echo -e '\pagenumbering{gobble}\n' | cat - $1 > /tmp/out && mv /tmp/out $TMPDIR$uuid/tmpcard.md
 
 # make pdf
 
-cat "$1"  | \
+cat $TMPDIR$uuid/tmpcard.md  | \
  pandoc  --latex-engine=xelatex --template=$confdir"pandoc_templates/nonumtemplate.tex" \
 -o $TMPDIR$uuid/memecard.pdf -V "geometry:paperheight=8.5in"
 
