@@ -160,3 +160,5 @@ $TMPDIR$uuid/memecard.png
 # create card for delivery to desitnation
 
 convert $TMPDIR$uuid"/memecard.png" -trim -border 30 $TMPDIR$uuid/memecard_delivery.png
+
+echo "built memecard and delivered it to $TMPDIR$uuid/memecard_delivery.png"
