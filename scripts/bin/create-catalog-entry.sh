@@ -523,8 +523,6 @@ else
 
 fi
 
-# test values
-
 # create directories I will need
 
 mkdir -p -m 777 $TMPDIR
@@ -585,8 +583,20 @@ csv)
 	cp $seedfile "$TMPDIR"$uuid/seeds/seedphrases
 ;;
 *)
-	echo "getting metadata from command line"
-	cp $seedfile "$TMPDIR"$uuid/seeds/seedphrases
+	echo "getting path to seedfile from command line"
+	if [ -z "$seedfile" ] ; then
+		if [ "$singleseed" = "no" ] ; then
+				echo "no seed file or singleseed was providing, exiting"
+				exit 0
+			else
+				seed="$singleseed"
+				echo "seed is now singleseed" "$seed"
+				echo "$singleseed" > "$TMPDIR"$uuid/seeds/seedphrases
+		fi
+	else
+	  echo "path to seedfile was $seedfile"
+		cp $seedfile "$TMPDIR"$uuid/seeds/seedphrases
+	fi
 ;;
 esac
 
@@ -631,8 +641,6 @@ else
 fi
 
 human_author="$editedby"
-
-# verbose logging
 
 # APIs
 
