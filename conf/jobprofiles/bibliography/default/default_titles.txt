@@ -1,4 +1,3 @@
-* 
 * 111
 * 802.11 ad  And Now For Something Completely Different
 * 802.11 ad And Now For Something Completely Different
@@ -225,4 +224,3 @@
 * world peace
 * World's 57 largest book publishers [test]
 * Россия начало 21-ого века
-* 本の自炊

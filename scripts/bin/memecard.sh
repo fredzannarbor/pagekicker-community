@@ -1,9 +1,6 @@
 #!/bin/bash
 
 
-font="Adler"
-memewidth=1200
-memeheight=630
 
 echo "****MEMECARD****"
 
@@ -24,6 +21,15 @@ else
 fi
 
 cd $scriptpath
+
+TMPDIR="/tmp/pagekicker/"
+uuid="memecard"  && mkdir -p $TMPDIR"$uuid"
+confdir="/home/fred/pagekicker-community/conf/"
+memewidth=1200
+memeheight=630
+memebackgroundcolor="white"
+memefillcolor="black"
+memeheadlinefont="GillSansStd"
 
 . includes/set-variables.sh
 
@@ -113,12 +119,16 @@ fi
 
 cp "$infile" $TMPDIR$uuid/tmp.md
 
-# make labels
+# create title bar & version label
 
-convert -units pixelsperinch -density 300 -size 1000x50 -font "$font" -background black -fill white -gravity center -border 5  caption:"$tldr" $TMPDIR$uuid/toplabel1.png
-convert -units pixelsperinch -density 300 -size 200x15 -font "Calibri" -background white -fill black -gravity southeast caption:"$SFB_VERSION" $TMPDIR$uuid/version.png
+convert -units pixelsperinch -density 300 -size 1000x50 -border 5 -background "$backgroundcolor" -font "$memeheadlinefont" -fill "$memefillcolor" -background "$memebackgroundcolor" -gravity center  caption:"$tldr" $TMPDIR$uuid/toplabel1.png
+convert -units pixelsperinch -density 300 -size 250x25 -font "Calibri" -background white -fill black -gravity southeast caption:"$SFB_VERSION" $TMPDIR$uuid/version.png
+
+# prepend pagenumbering to tmp file
 
 echo -e '\pagenumbering{gobble}\n' | cat - $TMPDIR$uuid/"tmp.md" > $TMPDIR$uuid/out && mv $TMPDIR$uuid/out $TMPDIR$uuid/"tmp.md"
+
+# make pdf
 
 # make pdf
 
@@ -127,10 +137,11 @@ cat $TMPDIR$uuid/"tmp.md"  | \
 -o $TMPDIR$uuid/memecard.pdf
 # -V "geometry:paperheight=5.0in" -V "geometry:paperwidth=7.0in"
 
-# make png
+# make png of text
 convert -density 400  $TMPDIR$uuid/memecard.pdf  -trim $TMPDIR$uuid/memecard.png
 # "if error issued here see comments in includes/1000x3000skyscraper.sh for explanation"
 
+# lay logo & version onto bottom label
 
 convert $TMPDIR$uuid/memecard.png -border 30 $TMPDIR$uuid/memecard.png
 # put logo on 1000 px wide & trim
@@ -139,11 +150,15 @@ convert $TMPDIR$uuid"/pksmall.jpg" -gravity west -background white -extent 1024x
 $TMPDIR$uuid/memecardlogo.png
  convert -gravity center $TMPDIR$uuid/memecardlogo.png -gravity southeast $TMPDIR$uuid/version.png -composite   $TMPDIR$uuid/bottom.png
 
-# make card
+# lay image of text onto card background
 montage $TMPDIR$uuid/toplabel1.png \
 $TMPDIR$uuid"/memecard.png" \
 $TMPDIR$uuid/bottom.png  \
 -geometry "$memewidth"x"$memeheight" -border 10 -tile 1x10 -mode concatenate \
 $TMPDIR$uuid/memecard.png
 
-convert $TMPDIR$uuid"/memecard.png" -trim -border 30 $TMPDIR$uuid/memecardw1200.png
+# create card for delivery to desitnation
+
+convert $TMPDIR$uuid"/memecard.png" -trim -border 30 $TMPDIR$uuid/memecard_delivery.png
+
+echo "built memecard and delivered it to $TMPDIR$uuid/memecard_delivery.png"
