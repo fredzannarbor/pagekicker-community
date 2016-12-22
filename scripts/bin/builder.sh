@@ -910,13 +910,14 @@ fi
 	echo "" >> "$TMPDIR"$uuid/sources.md
 
 	echo "# Also built by PageKicker Robot $jobprofilename" >>   "$TMPDIR"$uuid/builtby.md
-	sort -u --ignore-case "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.txt" -o  "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.txt" # currently sort by alphabetical
-	cat "$LOCAL_DATA"/bibliography/robots/"$jobprofilename"/"$jobprofilename""_titles.txt" >>  "$TMPDIR"$uuid/builtby.md
+	sort -u --ignore-case "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.txt" -o  "$LOCAL_DATA"/bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.tmp" # currently sort by alphabetical
+	cat "$LOCAL_DATA"/bibliography/robots/"$jobprofilename"/"$jobprofilename""_titles.tmp" >>  "$TMPDIR"$uuid/builtby.md
 	echo " ">>  "$TMPDIR"$uuid/builtby.md
 	echo " " >>  "$TMPDIR"$uuid/builtby.md
 
-	echo "# Also from $imprintname" >>   "$TMPDIR"$uuid/byimprint.md
+
 	if [ "add_imprint_biblio" = "yes" ] ; then
+			echo "# Also from $imprintname" >>   "$TMPDIR"$uuid/byimprint.md
 			uniq "$LOCAL_DATA"bibliography/imprints/"$imprint"/$imprint"_titles.txt" >>  "$TMPDIR"$uuid/byimprint.md # imprint pubs are not alpha
 			echo "" >> "$TMPDIR"$uuid"/byimprint.md"
 			echo "" >> "$TMPDIR"$uuid"/byimprint.md"
@@ -1099,11 +1100,12 @@ else
   #	ls -la "$seedfile"
 fi
 
-echo "appending & sorting new bibliography entries"
-echo "* ""$bibliography_title" >> "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/"$jobprofilename"_titles.txt
-echo "* ""$bibliography_title" >> "$LOCAL_DATA"bibliography/imprints/"$imprint"/"$imprint"_titles.txt
+echo "moving tmp biography to replace prior one"
+cp "$LOCAL_DATA"/bibliography/robots/"$jobprofilename"/"$jobprofilename""_titles.tmp"  "$LOCAL_DATA"/bibliography/robots/"$jobprofilename"/"$jobprofilename""_titles.txt"
+echo "appending & sorting new bibliography entries" # last item is out of alpha order, so must be sorted when read in future
+echo "* $bibliography_title" >> "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/"$jobprofilename"_titles.txt
+echo "* $bibliography_title" >> "$LOCAL_DATA"bibliography/imprints/"$imprint"/"$imprint"_titles.txt
 cat "$TMPDIR"$uuid"/yaml-metadata.md" >> "$LOCAL_DATA"bibliography/yaml/allbuilds.yaml
-
 
 echo "exiting builder"
 exit 0
