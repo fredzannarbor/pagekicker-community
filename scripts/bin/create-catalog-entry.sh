@@ -493,6 +493,14 @@ shift 2
 skyscraper=${1#*=}
 shift
 ;;
+--twitter_announcement)
+twitter_announcement=$2
+shift 2
+;;
+--twitter_announcement=*)
+twitter_announcement=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -934,6 +942,7 @@ if [ "$import" = "yes" ] ; then
   ls -lart $scriptpath/import_status/manifest.csv
 	$scriptpath"bin/receiving_dock.sh"
 
+
 else
 
 	echo "not importing this job"
@@ -990,6 +999,28 @@ if [ "$mailtoadmin" = "yes" ] ; then
 else
 	echo "not mailing to $mailtoadmin_ids"
 
+fi
+
+
+if [ "$twitter_announcement" = "yes" ] ; then
+
+        echo -n "t update " > $TMPDIR$uuid/tcommand
+        echo -n  \" >> $TMPDIR$uuid/tcommand
+        echo -n "New: $booktitle at "$WEB_HOST"index.php/$prevsku.html robots #amwriting" >> $TMPDIR$uuid/tcommand
+        echo -n \" >> $TMPDIR$uuid/tcommand
+        . $TMPDIR$uuid/tcommand
+
+else
+        echo "no twitter announcement" | tee --append $sfb_log
+
+fi
+
+if [ "$fb_announcement" = "yes" ] ; then
+
+        facebook-cli post "robot author #amwriting $booktitle at \ $WEB_HOST"index.php/"$prevsku.html"
+
+else
+        echo "no fb notification" | tee --append $sfb_log
 fi
 
 echo 'job ' $uuid 'ending logging at' `date +'%m/%d/%y%n %H:%M:%S'` >> $sfb_log
