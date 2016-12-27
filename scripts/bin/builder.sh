@@ -449,14 +449,20 @@ echo "sku is" $sku
 
 echo "test $covercolor" "$coverfont"
 
-#echo "seedfile is " $seedfile
-#ls -lart "seedfile is" $seedfile
-if [ "$singleseed" = "no" ] ; then
-	echo "no singleseed"
+# resolving seedfile from command line
+
+if [ -z "$seedfile" ] ; then
+	if [ -z "$singleseed" ] ; then
+			echo "no seed file or singleseed was provided, exiting"
+			exit 0
+		else
+			seed="$singleseed"
+			echo "seed is now singleseed" "$seed"
+			echo "$singleseed" > "$TMPDIR"$uuid/seeds/seedphrases
+	fi
 else
-	seed="$singleseed"
-	echo "seed is now singleseed" "$seed"
-	echo "$seed" > "$seedfile"
+	echo "path to seedfile was $seedfile"
+	cp $seedfile "$TMPDIR"$uuid/seeds/seedphrases
 fi
 
 #echo "seedfile is " $seedfile
