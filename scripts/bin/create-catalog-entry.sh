@@ -593,7 +593,7 @@ csv)
 *)
 	echo "getting path to seedfile from command line"
 	if [ -z "$seedfile" ] ; then
-		if [ "$singleseed" = "no" ] ; then
+		if [ -z "$singleseed" ] ; then
 				echo "no seed file or singleseed was provided, exiting"
 				exit 0
 			else
@@ -706,7 +706,7 @@ echo "seedfile is" $seedfile
 
 
 cat "$TMPDIR$uuid/seeds/seedphrases" | uniq | sort | sed -e '/^$/d' -e '/^[0-9#@]/d' > "$TMPDIR$uuid/seeds/sorted.seedfile"
-cat "$TMPDIR$uuid/seeds/sorted.seedfile" > "$LOCAL_DATA"seeds/history/"$sku".seedphrasesb
+cat "$TMPDIR$uuid/seeds/sorted.seedfile" > "$LOCAL_DATA"seeds/history/"$sku".seedphrases
 
 #expand seeds to valid wiki pages
 
