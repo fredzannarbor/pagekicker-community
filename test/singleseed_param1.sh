@@ -26,7 +26,7 @@ fi
 
 
 bin/create-catalog-entry.sh --builder "yes" --booktitle "$1" --yourname "Sam Johnson" --jobprofilename "default" --import "no" --passuuid "$uuid" --singleseed "$1" --imprint "pagekicker"  \
---analyze_url "none" --summary "both" --import "no" --skyscraper "yes"
+--analyze_url "none" --summary "both" --import "yes" --skyscraper "yes"
 
 # tests begin here
 
