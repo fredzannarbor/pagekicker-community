@@ -594,7 +594,7 @@ csv)
 	echo "getting path to seedfile from command line"
 	if [ -z "$seedfile" ] ; then
 		if [ "$singleseed" = "no" ] ; then
-				echo "no seed file or singleseed was providing, exiting"
+				echo "no seed file or singleseed was provided, exiting"
 				exit 0
 			else
 				seed="$singleseed"
