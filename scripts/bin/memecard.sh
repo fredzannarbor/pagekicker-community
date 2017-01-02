@@ -24,7 +24,7 @@ cd $scriptpath
 
 TMPDIR="/tmp/pagekicker/"
 uuid="memecard"  && mkdir -p $TMPDIR"$uuid"
-confdir="/home/fred/pagekicker-community/conf/"
+confdir="$confdir"
 memewidth=1200
 memeheight=630
 memebackgroundcolor="white"
