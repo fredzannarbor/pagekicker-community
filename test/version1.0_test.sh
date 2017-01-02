@@ -22,10 +22,17 @@ else
 fi
 
 cd $scriptpath
-
+echo "$import_available_on_machine importing"
 . includes/set-variables.sh
 
-. ../test/paella.sh
-. ../test/decimator-test.sh ../test/data/Zalasiewicz_Technosphere_2016.pdf "pioneering metrics and inventory"
-. ../test/dat-mettan-test.sh
-. ../test/import-paella.sh
+../test/paella.sh
+../test/decimator-test.sh ../test/data/Zalasiewicz_Technosphere_2016.pdf "pioneering metrics and inventory"
+../test/dat-mettan-test.sh
+
+if [ "$import_available_on_machine" = "no" ] ; then
+	(>&2 echo "importing not available on this machine")
+else
+		. ../test/import-paella.sh
+fi
+
+bin/memecard.sh --infile  ../test/data/FBadvisory.md --tldr "Addicted to Facebook?"

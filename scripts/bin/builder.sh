@@ -449,14 +449,20 @@ echo "sku is" $sku
 
 echo "test $covercolor" "$coverfont"
 
-#echo "seedfile is " $seedfile
-#ls -lart "seedfile is" $seedfile
-if [ "$singleseed" = "no" ] ; then
-	echo "no singleseed"
+# resolving seedfile from command line
+
+if [ -z "$seedfile" ] ; then
+	if [ -z "$singleseed" ] ; then
+			echo "no seed file or singleseed was provided, exiting"
+			exit 0
+		else
+			seed="$singleseed"
+			echo "seed is now singleseed" "$seed"
+			echo "$singleseed" > "$TMPDIR"$uuid/seeds/seedphrases
+	fi
 else
-	seed="$singleseed"
-	echo "seed is now singleseed" "$seed"
-	echo "$seed" > "$seedfile"
+	echo "path to seedfile was $seedfile"
+	cp $seedfile "$TMPDIR"$uuid/seeds/seedphrases
 fi
 
 #echo "seedfile is " $seedfile
@@ -975,7 +981,7 @@ cd  "$TMPDIR"$uuid
 "$PANDOC_BIN" -o "$TMPDIR"$uuid/$sku"."$safe_product_name".txt"   "$TMPDIR"$uuid/complete.md
 "$PANDOC_BIN" -o "$TMPDIR"$uuid/$sku"."$safe_product_name".mw" -t mediawiki -s -S  "$TMPDIR"$uuid/complete.md
 cp "$TMPDIR"$uuid/$sku"."$safe_product_name".txt" "$TMPDIR"$uuid/4stdout".txt"
-cp "$TMPDIR"$uuid/$sku"."$safe_product_name".txt" "$TMPDIR"4stdout".txt"
+
 cd $scriptpath
 lib/KindleGen/kindlegen "$TMPDIR"$uuid/$sku."$safe_product_name"".epub" -o "$sku.$safe_product_name"".mobi" 1> /dev/null
 #ls -lart  "$TMPDIR"$uuid
@@ -1022,8 +1028,14 @@ echo "checking that buildtarget exists"
 
 esac
 
-cp "$TMPDIR"$uuid/$sku.$safe_product_name".epub" /tmp/pagekicker/delivery.epub
-cp "$TMPDIR"$uuid/$sku.$safe_product_name".docx" /tmp/pagekicker/delivery.docx
+if [ "$two1" = "yes" ] ; then
+	echo "moving files so 21 script does not need to know uuid"
+	cp "$TMPDIR"$uuid/$sku"."$safe_product_name".txt" "$TMPDIR"4stdout".txt"
+	cp "$TMPDIR"$uuid/$sku.$safe_product_name".epub" /tmp/pagekicker/delivery.epub
+	cp "$TMPDIR"$uuid/$sku.$safe_product_name".docx" /tmp/pagekicker/delivery.docx
+else
+	echo "files not requested from 21"
+fi
 
 # build skyscraper image
 
