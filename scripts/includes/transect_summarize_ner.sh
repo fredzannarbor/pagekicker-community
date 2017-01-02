@@ -1,13 +1,13 @@
 for file in "$TMPDIR"$uuid"/xtarget."*
 do
-
+		echo $scriptpath
 		"$PYTHON27_BIN" $scriptpath"bin/nerv3.py" $file $file"_nouns.txt" "$uuid"
 		echo "ran nerv3 on $file" | tee --append $sfb_log
 		cat "$TMPDIR$uuid"/Places >> "$TMPDIR"$uuid"/"$sku"."$safe_product_name"_Places"
 		cat "$TMPDIR$uuid"/People >>  "$TMPDIR"$uuid"/"$sku"."$safe_product_name"_People"
 		cat "$TMPDIR$uuid"/Other >>  "$TMPDIR"$uuid"/"$sku"."$safe_product_name"_Other"
 
-		echo "python_bin for running PKsum is" $PYTHON_BIN "and PYTHON_BIN actually is"
+		echo -n "python_bin for running PKsum is" $PYTHON_BIN "and PYTHON_BIN actually is "
 		"$PYTHON_BIN" --version
 
 		"$PYTHON_BIN" bin/PKsum.py -l "$summary_length" -o $file"_summary.txt" $file
