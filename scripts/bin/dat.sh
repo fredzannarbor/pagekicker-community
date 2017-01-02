@@ -282,9 +282,9 @@ imagekeyword=$(xmlstarlet sel -t -v "/item/imagekeyword" "$xmlfilename")
 
 . "$confdir"jobprofiles/robots/"$jobprofilename"".jobprofile"
 . "$confdir"jobprofiles/imprints/$imprint/$imprint".imprint"
-echo "$jobprofile"
-echo "$imprint"
-echo $WEBFORMSXML_HOME
+echo "jobprofile is $jobprofile"
+echo "imprint is $imprint"
+echo "WEBFORMSXML_HOME is $WEBFORMSXML_HOME"
 
 export LANG
 
@@ -315,10 +315,10 @@ echo "uploaded_tat_file is "$uploaded_tat_file
 
 
 if  [ -z "$url" ] ; then
-	echo "WEBFORMSHOME is" $WEBFORMSHOME
+	echo "WEBFORMSXML_HOME is" $WEBFORMSXML_HOME
 
-	cp $WEBFORMSHOME$submissionid_base/$upload_tat_field_code/*/$uploaded_tat_file $TMPDIR$uuid/$uploaded_tat_file
-	cp $WEBFORMSHOME$submissionid_base/$upload_tat_field_code/*/$uploaded_tat_file $scriptpath/scr/debug
+	cp $WEBFORMSXML_HOME$submissionid_base/$upload_tat_field_code/*/$uploaded_tat_file $TMPDIR$uuid/$uploaded_tat_file
+	cp $WEBFORMSXML_HOME$submissionid_base/$upload_tat_field_code/*/$uploaded_tat_file $scriptpath/scr/debug
 
 else
 
