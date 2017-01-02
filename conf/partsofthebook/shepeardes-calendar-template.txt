@@ -1,0 +1,15 @@
+# The Shephearde's Calender
+# parts of the book template
+
+# title
+# dedication to patron
+# General Argument of the Whole Booke (explanation of structure)
+# 12 eclogues, one per month, beginning in January
+# ECLOGUE (EC'LOGUE) n.s.[ejkocg.] A pastoral poem so called, because Virgil called his pastorals eclogues.
+## [monthname]
+## [Eclogue #]
+## ARGUMENT (abstract, one para)
+## [the poem itself]
+## CHARACTER EMBLEMES -- each character's embleme, or motto
+## GLOSSE (glossary of terms in order of appearance, each term in ital)
+## CHAPTER EMBLEME
