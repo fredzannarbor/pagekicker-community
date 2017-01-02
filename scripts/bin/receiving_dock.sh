@@ -36,6 +36,8 @@ do
 
 	# echo "opening the pod bay door"
 	# echo $SFB_MAGENTO_HOME $SFB_PHP_BIN $scriptpath
+
+	
 	cd $SFB_MAGENTO_HOME ; $SFB_PHP_BIN $scriptpath"bin/import_cron.php"
 
 	importrows=$(grep 'admin' var/import/current-import.csv | wc -l)
