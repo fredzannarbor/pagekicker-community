@@ -27,7 +27,7 @@ echo "$import_available_on_machine importing"
 
 ../test/paella.sh
 ../test/decimator-test.sh ../test/data/Zalasiewicz_Technosphere_2016.pdf "pioneering metrics and inventory"
-bin/xform.sh /home/fred/pagekicker-community/test/data mettan.xml
+bin/xform.sh "$SFB_HOME"/test/data mettan.xml
 
 if [ "$import_available_on_machine" = "no" ] ; then
 	(>&2 echo "importing not available on this machine")
