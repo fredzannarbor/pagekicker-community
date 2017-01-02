@@ -157,6 +157,7 @@ toplabelfontname="WatersTitlingPro-Bd" #Decimator
 txtformatname=".txt"
 txtwildcard="*.txt"
 twitter_announcement="no"
+two1="no"
 type="downloadable"
 userdatadir="none"
 userdescription="no"
