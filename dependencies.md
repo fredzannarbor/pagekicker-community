@@ -4,6 +4,8 @@ Python 2.7 *and* Python 3.5.2 (some helper programs use one or the other)
 
 python libraries: see requirements.txt
 
+php (for Magento -- should be installed with Magento stack)
+
 imagemagick 6.8.9 or more
 sendemail # note middle "e", this is lightweight version that is very portable
           # sendemail has issue with TLS/SSL in Ubuntu 14.04, needs to be fixed
@@ -26,4 +28,3 @@ t command line twitter client with Twitter API key # any other twitter search cl
 Storefronts:
 
 The Magento storefront requires Magento Community 1.9.2.4.1 (free) plus several commercial extensions that have been customized by PageKicker.  Distribution via the PageKicker store and private label hosted solutions are available via PageKicker Enterprise.
- 
