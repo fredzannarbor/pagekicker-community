@@ -7,6 +7,9 @@
 # input: PDF file
 # output: unique jpgs, zip, montage
 
+echo "-M-M-M-M-M-M-M-M-M-M-M-M-M-M" | tee --append $xform_log
+echo "starting montageur"| tee --append $xform_log
+
 if shopt -q  login_shell ; then
 
 	if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
@@ -32,8 +35,6 @@ echo "scriptpath is" $scriptpath
 
 starttime=$(( `date +%s` ))
 
-echo "-M-M-M-M-M-M-M-M-M-M-M-M-M-M" | tee --append $xform_log
-echo "starting montageur"| tee --append $xform_log
 
 while :
 do
