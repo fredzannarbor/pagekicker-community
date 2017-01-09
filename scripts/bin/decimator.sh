@@ -383,10 +383,16 @@ convert -background blue -fill Yellow -gravity west -size 3300x200 -font "$topla
 convert xc:blue -size 3300x200 $TMPDIR$uuid/bottomlabel2.png
 convert -background white -fill black -gravity west -size 1000x2000 -font "$slidebodyfont" -pointsize "96" caption:@$TMPDIR$uuid/tldr.txt $TMPDIR$uuid/tldr.png
 
+# page 1 image
+pdftk $TMPDIR$uuid/targetfile.pdf cat 1 output $TMPDIR$uuid/p1.pdf
+convert -density 300 $TMPDIR$uuid/p1.pdf $TMPDIR$uuid/p1.png
+convert $TMPDIR$uuid/p1.png -background white -flatten -resize 50% $TMPDIR$uuid/p1.png
+
+
 # create montage of sample image + TLDR
 
-montage  -units pixelsperinch -density 300 -size 3300x2100 $TMPDIR$uuid/dl-0.jpg $TMPDIR$uuid/tldr.png $TMPDIR$uuid/p1_montage.png
-montage $TMPDIR$uuid/dl_top_pane.png $TMPDIR$uuid/tldr.png -geometry 1500x2000\>+100+100 $TMPDIR$uuid/p1_montage.png
+#montage  -units pixelsperinch -density 300 -size 3300x2100 $TMPDIR$uuid/p1.png $TMPDIR$uuid/tldr.png $TMPDIR$uuid/p1_montage.png
+convert +append $TMPDIR$uuid/p1.png  $TMPDIR$uuid/tldr.png -resize 3100x2000 $TMPDIR$uuid/p1_montage.png
 convert -units pixelsperinch -density 300 xc:blue -size 3300x200  $TMPDIR$uuid/bottomlabel1.png
 convert -units pixelsperinch -density 300 $TMPDIR$uuid/canvas.png \
 $TMPDIR$uuid/toplabel1.png -gravity north -composite \
@@ -396,20 +402,38 @@ $TMPDIR$uuid/home.png
 
 # convert images into slide deck
 
-convert -units pixelsperinch -density 300 \
-$TMPDIR$uuid/home.png  $TMPDIR$uuid/wordcloudslide.png \
-$TMPDIR$uuid/sumall3.png \
- $TMPDIR$uuid/pages.png \
- $TMPDIR$uuid/keywords.png \
- $TMPDIR$uuid/rrslide.png  \
- $TMPDIR$uuid/pageburst.png \
- $TMPDIR$uuid/montage.png \
- -size 3300x2550 \
- $TMPDIR$uuid/slidedeck.pdf
+if [ -s "$TMPDIR$uuid/montage.png" ] ; then
 
+	convert -units pixelsperinch -density 300 \
+	$TMPDIR$uuid/home.png  $TMPDIR$uuid/wordcloudslide.png \
+	$TMPDIR$uuid/sumall3.png \
+	 $TMPDIR$uuid/pages.png \
+	 $TMPDIR$uuid/keywords.png \
+	 $TMPDIR$uuid/pageburst.png \
+	 $TMPDIR$uuid/montage.png \
+	 $TMPDIR$uuid/rrslide.png  \
+	 -size 3300x2550 \
+	 $TMPDIR$uuid/slidedeck.pdf
+
+	 montage  $TMPDIR$uuid/wordcloudslide.png $TMPDIR$uuid/sumall3.png $TMPDIR$uuid/keywords.png $TMPDIR$uuid/pages.png $TMPDIR$uuid"/montage.png" $TMPDIR$uuid"/pageburst.png"  -geometry 1000x5000 -tile 1x10 -mode concatenate $TMPDIR$uuid/skyscraper.png
+
+else
+
+	convert -units pixelsperinch -density 300 \
+	$TMPDIR$uuid/home.png  $TMPDIR$uuid/wordcloudslide.png \
+	$TMPDIR$uuid/sumall3.png \
+	 $TMPDIR$uuid/pages.png \
+	 $TMPDIR$uuid/keywords.png \
+	 $TMPDIR$uuid/pageburst.png \
+	 $TMPDIR$uuid/rrslide.png  \
+	 -size 3300x2550 \
+	 $TMPDIR$uuid/slidedeck.pdf
+
+	 montage  $TMPDIR$uuid/wordcloudslide.png $TMPDIR$uuid/sumall3.png $TMPDIR$uuid/keywords.png $TMPDIR$uuid/pages.png $TMPDIR$uuid"/pageburst.png"  -geometry 1000x5000 -tile 1x10 -mode concatenate $TMPDIR$uuid/skyscraper.png
+
+fi
 # convert images into skyscraper infographic
 
-montage  $TMPDIR$uuid/wordcloudslide.png $TMPDIR$uuid/sumall3.png $TMPDIR$uuid/keywords.png $TMPDIR$uuid/pages.png $TMPDIR$uuid"/montage.png" $TMPDIR$uuid"/pageburst.png"  -geometry 1000x5000 -tile 1x10 -mode concatenate $TMPDIR$uuid/skyscraper.png
 # convert --units pixelsperinch -density 300 -size 1000x5000 \
 
  sendemail -t "$customer_email" \
