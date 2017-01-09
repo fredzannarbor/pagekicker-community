@@ -451,18 +451,24 @@ echo "test $covercolor" "$coverfont"
 
 # resolving seedfile from command line
 
+echo "getting path to seedfile from command line"
 if [ -z "$seedfile" ] ; then
-	if [ -z "$singleseed" ] ; then
-			echo "no seed file or singleseed was provided, exiting"
-			exit 0
+	echo "no seedfile provided"
+		if [ -z "$singleseed" ] ; then
+			echo "no singleseed provided"
+				if [ -z "$seedsviacli" ] ; then
+					echo "no seedsviacli provided, exiting"
+				else
+					echo "$seedsviacli" | sed -e 's/;/\n/' > "$TMPDIR"$uuid/seeds/seedphrases
+				fi
 		else
 			seed="$singleseed"
 			echo "seed is now singleseed" "$seed"
 			echo "$singleseed" > "$TMPDIR"$uuid/seeds/seedphrases
-	fi
+		fi
 else
-	echo "path to seedfile was $seedfile"
-	cp $seedfile "$TMPDIR"$uuid/seeds/seedphrases
+	  echo "path to seedfile was $seedfile"
+		cp $seedfile "$TMPDIR"$uuid/seeds/seedphrases
 fi
 
 #echo "seedfile is " $seedfile
