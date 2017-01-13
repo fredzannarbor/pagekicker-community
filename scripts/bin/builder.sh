@@ -3,7 +3,10 @@
 # accepts book topic and book type definition, then builds book
 
 echo "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
-
+echo ""
+echo "received from command line: "
+echo "$@"
+echo ""
 if shopt -q  login_shell ; then
 
 	if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
@@ -25,6 +28,8 @@ cd $scriptpath
 . includes/set-variables.sh
 
  #ls -lart "$seedfile"
+
+echo " " #spacing
 
 echo "shortform is $shortform"
 
