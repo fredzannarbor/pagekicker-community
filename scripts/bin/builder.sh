@@ -879,8 +879,8 @@ fi
 echo "# Acronyms" > $TMPDIR$uuid/tmpacronyms.md
 echo " " >> $TMPDIR$uuid/tmpacronyms.md
 echo " " >> $TMPDIR$uuid/tmpacronyms.md
-$scriptpath/bin/acronym-filter.sh --txtinfile  "$TMPDIR"$uuid/targetfile.txt > "$TMPDIR"$uuid/acronyms.txt
-sed G $TMPDIR$uuid/acronyms.txt >> $TMPDIR$uuid/acronyms.md
+$scriptpath/bin/acronym-filter.sh --txtinfile  "$TMPDIR"$uuid/targetfile.txt  > "$TMPDIR"$uuid/acronyms.txt
+sed G $TMPDIR$uuid/acronyms.txt | sed 's/^#/[hashtag]/g' >> $TMPDIR$uuid/acronyms.md
 cat $TMPDIR$uuid/acronyms.md >> $TMPDIR$uuid/tmpacronyms.md
 cp $TMPDIR$uuid/tmpacronyms.md $TMPDIR$uuid/acronyms.md
 
