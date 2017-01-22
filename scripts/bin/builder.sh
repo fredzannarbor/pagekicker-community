@@ -488,7 +488,8 @@ if [ -z "$seedfile" ] ; then
 				if [ -z "$seedsviacli" ] ; then
 					echo "no seedsviacli provided, exiting"
 				else
-					echo "$seedsviacli" | sed -e 's/;/\n/' > "$TMPDIR"$uuid/seeds/seedphrases
+					echo "semi-colon seeds provided via command line"
+					echo "$seedsviacli" | sed -e 's/; /;/g' -e 's/;/\n/g' > "$TMPDIR"$uuid/seeds/seedphrases
 				fi
 		else
 			seed="$singleseed"
