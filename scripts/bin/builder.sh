@@ -369,6 +369,14 @@ shift 2
 add_this_image_name=${1#*=}
 shift
 ;;
+--seedsviacli)
+seedsviacli=$2
+shift 2
+;;
+--seedsviacli=*)
+seedsviacli=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -406,6 +414,22 @@ else
 	echo "received uuid " $uuid
 	mkdir -p -m 777  "$TMPDIR"$uuid
 fi
+
+# create directories I will need
+
+mkdir -p -m 755  "$TMPDIR"$uuid/actual_builds
+mkdir -p -m 755  "$TMPDIR"$uuid/cover
+mkdir -p -m 755  "$TMPDIR"$uuid/twitter
+mkdir -p -m 777  "$TMPDIR"$uuid/fetch
+mkdir -p -m 777  "$TMPDIR"$uuid/flickr
+mkdir -p -m 777  "$TMPDIR"$uuid/images
+mkdir -p -m 777  "$TMPDIR"$uuid/mail
+mkdir -p -m 777  "$TMPDIR"$uuid/seeds
+mkdir -p -m 777  "$TMPDIR"$uuid/user
+mkdir -p -m 777  "$TMPDIR"$uuid/wiki
+mkdir -p -m 777  "$TMPDIR"$uuid/webseeds
+mkdir -p -m 755 $LOCAL_DATA"jobprofile_builds/""$jobprofilename"
+
 
 if [ -z "$covercolor" ]; then
 	covercolor="RosyBrown"
@@ -483,20 +507,6 @@ fi
 
 echo "test $covercolor" "$coverfont"
 
-# create directories I will need
-
-mkdir -p -m 755  "$TMPDIR"$uuid/actual_builds
-mkdir -p -m 755  "$TMPDIR"$uuid/cover
-mkdir -p -m 755  "$TMPDIR"$uuid/twitter
-mkdir -p -m 777  "$TMPDIR"$uuid/fetch
-mkdir -p -m 777  "$TMPDIR"$uuid/flickr
-mkdir -p -m 777  "$TMPDIR"$uuid/images
-mkdir -p -m 777  "$TMPDIR"$uuid/mail
-mkdir -p -m 777  "$TMPDIR"$uuid/seeds
-mkdir -p -m 777  "$TMPDIR"$uuid/user
-mkdir -p -m 777  "$TMPDIR"$uuid/wiki
-mkdir -p -m 777  "$TMPDIR"$uuid/webseeds
-mkdir -p -m 755 $LOCAL_DATA"jobprofile_builds/""$jobprofilename"
 
 #move assets into position
 
