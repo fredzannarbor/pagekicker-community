@@ -25,7 +25,8 @@ else
 fi
 
 
-bin/create-catalog-entry.sh --builder "yes" --booktitle "Paella" --yourname "Manuel" --jobprofilename "default" --import "no" --passuuid "$uuid" --seedfile "seeds/paella" --imprint "pagekicker"  --analyze_url "none" --summary "both"
+bin/create-catalog-entry.sh --builder "yes" --booktitle "Paella" --yourname "Manuel" --jobprofilename "default" --import "no" --passuuid "$uuid" --seedfile "seeds/paella" --imprint "pagekicker"  \
+--analyze_url "none" --summary "both" --import "no" --skyscraper "yes"
 
 # tests begin here
 
@@ -34,6 +35,5 @@ if [ ! -f "$TMPDIR$uuid/ebookcover.jpg" ]; then
 fi
 
 # if error log is empty then PASS
-echo "\n"
-echo "PASS" "  $uuid"  | tee -a $LOCAL_DATA/logs/error.log
-
+echo -e "\n"
+echo "PASS" "  $uuid"  "$0" | tee -a $LOCAL_DATA/logs/testlog

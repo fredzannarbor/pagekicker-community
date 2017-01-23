@@ -3,7 +3,10 @@
 # accepts book topic and book type definition, then builds book
 
 echo "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
-
+echo ""
+echo "received from command line: "
+echo "$@"
+echo ""
 if shopt -q  login_shell ; then
 
 	if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
@@ -25,6 +28,8 @@ cd $scriptpath
 . includes/set-variables.sh
 
  #ls -lart "$seedfile"
+
+echo " " #spacing
 
 echo "shortform is $shortform"
 
@@ -348,6 +353,30 @@ shift 2
 skyscraper=${1#*=}
 shift
 ;;
+--add_this_image)
+add_this_image=$2
+shift 2
+;;
+--add_this_image=*)
+add_this_image=${1#*=}
+shift
+;;
+--add_this_image_name)
+add_this_image_name=$2
+shift 2
+;;
+--add_this_image_name=*)
+add_this_image_name=${1#*=}
+shift
+;;
+--seedsviacli)
+seedsviacli=$2
+shift 2
+;;
+--seedsviacli=*)
+seedsviacli=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -385,6 +414,22 @@ else
 	echo "received uuid " $uuid
 	mkdir -p -m 777  "$TMPDIR"$uuid
 fi
+
+# create directories I will need
+
+mkdir -p -m 755  "$TMPDIR"$uuid/actual_builds
+mkdir -p -m 755  "$TMPDIR"$uuid/cover
+mkdir -p -m 755  "$TMPDIR"$uuid/twitter
+mkdir -p -m 777  "$TMPDIR"$uuid/fetch
+mkdir -p -m 777  "$TMPDIR"$uuid/flickr
+mkdir -p -m 777  "$TMPDIR"$uuid/images
+mkdir -p -m 777  "$TMPDIR"$uuid/mail
+mkdir -p -m 777  "$TMPDIR"$uuid/seeds
+mkdir -p -m 777  "$TMPDIR"$uuid/user
+mkdir -p -m 777  "$TMPDIR"$uuid/wiki
+mkdir -p -m 777  "$TMPDIR"$uuid/webseeds
+mkdir -p -m 755 $LOCAL_DATA"jobprofile_builds/""$jobprofilename"
+
 
 if [ -z "$covercolor" ]; then
 	covercolor="RosyBrown"
@@ -433,14 +478,27 @@ echo "sku is" $sku
 
 echo "test $covercolor" "$coverfont"
 
-#echo "seedfile is " $seedfile
-#ls -lart "seedfile is" $seedfile
-if [ "$singleseed" = "no" ] ; then
-	echo "no singleseed"
+# resolving seedfile from command line
+
+echo "getting path to seedfile from command line"
+if [ -z "$seedfile" ] ; then
+	echo "no seedfile provided"
+		if [ -z "$singleseed" ] ; then
+			echo "no singleseed provided"
+				if [ -z "$seedsviacli" ] ; then
+					echo "no seedsviacli provided, exiting"
+				else
+					echo "semi-colon seeds provided via command line"
+					echo "$seedsviacli" | sed -e 's/; /;/g' -e 's/;/\n/g' > "$TMPDIR"$uuid/seeds/seedphrases
+				fi
+		else
+			seed="$singleseed"
+			echo "seed is now singleseed" "$seed"
+			echo "$singleseed" > "$TMPDIR"$uuid/seeds/seedphrases
+		fi
 else
-	seed="$singleseed"
-	echo "seed is now singleseed" "$seed"
-	echo "$seed" > "$seedfile"
+	  echo "path to seedfile was $seedfile"
+		cp $seedfile "$TMPDIR"$uuid/seeds/seedphrases
 fi
 
 #echo "seedfile is " $seedfile
@@ -450,20 +508,6 @@ fi
 
 echo "test $covercolor" "$coverfont"
 
-# create directories I will need
-
-mkdir -p -m 755  "$TMPDIR"$uuid/actual_builds
-mkdir -p -m 755  "$TMPDIR"$uuid/cover
-mkdir -p -m 755  "$TMPDIR"$uuid/twitter
-mkdir -p -m 777  "$TMPDIR"$uuid/fetch
-mkdir -p -m 777  "$TMPDIR"$uuid/flickr
-mkdir -p -m 777  "$TMPDIR"$uuid/images
-mkdir -p -m 777  "$TMPDIR"$uuid/mail
-mkdir -p -m 777  "$TMPDIR"$uuid/seeds
-mkdir -p -m 777  "$TMPDIR"$uuid/user
-mkdir -p -m 777  "$TMPDIR"$uuid/wiki
-mkdir -p -m 777  "$TMPDIR"$uuid/webseeds
-mkdir -p -m 755 $LOCAL_DATA"jobprofile_builds/""$jobprofilename"
 
 #move assets into position
 
@@ -835,8 +879,8 @@ fi
 echo "# Acronyms" > $TMPDIR$uuid/tmpacronyms.md
 echo " " >> $TMPDIR$uuid/tmpacronyms.md
 echo " " >> $TMPDIR$uuid/tmpacronyms.md
-$scriptpath/bin/acronym-filter.sh --txtinfile  "$TMPDIR"$uuid/targetfile.txt > "$TMPDIR"$uuid/acronyms.txt
-sed G $TMPDIR$uuid/acronyms.txt >> $TMPDIR$uuid/acronyms.md
+$scriptpath/bin/acronym-filter.sh --txtinfile  "$TMPDIR"$uuid/targetfile.txt  > "$TMPDIR"$uuid/acronyms.txt
+sed G $TMPDIR$uuid/acronyms.txt | sed 's/^#/[hashtag]/g' >> $TMPDIR$uuid/acronyms.md
 cat $TMPDIR$uuid/acronyms.md >> $TMPDIR$uuid/tmpacronyms.md
 cp $TMPDIR$uuid/tmpacronyms.md $TMPDIR$uuid/acronyms.md
 
@@ -894,13 +938,14 @@ fi
 	echo "" >> "$TMPDIR"$uuid/sources.md
 
 	echo "# Also built by PageKicker Robot $jobprofilename" >>   "$TMPDIR"$uuid/builtby.md
-	sort -u --ignore-case "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.txt" -o  "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.txt" # currently sort by alphabetical
-	cat "$LOCAL_DATA"/bibliography/robots/"$jobprofilename"/"$jobprofilename""_titles.txt" >>  "$TMPDIR"$uuid/builtby.md
+	sort -u --ignore-case "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.txt" -o  "$LOCAL_DATA"/bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.tmp" # currently sort by alphabetical
+	cat "$LOCAL_DATA"/bibliography/robots/"$jobprofilename"/"$jobprofilename""_titles.tmp" >>  "$TMPDIR"$uuid/builtby.md
 	echo " ">>  "$TMPDIR"$uuid/builtby.md
 	echo " " >>  "$TMPDIR"$uuid/builtby.md
 
-	echo "# Also from $imprintname" >>   "$TMPDIR"$uuid/byimprint.md
+
 	if [ "add_imprint_biblio" = "yes" ] ; then
+			echo "# Also from $imprintname" >>   "$TMPDIR"$uuid/byimprint.md
 			uniq "$LOCAL_DATA"bibliography/imprints/"$imprint"/$imprint"_titles.txt" >>  "$TMPDIR"$uuid/byimprint.md # imprint pubs are not alpha
 			echo "" >> "$TMPDIR"$uuid"/byimprint.md"
 			echo "" >> "$TMPDIR"$uuid"/byimprint.md"
@@ -958,7 +1003,7 @@ cd  "$TMPDIR"$uuid
 "$PANDOC_BIN" -o "$TMPDIR"$uuid/$sku"."$safe_product_name".txt"   "$TMPDIR"$uuid/complete.md
 "$PANDOC_BIN" -o "$TMPDIR"$uuid/$sku"."$safe_product_name".mw" -t mediawiki -s -S  "$TMPDIR"$uuid/complete.md
 cp "$TMPDIR"$uuid/$sku"."$safe_product_name".txt" "$TMPDIR"$uuid/4stdout".txt"
-cp "$TMPDIR"$uuid/$sku"."$safe_product_name".txt" "$TMPDIR"4stdout".txt"
+
 cd $scriptpath
 lib/KindleGen/kindlegen "$TMPDIR"$uuid/$sku."$safe_product_name"".epub" -o "$sku.$safe_product_name"".mobi" 1> /dev/null
 #ls -lart  "$TMPDIR"$uuid
@@ -1005,8 +1050,14 @@ echo "checking that buildtarget exists"
 
 esac
 
-cp "$TMPDIR"$uuid/$sku.$safe_product_name".epub" /tmp/pagekicker/delivery.epub
-cp "$TMPDIR"$uuid/$sku.$safe_product_name".docx" /tmp/pagekicker/delivery.docx
+if [ "$two1" = "yes" ] ; then
+	echo "moving files so 21 script does not need to know uuid"
+	cp "$TMPDIR"$uuid/$sku"."$safe_product_name".txt" "$TMPDIR"4stdout".txt"
+	cp "$TMPDIR"$uuid/$sku.$safe_product_name".epub" /tmp/pagekicker/delivery.epub
+	cp "$TMPDIR"$uuid/$sku.$safe_product_name".docx" /tmp/pagekicker/delivery.docx
+else
+	echo "files not requested from 21"
+fi
 
 # build skyscraper image
 
@@ -1083,11 +1134,12 @@ else
   #	ls -la "$seedfile"
 fi
 
-echo "appending & sorting new bibliography entries"
-echo "* ""$bibliography_title" >> "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/"$jobprofilename"_titles.txt
-echo "* ""$bibliography_title" >> "$LOCAL_DATA"bibliography/imprints/"$imprint"/"$imprint"_titles.txt
+echo "moving tmp biography to replace prior one"
+cp "$LOCAL_DATA"/bibliography/robots/"$jobprofilename"/"$jobprofilename""_titles.tmp"  "$LOCAL_DATA"/bibliography/robots/"$jobprofilename"/"$jobprofilename""_titles.txt"
+echo "appending & sorting new bibliography entries" # last item is out of alpha order, so must be sorted when read in future
+echo "* $bibliography_title" >> "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/"$jobprofilename"_titles.txt
+echo "* $bibliography_title" >> "$LOCAL_DATA"bibliography/imprints/"$imprint"/"$imprint"_titles.txt
 cat "$TMPDIR"$uuid"/yaml-metadata.md" >> "$LOCAL_DATA"bibliography/yaml/allbuilds.yaml
-
 
 echo "exiting builder"
 exit 0

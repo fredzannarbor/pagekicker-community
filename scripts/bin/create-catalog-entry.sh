@@ -61,6 +61,14 @@ shift 2
 seedfile=${1#*=}
 shift
 ;;
+--seedsviacli)
+seedsviacli=$2
+shift 2
+;;
+--seedsviacli=*)
+seedsviacli=${1#*=}
+shift
+;;
 --pdfdir)
 pdfdir=$2
 shift 2
@@ -485,6 +493,22 @@ shift 2
 expand_seeds_to_pages=${1#*=}
 shift
 ;;
+--skyscraper)
+skyscraper=$2
+shift 2
+;;
+--skyscraper=*)
+skyscraper=${1#*=}
+shift
+;;
+--twitter_announcement)
+twitter_announcement=$2
+shift 2
+;;
+--twitter_announcement=*)
+twitter_announcement=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -514,8 +538,6 @@ else
 	echo "received uuid " $uuid
 
 fi
-
-# test values
 
 # create directories I will need
 
@@ -577,8 +599,25 @@ csv)
 	cp $seedfile "$TMPDIR"$uuid/seeds/seedphrases
 ;;
 *)
-	echo "getting metadata from command line"
-	cp $seedfile "$TMPDIR"$uuid/seeds/seedphrases
+	echo "getting path to seedfile from command line"
+	if [ -z "$seedfile" ] ; then
+		echo "no seedfile provided"
+			if [ -z "$singleseed" ] ; then
+				echo "no singleseed provided"
+					if [ -z "$seedsviacli" ] ; then
+						echo "no seedsviacli provided, exiting"
+					else
+						echo "$seedsviacli" | sed -e 's/;/\n/' > "$TMPDIR"$uuid/seeds/seedphrases
+					fi
+			else
+				seed="$singleseed"
+				echo "seed is now singleseed" "$seed"
+				echo "$singleseed" > "$TMPDIR"$uuid/seeds/seedphrases
+			fi
+	else
+	  echo "path to seedfile was $seedfile"
+		cp $seedfile "$TMPDIR"$uuid/seeds/seedphrases
+	fi
 ;;
 esac
 
@@ -623,8 +662,6 @@ else
 fi
 
 human_author="$editedby"
-
-# verbose logging
 
 # APIs
 
@@ -914,9 +951,10 @@ if [ "$import" = "yes" ] ; then
 
 	echo "adding import job to the manifest"
 
-	echo $uuid >> import_status/manifest.csv
-
+	echo "$uuid" >> $scriptpath/import_status/manifest.csv
+  ls -lart $scriptpath/import_status/manifest.csv
 	$scriptpath"bin/receiving_dock.sh"
+
 
 else
 
@@ -932,7 +970,8 @@ if [ "$builder" = "yes" ] ; then
 
 	echo "seedfile was" "$TMPDIR"seeds/seedphrases
 
-	$scriptpath"bin/builder.sh" --seedfile "$TMPDIR"$uuid"/seeds/sorted.seedfile" --booktype "$booktype" --jobprofilename "$jobprofilename" --booktitle "$booktitle" --ebook_format "epub" --sample_tweets "no" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername" --imprint "$imprint" --batch_uuid "$batch_uuid" --tldr "$tldr" --subtitle "$subtitle" --add_corpora "$add_corpora" --analyze_url "$analyze_url" --dontcleanupseeds "yes" --mailtoadmin "$mailtoadmin" --summary "$summary" --add_this_content "$add_this_content" --add_this_content_part_name "$add_this_content_part_name"
+	$scriptpath"bin/builder.sh" --seedfile "$TMPDIR"$uuid"/seeds/sorted.seedfile" --booktype "$booktype" --jobprofilename "$jobprofilename" --booktitle "$booktitle" --ebook_format "epub" --sample_tweets "no" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername" --imprint "$imprint" --batch_uuid "$batch_uuid" --tldr "$tldr" --subtitle "$subtitle" \
+	 --add_corpora "$add_corpora" --analyze_url "$analyze_url" --dontcleanupseeds "yes" --mailtoadmin "$mailtoadmin" --summary "$summary" --add_this_content "$add_this_content" --add_this_content_part_name "$add_this_content_part_name" --skyscraper "$skyscraper" --expand_seeds_to_pages "$expand_seeds_to_pages"
 
 echo "test $@"
 
@@ -973,6 +1012,28 @@ if [ "$mailtoadmin" = "yes" ] ; then
 else
 	echo "not mailing to $mailtoadmin_ids"
 
+fi
+
+
+if [ "$twitter_announcement" = "yes" ] ; then
+
+        echo -n "t update " > $TMPDIR$uuid/tcommand
+        echo -n  \" >> $TMPDIR$uuid/tcommand
+        echo -n "New: $booktitle at "$WEB_HOST"index.php/$prevsku.html robots #amwriting" >> $TMPDIR$uuid/tcommand
+        echo -n \" >> $TMPDIR$uuid/tcommand
+        . $TMPDIR$uuid/tcommand
+
+else
+        echo "no twitter announcement" | tee --append $sfb_log
+
+fi
+
+if [ "$fb_announcement" = "yes" ] ; then
+
+        facebook-cli post "robot author #amwriting $booktitle at \ $WEB_HOST"index.php/"$prevsku.html"
+
+else
+        echo "no fb notification" | tee --append $sfb_log
 fi
 
 echo 'job ' $uuid 'ending logging at' `date +'%m/%d/%y%n %H:%M:%S'` >> $sfb_log

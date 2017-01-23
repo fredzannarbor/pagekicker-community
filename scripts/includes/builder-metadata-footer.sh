@@ -1,5 +1,5 @@
 
-# this is an updated metadata builder to accommodate new product columns 
+# this is an updated metadata builder to accommodate new product columns
 # created by downloadable builder software
 
 # now need to also incorporate dat-builder metadata settings
@@ -97,7 +97,7 @@ echo -n "/"$uuid/$sku"ebookcover.jpg," >> $metadatatargetpath$uuid"/current-impo
 
 # thumbnail
  program &> /dev/null
-echo -n "/"$uuid/$sku"ebookcover.jpg," >> $metadatatargetpath$uuid"/current-import.csv" 
+echo -n "/"$uuid/$sku"ebookcover.jpg," >> $metadatatargetpath$uuid"/current-import.csv"
 
 # url_key
 
@@ -105,30 +105,30 @@ echo -n "$sku," >> $metadatatargetpath$uuid"/current-import.csv"
 
 # url_path
 
-echo -n "," >> $metadatatargetpath$uuid"/current-import.csv" 
+echo -n "," >> $metadatatargetpath$uuid"/current-import.csv"
 
 # config_attributes
 
-echo -n "," >> $metadatatargetpath$uuid"/current-import.csv" 
+echo -n "," >> $metadatatargetpath$uuid"/current-import.csv"
 
 # custom design
 
-echo -n "," >> $metadatatargetpath$uuid"/current-import.csv" 
+echo -n "," >> $metadatatargetpath$uuid"/current-import.csv"
 
 # page_layout
 
-echo -n "No layout updates," >> $metadatatargetpath$uuid"/current-import.csv" 
+echo -n "No layout updates," >> $metadatatargetpath$uuid"/current-import.csv"
 
 # options_container
  program &> /dev/null
-echo -n "Block after Info Column," >> $metadatatargetpath$uuid"/current-import.csv" 
+echo -n "Block after Info Column," >> $metadatatargetpath$uuid"/current-import.csv"
 
 # msrp_enabled
 
-echo -n "Use config," >> $metadatatargetpath$uuid"/current-import.csv" 
+echo -n "Use config," >> $metadatatargetpath$uuid"/current-import.csv"
 
 # msrp_display_actual_price_type
-echo -n "Use config," >> $metadatatargetpath$uuid"/current-import.csv" 
+echo -n "Use config," >> $metadatatargetpath$uuid"/current-import.csv"
 
 # gift_message_available
 
@@ -136,19 +136,19 @@ echo -n "Use config," >> $metadatatargetpath$uuid"/current-import.csv"
 
 # samples_title
 
-echo -n "Samples," >> $metadatatargetpath$uuid"/current-import.csv" 
+echo -n "Samples," >> $metadatatargetpath$uuid"/current-import.csv"
 # links_title
 
  program &> /dev/null
-echo -n "$links_title," >> $metadatatargetpath$uuid"/current-import.csv" 
+echo -n "$links_title," >> $metadatatargetpath$uuid"/current-import.csv"
 
 # editorid
 
-echo -n "$customerid," >> $metadatatargetpath$uuid"/current-import.csv" 
+echo -n "$customerid," >> $metadatatargetpath$uuid"/current-import.csv"
 
 # wordcount
 
-echo -n "," >> $metadatatargetpath$uuid"/current-import.csv" 
+echo -n "," >> $metadatatargetpath$uuid"/current-import.csv"
 
 # seedsource
 
@@ -156,15 +156,15 @@ echo -n "," >> $metadatatargetpath$uuid"/current-import.csv"
 
 # editedby
 
-echo -n "$customername," >> $metadatatargetpath$uuid"/current-import.csv" 
+echo -n "$customername," >> $metadatatargetpath$uuid"/current-import.csv"
 
 # external_uniqid
 
-echo -n "," >> $metadatatargetpath$uuid"/current-import.csv" 
+echo -n "," >> $metadatatargetpath$uuid"/current-import.csv"
 
 # xml_file
 
-echo -n "," >> $metadatatargetpath$uuid"/current-import.csv" 
+echo -n "," >> $metadatatargetpath$uuid"/current-import.csv"
 
 # price
 
@@ -194,7 +194,7 @@ echo -n "," >> $metadatatargetpath$uuid"/current-import.csv"
 
 # status
 
-echo -n "Enabled," >> $metadatatargetpath$uuid"/current-import.csv" 
+echo -n "$status," >> $metadatatargetpath$uuid"/current-import.csv" 
 
 # visibility
 
@@ -437,7 +437,7 @@ echo -n "," >> $metadatatargetpath$uuid"/current-import.csv"
 
 echo -n "," >> $metadatatargetpath$uuid"/current-import.csv"
 
-# gallery 
+# gallery
 
 echo -n "," >> $metadatatargetpath$uuid"/current-import.csv"
 
@@ -527,7 +527,7 @@ else
 
 		echo -n '"'$mobilinkname,0,9,builder,15$pipe$epublinkname,0,9,builder,13$pipe$docxlinkname,0,9,builder,14'"', >> $metadatatargetpath$uuid"/current-import.csv"
 
-	else 
+	else
 
 	echo -n '"'$mobilinkname,0,9,builder,12$pipe$epublinkname,0,9,builder,9$pipe$docxlinkname,0,9,builder,10'"', >> $metadatatargetpath$uuid"/current-import.csv"
 
@@ -595,7 +595,7 @@ echo -n "," >> $metadatatargetpath$uuid"/current-import.csv"
 
 # book types such as Reader, NodeHome, Spider, etc.
 
-echo -n "$booktype," >> $metadatatargetpath$uuid"/current-import.csv" 
+echo -n "$booktype," >> $metadatatargetpath$uuid"/current-import.csv"
 
 # seeds to catalog
 
@@ -618,17 +618,16 @@ safe_product_name=$(echo "$booktitle" | sed -e 's/[^A-Za-z0-9._-]/_/g' | sed -e 
 echo -n "$safe_product_name," >> $metadatatargetpath$uuid"/current-import.csv"
 
 # wikilang
-echo  -n "$wikilang," >> $metadatatargetpath$uuid"/current-import.csv" 
+echo  -n "$wikilang," >> $metadatatargetpath$uuid"/current-import.csv"
 
 #coverfont
 
 echo -n "$coverfont," >> $metadatatargetpath$uuid"/current-import.csv"
- 
+
 #covercolor
 
 echo -n "$covercolor," >> $metadatatargetpath$uuid"/current-import.csv"
- 
+
  #final line has different echo format
 
 echo "0" >> $metadatatargetpath$uuid"/current-import.csv"
-

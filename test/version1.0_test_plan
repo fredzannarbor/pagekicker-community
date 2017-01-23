@@ -1,0 +1,15 @@
+# Test plan
+
+1. Create-catalog and builder from command line as bitnami on git-pk-production throwing no stderr, creating ebooks properly in /tmp/pagekicker.
+2. Decimator from command line on git-pk-production throwing no stderr, creating ebooks properly in /tmp/pagekicker & delivering via email.
+3. DAT from command line on git-pk-production. throwing no stderr, creating ebooks properly in /tmp/pagekicker.
+4.  create-catalog and builder with import = "yes" in git-pk-production successfully creating catalog entries.
+5. DAT from command line on git-pk-production successfully creating catalog entries.
+6. New catalog entries are correctly showing up in Android and iOS.
+7. Buying newly created book with Bitcoin; PayPal; credit card working properly in production Web client.
+8. New purchases of newly created books are being built properly in download queue.
+9. Rebuilds of previously purchased books are working properly via Web client.
+10. Buying newly created books working properly via Android & iOS.
+11. Download & open newly created books working properly via Android & iOS.
+12. Rebuild recently downloaded books is working properly.
+13. Book builder is working properly via 21.

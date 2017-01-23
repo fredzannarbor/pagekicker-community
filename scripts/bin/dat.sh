@@ -184,12 +184,12 @@ shift 2
 buildtarget=${1#*=}
 shift
 ;;
---getwiki)
-getwiki=$2
+--import)
+import=$2
 shift 2
 ;;
---getwiki=*)
-getwiki={1#*=}
+--import=*)
+import={1#*=}
 shift
 ;;
   --) # End of all options
@@ -280,11 +280,11 @@ echo "url to fetch is" $url | tee --append $sfb_log
 echo "decimator_requested is " $decimator_requested
 imagekeyword=$(xmlstarlet sel -t -v "/item/imagekeyword" "$xmlfilename")
 
-#. "$confdir"jobprofiles/robots/"$jobprofilename"".jobprofile"
-#. "$confdir"jobprofiles/imprints/$imprint/$imprint".imprint"
-echo "$jobprofile"
-echo "$imprint"
-echo $WEBFORMSXML_HOME
+. "$confdir"jobprofiles/robots/"$jobprofilename"".jobprofile"
+. "$confdir"jobprofiles/imprints/$imprint/$imprint".imprint"
+echo "jobprofile is $jobprofile"
+echo "imprint is $imprint"
+echo "WEBFORMSXML_HOME is $WEBFORMSXML_HOME"
 
 export LANG
 
@@ -467,7 +467,7 @@ split -C 50K $TMPDIR$uuid/targetfile.txt "$TMPDIR$uuid/xtarget."
 for file in "$TMPDIR$uuid/xtarget."*
 do
 
-"$PYTHON_BIN" $scriptpath"bin/nerv3.py" $file $file"_nouns.txt" $uuid
+"$PYTHON27_BIN" $scriptpath"bin/nerv3.py" $file $file"_nouns.txt" $uuid
 echo "ran nerv3 on $file" | tee --append $sfb_log
 "$PYTHON_BIN" bin/PKsum.py -l "$summary_length" -o $file"_summary.txt" $file
 sed -i 's/ \+ / /g' $file"_summary.txt"
@@ -554,8 +554,9 @@ else
 
 fi
 
+echo "$confdir"jobprofiles/imprints/$imprint/"$imprintlogo"
 cp assets/PageKicker_cmyk300dpi.png $TMPDIR$uuid/PageKicker_cmyk300dpi.png
-cp "$confdir"jobprofiles/imprints/$imprint/$imprintlogo $TMPDIR$uuid/$imprintlogo
+cp "$confdir"jobprofiles/imprints/$imprint/"$imprintlogo" $TMPDIR$uuid/$imprintlogo
 
 if [ "$frontmatter" = "off" ] ; then
 
@@ -584,12 +585,13 @@ else
 	echo "# "$editedby >> $TMPDIR$uuid/titlepage.md
 	echo "# Enhanced with Text Analytics by PageKicker Robot" $jobprofilename >> $TMPDIR$uuid/titlepage.md
 
-	#if [ -z ${tldr+x} ];
-	#	then echo "tldr is unset";
-	#else
-	#	echo "# " 'TL;DR:' "$tldr" >> $TMPDIR$uuid/titlepage.md
-	#fi
-	# echo '![imprint logo]'($imprintlogo)'\' >> $TMPDIR$uuid/titlepage.md
+	if [ -z ${tldr+x} ];
+		then echo "tldr is unset"
+	else
+		echo "# " 'TL;DR:' "$tldr" >> $TMPDIR$uuid/titlepage.md
+	fi
+
+	echo '![imprint logo]'"($imprintlogo)"'\' >> $TMPDIR$uuid/titlepage.md
 	echo '\pagenumbering{roman}' >> $TMPDIR$uuid/titlepage.md
 	echo '\newpage' >> $TMPDIR$uuid/titlepage.md
 	# build "also by this Robot Author"
@@ -599,6 +601,7 @@ else
 	cat $LOCAL_DATA/bibliography/robots/$jobprofilename/$jobprofilename"_titles.txt" >> $TMPDIR$uuid/titlepage.md
 	echo "  " >> $TMPDIR$uuid/titlepage.md
 	echo "  " >> $TMPDIR$uuid/titlepage.md
+	cd $TMPDIR$uuid
 	"$PANDOC_BIN" $TMPDIR$uuid/titlepage.md -o $TMPDIR$uuid/titlepage.pdf --variable fontsize=12pt --latex-engine=xelatex
 	cd $scriptpath
 
@@ -623,8 +626,6 @@ else
 	echo "built acknowledgments"
 
 	# assemble front matter
-
-
 
 	cat $TMPDIR$uuid/titlepage.md assets/newpage.md $TMPDIR$uuid/$imprintcopyrightpage assets/newpage.md $TMPDIR$uuid/robot_author.md assets/newpage.md $TMPDIR$uuid/acknowledgements.md assets/newpage.md $TMPDIR$uuid/summary.md assets/newpage.md $TMPDIR$uuid/rr.md assets/newpage.md $TMPDIR$uuid/sorted_uniqs.md > $TMPDIR$uuid/textfrontmatter.md
 	cd $TMPDIR$uuid; "$PANDOC_BIN" textfrontmatter.md --latex-engine=xelatex -o textfrontmatter.pdf ; cd $scriptpath
@@ -654,9 +655,11 @@ else
 	# gs -sDEVICE=pdfwrite -sPAPERSIZE=letter -dFIXEDMEDIA -dPDFFitPage -dCompatibilityLevel=1.4 -o  $TMPDIR$uuid/lettersize_upload.pdf $TMPDIR$uuid/$uploaded_tat_file
 	cp $TMPDIR$uuid/$uploaded_tat_file $TMPDIR$uuid/lettersize_upload.pdf
 
-	pdftk $TMPDIR$uuid/$uuid"_frontmatter.pdf" $TMPDIR$uuid/lettersize_upload.pdf output $TMPDIR$uuid/$uuid"_front_body.pdf"
+ pdftk $TMPDIR$uuid/$uuid"_frontmatter.pdf" $TMPDIR$uuid/lettersize_upload.pdf output $TMPDIR$uuid/$uuid"_front_body.pdf"
 
 fi
+
+
 if [ "$backmatter" = "off" ] ; then
 	echo "not building back matter" | tee --append $sfb_log
 else
@@ -682,93 +685,13 @@ else
 	else
 		echo "didn't  process flickr files" | tee --append $sfb_log
 	fi
-
-	# assemble keyword reference appendix
-
-	if [ "$getwiki" = "yes" ] ; then
-
-		sed sed -e '/^$/d' -e '/^[0-9#@]/d' $TMPDIR$uuid/all_nouns.txt | sort | uniq -i > $TMPDIR$uuid/seeds #filters out numeric
-		"$PYTHON_BIN" bin/wikifetcher.py --infile "$TMPDIR$uuid/seeds" --outfile "$TMPDIR$uuid/wikisummaries.md" --lang "en" 1> /dev/null
-		cp $TMPDIR$uuid/wikisummaries.md $TMPDIR$uuid/original.md
-		sed -e s/\=\=\=\=/xyxyxyxy/g -e s/\=\=\=/xyxyxy/g -e s/\=\=/xyxy/g -e s/xyxyxyxy/\#\#\#\#/g -e s/xyxyxy/\#\#\#/g -e s/xyxy/\#\#/g $TMPDIR$uuid/wikisummaries.md > $TMPDIR$uuid/wikiall.md
-		grep -v '\\x' $TMPDIR$uuid/wikiall.md > $TMPDIR$uuid/wikisafe.md # stripping certain escape characters
-		cp $TMPDIR$uuid/wikisafe.md $TMPDIR$uuid/wikisummaries.md
-		"$PANDOC_BIN" -o $TMPDIR$uuid/wikisummaries.pdf $TMPDIR$uuid/wikisummaries.md --latex-engine=xelatex
-
-	else
-		# getwiki =no speeds up performance a lot since fetcher need not run
-		touch $TMPDIR$uuid/wikisummaries.md
-	fi
-
-	# assemble back matter
-	cp $TMPDIR$uuid/wikisummaries.pdf $TMPDIR$uuid/backmatter.pdf
-
-	# flick photos
-
-	# indexes
-
-	# appendixes
-
-	# cp $TMPDIR$uuid/images.pdf $TMPDIR$uuid/backmatter.pdf # temporary, just until more back matter parts are added
-
-	pdftk $TMPDIR$uuid/$uuid"_front_body.pdf" $TMPDIR$uuid/backmatter.pdf output $TMPDIR$uuid/$uuid"_all.pdf"
 fi
 
-#build epub with TOC
 
-cd $TMPDIR$uuid
-"$PANDOC_BIN" -S -o full_wtoc.epub titlepage.md \
-"$imprintcopyrightpage" \
-robot_author.md \
-summary.md \
-rr.md \
-sorted_uniqs.md \
-body.md \
-wikisummaries.md
-# temporarily removed flickr/all.md
-
-echo "getwiki is" $getwiki
-
-if [ "$getwiki" = "yes" ] ; then
-
-	"$PANDOC_BIN" -s -S -o research_report.docx titlepage.md \
-	"$imprintcopyrightpage" \
-	robot_author.md \
-	summary.md \
-	rr.md \
-	sorted_uniqs.md \
-	wikisummaries.md
-
-else
-
-	"$PANDOC_BIN" -s -S -o research_report.docx titlepage.md \
-	"$imprintcopyrightpage" \
-	robot_author.md \
-	summary.md \
-	rr.md \
-	sorted_uniqs.md \
-
-fi
-
-cd $scriptpath
-
-# deliver epub to Magento download builder
-
-ls -la $TMPDIR$uuid/full*
-cp $TMPDIR$uuid/full_wtoc.epub "$buildtarget"/full_wtoc.epub
-
-ls -la $buildtarget"f*"
-
-#deliver *Metadata files* to Magento
-
-mkdir -p -m 755 $mediatargetpath$uuid
-cp $TMPDIR$uuid/wordcloudbig.png $mediatargetpath$uuid/$sku"wordcloudbig.png"
-cp $TMPDIR$uuid/summary.txt $mediatargetpath$uuid/$sku"summary.txt"
-cp $TMPDIR$uuid/all_nouns.txt $mediatargetpath$uuid/$sku"all_nouns.txt"
-cp $TMPDIR$uuid/rr.pdf $mediatargetpath$uuid/$sku"rr.pdf"
-cp $TMPDIR$uuid/acronyms.txt $mediatargetpath$uuid/$sku"acronyms.txt"
+mkdir -p 755 $mediatargetpath$uuid
 
 if [ "$montageur_success" = 0 ] ; then
+
 	cp $TMPDIR$uuid/montage.jpg $mediatargetpath$uuid/$sku"montage.jpg"
 	cp $TMPDIR$uuid/montagetopn.jpg $mediatargetpath$uuid/$sku"montagetopn.jpg"
 else
@@ -779,37 +702,6 @@ fi
 cat $TMPDIR$uuid/textfrontmatter.md $TMPDIR$uuid/body.md  > $TMPDIR$uuid/complete.md
 
 # create metadata
-
-if [[ -z "$customtitle" ]] ; then
-	productname=`echo "$uploaded_tat_file" | colrm 30`
-else
-	productname="$customtitle"
-fi
-echo  "product name is "$productname
-mkdir -p -m  755 "$metadatatargetpath$uuid"
-cat includes/builder-metadata-header.csv > $metadatatargetpath$uuid/"current-import.csv"
-. includes/builder-metadata-footer.sh
-# take a number if you are planning to import
-
-import="yes"
-if [ "$import" = "yes" ] ; then
-
-	echo "adding import job to the manifest"
-
-	echo "$uuid" >> import_status/manifest.csv
-
-	$scriptpath/bin/receiving_dock.sh
-
-
-else
-
-	echo "not importing this job"
-
-fi
-
-echo "put docs on webserver where they are available" | tee --append $sfb_log
-
-# share
 
 twitter_announcement="no"
 
@@ -840,20 +732,13 @@ else
         echo "no fb notification" | tee --append $sfb_log
 fi
 
- # deliver via e-mail
-
-dat_catalog_url="http://www.pagekicker.com/index.php/catalog/document-analysis-results/"$prevsku".html" #prevsku is bug
-echo $dat_catalog_url
-
-echo "gmail id is" $GMAIL_ID
-echo "gmail pw is " $GMAIL_PASSWORD
 
 if [ "$montageur_success" = 0 ] ; then
 
 sendemail -t "$customer_email" \
 	-u "Document Analysis Tools Result" \
 	-m "PageKicker's Document Analysis Robots living on "$MACHINE_NAME "and using version " $SFB_VERSION " of the PageKicker software have analyzed your file " $uploaded_tat_file " in job" $uuid \
-       ".  A word cloud, an image montage, a list of proper nouns, and a list of possible acronyms have been placed in the PageKicker catalog at" $dat_catalog_url ". Additional files, including a programmatic summary, are attached here." \
+       ".  A word cloud, an image montage, a list of proper nouns, a programmatic summary, a list of acronyms, and additional files are attached." \
 	-f "$GMAIL_ID" \
 	-cc "$GMAIL_ID" \
 	-xu "$GMAIL_ID" \
@@ -867,7 +752,6 @@ sendemail -t "$customer_email" \
 	-a $TMPDIR$uuid/acronyms.txt \
 	-a $logdir$uuid"/xform_log" \
 	-a $TMPDIR$uuid/rr.md \
-	-a $TMPDIR$uuid/research_report.docx \
 	-a $TMPDIR$uuid/montage.jpg \
 	-a $TMPDIR$uuid/montagetopn.jpg
 
@@ -876,7 +760,7 @@ else
 sendemail -t "$customer_email" \
 	-u "Document Analysis Tools Result" \
 	-m "PageKicker's Document Analysis Robots living on "$MACHINE_NAME "and using version " $SFB_VERSION " of the PageKicker software have analyzed your file " $uploaded_tat_file " in job" $uuid \
-       ".  A word cloud, an image montage, a list of proper nouns, and a list of possible acronyms have been placed in the PageKicker catalog at" $dat_catalog_url ". Additional files, including a programmatic summary, are attached here."  \
+       ".  A word cloud, an image montage, a list of proper nouns, a list of possible acronyms and a programmatic summary, are attached."  \
 	-f "$GMAIL_ID" \
 	-cc "$GMAIL_ID" \
 	-xu "$GMAIL_ID" \
@@ -892,7 +776,4 @@ sendemail -t "$customer_email" \
 	-a $TMPDIR$uuid/research_report.docx \
 	-a $TMPDIR$uuid/rr.md
 
-
 fi
-
-# not sending montageur_success correctly I think
