@@ -611,6 +611,33 @@ both)
 	sed -e s/\=\=\=\=\=/JQJQJQJQJQ/g -e s/\=\=\=\=/JQJQJQJQ/g -e s/\=\=\=/JQJQJQ/g -e s/\=\=/JQJQ/g -e s/Edit\ /\ /g -e s/JQJQJQJQJQ/\#\#\#\#\#/g -e s/JQJQJQJQ/\#\#\#\#/g -e s/JQJQJQ/\#\#\#/g -e s/JQJQ/\#\#/g  "$TMPDIR"$uuid"/wiki/wikisummaries1.md" | sed G >  "$TMPDIR"$uuid/wiki/wikisummaries.md
 	sed -e s/\=\=\=\=\=/JQJQJQJQJQ/g -e s/\=\=\=\=/JQJQJQJQ/g -e s/\=\=\=/JQJQJQ/g -e s/\=\=/JQJQ/g -e s/Edit\ /\ /g -e s/JQJQJQJQJQ/\#\#\#\#\#/g -e s/JQJQJQJQ/\#\#\#\#/g -e s/JQJQJQ/\#\#\#/g -e s/JQJQ/\#\#/g  "$TMPDIR"$uuid"/wiki/wikipages1.md" | sed G >  "$TMPDIR"$uuid/wiki/wikipages.md
 
+	# use googler to get search snippets
+	echo "# Search Engine Snippets" > $TMPDIR$uuid/googler.md
+	echo "" >> $TMPDIR$uuid/googler.md
+	echo "search carried out at $(date -u)" >> $TMPDIR$uuid/googler.md
+	echo "" >> $TMPDIR$uuid/googler.md
+	while IFS= read -r seed; do
+		echo "running googler on $seed"
+		echo "**"$seed"**" >> $TMPDIR$uuid/googler.md
+		echo "" >> $TMPDIR$uuid/googler.md
+		~/bin/googler/googler -C --noprompt "$seed" >> $TMPDIR$uuid/googler.md
+		echo "" >> $TMPDIR$uuid/googler.md
+		echo "" >> $TMPDIR$uuid/googler.md
+	done < "$TMPDIR"$uuid"/seeds/filtered.pagehits"
+
+	echo "#  News Snippets" > $TMPDIR$uuid/googler-news.md
+	echo "" >> $TMPDIR$uuid/googler-news.md
+	echo "search carried out at $(date -u)" >> $TMPDIR$uuid/googler-news.md
+	echo "" >> $TMPDIR$uuid/googler-news.md
+	while IFS= read -r seed; do
+		echo "running googler -n on $seed"
+		echo "**"$seed"**" >> $TMPDIR$uuid/googler-news.md
+		echo "" >> $TMPDIR$uuid/googler-news.md
+		~/bin/googler/googler -C --noprompt --news "$seed" >> $TMPDIR$uuid/googler-news.md
+		echo "" >> $TMPDIR$uuid/googler-news.md
+		echo "" >> $TMPDIR$uuid/googler-news.md
+	done < "$TMPDIR"$uuid"/seeds/filtered.pagehits"
+
 	wordcountpages=$(wc -w "$TMPDIR"$uuid"/wiki/wikipages.md" | cut -f1 -d' ')
 		if [ "$wordcountpages" -gt 100000 ] ; then
 			cp  "$TMPDIR"$uuid/wiki/wikisummaries.md  "$TMPDIR"$uuid/wiki/wiki4cloud.md
