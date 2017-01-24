@@ -12,6 +12,8 @@ $TMPDIR$uuid/humansummary.md \
 $TMPDIR$uuid/programmaticsummary.md \
 $TMPDIR$uuid/add_this_content.md \
 $TMPDIR$uuid/chapters.md \
+$TMPDIR$uuid/googler.md \
+$TMPDIR$uuid/googler-news.md \
 $TMPDIR$uuid/sorted_uniqs.md \
 $TMPDIR$uuid/analyzed_webpage.md \
 $TMPDIR$uuid/acronyms.md \
