@@ -12,6 +12,9 @@ APT-GET INSTALLATIONS
 
         sudo apt-get install libio-socket-ssl-perl libnet-ssleay-perl is required for sendemail to work.
 
+CREATE scripts/lib
+
+git clone https://github.com/jarun/googler.git
 
 IMAGEMAGICK REQUIREMENTS
 

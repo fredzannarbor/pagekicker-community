@@ -4,6 +4,8 @@ Python 2.7 *and* Python 3.5.2 (some helper programs use one or the other)
 
 python libraries: see requirements.txt
 
+googler https://github.com/jarun/googler.git
+
 php (for Magento -- should be installed with Magento stack)
 
 imagemagick 6.8.9 or more

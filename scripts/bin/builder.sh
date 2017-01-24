@@ -3,7 +3,10 @@
 # accepts book topic and book type definition, then builds book
 
 echo "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
-
+echo ""
+echo "received from command line: "
+echo "$@"
+echo ""
 if shopt -q  login_shell ; then
 
 	if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
@@ -25,6 +28,8 @@ cd $scriptpath
 . includes/set-variables.sh
 
  #ls -lart "$seedfile"
+
+echo " " #spacing
 
 echo "shortform is $shortform"
 
@@ -364,6 +369,22 @@ shift 2
 add_this_image_name=${1#*=}
 shift
 ;;
+--seedsviacli)
+seedsviacli=$2
+shift 2
+;;
+--seedsviacli=*)
+seedsviacli=${1#*=}
+shift
+;;
+--googler)
+googler=$2
+shift 2
+;;
+--googler=*)
+googler=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -401,6 +422,22 @@ else
 	echo "received uuid " $uuid
 	mkdir -p -m 777  "$TMPDIR"$uuid
 fi
+
+# create directories I will need
+
+mkdir -p -m 755  "$TMPDIR"$uuid/actual_builds
+mkdir -p -m 755  "$TMPDIR"$uuid/cover
+mkdir -p -m 755  "$TMPDIR"$uuid/twitter
+mkdir -p -m 777  "$TMPDIR"$uuid/fetch
+mkdir -p -m 777  "$TMPDIR"$uuid/flickr
+mkdir -p -m 777  "$TMPDIR"$uuid/images
+mkdir -p -m 777  "$TMPDIR"$uuid/mail
+mkdir -p -m 777  "$TMPDIR"$uuid/seeds
+mkdir -p -m 777  "$TMPDIR"$uuid/user
+mkdir -p -m 777  "$TMPDIR"$uuid/wiki
+mkdir -p -m 777  "$TMPDIR"$uuid/webseeds
+mkdir -p -m 755 $LOCAL_DATA"jobprofile_builds/""$jobprofilename"
+
 
 if [ -z "$covercolor" ]; then
 	covercolor="RosyBrown"
@@ -451,18 +488,25 @@ echo "test $covercolor" "$coverfont"
 
 # resolving seedfile from command line
 
+echo "getting path to seedfile from command line"
 if [ -z "$seedfile" ] ; then
-	if [ -z "$singleseed" ] ; then
-			echo "no seed file or singleseed was provided, exiting"
-			exit 0
+	echo "no seedfile provided"
+		if [ -z "$singleseed" ] ; then
+			echo "no singleseed provided"
+				if [ -z "$seedsviacli" ] ; then
+					echo "no seedsviacli provided, exiting"
+				else
+					echo "semi-colon seeds provided via command line"
+					echo "$seedsviacli" | sed -e 's/; /;/g' -e 's/;/\n/g' > "$TMPDIR"$uuid/seeds/seedphrases
+				fi
 		else
 			seed="$singleseed"
 			echo "seed is now singleseed" "$seed"
 			echo "$singleseed" > "$TMPDIR"$uuid/seeds/seedphrases
-	fi
+		fi
 else
-	echo "path to seedfile was $seedfile"
-	cp $seedfile "$TMPDIR"$uuid/seeds/seedphrases
+	  echo "path to seedfile was $seedfile"
+		cp $seedfile "$TMPDIR"$uuid/seeds/seedphrases
 fi
 
 #echo "seedfile is " $seedfile
@@ -472,20 +516,6 @@ fi
 
 echo "test $covercolor" "$coverfont"
 
-# create directories I will need
-
-mkdir -p -m 755  "$TMPDIR"$uuid/actual_builds
-mkdir -p -m 755  "$TMPDIR"$uuid/cover
-mkdir -p -m 755  "$TMPDIR"$uuid/twitter
-mkdir -p -m 777  "$TMPDIR"$uuid/fetch
-mkdir -p -m 777  "$TMPDIR"$uuid/flickr
-mkdir -p -m 777  "$TMPDIR"$uuid/images
-mkdir -p -m 777  "$TMPDIR"$uuid/mail
-mkdir -p -m 777  "$TMPDIR"$uuid/seeds
-mkdir -p -m 777  "$TMPDIR"$uuid/user
-mkdir -p -m 777  "$TMPDIR"$uuid/wiki
-mkdir -p -m 777  "$TMPDIR"$uuid/webseeds
-mkdir -p -m 755 $LOCAL_DATA"jobprofile_builds/""$jobprofilename"
 
 #move assets into position
 
@@ -589,6 +619,7 @@ both)
 	sed -e s/\=\=\=\=\=/JQJQJQJQJQ/g -e s/\=\=\=\=/JQJQJQJQ/g -e s/\=\=\=/JQJQJQ/g -e s/\=\=/JQJQ/g -e s/Edit\ /\ /g -e s/JQJQJQJQJQ/\#\#\#\#\#/g -e s/JQJQJQJQ/\#\#\#\#/g -e s/JQJQJQ/\#\#\#/g -e s/JQJQ/\#\#/g  "$TMPDIR"$uuid"/wiki/wikisummaries1.md" | sed G >  "$TMPDIR"$uuid/wiki/wikisummaries.md
 	sed -e s/\=\=\=\=\=/JQJQJQJQJQ/g -e s/\=\=\=\=/JQJQJQJQ/g -e s/\=\=\=/JQJQJQ/g -e s/\=\=/JQJQ/g -e s/Edit\ /\ /g -e s/JQJQJQJQJQ/\#\#\#\#\#/g -e s/JQJQJQJQ/\#\#\#\#/g -e s/JQJQJQ/\#\#\#/g -e s/JQJQ/\#\#/g  "$TMPDIR"$uuid"/wiki/wikipages1.md" | sed G >  "$TMPDIR"$uuid/wiki/wikipages.md
 
+
 	wordcountpages=$(wc -w "$TMPDIR"$uuid"/wiki/wikipages.md" | cut -f1 -d' ')
 		if [ "$wordcountpages" -gt 100000 ] ; then
 			cp  "$TMPDIR"$uuid/wiki/wikisummaries.md  "$TMPDIR"$uuid/wiki/wiki4cloud.md
@@ -612,6 +643,20 @@ else
 	echo "$add_this_content"
 	"$PANDOC_BIN" -f docx -s -t markdown -o "$TMPDIR"$uuid"/add_this_content.md "$TMPDIR"$uuid/add_this_content_raw"
 	cat "$TMPDIR"$uuid"/add_this_content.md >> "$TMPDIR"$uuid/wiki/wiki4cloud.md"
+fi
+
+# use googler to get search snippets
+
+if [ "$googler" = "yes" ] ; then
+	. includes/googler.sh
+else
+	echo "not fetching Search Engine Snippets"
+fi
+
+if [ "$googler_news" = "yes" ] ; then
+	. includes/googler-news.sh
+else
+	echo "not fetching News Snippets"
 fi
 
 echo "summary is" $summary #summary should be on for cover building
@@ -857,8 +902,8 @@ fi
 echo "# Acronyms" > $TMPDIR$uuid/tmpacronyms.md
 echo " " >> $TMPDIR$uuid/tmpacronyms.md
 echo " " >> $TMPDIR$uuid/tmpacronyms.md
-$scriptpath/bin/acronym-filter.sh --txtinfile  "$TMPDIR"$uuid/targetfile.txt > "$TMPDIR"$uuid/acronyms.txt
-sed G $TMPDIR$uuid/acronyms.txt >> $TMPDIR$uuid/acronyms.md
+$scriptpath/bin/acronym-filter.sh --txtinfile  "$TMPDIR"$uuid/targetfile.txt  > "$TMPDIR"$uuid/acronyms.txt
+sed G $TMPDIR$uuid/acronyms.txt | sed 's/^#/[hashtag]/g' >> $TMPDIR$uuid/acronyms.md
 cat $TMPDIR$uuid/acronyms.md >> $TMPDIR$uuid/tmpacronyms.md
 cp $TMPDIR$uuid/tmpacronyms.md $TMPDIR$uuid/acronyms.md
 
@@ -983,7 +1028,7 @@ cd  "$TMPDIR"$uuid
 cp "$TMPDIR"$uuid/$sku"."$safe_product_name".txt" "$TMPDIR"$uuid/4stdout".txt"
 
 cd $scriptpath
-lib/KindleGen/kindlegen "$TMPDIR"$uuid/$sku."$safe_product_name"".epub" -o "$sku.$safe_product_name"".mobi" 1> /dev/null
+lib/KindleGen/kindlegen "$TMPDIR"$uuid/$sku."$safe_product_name"".epub" -o "$sku.$safe_product_name"".mobi" #1> /dev/null
 #ls -lart  "$TMPDIR"$uuid
 echo "built epub, mobi, and txt"
 

@@ -315,10 +315,10 @@ echo "uploaded_tat_file is "$uploaded_tat_file
 
 
 if  [ -z "$url" ] ; then
-	echo "WEBFORMSXML_HOME is" $WEBFORMSXML_HOME
+	echo "WEBFORMSHOME is" $WEBFORMSHOME
 
-	cp $WEBFORMSXML_HOME$submissionid_base/$upload_tat_field_code/*/$uploaded_tat_file $TMPDIR$uuid/$uploaded_tat_file
-	cp $WEBFORMSXML_HOME$submissionid_base/$upload_tat_field_code/*/$uploaded_tat_file $scriptpath/scr/debug
+	cp $WEBFORMSHOME$submissionid_base/$upload_tat_field_code/*/$uploaded_tat_file $TMPDIR$uuid/$uploaded_tat_file
+	cp $WEBFORMSHOME$submissionid_base/$upload_tat_field_code/*/$uploaded_tat_file $scriptpath/scr/debug
 
 else
 
