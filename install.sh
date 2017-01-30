@@ -74,75 +74,6 @@ systemctl_or_service(){
 }
 
 
-install_dependencies_fedora_linux(){
-    print_step "Installing 21 and dependencies on your Fedora Linux..."
-    arch=$(uname -m)
-
-    if ! program_exists "sudo"; then
-        sudo dnf install -y -q sudo
-    fi
-
-    if ! program_exists "python3"; then
-        print_and_run "sudo dnf install -y -q python3"
-    fi
-
-    if ! program_exists "pip3"; then
-        curl -O https://bootstrap.pypa.io/get-pip.py
-        sudo python3 get-pip.py
-        sudo rm get-pip.py
-    fi
-
-    if ! program_exists "gcc"; then
-        sudo dnf install -y -q gcc
-    fi
-
-    if ! program_exists "wget"; then
-        sudo dnf install -y -q wget
-    fi
-
-    if pip3_package_exists "setuptools"; then
-        sudo pip3 uninstall -y setuptools
-    fi
-
-    sudo dnf install -y -q redhat-rpm-config
-    sudo dnf install -y -q python3-devel
-    sudo pip3 install setuptools
-}
-
-install_dependencies_centos_linux(){
-    print_step "Installing 21 and dependencies on your CentOS Linux..."
-    arch=$(uname -m)
-
-    if ! program_exists "sudo"; then
-	yum install -y -q sudo
-    fi
-
-    if ! program_exists "python3"; then
-        print_and_run "sudo yum install -y -q epel-release"
-        print_and_run "sudo yum install -y -q python34"
-    fi
-
-    if ! program_exists "pip3"; then
-        curl -O https://bootstrap.pypa.io/get-pip.py
-        sudo python3 get-pip.py
-        sudo rm get-pip.py
-
-        # Amazon Linux doesn't have /usr/local/bin in the super user's PATH
-        sudo ln -s /usr/local/bin/pip3 /usr/bin/pip3
-    fi
-
-    if ! program_exists "gcc"; then
-        sudo yum -y -q install gcc
-    fi
-
-    if pip3_package_exists "setuptools"; then
-        sudo pip3 uninstall -y setuptools
-    fi
-
-    sudo yum install -y -q python34-devel
-    sudo pip3 install setuptools
-}
-
 install_dependencies_debian_linux(){
     print_step "Installing PageKicker and its dependencies on your Debian/Ubuntu Linux..."
     APT_FLAG=0
@@ -197,12 +128,6 @@ verify_installation_all(){
     fail=
     verify_installation "python3"
     verify_installation "pip3"
-    case "${UNAME:-nil}" in
-        Linux)
-            verify_installation "zerotier-cli"
-            ;;
-    esac
-    verify_installation "21"
 
     if [ -z $fail ]; then
         print_good "You have successfully installed PageKicker!"
@@ -230,22 +155,16 @@ main() {
         Linux)
             if program_exists "apt-get"; then
                 install_dependencies_debian_linux
-            elif program_exists "dnf"; then
-                install_dependencies_fedora_linux
-            elif program_exists "yum"; then
-                install_dependencies_centos_linux
             else
                 print_error "Sorry, your system does not have either apt-get or yum package manager."
                 exit 1
             fi
-            install_zerotier
         *)
             print_error "Sorry, $UNAME is currently not supported via this installer."
             exit 1
         ;;
     esac
 
-    pip_install_21
     suggest_locale
     verify_installation_all
 }
