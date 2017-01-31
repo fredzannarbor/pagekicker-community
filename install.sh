@@ -107,14 +107,67 @@ install_dependencies_debian_linux(){
         print_and_run "sudo apt-get -q update"
     fi
 
-    sudo apt-get install -y python3-dev build-essential
+    sudo apt-get install -y \
+    apache2 \
+    build-essential \
+    fdupes \
+    imagemagick \
+    java \
+    mysql \
+    pandoc \
+    pdftk \
+    perl \
+    pdfimages \
+    php \
+    python2.7 \
+    python3-dev \
+    sendemail
+
+    # install python libraries
     sudo pip3 install setuptools
-    cd $HOME
+
+    # install fonts
+
+    # need  /usr/share/fonts/truetype/ttf-dejavu
+
+    # create directory structure
+
     mkdir -m 755 .pagekicker
+    mkdir -m -p  /tmp/pagekicker
+
+    # get master repository
+
+    cd $HOME
     git clone https://github.com/fredzannarbor/pagekicker-community.git
+
+    # get lib programs
+
+    cd pagekicker-community/scripts/lib
+    git clone https://github.com/jarun/googler.git
+
+    # set up imagemagick configuration
+
+    cd pagekicker-community
+    cp conf/colors.xml ~/.magick
+
+    cd pagekicker-community/scripts/lib
+    imagemagick-fonts.pl > ~/.magick
+
 }
 
+install_optional_dependencies(){
 
+# Magento if needed
+
+# wget bitnami magento stack
+# sudo apt-get install xmlstarlet
+# Social media connectivity
+
+    sudo apt-get install ruby-dev
+    sudo gem install t
+    sudo gem install facebook-cli
+    # see  https://github.com/specious/facebook-cli for info on how to authorize
+}
 
 verify_installation(){
     printf "Verifying $1..."
@@ -167,6 +220,9 @@ main() {
             exit 1
         ;;
     esac
+
+    # test whether to install optional dependencies for Magento & social networking
+    # install_optional_dependencies
 
     suggest_locale
     verify_installation_all
