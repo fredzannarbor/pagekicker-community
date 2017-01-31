@@ -110,21 +110,21 @@ install_dependencies_debian_linux(){
     sudo apt-get install -y \
     apache2 \
     build-essential \
+    default-jre
     fdupes \
     imagemagick \
-    java \
     mysql \
     pandoc \
     pdftk \
     perl \
-    pdfimages \
     php \
+    poppler-utils \
     python2.7 \
     python3-dev \
-    sendemail
-
-    # install python libraries
-    sudo pip3 install setuptools
+    python-pip \
+    python3-pip \
+    sendemail \
+    xmlstarlet
 
     # install fonts
 
@@ -132,18 +132,33 @@ install_dependencies_debian_linux(){
 
     # create directory structure
 
-    mkdir -m 755 .pagekicker
+    mkdir -m 755 ~/.pagekicker
     mkdir -m -p  /tmp/pagekicker
 
     # get master repository
 
-    cd $HOME
+    cd ~
     git clone https://github.com/fredzannarbor/pagekicker-community.git
+    cd pagekicker-community
+    pip install -r requirements.txt
 
+    #install python dependencies
+
+    cd pagekicker-community
     # get lib programs
 
     cd pagekicker-community/scripts/lib
     git clone https://github.com/jarun/googler.git
+    wget https://sourceforge.net/projects/flesh/files/flesh/Flesh/Flesh-Linux.zip/
+    unzip Flesh-Linux.zip
+    mkdir KindleGen
+    cd KindleGen
+    wget http://kindlegen.s3.amazonaws.com/kindlegen_linux_2.6_i386_v2_9.tar.gz
+    tar -xvf kindlegen_linux_2.6_i386_v2_9.tar.gz
+
+# create local-data directory structure
+
+# not implemented yet
 
     # set up imagemagick configuration
 
@@ -167,7 +182,8 @@ install_optional_dependencies(){
     sudo gem install t
     sudo gem install facebook-cli
     # see  https://github.com/specious/facebook-cli for info on how to authorize
-}
+# mysql-client & mysql-server needed in future but not right now
+  }
 
 verify_installation(){
     printf "Verifying $1..."
@@ -203,6 +219,11 @@ suggest_locale(){
     print_step "\texport LANG=C.UTF-8"
 }
 
+API_warning(){
+  print_warning "To test the default system, you will need a Wikipedia API key."
+  print_step "Go to https://www.mediawiki.org/wiki/API:Login."
+}
+
 main() {
     trap 'kill $spinner_pid; printf "\n"; verify_installation_all; exit 1' 2
     # checks the system type and calls system specific install functions
@@ -226,6 +247,7 @@ main() {
 
     suggest_locale
     verify_installation_all
+    api_warning
 }
 
 main
