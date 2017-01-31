@@ -73,7 +73,6 @@ systemctl_or_service(){
     fi
 }
 
-
 install_dependencies_debian_linux(){
     print_step "Installing PageKicker and its dependencies on your Debian/Ubuntu Linux..."
     APT_FLAG=0
@@ -82,7 +81,6 @@ install_dependencies_debian_linux(){
     if ! program_exists "sudo"; then
 	apt-get install -q -y sudo
     fi
-
 
     # check for /usr/bin/pip3
     if [ "$(which pip3)" = "" ]; then
@@ -111,7 +109,12 @@ install_dependencies_debian_linux(){
 
     sudo apt-get install -y python3-dev build-essential
     sudo pip3 install setuptools
+    cd $HOME
+    mkdir -m 755 .pagekicker
+    git clone https://github.com/fredzannarbor/pagekicker-community.git
 }
+
+
 
 verify_installation(){
     printf "Verifying $1..."
