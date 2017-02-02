@@ -29,7 +29,7 @@ memewidth=1200
 memeheight=630
 memebackgroundcolor="white"
 memefillcolor="black"
-memeheadlinefont="GillSansStd"
+memeheadlinefont="DejaVu-Sans-Bold"
 
 . includes/set-variables.sh
 
@@ -121,7 +121,7 @@ cp "$infile" $TMPDIR$uuid/tmp.md
 
 # create title bar & version label
 convert -units pixelsperinch -density 300 -size 1000x50 -border 5 -background "$backgroundcolor" -font "$memeheadlinefont" -fill "$memefillcolor" -background "$memebackgroundcolor" -gravity center  caption:"$tldr" $TMPDIR$uuid/toplabel1.png
-convert -units pixelsperinch -density 300 -size 500x25 -font "Calibri" -background white -fill black -gravity southeast caption:"$SFB_VERSION" $TMPDIR$uuid/version.png
+convert -units pixelsperinch -density 300 -size 500x25 -font "Utopia" -background white -fill black -gravity southeast caption:"$SFB_VERSION" $TMPDIR$uuid/version.png
 
 # prepend pagenumbering to tmp file
 
