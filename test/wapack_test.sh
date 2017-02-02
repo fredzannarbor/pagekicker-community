@@ -26,7 +26,7 @@ echo "$import_available_on_machine importing"
 . includes/set-variables.sh
 
 ../test/paella.sh
-#../test/decimator-test.sh ../test/data/Zalasiewicz_Technosphere_2016.pdf "pioneering metrics and inventory"
+../test/decimator-test.sh ../test/data/Zalasiewicz_Technosphere_2016.pdf "pioneering metrics and inventory"
 #bin/xform.sh "$SFB_HOME"test/data mettan.xml
 
 if [ "$import_available_on_machine" = "no" ] ; then
