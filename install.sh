@@ -124,7 +124,7 @@ install_dependencies_debian_linux(){
     python-pip \
     python3-pip \
     sendemail \
-    xmlstarlet
+    xmlstarlet 
 
     # install fonts
 
