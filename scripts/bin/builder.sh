@@ -960,7 +960,7 @@ fi
 	echo "" >> "$TMPDIR"$uuid/sources.md
 	echo "" >> "$TMPDIR"$uuid/sources.md
 
-	echo "# Also built by PageKicker Robot $jobprofilename" >>   "$TMPDIR"$uuid/builtby.md
+	echo "# Also built by "$imprintname" Robot $jobprofilename" >>   "$TMPDIR"$uuid/builtby.md
 	sort -u --ignore-case "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.txt" -o  "$LOCAL_DATA"/bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.tmp" # currently sort by alphabetical
 	cat "$LOCAL_DATA"/bibliography/robots/"$jobprofilename"/"$jobprofilename""_titles.tmp" >>  "$TMPDIR"$uuid/builtby.md
 	echo " ">>  "$TMPDIR"$uuid/builtby.md
