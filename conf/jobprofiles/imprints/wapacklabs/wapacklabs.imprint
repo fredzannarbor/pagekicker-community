@@ -1,0 +1,6 @@
+echo "Wapack Labs imprint"
+imprintlogo="wapacklabs.png"
+imprintdir="wapack"
+imprintname="Wapack Labs"
+imprintcopyrightpage="wapacklabscopyrightpage.md"
+covercolor="red"

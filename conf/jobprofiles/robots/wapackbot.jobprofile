@@ -1,0 +1,13 @@
+firstname=""
+middlename=""
+lastname="WapackBot"
+editedby=$firstname" "$middlename" "$lastname
+authorbio=$SFB_HOME"conf/jobprofiles/authorbios/Wapack.html"
+fortunedb="literature"
+LSI_import="no"
+BISAC_code="none"
+rows="99"
+fetched_document_format="html"
+mylibrary="yes"
+sigfile="wapackbot.jpg"
+add_imprint_biblio="no" #data too messy for right now
