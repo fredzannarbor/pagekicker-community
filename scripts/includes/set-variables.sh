@@ -122,6 +122,7 @@ positive_seeds=""
 price=0.99
 printconfigfile="yes"
 refresh="yes"
+robot_location="Ann Arbor, Michigan, USA"
 robot_summary_length=10
 rows=1
 sample_tweets="no"
