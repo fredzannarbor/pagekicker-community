@@ -1158,7 +1158,7 @@ else
 fi
 
 echo "moving tmp biography to replace prior one"
-cp "$LOCAL_DATA"/bibliography/robots/"$jobprofilename"/"$jobprofilename""_titles.tmp"  "$LOCAL_DATA"/bibliography/robots/"$jobprofilename"/"$jobprofilename""_titles.txt"
+cp "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/"$jobprofilename""_titles.tmp"  "$LOCAL_DATA"/bibliography/robots/"$jobprofilename"/"$jobprofilename""_titles.txt"
 echo "appending & sorting new bibliography entries" # last item is out of alpha order, so must be sorted when read in future
 echo "* $bibliography_title" >> "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/"$jobprofilename"_titles.txt
 echo "* $bibliography_title" >> "$LOCAL_DATA"bibliography/imprints/"$imprint"/"$imprint"_titles.txt
