@@ -1,4 +1,4 @@
-sudo apt-get install -y \
+sudo apt-get remove -y \
 apache2 \
 build-essential \
 default-jre \
