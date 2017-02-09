@@ -583,7 +583,7 @@ fi
 
 # filter pagehits
 
-cp  "$TMPDIR"$uuid/seeds/pagehits  "$TMPDIR"$uuid/seeds/filtered.pagehits
+sort -u  "$TMPDIR"$uuid/seeds/pagehits >  "$TMPDIR"$uuid/seeds/filtered.pagehits
 
 echo "--- filtered pagehits are ---"
 cat  "$TMPDIR"$uuid/seeds/filtered.pagehits
