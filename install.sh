@@ -107,7 +107,7 @@ install_dependencies_debian_linux(){
         print_and_run "sudo apt-get -q update"
     fi
 
-. apt-install.sh  # installs ubuntu dependencies
+  
 
     # install fonts
 
@@ -118,39 +118,33 @@ install_dependencies_debian_linux(){
     mkdir -m 755 ~/.pagekicker
     mkdir -m -p  /tmp/pagekicker
 
+    # create local-data directory structure
+
     # get master repository
 
     cd ~
     git clone https://github.com/fredzannarbor/pagekicker-community.git
-    cd pagekicker-community
+
+    # install python dependencies
+
+    cd ~/pagekicker-community
     pip install -r requirements.txt
 
-    #install python dependencies
+    # installs ubuntu dependencie
 
-    cd pagekicker-community
+    . apt-install.sh  s
+
     # get lib programs
 
-    cd pagekicker-community/scripts/lib
-    git clone https://github.com/jarun/googler.git
-    wget https://sourceforge.net/projects/flesh/files/flesh/Flesh/Flesh-Linux.zip/
-    unzip Flesh-Linux.zip
-    mkdir KindleGen
-    cd KindleGen
-    wget http://kindlegen.s3.amazonaws.com/kindlegen_linux_2.6_i386_v2_9.tar.gz
-    tar -xvf kindlegen_linux_2.6_i386_v2_9.tar.gz
-
-# create local-data directory structure
-
-# not implemented yet
+    . get-lib.sh # fetches third party apps stored in PageKicker scripts/lib
 
     # set up imagemagick configuration
 
-    cd pagekicker-community
-    cp conf/colors.xml ~/.magick
+    . magick-setup.sh
 
-    cd pagekicker-community/scripts/lib
-    imagemagick-fonts.pl > ~/.magick
+ 
 
+  
 }
 
 install_optional_dependencies(){
