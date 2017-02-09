@@ -9,4 +9,5 @@ while IFS= read -r seed; do
   "$scriptpath"lib/googler/googler -C --noprompt "$seed" >> $TMPDIR$uuid/googler.md
   echo "" >> $TMPDIR$uuid/googler.md
   echo "" >> $TMPDIR$uuid/googler.md
+  sleep 2
 done < "$TMPDIR"$uuid"/seeds/filtered.pagehits"
