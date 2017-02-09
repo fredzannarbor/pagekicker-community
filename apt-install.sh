@@ -17,4 +17,5 @@ python3-dev \
 python-pip \
 python3-pip \
 sendemail \
+ttf-dejavu \
 xmlstarlet
