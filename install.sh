@@ -132,7 +132,7 @@ install_dependencies_debian_linux(){
 
     # installs ubuntu dependencie
 
-    . apt-install.sh  s
+    . apt-install.sh 
 
     # get lib programs
 
