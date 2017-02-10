@@ -6,7 +6,6 @@ fdupes \
 git \
 imagemagick \
 mysql-client \
-mysql-server \
 pandoc \
 pdftk \
 perl \
