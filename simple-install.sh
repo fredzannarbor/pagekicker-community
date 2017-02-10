@@ -13,26 +13,26 @@ mkdir -m 755 ~/magento  # stub directory for optional import/export to catalog
 
 # get master repository
 
-cd ~
-git clone https://github.com/fredzannarbor/pagekicker-community.git
+#cd ~
+#git clone https://github.com/fredzannarbor/pagekicker-community.git
 
 # put default configuration file in place
 # inspect it to make sure paths are correct
 
-cp ~/pagekicker-community/conf/config_default.txt ~/.pagekicker/config.txt
+cp ~/pagekicker-community/conf/config_defaults.txt ~/.pagekicker/config.txt
+
+# installs ubuntu dependencies
+
+./apt-install.sh 
 
 # install python dependencies
 
 cd ~/pagekicker-community
 pip install -r requirements.txt
 
-# installs ubuntu dependencies
-
-. apt-install.sh 
-
 # get lib programs
 
-. get-lib.sh # fetches third party apps stored in PageKicker scripts/lib
+./ get-lib.sh # fetches third party apps stored in PageKicker scripts/lib
 
 # set up imagemagick configuration
 
