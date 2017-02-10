@@ -23,7 +23,7 @@ cp ~/pagekicker-community/conf/config_defaults.txt ~/.pagekicker/config.txt
 
 # installs ubuntu dependencies
 
-./apt-install.sh 
+./apt-install.sh
 
 # install python dependencies
 
@@ -32,11 +32,8 @@ pip install -r requirements.txt
 
 # get lib programs
 
-./ get-lib.sh # fetches third party apps stored in PageKicker scripts/lib
+./get-lib.sh # fetches third party apps stored in PageKicker scripts/lib
 
 # set up imagemagick configuration
 
-. magick-setup.sh
-
-
-
+./magick-setup.sh
