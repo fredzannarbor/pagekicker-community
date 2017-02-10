@@ -4,7 +4,8 @@ venv
 api_key.txt
 conf/config.txt
 conf/jobprofiles/bibliography/Default/Default_titles.txt
-lib/
+!scripts/lib/CmdFlesh.jar
+!scripts/IBMcloud
 scratch/
 sshto21co.sh
 output.xml
@@ -18,3 +19,6 @@ tmp
 *.save
 !local-data/seeds/
 local-data/seeds/*
+scripts/out.xml
+scripts/cookies.txt
+scripts/output.xml
