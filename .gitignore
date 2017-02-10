@@ -3,16 +3,8 @@ venv
 *~
 api_key.txt
 conf/config.txt
-local-data/SKUs/sku_list
-conf/jobprofiles/bibliography/Default/Default_titles.txt 
+conf/jobprofiles/bibliography/Default/Default_titles.txt
 lib/
-local-data/archived_builds/
-local-data/bibliography/
-local-data/jobprofile_builds/
-local-data/local_configurations/
-local-data/logs/
-local-data/archives/
-local-data/seeds/
 scratch/
 sshto21co.sh
 output.xml
@@ -23,3 +15,6 @@ tmp
 *.pyc
 *~
 *.swp
+*.save
+!local-data/seeds/
+local-data/seeds/*
