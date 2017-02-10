@@ -16,6 +16,11 @@ mkdir -m 755 ~/magento  # stub directory for optional import/export to catalog
 cd ~
 git clone https://github.com/fredzannarbor/pagekicker-community.git
 
+# put default configuration file in place
+# inspect it to make sure paths are correct
+
+cp ~/pagekicker-community/conf/config_default.txt ~/.pagekicker/config.txt
+
 # install python dependencies
 
 cd ~/pagekicker-community
