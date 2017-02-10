@@ -107,7 +107,7 @@ install_dependencies_debian_linux(){
         print_and_run "sudo apt-get -q update"
     fi
 
-  
+
 
     # install fonts
 
@@ -142,9 +142,9 @@ install_dependencies_debian_linux(){
 
     . magick-setup.sh
 
- 
 
-  
+
+
 }
 
 install_optional_dependencies(){
