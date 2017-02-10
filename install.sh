@@ -130,9 +130,9 @@ install_dependencies_debian_linux(){
     cd ~/pagekicker-community
     pip install -r requirements.txt
 
-    # installs ubuntu dependencie
+    # installs ubuntu dependencies
 
-    . apt-install.sh  s
+    . apt-install.sh 
 
     # get lib programs
 
@@ -141,9 +141,6 @@ install_dependencies_debian_linux(){
     # set up imagemagick configuration
 
     . magick-setup.sh
-
-
-
 
 }
 
