@@ -20,12 +20,12 @@ tmp
 *.swp
 *.save
 !local-data/seeds/
-!local-data/seeds/history
+!local-data/seeds/history/.gitignore
 !local-data/logs/uuids
 !local-data/bibliography/robots/default
 !local-data/bibliography/imprints/pagekicker
 !local-data/bibliography/yaml
-local-data/seeds/*
+local-data/seeds/
 scripts/out.xml
 scripts/cookies.txt
 scripts/output.xml
