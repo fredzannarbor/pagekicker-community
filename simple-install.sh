@@ -2,7 +2,7 @@
 
 # This is the simple version of the install script for PageKicker.
 #
-###########
+
 
 
 # create directory structure
@@ -29,6 +29,7 @@ cp ~/pagekicker-community/conf/config_defaults.txt ~/.pagekicker/config.txt
 
 cd ~/pagekicker-community
 pip install -r requirements.txt
+pip3 install -r requirements.txt
 
 # get lib programs
 
