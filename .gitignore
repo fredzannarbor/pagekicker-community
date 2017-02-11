@@ -5,7 +5,7 @@ api_key.txt
 conf/config.txt
 conf/jobprofiles/bibliography/Default/Default_titles.txt
 !scripts/lib/CmdFlesh.jar
-!scripts/IBMcloud
+!scripts/IBMcloud/*
 scratch/
 sshto21co.sh
 output.xml
@@ -18,6 +18,11 @@ tmp
 *.swp
 *.save
 !local-data/seeds/
+!local-data/seeds/history
+!local-data/logs/uuids
+!local-data/bibliography/robots/default
+!local-data/bibliography/imprints/pagekicker
+!local-data/bibliography/yaml
 local-data/seeds/*
 scripts/out.xml
 scripts/cookies.txt
