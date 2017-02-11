@@ -6,6 +6,8 @@ conf/config.txt
 conf/jobprofiles/bibliography/Default/Default_titles.txt
 !scripts/lib/CmdFlesh.jar
 !scripts/IBMcloud/*
+lib/KindleGen
+lib/googler
 scratch/
 sshto21co.sh
 output.xml
