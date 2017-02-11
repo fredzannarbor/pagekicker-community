@@ -1,7 +1,7 @@
 py3env
 venv
 *~
-api_key.txt
+!api_key.txt
 conf/config.txt
 conf/jobprofiles/bibliography/Default/Default_titles.txt
 !scripts/lib/CmdFlesh.jar
