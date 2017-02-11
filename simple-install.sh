@@ -31,8 +31,8 @@ pip3 install -r requirements.txt
 
 # create local-data hierarchy
 
-mkdir -p local-data/bibliography local-data/imprints local-data/imprints/pagekicker
-mkdir -p local-data/bibliography/robots local-data/bibliography/default
+mkdir -p local-data/bibliography local-data/bibliography/imprints local-data/bibliography/imprints/pagekicker
+mkdir -p local-data/bibliography/robots local-data/bibliography/robots/default
 mkdir -p local-data/bibliography/yaml
 mkdir -p local-data/jobprofile_builds/default
 mkdir -p local-data/logs/uuids
