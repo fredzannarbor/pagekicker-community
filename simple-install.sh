@@ -3,9 +3,7 @@
 # This is the simple version of the install script for PageKicker.
 #
 
-
-
-# create directory structure
+# create outside repo directory structure
 
 mkdir -m 755 ~/.pagekicker
 mkdir -m 777 -p  /tmp/pagekicker
@@ -30,6 +28,17 @@ cp ~/pagekicker-community/conf/config_defaults.txt ~/.pagekicker/config.txt
 cd ~/pagekicker-community
 pip install -r requirements.txt
 pip3 install -r requirements.txt
+
+# create local-data hierarchy
+
+mkdir -p local-data/bibliography local-data/imprints local-data/imprints/pagekicker
+mkdir -p local-data/bibliography/robots local-data/bibliography/default
+mkdir -p local-data/bibliography/yaml
+mkdir -p local-data/jobprofile_builds/default
+mkdir -p local-data/logs/uuids
+mkdir -p local-data/seeds/history
+echo "1000001" > local-data/SKUs/sku_list
+touch local-data/bibliography/robots/default/default_titles.txt
 
 # get lib programs
 
