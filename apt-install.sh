@@ -1,6 +1,7 @@
 sudo apt-get install -y \
 apache2 \
 build-essential \
+calibre \
 default-jre \
 fdupes \
 git \
@@ -16,5 +17,6 @@ python3-dev \
 python-pip \
 python3-pip \
 sendemail \
+texlive-xetex \
 ttf-dejavu \
 xmlstarlet
