@@ -1,0 +1,4 @@
+theweight	thecolor	ignoreme	theword
+21.4	ff0000	hello nice to see you	Red
+13.7	00FF00		Green
+18	0000ff	unh! unh! unh!	Blue	
