@@ -68,7 +68,6 @@ mkdir -p local-data/seeds/SKUs
 echo "1000001" > local-data/SKUs/sku_list
 touch local-data/bibliography/robots/default/default_titles.txt
 
-
 # fetches & deploys third party apps stored in PageKicker scripts/lib
 
 cd ~/pagekicker-community/scripts/lib
