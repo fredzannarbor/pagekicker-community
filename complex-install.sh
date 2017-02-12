@@ -1,7 +1,9 @@
 #!/bin/sh
 
-# This is the install script for PageKicker.
+# This is the complex install script for PageKicker.
 #
+
+# NOT YET WORKING, USE simple-install.sh INSTEAD!!
 ###########
 
 BLACK='\033[30;1m'
