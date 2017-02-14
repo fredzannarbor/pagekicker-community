@@ -1,0 +1,244 @@
+
+# This is a sample output configuration for the
+# IBM Word Cloud Generator; it also serves
+# as documentation.
+
+# Blank lines and lines beginning with the # character are ignored.
+# Case *is* significant.
+
+# Configuration files must be encoded as UTF-8 (therefore, ASCII is fine).
+
+##########################################
+# The following properties are MANDATORY #
+##########################################
+
+# Path to a TrueType font:
+
+# e.g. windows:
+#font: c:/windows/fonts/georgiab.ttf
+
+# e.g. mac:
+# font: /Library/Fonts/Times New Roman.ttf
+# font: /Library/Fonts/Georgia.ttf
+
+# for linux, download any TrueType font and point to it
+font: /usr/share/fonts/truetype/ttf-dejavu/DejaVuSans-Bold.ttf
+
+# NOTE: if you're using this sample to test, remember to change your
+# working directory to the one containing this file, so that the relative
+# path to the sample font will work for you. You could also replace it
+# with the absolute path of one of your own truetype fonts.
+
+# The structure of the input text.
+#
+# Possible values are:
+#
+#	text
+#	tab
+#
+# "text" means unstructured text. The program will count words and
+#		size the words in proportion to their frequencies.
+# "tab" means tab-separated values, and requires further configuration
+#		settings, below.
+#
+format: text
+
+# The encoding of the input text.
+#
+# Possible values are:
+#
+#	US-ASCII
+#	ISO-8859-1
+#	UTF-8
+#	UTF-16BE
+#	UTF-16LE
+#	UTF-16
+#
+inputencoding: UTF-8
+
+#################################################################
+# The following properties are MANDATORY for tab files          #
+#################################################################
+
+# How to treat the first line of structured data.
+#
+# Possible values:
+#	data
+#	skip
+#	headings
+#
+# "data" means that the first line in the file is data. This
+#		setting cause the "column" configuration options to
+#		be understood as numeric indices, starting at 1.
+# "skip" means throw away the first line, and look for numeric
+#		indices in the "column" config options, as with "data".
+# "headings" means that the first line contains column headings.
+#		The "column" config options will be interpreted as the
+#		text of the data headings.
+#
+# Ignored for input type "text".
+
+# example
+firstline: data
+
+# How to interpret the structured data.
+
+# Which column contains the "word"?
+#
+# For firstline values of "data" and "skip", this should be a
+# column number, where the first column is column 1. For
+# "heading", this should be the value of the heading for
+# column containing the word or phrase to be rendered in the cloud.
+
+# example numeric index
+wordcolumn: 1
+
+# examples with headings:
+# wordcolumn: firstname
+# wordcolumn: Heading With Spaces
+
+# Which column contains the weight?
+#
+# For firstline values of "data" and "skip", this should be a
+# column number, where the first column is column 1. For
+# "heading", this should be the value of the heading for
+# column containing the weight of the given word or phrase.
+# The weight determines the word's relative size.
+
+# example
+weightcolumn: 2
+
+# Which column contains the color? (OPTIONAL)
+#
+# You can provide your own color per word.
+# Colors should be in the format
+#    RRGGBB
+# or
+#    #RRGGBB
+# or
+#    0xRRGGBB
+# where RR, GG, and BB are hexadecimal numbers
+# between 00 and FF.
+#
+# For firstline values of "data" and "skip", this should be a
+# column number, where the first column is column 1. For
+# "heading", this should be the value of the heading for
+# column containing the color of the given word or phrase.
+#
+# If this configuration is given, then palette settings (below)
+# will be ignored.
+
+# example
+colorcolumn: 3
+
+
+##########################################
+# The following properties are OPTIONAL  #
+##########################################
+
+# Case folding -- send everything to upper or lower case
+#
+# Possible values: Upper, Lower
+#
+# Default: no case folding
+#
+# Example:
+#
+#casefold: Lower
+
+
+# Background color
+#
+# Colors should be specified as in the colorcolumn setting, above.
+# 
+# Default:
+background: FFFFFF
+
+# Palette
+#
+# Colors should be specified as in the colorcolumn setting, above.
+#
+# Colors are assigned to words by randomly choosing from
+# the provided palette. You can list any number of colors, and
+# you can make a given color more likely
+# than another by listing it more than once.
+#
+# Default:
+palette: 880099, 339922, 993333, 2266CC
+
+# Maximum number of words to show
+#
+# Default:
+# maxwords: 150
+# More fun:
+maxwords: 800
+
+# The "placement strategy" to use
+# Possible values:
+#
+#   HorizontalCenterLine
+#   VerticalCenterLine
+#   Alphabetical
+#   AlphabeticalVertical
+#   Center
+#
+# Capitalization and spelling are significant.
+#
+# Default:
+placement: HorizontalCenterLine
+
+# The perimeter shape, either BLOBBY or SQUARISH
+#
+# Default:
+shape: BLOBBY
+
+# The "orientation strategy" to use.
+# Possible values:
+#
+#	HORIZONTAL
+#	MOSTLY_HORIZONTAL
+#	HALF_AND_HALF
+#	MOSTLY_VERTICAL
+#	VERTICAL
+#	ANY_WHICH_WAY
+#
+# Default:
+orientation: HALF_AND_HALF
+			
+# Which collection of stopwords (ignored words) to use.
+# One of:
+#
+#	Arabic, Catalan, Czech, Dutch, Danish, English, Esperanto,
+#	Farsi, Finnish, French, German, Greek, Hebrew, Hindi, Hungarian,
+#	Italian, Norwegian, Polish, Portuguese, Romanian, Russian,
+#	Slovenian, Spanish, Swedish, Turkish
+#
+#	See stopwordsfile setting for custom stop words lists.
+#
+# No stopwords used by default.
+#
+# Example: 
+stopwords: English
+
+# Path to a file containing custom stopwords. 
+# Stopwords should be given one per line in a text file.
+#
+# No stopwords file used by default.
+# For the hamlet example, we might wish to remove the names that
+# indicate the speaker
+stopwordsfile: /opt/bitnami/apache2/htdocs/pk-new/development/scripts/lib/IBMcloud/examples/scarcello-stopwords.txt
+# If you use both the "stopwords" and "stopwordsfile" options
+# the the program will load the given stopwords and append
+# your custom list.
+
+# Encoding of stopwords file, when using custom stopwords.
+#
+# Default:
+stopwordsencoding: UTF-8
+
+# Whether or not to treat numbers as stopwords
+#
+# true/false
+#
+# Default:
+stripnumbers: true

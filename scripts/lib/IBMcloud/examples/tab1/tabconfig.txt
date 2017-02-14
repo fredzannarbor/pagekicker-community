@@ -1,0 +1,11 @@
+font: c:/windows/fonts/georgiab.ttf
+input: tab
+inputencoding: UTF-8
+firstline: data
+wordcolumn: 1
+weightcolumn: 2
+background: 000000
+palette: FFFFFF, 0000FF, 0000FF, 0000FF
+placement: Center
+shape: BLOBBY
+orientation: ANY_WHICH_WAY

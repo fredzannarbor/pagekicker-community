@@ -1,0 +1,95 @@
+<html>
+<head>
+<title>IBM Word Cloud Generator</title>
+<style type="text/css">
+	p { width: 40em }
+	pre { 
+		padding: 1em; 
+		border: 1px solid #ccc; 
+	}
+</style>
+</head>
+<body>
+
+<h2>IBM Word Cloud Generator</h2>
+<h3>Build 32</h3>
+<p>
+	The IBM Word Cloud Generator is a Java application that creates
+	word clouds from your source texts. It's the same technology
+	that powers the popular "Wordle" web application.
+</p>
+
+<h2>Usage</h2>
+<table><tr><td><pre>java -jar ibm-word-cloud.jar <i>options</i>
+    Options:
+         <b>mandatory:</b> -c|--config /path/to/configuration
+         <b>optional:</b> -w|--width integer 
+         <b>optional:</b> -h|--height integer 
+         <b>optional:</b> -s|--seed longInteger
+         <b>optional:</b> -i|--infile /path/to/input.txt
+         <b>optional:</b> -o|--outfile /path/to/output.png
+         <b>optional:</b> -p|--print</pre></td></tr></table>
+
+<p>
+	The application uses a configuration file to control all of the
+	settings that affect the output, such as font, layout, the
+	treatment of stop-words, etc.
+</p>
+<p>
+	The default width and height are 800 and 1200, respectively.
+</p>
+<p>
+	If an input file is not provided, the application will read standard in.
+</p>
+<p>
+	If an output file is not provided, the application will write to standard out.
+	The output is always a 24-bit PNG.
+</p>
+<p>
+	You may only specify one of <samp>-p/--print</samp> or <samp>-o/--outfile</samp>. If you use the
+	print option, then the width and height are used to determine an aspect
+	ratio. You could tell the word cloud generator to try to make a square
+	by doing 
+</p>	
+<table><tr><td><pre>$java -jar ibm-word-cloud.jar -c myconfig.txt -w 1 -h 1 -p</pre></td></tr></table>
+<p>
+	for example.
+</p>
+
+</p>
+<p>
+	The <samp>-s</samp> or <samp>--seed</samp> option allows
+	you to seed the random number generator so that any two runs
+	using the same configuration <i>and having the same aspect ratio
+	with respect to the width and height arguments</i>
+	will produce identical output.
+</p>
+
+<h2>Sample Usages</h2>
+<table><tr><td><pre>$java -jar ibm-word-cloud.jar -c myconfig.txt &lt; /path/to/text &gt; /path/to/output.png
+$cat file1 file2 | java -jar ibm-word-cloud.jar -s 133277 -c myconfig.txt -o /path/to/output.png
+$java -jar ibm-word-cloud.jar --config myconfig.txt  --input /path/to/text --output /path/to/output.png</pre></td></tr></table>
+
+<p>
+	See the included <samp>run-example.bat</samp> or <samp>run-example.sh</samp>
+	for a command line that should work with this distribution.
+</p>
+
+<h2>Configuration</h2>
+<p>
+	See a heavily commented <a href="examples/configuration.txt">sample configuration file</a>.
+</p>
+<p>
+	A configuration file is a UTF-8-encoded text file. Blank lines, and
+	lines beginning with the <samp>#</samp> character are ignored.
+	Lines that set properties consist of a property name, optional
+	whitespace, the <samp>:</samp> character, optional whitespace,
+	and the desired property value. Example:
+</p>
+<table><tr><td><pre># This is a comment
+
+# The next line sets the "font" preperty
+font: /opt/fonts/ttf/helvetica.ttf</pre></td></tr></table>
+
+</body>
+</html>
