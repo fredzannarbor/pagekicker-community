@@ -38,7 +38,7 @@ mysql-client \
 pandoc \
 pdftk \
 perl \
-php \
+php5-cli \
 poppler-utils \
 python2.7 \
 python3-dev \
