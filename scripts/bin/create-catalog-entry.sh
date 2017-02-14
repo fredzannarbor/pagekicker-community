@@ -6,7 +6,7 @@ TEXTDOMAIN=SFB # required for bash language awareness
 echo $"hello, world, I am speaking" $LANG
 
 if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
-	echo "config file not found, creating /home/<user>/.pagekicker, put config file there"
+	echo "config file not found, creating /home/<user>/.pagekicker, you need to put config file there"
 	mkdir -p -m 755 "$HOME"/.pagekicker
 	echo "exiting"
 	exit 1
