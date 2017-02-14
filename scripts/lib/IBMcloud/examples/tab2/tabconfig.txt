@@ -1,0 +1,11 @@
+font: c:/windows/fonts/georgiab.ttf
+input: tab
+inputencoding: UTF-8
+firstline: headings
+wordcolumn: theword
+weightcolumn: theweight
+colorcolumn: thecolor
+background: 000000
+placement: Center
+shape: SQUARISH
+orientation: ANY_WHICH_WAY
