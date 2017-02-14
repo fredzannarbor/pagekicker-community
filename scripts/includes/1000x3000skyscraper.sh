@@ -24,7 +24,7 @@ echo "if error issued here see comments in includes/1000x3000skyscraper.sh for c
 # on the system.  if the command is not producing the trimmed infocard
 # you need to fix the problem with ImageMagick.  There are a number o
 # ways you can do this -- Google is your friend --  change convert to hard
-# code to a version of IM that works -- fix the IM configuration -- or
+# code to a version of IM that works (which is done here) -- fix the IM configuration -- or
 # specify the delegate in the IM command line.
 
 if [ -z "$add_this_image" ]; then
