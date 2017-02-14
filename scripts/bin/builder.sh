@@ -10,7 +10,7 @@ echo ""
 if shopt -q  login_shell ; then
 
 	if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
-		echo "config file not found, creating /home/<user>/.pagekicker, put config file there"
+		echo "config file not found, creating /home/<user>/.pagekicker, you need to put config file there"
 		mkdir -p -m 755 "$HOME"/.pagekicker
 		echo "exiting"
 		exit 1
@@ -583,7 +583,7 @@ fi
 
 # filter pagehits
 
-cp  "$TMPDIR"$uuid/seeds/pagehits  "$TMPDIR"$uuid/seeds/filtered.pagehits
+sort -u  "$TMPDIR"$uuid/seeds/pagehits >  "$TMPDIR"$uuid/seeds/filtered.pagehits
 
 echo "--- filtered pagehits are ---"
 cat  "$TMPDIR"$uuid/seeds/filtered.pagehits
