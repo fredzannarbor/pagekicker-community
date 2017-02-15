@@ -1043,9 +1043,10 @@ cd  "$TMPDIR"$uuid
 "$PANDOC_BIN" -o "$TMPDIR"$uuid/$sku"."$safe_product_name".mw" -t mediawiki -s -S  "$TMPDIR"$uuid/complete.md
 cp "$TMPDIR"$uuid/$sku"."$safe_product_name".txt" "$TMPDIR"$uuid/4stdout".txt"
 
+cd $scriptpath
 
 if [ "$kindlegen_on" = "yes" ] ; then
-	cd $scriptpath
+
 	lib/KindleGen/kindlegen "$TMPDIR"$uuid/$sku."$safe_product_name"".epub" -o "$sku.$safe_product_name"".mobi" #1> /dev/null
 else
 	ebook-convert "$TMPDIR"$uuid/$sku."$safe_product_name"".epub" "$sku.$safe_product_name"".mobi"
