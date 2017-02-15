@@ -385,6 +385,22 @@ shift 2
 googler=${1#*=}
 shift
 ;;
+--googler-n)
+googler-n=$2
+shift 2
+;;
+--googler-n=*)
+googler-n=${1#*=}
+shift
+;;
+--kindlegen_on)
+kindlegen_on=$2
+shift 2
+;;
+--kindlegen_on=*)
+kindlegen_on=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -1027,9 +1043,14 @@ cd  "$TMPDIR"$uuid
 "$PANDOC_BIN" -o "$TMPDIR"$uuid/$sku"."$safe_product_name".mw" -t mediawiki -s -S  "$TMPDIR"$uuid/complete.md
 cp "$TMPDIR"$uuid/$sku"."$safe_product_name".txt" "$TMPDIR"$uuid/4stdout".txt"
 
-cd $scriptpath
-lib/KindleGen/kindlegen "$TMPDIR"$uuid/$sku."$safe_product_name"".epub" -o "$sku.$safe_product_name"".mobi" #1> /dev/null
-#ls -lart  "$TMPDIR"$uuid
+
+if [ "$kindlegen_on" = "yes" ] ; then
+	cd $scriptpath
+	lib/KindleGen/kindlegen "$TMPDIR"$uuid/$sku."$safe_product_name"".epub" -o "$sku.$safe_product_name"".mobi" #1> /dev/null
+else
+	ebook-convert "$TMPDIR"$uuid/$sku."$safe_product_name"".epub" "$sku.$safe_product_name"".mobi"
+fi
+
 echo "built epub, mobi, and txt"
 
 case $ebook_format in
