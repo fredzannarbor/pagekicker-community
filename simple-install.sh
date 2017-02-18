@@ -38,7 +38,7 @@ mysql-client \
 pandoc \
 pdftk \
 perl \
-php \
+php5-cli \
 poppler-utils \
 python2.7 \
 python3-dev \
@@ -53,8 +53,8 @@ xmlstarlet
 # install python dependencies
 
 cd ~/pagekicker-community
-pip install -r requirements.txt
-pip3 install -r requirements.txt
+sudo pip install -r requirements.txt
+sudo pip3 install -r requirements.txt
 
 # create local-data hierarchy
 
