@@ -1049,7 +1049,7 @@ if [ "$kindlegen_on" = "yes" ] ; then
 
 	lib/KindleGen/kindlegen "$TMPDIR"$uuid/$sku."$safe_product_name"".epub" -o "$sku.$safe_product_name"".mobi" #1> /dev/null
 else
-	ebook-convert "$TMPDIR"$uuid/$sku."$safe_product_name"".epub" "$sku.$safe_product_name"".mobi"
+	ebook-convert "$TMPDIR"$uuid/$sku."$safe_product_name"".epub" "$TMPDIR"$uuid"/$sku.$safe_product_name"".mobi"
 fi
 
 echo "built epub, mobi, and txt"
