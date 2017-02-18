@@ -277,7 +277,8 @@ fi
 # create summary sentence slides
 
 sed -n 1,5p $TMPDIR$uuid/pp_summary_all.txt | cut -c 1-450 >> $TMPDIR$uuid/sumall.txt
-convert -background white -fill black -gravity west -size 2000x2000 -font "$slidebodyfont" -pointsize "64" caption:@$TMPDIR$uuid/sumall.txt $TMPDIR$uuid/sumall3.png
+sumalltext=$(cat $TMPDIR$uuid/sumall.txt)
+convert -background white -fill black -gravity west -size 2000x2000 -font "$slidebodyfont" -pointsize "64" label:"$sumalltext" $TMPDIR$uuid/sumall3.png
 
 convert -units pixelsperinch -density 300  -background blue -fill Yellow -gravity west -size 3300x200 -font "$toplabelfont"  -pointsize 30 label:"Summary Sentences" $TMPDIR$uuid/sumtop3.png
 convert -units pixelsperinch -density 300 -size 3300x200 xc:blue $TMPDIR$uuid/sumbot3.png
@@ -335,10 +336,12 @@ cat $TMPDIR$uuid/places >> $TMPDIR$uuid/places.txt
 cat $TMPDIR$uuid/others >> $TMPDIR$uuid/others.txt
 
 echo "(more ...)" | tee --append $TMPDIR$uuid/peoples.txt $TMPDIR$uuid/places.txt $TMPDIR$uuid/others.txt
-
-convert -units pixelsperinch -density 300 -background white -fill black -gravity northwest -size 1000x1850 -pointsize 24  -font "$slidebodyfont" caption:@$TMPDIR$uuid/peoples.txt $TMPDIR$uuid/people.png
-convert -units pixelsperinch -density 300  -background white -fill black -gravity northwest -size 1000x1850 -pointsize 24 -font "$slidebodyfont"  caption:@$TMPDIR$uuid/places.txt $TMPDIR$uuid/places.png
-convert -units pixelsperinch -density 300 -background white -fill black -gravity northwest -size 1000x1850 -pointsize 24 -font "$slidebodyfont" caption:@$TMPDIR$uuid/others.txt $TMPDIR$uuid/others.png
+peopletext=$(cat $TMPDIR$uuid/peoples.txt)
+placestext=$(cat $TMPDIR$uuid/places.txt)
+otherstext=$(cat $TMPDIR$uuid/others.txt)
+convert -units pixelsperinch -density 300 -background white -fill black -gravity northwest -size 1000x1850 -pointsize 24  -font "$slidebodyfont" label:"$peopletext" $TMPDIR$uuid/people.png
+convert -units pixelsperinch -density 300  -background white -fill black -gravity northwest -size 1000x1850 -pointsize 24 -font "$slidebodyfont"  label:"$placestext" $TMPDIR$uuid/places.png
+convert -units pixelsperinch -density 300 -background white -fill black -gravity northwest -size 1000x1850 -pointsize 24 -font "$slidebodyfont" label:"$otherstext" $TMPDIR$uuid/others.png
 convert -units pixelsperinch -density 300 -background white -fill black -gravity west +append $TMPDIR$uuid/people.png $TMPDIR$uuid/places.png $TMPDIR$uuid/others.png $TMPDIR$uuid/keywords.png
 #montage $TMPDIR$uuid/people.png $TMPDIR$uuid/places.png $TMPDIR$uuid/others.png -gravity north -geometry 800x1900+1+1 -tile 3x1 $TMPDIR$uuid/keywords.png
 
@@ -357,16 +360,18 @@ $TMPDIR$uuid/keywords.png
 
 cp $TMPDIR$uuid/downloaded.pdf $TMPDIR$uuid/targetfile.pdf
 pdftotext $TMPDIR$uuid/targetfile.pdf $TMPDIR$uuid/targetfile.txt
-java -jar lib/CmdFlesh.jar $TMPDIR$uuid/targetfile.txt > $TMPDIR$uuid/rr.txt
+# java -jar lib/CmdFlesh.jar $TMPDIR$uuid/targetfile.txt > $TMPDIR$uuid/rr.txt
 sed -i 's/Averaage/Average/g' $TMPDIR$uuid/rr.txt
 echo "# Readability Report" >> $TMPDIR$uuid/rr.md
 cat $TMPDIR$uuid/rr.txt >> $TMPDIR$uuid/rr.md
 cat assets/rr_decimator_explanation.md >> $TMPDIR$uuid/rr.md
 sed -i G $TMPDIR$uuid/rr.md
 "$PANDOC_BIN" $TMPDIR$uuid/rr.md -o $TMPDIR$uuid/rr.txt
-convert -background white -fill black -gravity west -size 2000x2000 -font "$slidebodyfont" -pointsize "64" caption:@$TMPDIR$uuid/rr.txt $TMPDIR$uuid/rr.png
+rrtext=cat$(cat $TMPDIR$uuid/rr.txt)
+echo $rrtext "rrtext"
+convert -background white -fill black -gravity west -size 2000x2000 -font "$slidebodyfont" -pointsize "64" label:"$rrtext" $TMPDIR$uuid/rr.png
 convert -units pixelsperinch -density 300  -background blue -fill Yellow -gravity west\
-  -size 3300x200 -font "$toplabelfont" -pointsize 30 caption:"Readability Report" \
+ -size 3300x200 -font "$toplabelfont" -pointsize 30 caption:"Readability Report" \
 	$TMPDIR$uuid/toplabel9.png
 convert -units pixelsperinch -density 300 xc:blue -size 3300x200 $TMPDIR$uuid/bottomlabel9.png
 convert -units pixelsperinch -density 300 $TMPDIR$uuid/canvas.png \
@@ -381,7 +386,8 @@ $TMPDIR$uuid/rrslide.png
 
 convert -background blue -fill Yellow -gravity west -size 3300x200 -font "$toplabelfont"  caption:"TL;DR" $TMPDIR$uuid/toplabel2.png
 convert xc:blue -size 3300x200 $TMPDIR$uuid/bottomlabel2.png
-convert -background white -fill black -gravity west -size 1000x2000 -font "$slidebodyfont" -pointsize "96" caption:@$TMPDIR$uuid/tldr.txt $TMPDIR$uuid/tldr.png
+tldrtext=$(cat $TMPDIR$uuid/tldr.txt)
+convert -background white -fill black -gravity west -size 1000x2000 -font "$slidebodyfont" -pointsize "96" label:"$tldrtext" $TMPDIR$uuid/tldr.png
 
 # page 1 image
 pdftk $TMPDIR$uuid/targetfile.pdf cat 1 output $TMPDIR$uuid/p1.pdf
@@ -411,9 +417,10 @@ if [ -s "$TMPDIR$uuid/montage.png" ] ; then
 	 $TMPDIR$uuid/keywords.png \
 	 $TMPDIR$uuid/pageburst.png \
 	 $TMPDIR$uuid/montage.png \
-	 $TMPDIR$uuid/rrslide.png  \
 	 -size 3300x2550 \
 	 $TMPDIR$uuid/slidedeck.pdf
+
+#	 	 $TMPDIR$uuid/rrslide.png  \
 
 	 montage  $TMPDIR$uuid/wordcloudslide.png $TMPDIR$uuid/sumall3.png $TMPDIR$uuid/keywords.png $TMPDIR$uuid/pages.png $TMPDIR$uuid"/montage.png" $TMPDIR$uuid"/pageburst.png"  -geometry 1000x5000 -tile 1x10 -mode concatenate $TMPDIR$uuid/skyscraper.png
 
@@ -425,9 +432,10 @@ else
 	 $TMPDIR$uuid/pages.png \
 	 $TMPDIR$uuid/keywords.png \
 	 $TMPDIR$uuid/pageburst.png \
-	 $TMPDIR$uuid/rrslide.png  \
 	 -size 3300x2550 \
 	 $TMPDIR$uuid/slidedeck.pdf
+
+#	 $TMPDIR$uuid/rrslide.png  - problem with generating this slide
 
 	 montage  $TMPDIR$uuid/wordcloudslide.png $TMPDIR$uuid/sumall3.png $TMPDIR$uuid/keywords.png $TMPDIR$uuid/pages.png $TMPDIR$uuid"/pageburst.png"  -geometry 1000x5000 -tile 1x10 -mode concatenate $TMPDIR$uuid/skyscraper.png
 
