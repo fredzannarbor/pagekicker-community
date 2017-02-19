@@ -77,6 +77,11 @@ cd KindleGen
 wget http://kindlegen.s3.amazonaws.com/kindlegen_linux_2.6_i386_v2_9.tar.gz
 tar -xvf kindlegen_linux_2.6_i386_v2_9.tar.gz
 
+# fix hard-coded IBMcloud configuration file
+
+cd ~/pagekicker-community/scripts/lib/IBMcloud/examples
+sed -i "s/fred/"$USER"/" configuration.txt
+
 # set up imagemagick configuration
 
 mkdir ~/.magick
