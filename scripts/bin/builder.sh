@@ -1034,7 +1034,7 @@ echo "---" >>  "$TMPDIR"$uuid/yaml-metadata.md
 # build ebook in epub
 
 safe_product_name=$(echo "$booktitle" | sed -e 's/[^A-Za-z0-9._-]/_/g')
-bibliography_title="$booktitle"
+bibliography_title=$(echo "$booktitle" | sed -e 's/[^A-Za-z0-9 :;,.?]//g')
 
 cd  "$TMPDIR"$uuid
 "$PANDOC_BIN" -o "$TMPDIR"$uuid/$sku"."$safe_product_name".epub" --epub-cover-image="$TMPDIR"$uuid/cover/$sku"ebookcover.jpg"  "$TMPDIR"$uuid/complete.md
@@ -1182,6 +1182,7 @@ fi
 echo "moving tmp biography to replace prior one"
 cp "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/"$jobprofilename""_titles.tmp"  "$LOCAL_DATA"/bibliography/robots/"$jobprofilename"/"$jobprofilename""_titles.txt"
 echo "appending & sorting new bibliography entries" # last item is out of alpha order, so must be sorted when read in future
+echo "adding markdown-safe bibliography title as $bibliography_title"
 echo "* $bibliography_title" >> "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/"$jobprofilename"_titles.txt
 echo "* $bibliography_title" >> "$LOCAL_DATA"bibliography/imprints/"$imprint"/"$imprint"_titles.txt
 cat "$TMPDIR"$uuid"/yaml-metadata.md" >> "$LOCAL_DATA"bibliography/yaml/allbuilds.yaml
