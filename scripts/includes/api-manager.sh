@@ -2,7 +2,7 @@
 
 # apis registered
 
-# currently registered APIs 
+# currently registered APIs
 
 AlchemyAPI=1
 WikipediaAPI=1
@@ -46,23 +46,23 @@ plos_API_key="XMIciRBsScpd2NT"
 
 # needs to check if already logged in elsewise it will be throttled
 
-curl --silent -c cookies.txt -d "lgname="$WikipediaAPIuserID"&lgpassword="$WikipediaAPIuserPW"&action=login&format=xml" https://en.wikipedia.org/w/api.php -o output.xml
+curl --silent -c cookies.txt -d "lgname="$WikipediaAPIuserID"&lgpassword="$WikipediaAPIuserPW"&action=login&format=xml" https://en.wikipedia.org/w/api.php -o $TMPDIR$uuid/output.xml
 
-TOKEN=$(xmlstarlet sel -t -m '//login' -v '//@token' output.xml)
+TOKEN=$(xmlstarlet sel -t -m '//login' -v '//@token' $TMPDIR$uuid/output.xml)
 
 if [ $WikipediaAPIinUse = "1" ] ; then
 
 	echo "running API manager for logging into Wikipedia API"
 
-	curl --silent -b cookies.txt -d "action=login&lgname="$WikipediaAPIuserID"&lgpassword="$WikipediaAPIuserPW"&format=xml&lgtoken="$TOKEN https://en.wikipedia.org/w/api.php 
+	curl --silent -b cookies.txt -d "action=login&lgname="$WikipediaAPIuserID"&lgpassword="$WikipediaAPIuserPW"&format=xml&lgtoken="$TOKEN https://en.wikipedia.org/w/api.php >> $TMPDIR$uuid/output.xml
 	echo " "
 else
 
-	echo "Wikipedia API not in use"
+	echo "Wikipedia API not in use" 
 
 fi
 
-if [ $MendeleyAPIinUse = "1" ] ; then 
+if [ $MendeleyAPIinUse = "1" ] ; then
 
 	echo "append customer key to URL requests for access to public Mendeley resources (only)"
 
@@ -73,6 +73,3 @@ if [ $MendeleyAPIinUse = "1" ] ; then
 	true
 
 fi
-
-
-

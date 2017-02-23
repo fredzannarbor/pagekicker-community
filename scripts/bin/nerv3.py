@@ -3,11 +3,11 @@
 # Jeffrey Herbstman
 # nerv3.py
 # Goal: Named entity recognition script to pull names/place from text
-# called as python nerv3.py text_path_or_file 
+# called as python nerv3.py text_path_or_file
 #
 # Inputs:
 # path - text file or directory containing text files
-# output - output file name 
+# output - output file name
 # Outputs:
 # Output file written
 #
@@ -20,7 +20,7 @@ import xml.etree.ElementTree as ET
 import collections
 import codecs
 import os
-#from IPython import embed 
+#from IPython import embed
 #=================================================
 def listwrite(output_file,thelist):
 	for item in thelist:
@@ -28,7 +28,7 @@ def listwrite(output_file,thelist):
 		output_file.write("%s\n" % item)
 
 #=================================================
- 
+
 def main():
 
 	tmpdir = "/tmp/pagekicker"
@@ -39,18 +39,18 @@ def main():
 	parser.add_argument('output', help = "target file for output")
 	parser.add_argument('uuid', help = "uuid")
 	args = parser.parse_args()
-	
+
 	in_file = args.path
 	out_file = args.output
 	uuid = args.uuid
 	folder = os.path.join(tmpdir, uuid)
-	print folder	
+	# print folder	
 	cwd = os.getcwd()
 	apikey_location = os.path.join(cwd, "api_key.txt")
-	
+
 	with open(in_file) as f:
 		text = f.read()
-		
+
 	alchemyObj = AlchemyAPI.AlchemyAPI()
 	alchemyObj.loadAPIKey(apikey_location)
 
@@ -63,7 +63,7 @@ def main():
 	People = {}
 	Places = {}
 	Other = {}
-	
+
 	for entity in root.getiterator('entity'):
 		if entity[0].text == 'Person':
 			People[entity[3].text]=[entity[1].text, entity[2].text]
@@ -71,7 +71,7 @@ def main():
 			Places[entity[3].text] = [entity[1].text, entity[2].text]
 		else:
 			Other[entity[3].text] = [entity[1].text, entity[2].text]
-	
+
 	#print lists ordered by relevance
 	Places_s = sorted(Places, key = Places.get, reverse = True)
 	People_s = sorted(People, key = People.get, reverse = True)

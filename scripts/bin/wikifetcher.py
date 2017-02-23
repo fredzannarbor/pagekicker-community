@@ -29,7 +29,7 @@ wikipedia.set_lang(lang)
 file = open(input_file, 'r')
 file2 = open(output_file, 'wb')
 for line in file:
-    print(line),
+    #print(line),
     try:
         a = wikipedia.summary(line)
         a = wikipedia.page(line)
