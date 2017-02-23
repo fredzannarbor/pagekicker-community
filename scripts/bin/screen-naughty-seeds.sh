@@ -1,11 +1,9 @@
 #!/bin/bash
 
-
-
 echo "*** HOLY CRAP!  BEGINNING TO SCREEN OUT NAUGHTY SEEDS! *** "
 
 if shopt -q  login_shell ; then
-	
+
 	if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
 		echo "config file not found, creating /home/<user>/.pagekicker, put config file there"
 		mkdir -p -m 755 "$HOME"/.pagekicker
@@ -16,15 +14,13 @@ if shopt -q  login_shell ; then
 		echo "read config file from login shell $HOME""/.pagekicker/config.txt"
 	fi
 else
-	. /home/$(whoami)/.pagekicker/config.txt #hard-coding /home is a hack 
+	. /home/$(whoami)/.pagekicker/config.txt #hard-coding /home is a hack
 	echo "read config file from nonlogin shell /home/$(whoami)/.pagekicker/config.txt"
 fi
 
 cd $scriptpath
 
 . includes/set-variables.sh
-
-
 
 # argparse
 # $1 is inbound seedphrases file
@@ -36,11 +32,11 @@ mkdir -p -m 777 $TMPDIR
 mkdir -p -m 777 $TMPDIR$uuid
 mkdir -p -m 777 $TMPDIR$uuid/seeds
 
-while read -r line; do 
+while read -r line; do
 
 if grep -qw "$line" "seeds/disallowed-seeds.txt" ; then
 
-	echo "the seed "$line "was disallowed" 
+	echo "the seed "$line "was disallowed"
 	disallowed="$disallowed""\n ""$line"
 
 else
@@ -72,8 +68,8 @@ else
 		-xp "$GMAIL_PASSWORD" \
 		-s smtp.gmail.com:587 \
 		-s smtp.gmail.com:587 \
-		-o tls=yes 
+		-o tls=yes
 fi
 
-echo " * * * DONE CHECKING NAUGHTY WORDS * * * "
+echo " * * * DONE CHECKING NAUGHTY WORDS * * * " >> "$TMPDIR"$uuid/$loguuid
 exit 0
