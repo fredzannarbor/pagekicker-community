@@ -12,6 +12,7 @@ echo "" >> /tmp/pagekicker/$loguuid/log
 echo "received from command line: ">> /tmp/pagekicker/$loguuid/log
 echo "$@" >> /tmp/pagekicker/$loguuid/log
 echo "" >> /tmp/pagekicker/$loguuid/log
+
 if shopt -q  login_shell ; then
 
 	if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
@@ -32,10 +33,6 @@ cd $scriptpath
 
 . includes/set-variables.sh
 
- #ls -lart "$seedfile"
-
-echo " " #spacing >> "$TMPDIR"$loguuid/log
-
 echo "shortform is $shortform" >> "$TMPDIR"$loguuid/log
 
 echo "revision number is" $SFB_VERSION >> "$TMPDIR"$loguuid/log
@@ -47,25 +44,17 @@ echo "completed reading config file and  beginning logging at" `date +'%m/%d/%y%
 export PERL_SIGNALS="unsafe"
 echo "PERL_SIGNALS" is $PERL_SIGNALS "UNSAFE is correct" >> "$TMPDIR"$loguuid/log
 
-
 while :
 do
 case $1 in
 --help | -\?)
-echo "for help review source code for now"
+echo "-v, --verbose  turn on verbose output"
+echo "$SFB_VERSION"
 exit 0  # This is not an error, the user requested help, so do not exit status 1.
 ;;
---verbose)
+--verbose|-v)
 echo "verbose on"
 quiet=""
-shift
-;;
---quiet|--log)
-echo "quiet mode, logging to" >> "$TMPDIR"$loguuid
-quiet="yes"
-verbose=""
-shift
-#cat "$TMPDIR"$loguuid/log
 shift
 ;;
 -U|--passuuid)
@@ -420,14 +409,6 @@ shift 2
 kindlegen_on=${1#*=}
 shift
 ;;
-#--verbose|-v)
-#verbose=$2
-#shift 2
-#;;
-#--verbose|-v=*)
-#verbose=${1#*=}
-#shift
-#;;
   --) # End of all options
             shift
             break
@@ -450,7 +431,6 @@ echo "add_this_content is $add_this_content" >> "$TMPDIR"$loguuid/log
 echo "imprint is $imprint" >> "$TMPDIR"$loguuid/log
 echo "editedby is $editedby" >> "$TMPDIR"$loguuid/log
 echo "jobprofilename is $jobprofilename">> "$TMPDIR"$loguuid/log
-
 
 human_author="$editedby"
 # Suppose some options are required. Check that we got them.
@@ -481,7 +461,6 @@ mkdir -m 777  "$TMPDIR"$uuid/user
 mkdir -m 777  "$TMPDIR"$uuid/wiki
 mkdir -m 777  "$TMPDIR"$uuid/webseeds
 mkdir -m 755 -p $LOCAL_DATA"jobprofile_builds/""$jobprofilename"
-
 
 if [ -z "$covercolor" ]; then
 	covercolor="RosyBrown"
@@ -909,14 +888,6 @@ pandoc -S -o "$TMPDIR"$uuid/targetfile.txt -t plain -f markdown "$TMPDIR"$uuid/t
 		cat "$TMPDIR$uuid"/summary.md >> $TMPDIR$uuid/programmaticsummary.md
 	fi
 
-
-else
-	echo "short form selected"   >> "$TMPDIR"$loguuid/log
-	echo '![cover image]'"(ebookcover.jpg)" >  "$TMPDIR"$uuid/titlepage.md
-	echo '!['"$imprintname"']'"(""$imprintlogo"")" >>  "$TMPDIR"$uuid/titlepage.md
-
-fi
-
 #tldr
 
 . includes/tldr_auto.sh #returns tldr.txt and tldr.md
@@ -1205,7 +1176,8 @@ else
 		rm "$seedfile"
 	else
 		echo "no seedfile to remove"  >> "$TMPDIR"$loguuid/log
-	fi
+  #	ls -la "$seedfile"
+
 fi
 
 echo "moving tmp biography to replace prior one"  >> "$TMPDIR"$loguuid/log
