@@ -51,8 +51,8 @@ do
 case $1 in
 --help | -\?)
 exec 1>&3
-echo "-v, --verbose  turn on verbose output"
-echo "$SFB_VERSION"
+echo "version $SFB_VERSION"
+cat assets/builder-help.txt | more
 exit 0  # This is not an error, the user requested help, so do not exit status 1.
 ;;
 --verbose|-v)
