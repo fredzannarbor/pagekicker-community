@@ -1141,7 +1141,7 @@ if [ "$add_corpora" = "yes" ] ; then
 		echo "added book associated with $unique_seed_string to corpus for robot $jobprofilename"
 	fi
 else
-	:
+	true
 fi
 
 if [ "$add_corpora" = "yes" ] ; then
@@ -1168,7 +1168,7 @@ else
         cp  "$TMPDIR"$uuid/seeds/filtered.pagehits "$TMPDIR"$batch_uuid/$sku.$safe_product_name"_filtered.pagehits"
         #ls -l "$TMPDIR""$batch_uuid"/* # debug
 fi
-exit
+
 
 if [ "$dontcleanupseeds" = "yes" ]; then
 	echo "leaving seed file in place $seedfile"
@@ -1178,10 +1178,8 @@ else
 		rm "$seedfile"
 	else
 		echo "no seedfile to remove"
-  #	ls -la "$seedfile"
-
+	fi
 fi
-
 
 echo "moving tmp biography to replace prior one"
 cp "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/"$jobprofilename""_titles.tmp"  "$LOCAL_DATA"/bibliography/robots/"$jobprofilename"/"$jobprofilename""_titles.txt"
@@ -1191,6 +1189,8 @@ echo "* $bibliography_title" >> "$LOCAL_DATA"bibliography/robots/"$jobprofilenam
 echo "* $bibliography_title" >> "$LOCAL_DATA"bibliography/imprints/"$imprint"/"$imprint"_titles.txt
 cat "$TMPDIR"$uuid"/yaml-metadata.md" >> "$LOCAL_DATA"bibliography/yaml/allbuilds.yaml
 
-echo "exiting builder, files in $TMPDIR$uuid/"
+# add some simple tests that builds worked ok
+
+echo "builder run complete, files in $TMPDIR$uuid/"
 
 exit 0
