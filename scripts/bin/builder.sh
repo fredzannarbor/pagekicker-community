@@ -2,25 +2,30 @@
 
 # accepts book topic and book type definition, then builds book
 
-echo "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
-echo ""
-echo "received from command line: "
-echo "$@"
-echo ""
+loguuid=$(python  -c 'import uuid; print(uuid.uuid1())')
+
+mkdir /tmp/pagekicker/$loguuid
+
+touch /tmp/pagekicker/$loguuid/log
+echo "builder begins" > /tmp/pagekicker/$loguuid/log
+echo "" >> /tmp/pagekicker/$loguuid/log
+echo "received from command line: ">> /tmp/pagekicker/$loguuid/log
+echo "$@" >> /tmp/pagekicker/$loguuid/log
+echo "" >> /tmp/pagekicker/$loguuid/log
 if shopt -q  login_shell ; then
 
 	if [ ! -f "$HOME"/.pagekicker/config.txt ]; then
-		echo "config file not found, creating /home/<user>/.pagekicker, you need to put config file there"
+		echo "config file not found, creating /home/<user>/.pagekicker, you need to put config file there" >> "$TMPDIR"$loguuid/log
 		mkdir -p -m 755 "$HOME"/.pagekicker
-		echo "exiting"
+		echo "exiting" >> "$TMPDIR"$loguuid/log
 		exit 1
 	else
 		. "$HOME"/.pagekicker/config.txt
-		echo "read config file from login shell $HOME""/.pagekicker/config.txt"
+		echo "read config file from login shell $HOME""/.pagekicker/config.txt" >> "$TMPDIR"$loguuid/log
 	fi
 else
 	. /home/$(whoami)/.pagekicker/config.txt #hard-coding /home is a hack
-	echo "read config file from nonlogin shell /home/$(whoami)/.pagekicker/config.txt"
+	echo "read config file from nonlogin shell /home/$(whoami)/.pagekicker/config.txt" >> "$TMPDIR"$loguuid/log
 fi
 
 cd $scriptpath
@@ -29,18 +34,19 @@ cd $scriptpath
 
  #ls -lart "$seedfile"
 
-echo " " #spacing
+echo " " #spacing >> "$TMPDIR"$loguuid/log
 
-echo "shortform is $shortform"
+echo "shortform is $shortform" >> "$TMPDIR"$loguuid/log
 
-echo "revision number is" $SFB_VERSION
+echo "revision number is" $SFB_VERSION >> "$TMPDIR"$loguuid/log
 
-echo "sfb_log is" $logdir"sfb_log"
+echo "sfb_log is" $logdir"sfb_log" >> "$TMPDIR"$loguuid/log
 
-echo "completed reading config file and  beginning logging at" `date +'%m/%d/%y%n %H:%M:%S'`
+echo "completed reading config file and  beginning logging at" `date +'%m/%d/%y%n %H:%M:%S'` >> "$TMPDIR"$loguuid/log
 
 export PERL_SIGNALS="unsafe"
-echo "PERL_SIGNALS" is $PERL_SIGNALS "UNSAFE is correct"
+echo "PERL_SIGNALS" is $PERL_SIGNALS "UNSAFE is correct" >> "$TMPDIR"$loguuid/log
+
 
 while :
 do
@@ -48,6 +54,19 @@ case $1 in
 --help | -\?)
 echo "for help review source code for now"
 exit 0  # This is not an error, the user requested help, so do not exit status 1.
+;;
+--verbose)
+echo "verbose on"
+quiet=""
+shift
+;;
+--quiet|--log)
+echo "quiet mode, logging to" >> "$TMPDIR"$loguuid
+quiet="yes"
+verbose=""
+shift
+#cat "$TMPDIR"$loguuid/log
+shift
 ;;
 -U|--passuuid)
 passuuid=$2
@@ -401,6 +420,14 @@ shift 2
 kindlegen_on=${1#*=}
 shift
 ;;
+#--verbose|-v)
+#verbose=$2
+#shift 2
+#;;
+#--verbose|-v=*)
+#verbose=${1#*=}
+#shift
+#;;
   --) # End of all options
             shift
             break
@@ -416,64 +443,65 @@ shift
 esac
 done
 
-echo "LOCAL_DATA is $LOCAL_DATA"
+echo "LOCAL_DATA is $LOCAL_DATA" >> "$TMPDIR"$loguuid/log
 
-echo "add_this_content is $add_this_content"
+echo "add_this_content is $add_this_content" >> "$TMPDIR"$loguuid/log
 
-echo "imprint is $imprint" #debug
-echo "editedby is $editedby" #debug
-echo "jobprofilename is $jobprofilename" #debug
+echo "imprint is $imprint" >> "$TMPDIR"$loguuid/log
+echo "editedby is $editedby" >> "$TMPDIR"$loguuid/log
+echo "jobprofilename is $jobprofilename">> "$TMPDIR"$loguuid/log
 
 
 human_author="$editedby"
 # Suppose some options are required. Check that we got them.
 
 if [ ! "$passuuid" ] ; then
-	echo "creating uuid"
-	uuid=$("$PYTHON_BIN"  -c 'import uuid; print(uuid.uuid1())')
-	echo "uuid is" $uuid | tee --append $xform_log
+	echo "using loguuid" >> "$TMPDIR"$loguuid/log
+	#uuid=$("$PYTHON_BIN"  -c 'import uuid; print(uuid.uuid1())')
+	uuid=$loguuid
+	echo "uuid is" $uuid >> "$TMPDIR"$loguuid/log
 	mkdir -p -m 777  "$TMPDIR"$uuid
 else
 	uuid=$passuuid
-	echo "received uuid " $uuid
+	echo "received uuid " $uuid >> "$TMPDIR"$loguuid/log
 	mkdir -p -m 777  "$TMPDIR"$uuid
 fi
 
 # create directories I will need
 
-mkdir -p -m 755  "$TMPDIR"$uuid/actual_builds
-mkdir -p -m 755  "$TMPDIR"$uuid/cover
-mkdir -p -m 755  "$TMPDIR"$uuid/twitter
-mkdir -p -m 777  "$TMPDIR"$uuid/fetch
-mkdir -p -m 777  "$TMPDIR"$uuid/flickr
-mkdir -p -m 777  "$TMPDIR"$uuid/images
-mkdir -p -m 777  "$TMPDIR"$uuid/mail
-mkdir -p -m 777  "$TMPDIR"$uuid/seeds
-mkdir -p -m 777  "$TMPDIR"$uuid/user
-mkdir -p -m 777  "$TMPDIR"$uuid/wiki
-mkdir -p -m 777  "$TMPDIR"$uuid/webseeds
-mkdir -p -m 755 $LOCAL_DATA"jobprofile_builds/""$jobprofilename"
+mkdir -m 755  "$TMPDIR"$uuid/actual_builds
+mkdir -m 755  "$TMPDIR"$uuid/cover
+mkdir -m 755  "$TMPDIR"$uuid/twitter
+mkdir -m 777  "$TMPDIR"$uuid/fetch
+mkdir -m 777  "$TMPDIR"$uuid/flickr
+mkdir -m 777  "$TMPDIR"$uuid/images
+mkdir -m 777  "$TMPDIR"$uuid/mail
+mkdir -m 777  "$TMPDIR"$uuid/seeds
+mkdir -m 777  "$TMPDIR"$uuid/user
+mkdir -m 777  "$TMPDIR"$uuid/wiki
+mkdir -m 777  "$TMPDIR"$uuid/webseeds
+mkdir -m 755 -p $LOCAL_DATA"jobprofile_builds/""$jobprofilename"
 
 
 if [ -z "$covercolor" ]; then
 	covercolor="RosyBrown"
-	echo "no cover color in command line so I set it to "$covercolor
+	echo "no cover color in command line so I set it to "$covercolor >> "$TMPDIR"$loguuid/log
 else
-	echo "cover color is $covercolor"
+	echo "cover color is $covercolor" >> "$TMPDIR"$loguuid/log
 fi
 
 if [ -z "$coverfont" ]; then
 	coverfont="Minion"
-	echo "no cover font in command line so I set it to "$coverfont
+	echo "no cover font in command line so I set it to "$coverfont >> "$TMPDIR"$loguuid/log
 else
-	echo "cover font is $coverfont"
+	echo "cover font is $coverfont" >> "$TMPDIR"$loguuid/log
 fi
 
 if [ -z "$wikilang" ]; then
 	wikilang="en"
-	echo "no wikilang in command line so I set it to "$wikilang
+	echo "no wikilang in command line so I set it to "$wikilang >> "$TMPDIR"$loguuid/log
 else
-	echo "wiki search language is $wikilang"
+	echo "wiki search language is $wikilang" >> "$TMPDIR"$loguuid/log
 fi
 
 if [ -z "$imprint" ]; then
@@ -491,46 +519,43 @@ else
 fi
 
 TEXTDOMAIN=SFB
-echo $"hello, world, I am speaking" $LANG
+echo $"hello, world, I am speaking" $LANG >> "$TMPDIR"$loguuid/log
 
 safe_product_name=$(echo "$booktitle"| sed -e 's/[^A-Za-z0-9._-]/_/g')
-echo "safe product name is" $safe_product_name
+echo "safe product name is" $safe_product_name >> "$TMPDIR"$loguuid/log
 
 sku=`tail -1 < "$LOCAL_DATA""SKUs/sku_list"`
-echo "sku is" $sku
+echo "sku is" $sku >> "$TMPDIR"$loguuid/log
 
 
-echo "test $covercolor" "$coverfont"
+echo "test $covercolor" "$coverfont" >> "$TMPDIR"$loguuid/log
 
 # resolving seedfile from command line
 
-echo "getting path to seedfile from command line"
+echo "getting path to seedfile from command line" >> "$TMPDIR"$loguuid/log
 if [ -z "$seedfile" ] ; then
-	echo "no seedfile provided"
+	echo "no seedfile provided" >> "$TMPDIR"$loguuid/log
 		if [ -z "$singleseed" ] ; then
-			echo "no singleseed provided"
+			echo "no singleseed provided" >> "$TMPDIR"$loguuid/log
 				if [ -z "$seedsviacli" ] ; then
-					echo "no seedsviacli provided, exiting"
+					echo "no seedsviacli provided" >> "$TMPDIR"$loguuid/log
+					echo "exiting because no seeds provided"  >> "$TMPDIR"$loguuid/log
+					exit 0
 				else
-					echo "semi-colon seeds provided via command line"
+					echo "semi-colon seeds provided via command line" >> "$TMPDIR"$loguuid/log
 					echo "$seedsviacli" | sed -e 's/; /;/g' -e 's/;/\n/g' > "$TMPDIR"$uuid/seeds/seedphrases
 				fi
 		else
 			seed="$singleseed"
-			echo "seed is now singleseed" "$seed"
+			echo "seed is now singleseed" "$seed" >> "$TMPDIR"$loguuid/log
 			echo "$singleseed" > "$TMPDIR"$uuid/seeds/seedphrases
 		fi
 else
-	  echo "path to seedfile was $seedfile"
+	  echo "path to seedfile was $seedfile" >> "$TMPDIR"$loguuid/log
 		cp $seedfile "$TMPDIR"$uuid/seeds/seedphrases
 fi
 
-#echo "seedfile is " $seedfile
-#ls -lart "seedfile is" $seedfile
-
 . includes/api-manager.sh
-
-echo "test $covercolor" "$coverfont"
 
 
 #move assets into position
@@ -551,49 +576,48 @@ echo "test $covercolor" "$coverfont"
 
 cp $scriptpath"assets/pk35pc.jpg"  "$TMPDIR"$uuid/pk35pc.jpg
 
-if cmp -s "$seedfile" "$TMPDIR"$uuid"/seeds/seedphrases" ; then
-	echo "seedfiles are identical, no action necessary"
-else
-	echo "Rotating new seedfile into tmpdir"
-	cp "$seedfile"  "$TMPDIR"$uuid"/seeds/seedphrases"
-fi
+#if cmp -s "$seedfile" "$TMPDIR"$uuid"/seeds/seedphrases" ; then
+#	echo "seedfiles are identical, no action necessary" >> "$TMPDIR"$loguuid/log
+#else
+#	echo "Rotating new seedfile into tmpdir" >> "$TMPDIR"$loguuid/log
+#	cp "$seedfile"  "$TMPDIR"$uuid"/seeds/seedphrases"
+#fi
 
 cp $confdir"jobprofiles"/imprints/"$imprint"/"$imprintlogo"  "$TMPDIR""$uuid"
 cp $confdir"jobprofiles"/signatures/"$sigfile" "$TMPDIR""$uuid"
 cp $confdir"jobprofiles"/imprints/"$imprint"/"$imprintlogo" "$TMPDIR"$uuid"/cover"
 
 if [ -z  ${analyze_url+x} ] ; then
-	echo "$analyze_url not set as analyze_url"
+	echo "$analyze_url not set as analyze_url" >> "$TMPDIR"$loguuid/log
 else
 	if [[ $analyze_url =~ $httpvalidate ]] ; then
-		echo "$analyze_url is valid URI"
-		echo "analyze_url is set as $analyze_url"
+		echo "$analyze_url is valid URI" >> "$TMPDIR"$loguuid/log
+		echo "analyze_url is set as $analyze_url" >> "$TMPDIR"$loguuid/log
 		"$PANDOC_BIN" -s -r html "$analyze_url" -o  "$TMPDIR"$uuid"/webpage.md"
 		"$PYTHON27_BIN" bin/nerv3.py  "$TMPDIR"$uuid"/webpage.md"  "$TMPDIR"$uuid"/webseeds" "$uuid"
-		echo "seeds have been extracted from analyze_url"
+		echo "seeds have been extracted from analyze_url" >> "$TMPDIR"$loguuid/log
 		head -n "$top_q"  "$TMPDIR"$uuid"/webseeds" | sed '/^\s*$/d' >  "$TMPDIR"$uuid"/webseeds.top_q"
 		cat  "$TMPDIR"$uuid"/webseeds.top_q" >  "$TMPDIR"$uuid"/webseeds"
 		comm -2 -3 <(sort  "$TMPDIR"$uuid"/webseeds") <(sort "locale/stopwords/webstopwords.en") >>  "$TMPDIR"$uuid/seeds/seedphrases
 	else
-		echo "invalid URI, analyze_url not added"
+		echo "invalid URI, analyze_url not added" >> "$TMPDIR"$loguuid/log
 	fi
 fi
 
-sort -f "$TMPDIR"$uuid"/seeds/seedphrases"
 sort -u --ignore-case "$TMPDIR"$uuid"/seeds/seedphrases" | sed -e '/^$/d' -e '/^[0-9#@]/d' >  "$TMPDIR"$uuid/seeds/sorted.seedfile
 
-echo "---"
-echo "seeds are"
-cat "$TMPDIR"$uuid"/seeds/sorted.seedfile"
-echo "---"
+echo "---" >> "$TMPDIR"$loguuid/log
+echo "seeds are" >> "$TMPDIR"$loguuid/log
+cat "$TMPDIR"$uuid"/seeds/sorted.seedfile" >> "$TMPDIR"$loguuid/log
+echo "---">> "$TMPDIR"$loguuid/log
 
 #expand seeds to valid wiki pages
 
 if [ "$expand_seeds_to_pages" = "yes" ] ; then
-		echo "$expand_seeds_to_pages"
-		"$PYTHON27_BIN" bin/wiki_seeds_2_pages.py --infile "$TMPDIR"$uuid"/seeds/sorted.seedfile" --pagehits "$TMPDIR"$uuid"/seeds/pagehits"
+		echo "$expand_seeds_to_pages" >> "$TMPDIR"$loguuid/log
+		"$PYTHON27_BIN" bin/wiki_seeds_2_pages.py --infile "$TMPDIR"$uuid"/seeds/sorted.seedfile" --pagehits "$TMPDIR"$uuid"/seeds/pagehits"  >> "$TMPDIR"$uuid/$loguuid
 else
-		echo "not expanding seeds to pages"
+		echo "not expanding seeds to pages" >> "$TMPDIR"$loguuid/log
 		cp "$TMPDIR"$uuid"/seeds/sorted.seedfile" "$TMPDIR"$uuid"/seeds/pagehits"
 fi
 
@@ -601,17 +625,17 @@ fi
 
 sort -u  "$TMPDIR"$uuid/seeds/pagehits >  "$TMPDIR"$uuid/seeds/filtered.pagehits
 
-echo "--- filtered pagehits are ---"
-cat  "$TMPDIR"$uuid/seeds/filtered.pagehits
+echo "--- filtered pagehits are ---" >> "$TMPDIR"$loguuid/log
+cat  "$TMPDIR"$uuid/seeds/filtered.pagehits >> "$TMPDIR"$loguuid/log
 
-echo "--- end of pagehits ---"
+echo "--- end of pagehits ---" >> "$TMPDIR"$loguuid/log
 
 # fetch by pagehits
 
 
 case "$summary" in
 summaries_only)
-	echo "fetching page summaries only"
+	echo "fetching page summaries only" >> "$TMPDIR"$loguuid/log
 	"$PYTHON_BIN"  $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR"$uuid"/seeds/filtered.pagehits" --outfile "$TMPDIR"$uuid/"wiki/wikisummariesraw.md" --lang "$wikilocale" --summary  1> /dev/null
 	sed -e s/\=\=\=\=\=/JQJQJQJQJQ/g -e s/\=\=\=\=/JQJQJQJQ/g -e s/\=\=\=/JQJQJQ/g -e s/\=\=/JQJQ/g -e s/Edit\ /\ /g -e s/JQJQJQJQJQ/\#\#\#\#\#/g -e s/JQJQJQJQ/\#\#\#\#/g -e s/JQJQJQ/\#\#\#/g -e s/JQJQ/\#\#/g  "$TMPDIR"$uuid/wiki/wikisummariesraw.md | sed G >  "$TMPDIR"$uuid/wiki/wikisummaries.md
 	cp  "$TMPDIR"$uuid/wiki/wikisummaries.md  "$TMPDIR"$uuid/wiki/wikiall.md
@@ -619,7 +643,7 @@ summaries_only)
 	cp "$TMPDIR"$uuid"/wiki/wikisummaries.md" "$TMPDIR"$uuid"/wiki/wiki4cloud.md"
 ;;
 complete_pages_only)
-	echo "fetching complete pages only"
+	echo "fetching complete pages only" >> "$TMPDIR"$loguuid/log
 	"$PYTHON_BIN" $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR"$uuid"/seeds/filtered.pagehits" --outfile "$TMPDIR"$uuid"/wiki/wikipagesraw.md" --lang "$wikilocale"  1> /dev/null
 	sed -e s/\=\=\=\=\=/JQJQJQJQJQ/g -e s/\=\=\=\=/JQJQJQJQ/g -e s/\=\=\=/JQJQJQ/g -e s/\=\=/JQJQ/g -e s/Edit\ /\ /g -e s/JQJQJQJQJQ/\#\#\#\#\#/g -e s/JQJQJQJQ/\#\#\#\#/g -e s/JQJQJQ/\#\#\#/g -e s/JQJQ/\#\#/g  "$TMPDIR"$uuid/wiki/wikipagesraw.md | sed G >  "$TMPDIR"$uuid"/wiki/wikipages.md"
 	wordcountpages=$(wc -w "$TMPDIR"$uuid"/wiki/wikipages.md" | cut -f1 -d' ')
@@ -627,11 +651,11 @@ complete_pages_only)
 	cp  "$TMPDIR"$uuid/wiki/wikipages.md  "$TMPDIR"$uuid/wiki/wikiall.md
 ;;
 both)
-	echo "fetching both summaries and complete pages"
-	echo "fetching page summaries now"
-	"$PYTHON_BIN"  $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR"$uuid"/seeds/filtered.pagehits" --outfile "$TMPDIR"$uuid"/wiki/wikisummaries1.md" --lang "$wikilocale" --summary  1> /dev/null
-	echo "fetching complete pages now"
-	"$PYTHON_BIN" $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR"$uuid"/seeds/filtered.pagehits" --outfile "$TMPDIR"$uuid"/wiki/wikipages1.md" --lang "$wikilocale"  1> /dev/null
+	echo "fetching both summaries and complete pages" >> "$TMPDIR"$loguuid/log
+	echo "fetching page summaries now" >> "$TMPDIR"$loguuid/log
+	"$PYTHON_BIN"  $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR"$uuid"/seeds/filtered.pagehits" --outfile "$TMPDIR"$uuid"/wiki/wikisummaries1.md" --lang "$wikilocale" --summary   >> "$TMPDIR"$uuid/$loguuid
+	echo "fetching complete pages now" >> "$TMPDIR"$loguuid/log
+	"$PYTHON_BIN" $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR"$uuid"/seeds/filtered.pagehits" --outfile "$TMPDIR"$uuid"/wiki/wikipages1.md" --lang "$wikilocale"   >> "$TMPDIR"$uuid/$loguuid
 	sed -e s/\=\=\=\=\=/JQJQJQJQJQ/g -e s/\=\=\=\=/JQJQJQJQ/g -e s/\=\=\=/JQJQJQ/g -e s/\=\=/JQJQ/g -e s/Edit\ /\ /g -e s/JQJQJQJQJQ/\#\#\#\#\#/g -e s/JQJQJQJQ/\#\#\#\#/g -e s/JQJQJQ/\#\#\#/g -e s/JQJQ/\#\#/g  "$TMPDIR"$uuid"/wiki/wikisummaries1.md" | sed G >  "$TMPDIR"$uuid/wiki/wikisummaries.md
 	sed -e s/\=\=\=\=\=/JQJQJQJQJQ/g -e s/\=\=\=\=/JQJQJQJQ/g -e s/\=\=\=/JQJQJQ/g -e s/\=\=/JQJQ/g -e s/Edit\ /\ /g -e s/JQJQJQJQJQ/\#\#\#\#\#/g -e s/JQJQJQJQ/\#\#\#\#/g -e s/JQJQJQ/\#\#\#/g -e s/JQJQ/\#\#/g  "$TMPDIR"$uuid"/wiki/wikipages1.md" | sed G >  "$TMPDIR"$uuid/wiki/wikipages.md
 
@@ -639,24 +663,24 @@ both)
 	wordcountpages=$(wc -w "$TMPDIR"$uuid"/wiki/wikipages.md" | cut -f1 -d' ')
 		if [ "$wordcountpages" -gt 100000 ] ; then
 			cp  "$TMPDIR"$uuid/wiki/wikisummaries.md  "$TMPDIR"$uuid/wiki/wiki4cloud.md
-			echo "body too big for wordcloud, using abstracts only"
+			echo "body too big for wordcloud, using abstracts only" >> "$TMPDIR"$loguuid/log
 		else
 			cat  "$TMPDIR"$uuid/wiki/wikisummaries.md  "$TMPDIR"$uuid/wiki/wikipages.md >  "$TMPDIR"$uuid/wiki/wiki4cloud.md
-			echo "building wordcloud from body + summaries"
+			echo "building wordcloud from body + summaries" >> "$TMPDIR"$loguuid/log
 		fi
 ;;
 *)
-	echo "unrecognized summary option"
+	echo "unrecognized summary option" >> "$TMPDIR"$loguuid/log
 ;;
 esac
 
 if [ "$add_this_content" = "none" ] ; then
-	echo "no added content"
+	echo "no added content" >> "$TMPDIR"$loguuid/log
 	touch "$TMPDIR"$uuid/add_this_content.md
 else
-	echo "adding user content to cover cloud"
+	echo "adding user content to cover cloud" >> "$TMPDIR"$loguuid/log
 	cp "$add_this_content" "$TMPDIR"$uuid"/add_this_content_raw"
-	echo "$add_this_content"
+	echo "$add_this_content" >> "$TMPDIR"$loguuid/log
 	"$PANDOC_BIN" -f docx -s -t markdown -o "$TMPDIR"$uuid"/add_this_content.md "$TMPDIR"$uuid/add_this_content_raw"
 	cat "$TMPDIR"$uuid"/add_this_content.md >> "$TMPDIR"$uuid/wiki/wiki4cloud.md"
 fi
@@ -666,33 +690,33 @@ fi
 if [ "$googler" = "yes" ] ; then
 	. includes/googler.sh
 else
-	echo "not fetching Search Engine Snippets"
+	echo "not fetching Search Engine Snippets" >> "$TMPDIR"$loguuid/log
 fi
 
 if [ "$googler_news" = "yes" ] ; then
 	. includes/googler-news.sh
 else
-	echo "not fetching News Snippets"
+	echo "not fetching News Snippets" >> "$TMPDIR"$loguuid/log
 fi
 
-echo "summary is" $summary #summary should be on for cover building
+echo "summary is" $summary >> "$TMPDIR"$loguuid/log  #summary should be on for cover building >> "$TMPDIR"$loguuid/log
 wikilocale="en" # hard code for testing
-echo $wikilocale "is wikilocale"
+echo $wikilocale "is wikilocale" >> "$TMPDIR"$loguuid/log
 
 if [ -n "$wordcountsummaries" ] ; then
-	echo "summaries data has been returned, proceeding"
+	echo "summaries data has been returned, proceeding" >> "$TMPDIR"$loguuid/log
 	wordcountsummaries=$(wc -w "$TMPDIR"$uuid"/wiki/wikisummaries.md" | cut -f1 -d' ')
 
 elif [ "$wordcountpages" -gt "0" ] ; then
-	echo "pages data has been returned, proceeding"
+	echo "pages data has been returned, proceeding" >> "$TMPDIR"$loguuid/log
 	wordcount=$(wc -w "$TMPDIR"$uuid"/wiki/wikipages.md" | cut -f1 -d' ')
 
 else
 
-	echo "zero data returned from wiki, exiting with error message"
+	echo "zero data returned from wiki, exiting with error message" >> "$TMPDIR"$loguuid/log
 	sendemail -t "$customer_email" \
 		-u "Your submission [ $booktitle ] has not been added to the catalog" \
-		-m "The system was not able to find any valid seed terms in your subcat $TMPDIR$uuid"/add_this_content.md" >> $TMPDIR$uuid/tmpbody.mdmission. Make sure that you have provided several keyphrases and that the words are spelled correctly.  Please let us know by replying to this message if you need assistance." \
+		-m "The system was not able to find any valid seed terms in your submission. Make sure that you have provided several keyphrases and that the words are spelled correctly.  Please let us know by replying to this message if you need assistance." \
 		-f "$GMAIL_ID" \
 		-cc "$GMAIL_ID" \
 		-xu "$GMAIL_ID" \
@@ -725,21 +749,22 @@ fi
 #rotate stopfile
 
 if cmp -s "$scriptpath/lib/IBMcloud/examples/pk-stopwords.txt" $scriptpath"/lib/IBMcloud/examples/restore-pk-stopwords.txt" ; then
-	echo "stopfiles are identical, no action"
+	echo "stopfiles are identical, no action" >> "$TMPDIR"$loguuid/log
 else
-	echo "Rotating stopfile into place"
+	echo "Rotating stopfile into place" >> "$TMPDIR"$loguuid/log
 	cp "$stopfile" "$scriptpath""lib/IBMcloud/examples/pk-stopwords.txt"
 fi
 
 
-	"$JAVA_BIN" -jar $scriptpath"lib/IBMcloud/ibm-word-cloud.jar" -c $scriptpath"lib/IBMcloud/examples/configuration.txt" -w "1800" -h "1800" <  "$TMPDIR"$uuid/wiki/wiki4cloud.md >  "$TMPDIR"$uuid/cover/wordcloudcover.png
+	"$JAVA_BIN" -jar $scriptpath"lib/IBMcloud/ibm-word-cloud.jar" -c $scriptpath"lib/IBMcloud/examples/configuration.txt" -w "1800" -h "1800" <  "$TMPDIR"$uuid/wiki/wiki4cloud.md >  "$TMPDIR"$uuid/cover/wordcloudcover.png 2> /dev/null
+
 
 #copying old stopfile backup  to overwrite rotated stopfile
 
 if cmp -s "$scriptpath/lib/IBMcloud/examples/pk-stopwords.txt" $scriptpath"/lib/IBMcloud/examples/restore-pk-stopwords.txt" ; then
-	echo "stopfiles are identical, no action"
+	echo "stopfiles are identical, no action" >> "$TMPDIR"$loguuid/log
 else
-	echo "Rotating old stopfile back in place"
+	echo "Rotating old stopfile back in place" >> "$TMPDIR"$loguuid/log
 	cp $scriptpath"/lib/IBMcloud/examples/restore-pk-stopwords.txt"  "$scriptpath/lib/IBMcloud/examples/pk-stopwords.txt"
 fi
 
@@ -748,29 +773,29 @@ fi
 
 if [ "$coverfont" = "Random" ] ; then
 	coverfont=`./bin/random-line.sh ../conf/fonts.txt`
-	echo "random coverfont is " $coverfont
+	echo "random coverfont is " $coverfont >> "$TMPDIR"$loguuid/log
 
 else
 	coverfont=$coverfont
-	echo "using specified cover font" $coverfont
+	echo "using specified cover font" $coverfont >> "$TMPDIR"$loguuid/log
 fi
 
 
 if [ "$covercolor" = "Random" ]; then
 	covercolor=`./bin/random-line.sh ../conf/colors.txt`
-	echo "random covercolor is " $covercolor
+	echo "random covercolor is " $covercolor >> "$TMPDIR"$loguuid/log
 else
 	covercolor=$covercolor
-	echo "using specified covercolor "$covercolor
+	echo "using specified covercolor "$covercolor >> "$TMPDIR"$loguuid/log
 
 fi
 
-echo "covercolor is" $covercolor | tee --append $sfb_log
-echo "coverfont is" $coverfont  | tee --append $sfb_log
+echo "covercolor is" $covercolor >> "$TMPDIR"$loguuid/log
+echo "coverfont is" $coverfont  >> "$TMPDIR"$loguuid/log
 
 #create base canvases
 
-convert -size 1800x2400 xc:$covercolor   "$TMPDIR"$uuid/cover/canvas.png
+convert -size 1800x2400 xc:$covercolor  "$TMPDIR"$uuid/cover/canvas.png
 convert -size 1800x800 xc:$covercolor   "$TMPDIR"$uuid/cover/topcanvas.png
 convert -size 1800x400 xc:$covercolor   "$TMPDIR"$uuid/cover/bottomcanvas.png
 convert -size 1800x800 xc:$covercolor   "$TMPDIR"$uuid/cover/toplabel.png
@@ -786,14 +811,14 @@ convert -background "$covercolor" -fill "$coverfontcolor" -gravity center -size 
 
 #build bottom label
 
-echo "yourname is" $yourname
+echo "yourname is" $yourname >> "$TMPDIR"$loguuid/log
 if [ "$yourname" = "yes" ] ; then
 	editedby="$human_author"
 else
-	echo "robot name on cover"
+	echo "robot name on cover" >> "$TMPDIR"$loguuid/log
 fi
 #editedby="PageKicker"
-echo "editedby is" $editedby
+echo "editedby is" $editedby >> "$TMPDIR"$loguuid/log
 convert  -background "$covercolor"  -fill "$coverfontcolor" -gravity south -size 1800x394 \
  -font "$coverfont"  caption:"$editedby" \
   "$TMPDIR"$uuid/cover/bottomcanvas.png  +swap -gravity center -composite  "$TMPDIR"$uuid/cover/bottomlabel.png
@@ -858,6 +883,7 @@ pandoc -S -o "$TMPDIR"$uuid/targetfile.txt -t plain -f markdown "$TMPDIR"$uuid/t
 
 . includes/transect_summarize_ner.sh
 
+
 # clean up both unprocessed and postprocessed summary text
 
 	sed -i '1i # Programmatically Generated Summary \'  "$TMPDIR"$uuid/pp_summary.txt
@@ -867,7 +893,7 @@ pandoc -S -o "$TMPDIR"$uuid/targetfile.txt -t plain -f markdown "$TMPDIR"$uuid/t
 
 	sed -n 3p $TMPDIR$uuid/pp_summary.txt > $TMPDIR$uuid/pp_summary_all.txt # for tldr
 	echo '\pagenumbering{gobble}' > $TMPDIR$uuid/pp_summary_sky.txt
-	#echo "  " >>
+	#echo "  " >>  $TMPDIR$uuid/pp_summary_sky.txt
 	#echo '\pagecolor{yellow!30}' >> $TMPDIR$uuid/pp_summary_sky.txt
 	echo "  "  >> $TMPDIR$uuid/pp_summary_sky.txt
   sed -n 1,35p $TMPDIR$uuid/pp_summary.txt >> $TMPDIR$uuid/pp_summary_sky.txt # for skyscraper
@@ -876,7 +902,7 @@ pandoc -S -o "$TMPDIR"$uuid/targetfile.txt -t plain -f markdown "$TMPDIR"$uuid/t
 	# throw away unpreprocessed summary text if zero size
 
 	if [ `wc -c <  "$TMPDIR"$uuid/pp_summary.txt` = "0" ] ; then
-	  echo using "unpostprocessed summary bc wc pp summary = 0"
+	  echo using "unpostprocessed summary bc wc pp summary = 0" >> "$TMPDIR"$loguuid/log
 	  cat "$TMPDIR$uuid"/summary.txt >> $TMPDIR$uuid/programmaticsummary.md
 	else
 	  cp  "$TMPDIR"$uuid/pp_summary.txt  "$TMPDIR"$uuid/summary.md
@@ -885,7 +911,7 @@ pandoc -S -o "$TMPDIR"$uuid/targetfile.txt -t plain -f markdown "$TMPDIR"$uuid/t
 
 
 else
-	echo "short form selected"
+	echo "short form selected"   >> "$TMPDIR"$loguuid/log
 	echo '![cover image]'"(ebookcover.jpg)" >  "$TMPDIR"$uuid/titlepage.md
 	echo '!['"$imprintname"']'"(""$imprintlogo"")" >>  "$TMPDIR"$uuid/titlepage.md
 
@@ -899,10 +925,11 @@ fi
 
 ## user provided content
 
+
 ## algorithmic content chapters
 
 if [ "$summary" = "summaries_only" ] ; then
-	echo "no body"
+	echo "no body" >> "$TMPDIR"$loguuid/log
 	touch $TMPDIR$uuid/chapters.md
 else
 	echo "  " >> $TMPDIR$uuid/chapters.md
@@ -942,10 +969,10 @@ echo "" >> "$TMPDIR"$uuid/sorted_uniqs.md
 echo "" >> "$TMPDIR"$uuid/sorted_uniqs.md
 
 if [ "$sample_tweets" = "yes" ] ; then
-			echo "adding Tweets to back matter"
+			echo "adding Tweets to back matter"  >> "$TMPDIR"$loguuid/log
 			cat  "$TMPDIR"$uuid/twitter/sample_tweets.md >>  "$TMPDIR"$uuid/backmatter.md
 else
-			echo "no sample tweets"
+			echo "no sample tweets"  >> "$TMPDIR"$loguuid/log
 			touch $TMPDIR$uuid/twitter/sample_tweets.md
 fi
 
@@ -967,7 +994,7 @@ fi
 		# echo "converted flickr md files to pdf pages with images" | tee --append $xform_log
 
 	else
-		echo "didn't  process flickr files"
+		echo "didn't  process flickr files"  >> "$TMPDIR"$loguuid/log
 		touch $TMPDIR$uuid/allflickr.md
 	fi
 
@@ -1011,7 +1038,7 @@ fi
 	touch "$TMPDIR"$uuid/imprint_mission_statement.md
 	cat $confdir"jobprofiles/imprints/$imprint/""$imprint_mission_statement" >> "$TMPDIR"$uuid"/imprint_mission_statement.md"
 	echo '!['"$imprintname"']'"(""$imprintlogo"")" >>  "$TMPDIR"$uuid/imprint_mission_statement.md
-	echo "built back matter"
+	echo "built back matter"  >> "$TMPDIR"$loguuid/log
 
 my_year=`date +'%Y'`
 
@@ -1047,26 +1074,25 @@ cd $scriptpath
 
 if [ "$kindlegen_on" = "yes" ] ; then
 
-	lib/KindleGen/kindlegen "$TMPDIR"$uuid/$sku."$safe_product_name"".epub" -o "$sku.$safe_product_name"".mobi" #1> /dev/null
+	lib/KindleGen/kindlegen "$TMPDIR"$uuid/$sku."$safe_product_name"".epub" -o "$sku.$safe_product_name"".mobi" >> "$TMPDIR"$loguuid/log
 else
-	ebook-convert "$TMPDIR"$uuid/$sku."$safe_product_name"".epub" "$TMPDIR"$uuid"/$sku.$safe_product_name"".mobi"
+	ebook-convert "$TMPDIR"$uuid/$sku."$safe_product_name"".epub" "$TMPDIR"$uuid"/$sku.$safe_product_name"".mobi"  1>> "$TMPDIR"$loguuid/log
 fi
 
-echo "built epub, mobi, and txt"
-
+echo "built epub, mobi, and txt"  >> "$TMPDIR"$loguuid/log
 case $ebook_format in
 
 epub)
 if [ ! "$buildtarget" ] ; then
 	buildtarget=" "$TMPDIR"$uuid/buildtarget.epub"
 else
-	echo "received buildtarget as $buildtarget"
+	echo "received buildtarget as $buildtarget"  >> "$TMPDIR"$loguuid/log
 fi
 # deliver epub to build target
 cp  "$TMPDIR"$uuid/$sku.$safe_product_name".epub" "$buildtarget"
 
 chmod 755 "$buildtarget"
-#echo "checking that buildtarget exists"
+#echo "checking that buildtarget exists"  >> "$TMPDIR"$loguuid/log
 #ls -la $buildtarget
 ;;
 
@@ -1074,21 +1100,21 @@ mobi)
 if [ ! "$buildtarget" ] ; then
 	buildtarget="$TMPDIR"$uuid"/buildtarget.mobi"
 else
-	echo "received buildtarget as $buildtarget"
+	echo "received buildtarget as $buildtarget"  >> "$TMPDIR"$loguuid/log
 fi
 cp  "$TMPDIR"$uuid/$sku.$safe_product_name".mobi" "$buildtarget"
-#echo "checking that buildtarget exists"
+#echo "checking that buildtarget exists"  >> "$TMPDIR"$loguuid/log
 #ls -la $buildtarget
 ;;
 docx)
 if [ ! "$buildtarget" ] ; then
 	buildtarget="$TMPDIR"$uuid"/buildtarget.docx"
 else
-	echo "received buildtarget as $buildtarget"
+	echo "received buildtarget as $buildtarget"  >> "$TMPDIR"$loguuid/log
 fi
 cp  "$TMPDIR"$uuid/$sku"."$safe_product_name".docx" "$buildtarget"
 chmod 755 "$buildtarget"
-echo "checking that buildtarget exists"
+echo "checking that buildtarget exists"  >> "$TMPDIR"$loguuid/log
 #ls -la $buildtarget
 ;;
 *)
@@ -1096,22 +1122,22 @@ echo "checking that buildtarget exists"
 esac
 
 if [ "$two1" = "yes" ] ; then
-	echo "moving files so 21 script does not need to know uuid"
+	echo "moving files so 21 script does not need to know uuid"  >> "$TMPDIR"$loguuid/log
 	cp "$TMPDIR"$uuid/$sku"."$safe_product_name".txt" "$TMPDIR"4stdout".txt"
 	cp "$TMPDIR"$uuid/$sku.$safe_product_name".epub" /tmp/pagekicker/delivery.epub
 	cp "$TMPDIR"$uuid/$sku.$safe_product_name".docx" /tmp/pagekicker/delivery.docx
 else
-	echo "files not requested from 21"
+	echo "files not requested from 21"  >> "$TMPDIR"$loguuid/log
 fi
 
 # build skyscraper image
 
 if [ -z "$skyscraper" ]; then
-	echo "no skyscraper"
+	echo "no skyscraper"  >> "$TMPDIR"$loguuid/log
 else
 
 	. includes/1000x3000skyscraper.sh
-	echo "built skyscraper"
+	echo "built skyscraper"  >> "$TMPDIR"$loguuid/log
 fi
 
 # housekeeping
@@ -1123,10 +1149,10 @@ unique_seed_string=$(sed -e 's/[^A-Za-z0-9._-]//g' <  "$TMPDIR"$uuid/seeds/sorte
 if [ "$add_corpora" = "yes" ] ; then
 
 	if grep -q "$unique_seed_string" "$SFB_HOME"shared-corpus/imprints/"$imprint"/unique_seed_strings.sorted ; then
-		echo "seed string $unique_seed_string is already in corpus for imprint $imprint"
+		echo "seed string $unique_seed_string is already in corpus for imprint $imprint"  >> "$TMPDIR"$loguuid/log
 	else
 		cp -u "$TMPDIR"$uuid"/"$sku.$safe_product_name".epub" "$SFB_HOME"shared-corpus/imprints"/"$imprint"/"$sku.$safe_product_name".epub"
-		echo "added book associated with $unique_seed_string to corpus for imprint $imprint"
+		echo "added book associated with $unique_seed_string to corpus for imprint $imprint"  >> "$TMPDIR"$loguuid/log
 	fi
 else
 	:
@@ -1136,10 +1162,10 @@ fi
 if [ "$add_corpora" = "yes" ] ; then
 
 	if grep -q "$unique_seed_string" "$SFB_HOME"shared-corpus/robots/$jobprofilename/unique_seed_strings.sorted ; then
-		echo "seed string $unique_seed_string is already in corpus for robot $jobprofilename "
+		echo "seed string $unique_seed_string is already in corpus for robot $jobprofilename "  >> "$TMPDIR"$loguuid/log
 	else
 		cp "$TMPDIR"$uuid"/"$sku.$safe_product_name".epub" "$SFB_HOME"shared-corpus/robots/"$jobprofilename"/"$sku.$safe_product_name.epub"
-		echo "added book associated with $unique_seed_string to corpus for robot $jobprofilename"
+		echo "added book associated with $unique_seed_string to corpus for robot $jobprofilename"  >> "$TMPDIR"$loguuid/log
 	fi
 else
 	:
@@ -1152,12 +1178,12 @@ if [ "$add_corpora" = "yes" ] ; then
 	sort -u $SFB_HOME"shared-corpus/imprints/"$imprint"/unique_seed_strings" > $SFB_HOME"shared-corpus/imprints/"$imprint"/unique_seed_strings.sorted"
 
 else
-	echo "not requested to add builds and unique_seed_strings to corpus"
+	echo "not requested to add builds and unique_seed_strings to corpus"  >> "$TMPDIR"$loguuid/log
 fi
 
 
 if [ -z "$batch_uuid" ] ; then
-	echo "not part of a batch"
+	echo "not part of a batch"  >> "$TMPDIR"$loguuid/log
 else
 	cp  "$TMPDIR"$uuid/$sku.$safe_product_name".epub"  "$TMPDIR"$batch_uuid/$sku.$safe_product_name".epub"
         cp  "$TMPDIR"$uuid/$sku.$safe_product_name".mobi"  "$TMPDIR"$batch_uuid/$sku.$safe_product_name".mobi"
@@ -1172,20 +1198,30 @@ fi
 
 
 if [ "$dontcleanupseeds" = "yes" ]; then
-	echo "leaving seed file in place $seedfile"
+	echo "leaving seed file in place $seedfile"  >> "$TMPDIR"$loguuid/log
 else
-	echo "removing seedfile"
-	rm "$seedfile"
-  #	ls -la "$seedfile"
+	if [ -v "$seedfile" ] ; then
+		echo "removing seedfile"  >> "$TMPDIR"$loguuid/log
+		rm "$seedfile"
+	else
+		echo "no seedfile to remove"  >> "$TMPDIR"$loguuid/log
+	fi
 fi
 
-echo "moving tmp biography to replace prior one"
+echo "moving tmp biography to replace prior one"  >> "$TMPDIR"$loguuid/log
 cp "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/"$jobprofilename""_titles.tmp"  "$LOCAL_DATA"/bibliography/robots/"$jobprofilename"/"$jobprofilename""_titles.txt"
-echo "appending & sorting new bibliography entries" # last item is out of alpha order, so must be sorted when read in future
-echo "adding markdown-safe bibliography title as $bibliography_title"
+echo "appending & sorting new bibliography entries" >> "$TMPDIR"$loguuid/log # last item is out of alpha order, so must be sorted when read in future
+echo "adding markdown-safe bibliography title as $bibliography_title"  >> "$TMPDIR"$loguuid/log
 echo "* $bibliography_title" >> "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/"$jobprofilename"_titles.txt
 echo "* $bibliography_title" >> "$LOCAL_DATA"bibliography/imprints/"$imprint"/"$imprint"_titles.txt
 cat "$TMPDIR"$uuid"/yaml-metadata.md" >> "$LOCAL_DATA"bibliography/yaml/allbuilds.yaml
 
-echo "exiting builder"
+if [ -v "$verbose" ] ; then
+	cat "$TMPDIR"$loguuid/log
+else
+	echo "quiet mode"  >> "$TMPDIR"$loguuid/log
+fi
+
+echo "exiting builder, files in $TMPDIR$uuid/"
+
 exit 0
