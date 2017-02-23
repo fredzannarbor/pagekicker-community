@@ -3,8 +3,8 @@ Must always run from ~/pagekicker-community/scripts/
 Usage: bin/builder.sh --option1 "value" etc.
 
 QUICK START
---seedsviacli "Norman Bel Geddes; Theatrical Design" # semi-colon separated
---booktitle "All About Norman Bel Geddes"
+--seedsviacli "Melania Trump; Slovenia" # semi-colon separated
+--booktitle "Melania of Slovenia"
 --editedby "Your Name Here" # your personal byline
 --expand_seeds_to_pages "yes" # spidering search strategy, many more pages
 --verbose (no value) turn on verbose output
