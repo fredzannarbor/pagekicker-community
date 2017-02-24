@@ -970,7 +970,7 @@ if [ "$builder" = "yes" ] ; then
 	echo "seedfile was" "$TMPDIR"seeds/seedphrases
 
 	$scriptpath"bin/builder.sh" --seedfile "$TMPDIR"$uuid"/seeds/sorted.seedfile" --booktype "$booktype" --jobprofilename "$jobprofilename" --booktitle "$booktitle" --ebook_format "epub" --sample_tweets "no" --wikilang "$wikilocale" --coverfont "$coverfont"  --covercolor "$covercolor" --passuuid "$uuid" --truncate_seed "no" --editedby "$editedby" --yourname "$yourname" --customername "$customername" --imprint "$imprint" --batch_uuid "$batch_uuid" --tldr "$tldr" --subtitle "$subtitle" \
-	 --add_corpora "$add_corpora" --analyze_url "$analyze_url" --dontcleanupseeds "yes" --mailtoadmin "$mailtoadmin" --summary "$summary" --add_this_content "$add_this_content" --add_this_content_part_name "$add_this_content_part_name" --skyscraper "$skyscraper" --expand_seeds_to_pages "$expand_seeds_to_pages"
+	 --add_corpora "$add_corpora" --analyze_url "$analyze_url" --dontcleanupseeds "yes" --mailtoadmin "$mailtoadmin" --summary "$summary" --add_this_content "$add_this_content" --add_this_content_part_name "$add_this_content_part_name" --skyscraper "$skyscraper" --expand_seeds_to_pages "$expand_seeds_to_pages" --verbose
 
 echo "test $@"
 
