@@ -1181,6 +1181,12 @@ else
 	fi
 fi
 
+# increment sku
+
+sku=$((sku+1))
+echo $sku >> "$LOCAL_DATA""SKUs/sku_list"
+echo "incremented SKU by 1 to" $sku " and updated SKUs/sku_list"
+
 echo "moving tmp biography to replace prior one"
 cp "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/"$jobprofilename""_titles.tmp"  "$LOCAL_DATA"/bibliography/robots/"$jobprofilename"/"$jobprofilename""_titles.txt"
 echo "appending & sorting new bibliography entries"   # last item is out of alpha order, so must be sorted when read in future
