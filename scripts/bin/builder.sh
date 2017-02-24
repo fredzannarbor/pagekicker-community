@@ -4,11 +4,11 @@
 
 loguuid=$(python  -c 'import uuid; print(uuid.uuid1())')
 
-mkdir /tmp/pagekicker/$loguuid
+mkdir /tmp/pagekicker/"$loguuid"
 
-touch /tmp/pagekicker/$loguuid/log
+touch /tmp/pagekicker/"$loguuid"/log
 
-exec 3>&1 >> /tmp/pagekicker/$loguuid/startuplog
+exec 3>&1 >> /tmp/pagekicker/"$loguuid"/startuplog
 
 echo "builder begins"
 echo ""
@@ -28,7 +28,7 @@ if shopt -q  login_shell ; then
 		echo "read config file from login shell $HOME""/.pagekicker/config.txt"
 	fi
 else
-	. /home/$(whoami)/.pagekicker/config.txt #hard-coding /home is a hack
+	. /home/"$(whoami)"/.pagekicker/config.txt #hard-coding /home is a hack
 	echo "read config file from nonlogin shell /home/$(whoami)/.pagekicker/config.txt"
 fi
 
