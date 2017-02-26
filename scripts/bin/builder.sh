@@ -19,7 +19,7 @@ if shopt -q  login_shell ; then
 		echo "read config file from login shell $HOME""/.pagekicker/config.txt"
 	fi
 else
-	. /home/$(whoami)/.pagekicker/config.txt #hard-coding /home is a hack
+	. /home/"$(whoami)"/.pagekicker/config.txt #hard-coding /home is a hack
 	echo "read config file from nonlogin shell /home/$(whoami)/.pagekicker/config.txt"
 fi
 
@@ -860,6 +860,7 @@ pandoc -S -o "$TMPDIR"$uuid/targetfile.txt -t plain -f markdown "$TMPDIR"$uuid/t
 
 # clean up both unprocessed and postprocessed summary text
 
+  cp "$TMPDIR$uuid/pp_summary.txt" "$TMPDIR$uuid/clean_summary.txt"
 	sed -i '1i # Programmatically Generated Summary \'  "$TMPDIR"$uuid/pp_summary.txt
 	sed -i G  "$TMPDIR"$uuid/pp_summary.txt
 	sed -i '1i # Programmatically Generated Summary \'  "$TMPDIR"$uuid/summary.txt
@@ -1027,9 +1028,21 @@ echo "rights:  (c) $my_year $imprintname" >>  "$TMPDIR"$uuid/yaml-metadata.md
 echo "---" >>  "$TMPDIR"$uuid/yaml-metadata.md
 
 
-# bin/partsofthebook.sh parallel construction of parts of the book
+# select booktype, returns complete.md
 
-. includes/partsofthebook.txt
+case $booktype in
+reader)transect_summarize_ner
+	# default
+  . includes/partsofthebook.txt
+  ;;
+draft-report)
+  . includes/draft-report.sh
+  ;;
+*)
+  . includes/partsofthebook.txt
+  ;;
+esac
+
 
 # build ebook in epub
 
@@ -1042,6 +1055,7 @@ cd  "$TMPDIR"$uuid
 "$PANDOC_BIN" -o "$TMPDIR"$uuid/$sku"."$safe_product_name".txt"   "$TMPDIR"$uuid/complete.md
 "$PANDOC_BIN" -o "$TMPDIR"$uuid/$sku"."$safe_product_name".mw" -t mediawiki -s -S  "$TMPDIR"$uuid/complete.md
 cp "$TMPDIR"$uuid/$sku"."$safe_product_name".txt" "$TMPDIR"$uuid/4stdout".txt"
+
 
 cd $scriptpath
 
