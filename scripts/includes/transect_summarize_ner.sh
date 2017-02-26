@@ -1,4 +1,4 @@
-for file in "$TMPDIR"$uuid"/xtarget."*
+for file in "$TMPDIR$uuid/xtarget."*
 do
 		"$PYTHON27_BIN" $scriptpath"bin/nerv3.py" $file $file"_nouns.txt" "$uuid"
 		echo "ran nerv3 on $file"
@@ -9,7 +9,7 @@ do
 		echo -n "python_bin for running PKsum is" $PYTHON_BIN "and PYTHON_BIN actually is "
 		"$PYTHON_BIN" --version
 
-		"$PYTHON_BIN" bin/PKsum.py -l "$summary_length" -o $file"_summary.txt" $file
+		"$PYTHON_BIN" bin/PKsum-clean.py -l "$summary_length" -o $file"_summary.txt" $file
 		sed -i 's/ \+ / /g' $file"_summary.txt"
 		cp $file"_summary.txt" $file"_pp_summary.txt"
 		echo "ran summarizer on $file"
