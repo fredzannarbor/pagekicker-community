@@ -1,13 +1,13 @@
 #!/bin/bash
 # --booktype="draft-report"
-# Front and back matter are minimized, candidate sentences for executive 
+# Front and back matter are minimized, candidate sentences for executive
 # summary are provided."
 
 # 1. create any unique parts of the book  that are needed
 # 2. concatenates them and deliver complete.md to builder.
 
 # tweak pp_summary to create Executive_summary
-.
+
 
 summary_length="5"
 echo "creating executive summary"
