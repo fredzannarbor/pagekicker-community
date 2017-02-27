@@ -30,6 +30,7 @@ cat \
 "$TMPDIR$uuid/sorted_uniqs.md" \
 "$TMPDIR$uuid/analyzed_webpage.md" \
 "$TMPDIR$uuid/acronyms.md" \
+"$TMPDIR$uuid/sources.md" \
 "$TMPDIR$uuid/yaml-metadata.md" \
 "$TMPDIR$uuid/settings.md" \
 > "$TMPDIR$uuid/complete.md"
