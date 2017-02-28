@@ -71,5 +71,5 @@ else
 		-o tls=yes
 fi
 
-echo " * * * DONE CHECKING NAUGHTY WORDS * * * " >> "$TMPDIR"$uuid/$loguuid
+echo " * * * DONE CHECKING NAUGHTY WORDS * * * "
 exit 0
