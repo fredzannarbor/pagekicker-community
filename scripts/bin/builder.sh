@@ -389,20 +389,20 @@ shift 2
 seedsviacli=${1#*=}
 shift
 ;;
---googler)
-googler=$2
+--googler_on)
+googler_on=$2
 shift 2
 ;;
---googler=*)
-googler=${1#*=}
+--googler_on=*)
+googler_on=${1#*=}
 shift
 ;;
---googler-n)
-googler-n=$2
+--googler_news_on)
+googler_news_on=$2
 shift 2
 ;;
---googler-n=*)
-googler-n=${1#*=}
+--googler_news_on=*)
+googler_news_on=${1#*=}
 shift
 ;;
 --kindlegen_on)
@@ -670,16 +670,18 @@ fi
 
 # use googler to get search snippets
 
-if [ "$googler" = "yes" ] ; then
+if [ "$googler_on" = "yes" ] ; then
 	. includes/googler.sh
 else
 	echo "not fetching Search Engine Snippets"
+	touch "$TMPDIR$uuid/googler.md"
 fi
 
-if [ "$googler_news" = "yes" ] ; then
+if [ "$googler_news_on" = "yes" ] ; then
 	. includes/googler-news.sh
 else
 	echo "not fetching News Snippets"
+	touch "$TMPDIR$uuid/googler-news.md"
 fi
 
 echo "summary is" $summary  #summary should be on for cover building
