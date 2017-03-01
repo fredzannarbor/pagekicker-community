@@ -1018,13 +1018,13 @@ my_year=`date +'%Y'`
 
 echo "" >  "$TMPDIR"$uuid/yaml-metadata.md
 echo "---" >>  "$TMPDIR"$uuid/yaml-metadata.md
-echo "title: $booktitle" >>  "$TMPDIR"$uuid/yaml-metadata.md
-echo "subtitle: $subtitle" >>  "$TMPDIR"$uuid/yaml-metadata.md
+echo "title: \"$booktitle\"" >>  "$TMPDIR"$uuid/yaml-metadata.md
+echo "subtitle: \"$subtitle\"" >>  "$TMPDIR"$uuid/yaml-metadata.md
 echo "creator: " >>  "$TMPDIR"$uuid/yaml-metadata.md
 echo "- role: author "  >>  "$TMPDIR"$uuid/yaml-metadata.md
-echo "  text: "" $editedby"  >>  "$TMPDIR"$uuid/yaml-metadata.md
-echo "publisher: $imprintname"  >>  "$TMPDIR"$uuid/yaml-metadata.md
-echo "rights:  (c) $my_year $imprintname" >>  "$TMPDIR"$uuid/yaml-metadata.md
+echo "  text: "" \"$editedby\""  >>  "$TMPDIR"$uuid/yaml-metadata.md
+echo "publisher: \"$imprintname\""  >>  "$TMPDIR"$uuid/yaml-metadata.md
+echo "rights:  (c) \"$my_year $imprintname\"" >>  "$TMPDIR"$uuid/yaml-metadata.md
 echo "---" >>  "$TMPDIR"$uuid/yaml-metadata.md
 
 

@@ -16,4 +16,47 @@ Default variable values: scripts/includes/set-variables.sh
 Command line trumps default variables trumps user configuration
 
 COMPLETE LIST OF OPTIONS
-(to come)
+
+--add_corpora
+--add-this-content # "/path/to/file" # file must be .docx
+--add_this_content_part_name
+--add_this_image
+--add_this_image_name
+--analyze_url
+--batch_uuid
+--booktitle
+--booktype
+--buildcover
+--buildtarget
+--covercolor
+--coverfont
+--customername
+--dontcleanupseeds
+--ebook_format
+--editedby
+--environment
+--expand_seeds_to_pages
+--flickr
+--fromccc
+--googler
+--googler-n
+--imprint
+--jobprofilename
+--kindlegen_on
+--mailtoadmin
+--passuuid
+--safe_product_name
+--sample_tweets
+--seedfile
+--seedsviacli
+--shortform
+--singleseed
+--skyscraper
+--storecode
+--subtitle
+--summary
+--tldr
+--truncate_seed
+--two1
+--wikilang
+--yourname
