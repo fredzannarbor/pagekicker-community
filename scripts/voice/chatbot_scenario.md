@@ -26,12 +26,3 @@ From IA Laurie Lamar:
 My response:
 
 > PageKicker's most validated by $$$ use case at this point is as a command line application for rapidly generating draft reports that can then be edited--thus shaving many hours off the time it takes to go from blank page to half-way done.  Thus gathering parameters and narrowing them down is important. What I would really like is to be able to say "PageKicker, build me a book about X", then have the system elicit parameters and burrow down into tradeoffs, all of which would create & launch a command line, that could then be saved for future use by the operator.
-> PageKicker's most validated by $$$ use case at this point is as a 
-> command line application for rapidly generating draft reports that can 
-> then be edited--thus shaving many hours off the time it takes to go 
-> from blank page to half-way done.  Thus gathering parameters and 
-> narrowing them down is important. What I would really like is to be 
-> able to say "PageKicker, build me a book about X", then have the 
-> system elicit parameters and burrow down into tradeoffs, all of which 
-> would create & launch a command line, that could then be saved for 
-> future use by the operator.
