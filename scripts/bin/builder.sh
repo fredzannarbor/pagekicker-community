@@ -453,18 +453,18 @@ fi
 
 # create directories I will need
 
-mkdir -m 755  "$TMPDIR"$uuid/actual_builds
-mkdir -m 755  "$TMPDIR"$uuid/cover
-mkdir -m 755  "$TMPDIR"$uuid/twitter
-mkdir -m 777  "$TMPDIR"$uuid/fetch
-mkdir -m 777  "$TMPDIR"$uuid/flickr
-mkdir -m 777  "$TMPDIR"$uuid/images
-mkdir -m 777  "$TMPDIR"$uuid/mail
-mkdir -m 777  "$TMPDIR"$uuid/seeds
-mkdir -m 777  "$TMPDIR"$uuid/user
-mkdir -m 777  "$TMPDIR"$uuid/wiki
-mkdir -m 777  "$TMPDIR"$uuid/webseeds
-mkdir -m 755 -p $LOCAL_DATA"jobprofile_builds/""$jobprofilename"
+mkdir -p -m 755  "$TMPDIR"$uuid/actual_builds
+mkdir -p -m 755  "$TMPDIR"$uuid/cover
+mkdir -p -m 755  "$TMPDIR"$uuid/twitter
+mkdir -p -m 777  "$TMPDIR"$uuid/fetch
+mkdir -p -m 777  "$TMPDIR"$uuid/flickr
+mkdir -p -m 777  "$TMPDIR"$uuid/images
+mkdir -p -m 777  "$TMPDIR"$uuid/mail
+mkdir -p -m 777  "$TMPDIR"$uuid/seeds
+mkdir -p -m 777  "$TMPDIR"$uuid/user
+mkdir -p -m 777  "$TMPDIR"$uuid/wiki
+mkdir -p -m 777  "$TMPDIR"$uuid/webseeds
+mkdir -p -m 755 -p $LOCAL_DATA"jobprofile_builds/""$jobprofilename"
 
 if [ -z "$covercolor" ]; then
 	covercolor="RosyBrown"
