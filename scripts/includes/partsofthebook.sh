@@ -1,6 +1,5 @@
 # assembling front matter
 # assumes that all files exist but size 0 if not available for book
-TMPDIR="/tmp/pagekicker/"
 cat \
 "$TMPDIR$uuid/titlepage.md" \
 "$TMPDIR$uuid/robo_ack.md" \
