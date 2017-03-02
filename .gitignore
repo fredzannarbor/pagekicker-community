@@ -39,7 +39,7 @@ scripts/lib/tika-app.jar
 scripts/lib/wikiquote-fortune/
 scripts/lib/xml2csv-conv.bat
 scripts/lib/xml2csv-conv.jar
-*wapack*
+#*wapack*
 conf/partsofthebook/Appendix_E_AGuideToWritingAnEffectiveExecutiveSummary.pdf
 conf/partsofthebook/USN_GuideToWritingAnEffectiveExecutiveSummaryp4-5.pdf
 
