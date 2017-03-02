@@ -38,8 +38,8 @@ COMPLETE LIST OF OPTIONS
 --expand_seeds_to_pages
 --flickr
 --fromccc
---googler
---googler-n
+--googler_on
+--googler_news_on
 --imprint
 --jobprofilename
 --kindlegen_on

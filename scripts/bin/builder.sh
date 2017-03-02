@@ -975,9 +975,17 @@ fi
 	fi
 
 	echo "# Sources" >>  "$TMPDIR"$uuid/sources.md
- 	cat includes/wikilicense.md >> $TMPDIR/$uuid/sources.md
-	echo "" >> "$TMPDIR"$uuid/sources.md
-	echo "" >> "$TMPDIR"$uuid/sources.md
+  echo "  "  >>  "$TMPDIR"$uuid/sources.md
+	while IFS= read -r line; do
+
+	safeline=$(echo $line | sed -e 's/[ ]/_/g')
+	echo "Wikipedia contributors, $line, Wikipedia, The Free Encyclopedia, https://en.wikipedia.org/w/index.php?title=$safeline, accessed $(date +"%m-%d-%Y")."  >>  "$TMPDIR$uuid/sources.md"
+  echo "  "  >>  "$TMPDIR"$uuid/sources.md
+	done < "$TMPDIR$uuid/seeds/filtered.pagehits"
+
+ 	cat includes/wikilicense.md >> "$TMPDIR/$uuid/sources.md"
+	echo "" >> "$TMPDIR$uuid/sources.md"
+	echo "" >> "$TMPDIR$uuid/sources.md"
 
 	echo "# Also built by "$imprintname" Robot $jobprofilename" >>   "$TMPDIR"$uuid/builtby.md
 	sort -u --ignore-case "$LOCAL_DATA"bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.txt" -o  "$LOCAL_DATA"/bibliography/robots/"$jobprofilename"/$jobprofilename"_titles.tmp" # currently sort by alphabetical
@@ -1035,13 +1043,13 @@ echo "---" >>  "$TMPDIR"$uuid/yaml-metadata.md
 case $booktype in
 reader)transect_summarize_ner
 	# default
-  . includes/partsofthebook.txt
+  . includes/partsofthebook.sh
   ;;
 draft-report)
   . includes/draft-report.sh
   ;;
 *)
-  . includes/partsofthebook.txt
+  . includes/partsofthebook.sh
   ;;
 esac
 
