@@ -1,0 +1,20 @@
+Fetcher Responsibilities
+
+In PageKicker **fetchers** are programs that accept input parameters (typically, queries) and return relevant documents for inclusion in the completed book.
+
+Fetchers must do the following things.
+
+Accept one or more **seeds** (key phrases) read from $TMPDIR$uuid/seedphrases.
+Order those seeds as desired (default: alpha).
+Validate to an external API.
+Submit seeds in order to the API.
+Store results in $TMPDIR$uuid/apis/<apiname>
+Create bibliography entries for each fetched document (text format) and store them in $TMPDIR$uuid/apis/<apiname>/bibentries.txt
+
+For fetched documents to be incorporated in books, the following things must occur.
+
+Text from fetched documents should by default be included in cover wordcloud.
+
+Text from fetched documents should be either:
+a) included in an existing "part of the book", such as $TMPDIR$uuid/chapters.md, or ...
+b) given its own "new" part of the book, e.g. cyberwatch.md
