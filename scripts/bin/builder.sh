@@ -454,6 +454,7 @@ fi
 # create directories I will need
 
 mkdir -p -m 755  "$TMPDIR"$uuid/actual_builds
+mkdir -p -m 755  "$TMPDIR"$uuid/apis
 mkdir -p -m 755  "$TMPDIR"$uuid/cover
 mkdir -p -m 755  "$TMPDIR"$uuid/twitter
 mkdir -p -m 777  "$TMPDIR"$uuid/fetch
