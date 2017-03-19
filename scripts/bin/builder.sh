@@ -454,6 +454,7 @@ fi
 # create directories I will need
 
 mkdir -p -m 755  "$TMPDIR"$uuid/actual_builds
+mkdir -p -m 755  "$TMPDIR"$uuid/apis
 mkdir -p -m 755  "$TMPDIR"$uuid/cover
 mkdir -p -m 755  "$TMPDIR"$uuid/twitter
 mkdir -p -m 777  "$TMPDIR"$uuid/fetch
@@ -974,14 +975,17 @@ fi
 		touch $TMPDIR$uuid/allflickr.md
 	fi
 
-	echo "# Sources" >>  "$TMPDIR"$uuid/sources.md
-  echo "  "  >>  "$TMPDIR"$uuid/sources.md
+	echo "# Sources" >>  "$TMPDIR$uuid/sources.md"
+  echo "  "  >>  "$TMPDIR$uuid/sources.md"
 	while IFS= read -r line; do
 
 	safeline=$(echo $line | sed -e 's/[ ]/_/g')
 	echo "Wikipedia contributors, $line, Wikipedia, The Free Encyclopedia, https://en.wikipedia.org/w/index.php?title=$safeline, accessed $(date +"%m-%d-%Y")."  >>  "$TMPDIR$uuid/sources.md"
-  echo "  "  >>  "$TMPDIR"$uuid/sources.md
+  echo "  "  >>  "$TMPDIR"$uuid/wiki/wikisources.md
 	done < "$TMPDIR$uuid/seeds/filtered.pagehits"
+	# pipe other sources in here, either apppend with ## second-level heading or sort -u
+
+	cat $TMPDIR$uuid/wiki/wikisources.md >> $TMPDIR$uuid/sources.md
 
  	cat includes/wikilicense.md >> "$TMPDIR/$uuid/sources.md"
 	echo "" >> "$TMPDIR$uuid/sources.md"
