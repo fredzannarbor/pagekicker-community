@@ -341,6 +341,14 @@ shift 2
 add_this_content_part_name=${1#*=}
 shift
 ;;
+--search_this_content)
+search_this_content=$2
+shift 2
+;;
+--search_this_content=*)
+search_this_content=${1#*=}
+shift
+;;
 --two1)
 two1=$2
 shift 2
@@ -453,18 +461,19 @@ fi
 
 # create directories I will need
 
-mkdir -p -m 755  "$TMPDIR"$uuid/actual_builds
-mkdir -p -m 755  "$TMPDIR"$uuid/apis
-mkdir -p -m 755  "$TMPDIR"$uuid/cover
-mkdir -p -m 755  "$TMPDIR"$uuid/twitter
-mkdir -p -m 777  "$TMPDIR"$uuid/fetch
-mkdir -p -m 777  "$TMPDIR"$uuid/flickr
-mkdir -p -m 777  "$TMPDIR"$uuid/images
-mkdir -p -m 777  "$TMPDIR"$uuid/mail
-mkdir -p -m 777  "$TMPDIR"$uuid/seeds
-mkdir -p -m 777  "$TMPDIR"$uuid/user
-mkdir -p -m 777  "$TMPDIR"$uuid/wiki
-mkdir -p -m 777  "$TMPDIR"$uuid/webseeds
+mkdir -p -m 755  "$TMPDIR$uuid/actual_builds"
+mkdir -p -m 755  "$TMPDIR$uuid/apis"
+mkdir -p -m 755  "$TMPDIR$uuid/cover"
+mkdir -p -m 755  "$TMPDIR$uuid/twitter"
+mkdir -p -m 777  "$TMPDIR$uuid/fetch"
+mkdir -p -m 777  "$TMPDIR$uuid/flickr"
+mkdir -p -m 777  "$TMPDIR$uuid/images"
+mkdir -p -m 777  "$TMPDIR$uuid/mail"
+mkdir -p -m 777  "$TMPDIR$uuid/search_this_content"
+mkdir -p -m 777  "$TMPDIR$uuid/seeds"
+mkdir -p -m 777  "$TMPDIR$uuid/user"
+mkdir -p -m 777  "$TMPDIR$uuid/wiki"
+mkdir -p -m 777  "$TMPDIR$uuid/webseeds"
 mkdir -p -m 755 -p $LOCAL_DATA"jobprofile_builds/""$jobprofilename"
 
 if [ -z "$covercolor" ]; then
