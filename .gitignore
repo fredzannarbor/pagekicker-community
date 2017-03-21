@@ -13,6 +13,7 @@ scripts/lib/googler
 scripts/out.xml
 scripts/cookies.txt
 scripts/output.xml
+!local-data/content_collections//.gitignore
 !local-data/seeds/
 !local-data/seeds/history/.gitignore
 !local-data/logs/uuids/.gitignore
@@ -42,5 +43,7 @@ scripts/lib/xml2csv-conv.jar
 #*wapack*
 conf/partsofthebook/Appendix_E_AGuideToWritingAnEffectiveExecutiveSummary.pdf
 conf/partsofthebook/USN_GuideToWritingAnEffectiveExecutiveSummaryp4-5.pdf
-voice/chatbot_scenario.jpg
-voice/chatbot_scenario.pdf
+scripts/voice/chatbot_scenario.jpg
+scripts/voice/chatbot_scenario.pdf
+scripts/voice/chatbot_scenario1.jpg
+scripts/voice/chatbot_scenario2.jpg
