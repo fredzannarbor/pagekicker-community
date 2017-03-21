@@ -1,0 +1,5 @@
+content_collection_name="Permissoned Content Collection"
+content_collection_owner="Content Owner"
+content_collection_copyright_notice="Copyright $content_collection_owner"
+content_collecton_dirname="$LOCAL_DATA/content_collections/$content_collection_name"
+content_collection_filetype=".doc" # file extension
