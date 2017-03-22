@@ -36,6 +36,7 @@ git \
 imagemagick \
 mysql-client \
 pandoc \
+pdfgrep \
 pdftk \
 perl \
 php5-cli \
