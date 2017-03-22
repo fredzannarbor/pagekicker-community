@@ -4,9 +4,9 @@ Usage: bin/builder.sh --option1 "value" etc.
 
 QUICK START
 --booktitle "Melania of Slovenia"
+--content_collections # semi-colon-separated collection names
 --editedby "Your Name Here" # your personal byline
 --expand_seeds_to_pages "yes" # spidering search strategy, many more pages
---search_this_content # specify permissioned source name
 --seedsviacli "Melania Trump; Slovenia" # semi-colon separated
 --verbose (no value) turn on verbose output
 Job results: ls -lart $TMPDIR (default /tmp/pagekicker/), inside latest dir
@@ -29,6 +29,7 @@ COMPLETE LIST OF OPTIONS
 --booktype
 --buildcover
 --buildtarget
+--content_collections # semi-colon-separated collection names
 --covercolor
 --coverfont
 --customername
@@ -48,7 +49,6 @@ COMPLETE LIST OF OPTIONS
 --passuuid
 --safe_product_name
 --sample_tweets
---search_this_content # specify permissioned source name
 --seedfile
 --seedsviacli
 --shortform
