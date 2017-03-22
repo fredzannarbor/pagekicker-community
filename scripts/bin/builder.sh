@@ -341,12 +341,12 @@ shift 2
 add_this_content_part_name=${1#*=}
 shift
 ;;
---search_this_content)
-search_this_content=$2
+--content_collections)
+content_collections=$2
 shift 2
 ;;
---search_this_content=*)
-search_this_content=${1#*=}
+--content_collections=*)
+content_collections=${1#*=}
 shift
 ;;
 --two1)
@@ -469,7 +469,7 @@ mkdir -p -m 777  "$TMPDIR$uuid/fetch"
 mkdir -p -m 777  "$TMPDIR$uuid/flickr"
 mkdir -p -m 777  "$TMPDIR$uuid/images"
 mkdir -p -m 777  "$TMPDIR$uuid/mail"
-mkdir -p -m 777  "$TMPDIR$uuid/search_this_content"
+mkdir -p -m 777  "$TMPDIR$uuid/content_collections"
 mkdir -p -m 777  "$TMPDIR$uuid/seeds"
 mkdir -p -m 777  "$TMPDIR$uuid/user"
 mkdir -p -m 777  "$TMPDIR$uuid/wiki"
@@ -597,11 +597,13 @@ else
 	fi
 fi
 
-sort -u --ignore-case "$TMPDIR"$uuid"/seeds/seedphrases" | sed -e '/^$/d' -e '/^[0-9#@]/d' >  "$TMPDIR"$uuid/seeds/sorted.seedfile
+# creates sorted & screened list of seeds
+
+sort -u --ignore-case "$TMPDIR$uuid/seeds/seedphrases" | sed -e '/^$/d' -e '/^[0-9#@]/d' >  "$TMPDIR"$uuid/seeds/sorted.seedfile
 
 echo "---"
 echo "seeds are"
-cat "$TMPDIR"$uuid"/seeds/sorted.seedfile"
+cat "$TMPDIR$uuid/seeds/sorted.seedfile"
 echo "---"
 
 #expand seeds to valid wiki pages
@@ -692,6 +694,13 @@ if [ "$googler_news_on" = "yes" ] ; then
 else
 	echo "not fetching News Snippets"
 	touch "$TMPDIR$uuid/googler-news.md"
+fi
+
+if [ -n "$content_collections" ] ; then
+	. includes/search-content-collections.sh
+else
+	echo "not searching content collections"
+	touch "$TMPDIR$uuid/content_collections/content-collections-results.md"
 fi
 
 echo "summary is" $summary  #summary should be on for cover building
@@ -1234,6 +1243,9 @@ cat "$TMPDIR"$uuid"/yaml-metadata.md" >> "$LOCAL_DATA"bibliography/yaml/allbuild
 
 # add some simple tests that builds worked ok
 
+# always reports success, whether verbose is on or off
+
+exec 1>&3
 echo "builder run complete, files in $TMPDIR$uuid/"
 
 exit 0
