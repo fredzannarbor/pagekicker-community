@@ -12,3 +12,4 @@ mylibrary="yes"
 sigfile="wapackbotsig.jpg"
 add_imprint_biblio="no" #data too messy for right now
 robot_location="New Boston, New Hampshire, USA"
+covercolor="red"
