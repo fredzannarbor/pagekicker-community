@@ -1,0 +1,6 @@
+content_collection_dirname="local1"
+content_collection_name="Local Content Collection"
+content_collection_owner="Owner Name"
+content_collection_copyright_notice="Copyright $content_collection_owner. "$(date+"%Y")
+content_collection_filetype=".doc" # file extension
+content_collection_citation="$(date+"%Y"). $content_collection_owner City: Publisher."

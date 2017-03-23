@@ -3,10 +3,11 @@ Must always run from ~/pagekicker-community/scripts/
 Usage: bin/builder.sh --option1 "value" etc.
 
 QUICK START
---seedsviacli "Melania Trump; Slovenia" # semi-colon separated
 --booktitle "Melania of Slovenia"
+--content_collections # semi-colon-separated collection names
 --editedby "Your Name Here" # your personal byline
 --expand_seeds_to_pages "yes" # spidering search strategy, many more pages
+--seedsviacli "Melania Trump; Slovenia" # semi-colon separated
 --verbose (no value) turn on verbose output
 Job results: ls -lart $TMPDIR (default /tmp/pagekicker/), inside latest dir
 
@@ -28,8 +29,9 @@ COMPLETE LIST OF OPTIONS
 --booktype
 --buildcover
 --buildtarget
---covercolor 
---coverfont
+--covercolor  # valids in conf/colors.txt
+--content_collections # semi-colon-separated collection names
+--coverfont # valids in conf/fonts.txt
 --customername
 --dontcleanupseeds # for store implementations
 --ebook_format
