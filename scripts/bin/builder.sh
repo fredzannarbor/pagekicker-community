@@ -545,7 +545,23 @@ if [ -z "$seedfile" ] ; then
 		fi
 else
 	  echo "path to seedfile was $seedfile"
-		cp $seedfile "$TMPDIR"$uuid/seeds/seedphrases
+		cp $seedfile "$TMPDIR$uuid/seeds/seedphrases"
+fi
+
+if [ -z "$booktitle" ] ; then
+	echo "no booktitle provided by operator"
+
+	seedcount=`wc -l $TMPDIR$uuid/seeds/seedphrases | cut -f1 -d' '`
+	echo "$seedcount"
+	if [ "$seedcount" -gt "1" ] ; then
+		booktitle=$(head -n 1 "$TMPDIR$uuid/seeds/seedphrases")" ..."
+			echo "arbitrary booktitle is $booktitle"
+	else
+		booktitle=$(head -n 1 "$TMPDIR$uuid/seeds/seedphrases")
+		echo "arbitrary booktitle is $booktitle"
+	fi
+else
+	echo "booktitle provided via command line is $booktitle"
 fi
 
 . includes/api-manager.sh
