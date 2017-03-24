@@ -25,21 +25,35 @@ while IFS= read -r collection; do
     case $content_collection_filetype in
     pdf)
       echo "using pdfgrep against txt files in collection"
-      afterKWIC=3
-      beforeKWIC=1
-      pdfgrep "$seed" -r -h -C 120  "$LOCAL_DATA"content_collections/"$content_collection_dirname" | uniq | sed G >> "$TMPDIR$uuid/content_collections/content_collections_results.md"
+      grep -h -r -l -w "$seed" "$LOCAL_DATA"content_collections/"$content_collection_dirname"   | while read fn
+      do
+        echo "**$fn**" >> "$TMPDIR$uuid/content_collections/content_collections_results.md"
+        echo "  " >> "$TMPDIR$uuid/content_collections/content_collections_results.md"
+        pdfgrep "$seed" -r -h -C 120  "$fn" | uniq | sed G >> "$TMPDIR$uuid/content_collections/content_collections_results.md"
+        echo "  " >> "$TMPDIR$uuid/content_collections/content_collections_results.md"
+      done
     ;;
     txt)
       echo "using grep against txt files in collection"
-      afterKWIC=3
-      beforeKWIC=1
-      grep -r -h -w --no-group-separator -A "$afterKWIC" -B "$beforeKWIC" "$seed" "$LOCAL_DATA"content_collections/"$content_collection_dirname" >> "$TMPDIR$uuid/content_collections/content_collections_results.md"
+      echo $content_collection_dirname
+      grep -h -r -l -w "$seed" "$LOCAL_DATA"content_collections/"$content_collection_dirname" >> "$TMPDIR$uuid/content_collections/files"
+      grep -r -l "$seed" "$LOCAL_DATA"content_collections/"$content_collection_dirname" | while read fn
+      do
+        echo "*$fn*" >> "$TMPDIR$uuid/content_collections/content_collections_results.md"
+        echo "  " >> "$TMPDIR$uuid/content_collections/content_collections_results.md"
+        grep "$seed" --no-group-separator -h -w -A 2 -B 2  "$fn" >> "$TMPDIR$uuid/content_collections/content_collections_results.md"
+        echo "  " >> "$TMPDIR$uuid/content_collections/content_collections_results.md"
+      done
     ;;
     *)
     echo "assuming files in collection are txt and running grep"
-      afterKWIC=3
-      beforeKWIC=1
-      grep -r -h -w --no-group-separator -A "$afterKWIC" -B "$beforeKWIC" "$seed" "$LOCAL_DATA"content_collections/"$content_collection_dirname" >> "$TMPDIR$uuid/content_collections/content_collections_results.md"
+      grep -h -r -l -w "$seed" "$fn" "$LOCAL_DATA"content_collections/"$content_collection_dirname"   | while read fn
+      do
+        echo "**$fn**" >> "$TMPDIR$uuid/content_collections/content_collections_results.md"
+        echo "  " >> "$TMPDIR$uuid/content_collections/content_collections_results.md"
+        grep "$seed" --no-group-separator -hw -A 2 -B 2 "$fn" >> "$TMPDIR$uuid/content_collections/content_collections_results.md"
+        echo "  " >> "$TMPDIR$uuid/content_collections/content_collections_results.md"
+      done
     ;;
     esac
     echo "" >> "$TMPDIR$uuid/content_collections/content_collections_results.md"
