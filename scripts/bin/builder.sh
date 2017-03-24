@@ -1016,8 +1016,9 @@ fi
 	while IFS= read -r line; do
 
 	safeline=$(echo $line | sed -e 's/[ ]/_/g')
-	echo "Wikipedia contributors, $line, Wikipedia, The Free Encyclopedia, https://en.wikipedia.org/w/index.php?title=$safeline, accessed $(date +"%m-%d-%Y")."  >>  "$TMPDIR$uuid/sources.md"
+	echo "Wikipedia contributors, $line, Wikipedia, The Free Encyclopedia, https://en.wikipedia.org/w/index.php?title=$safeline, accessed $(date +"%m-%d-%Y")."  >>  "$TMPDIR$uuid/wiki/wikisources.md"
   echo "  "  >>  "$TMPDIR"$uuid/wiki/wikisources.md
+	echo "  "  >>  "$TMPDIR"$uuid/wiki/wikisources.md
 	done < "$TMPDIR$uuid/seeds/filtered.pagehits"
 	# pipe other sources in here, either apppend with ## second-level heading or sort -u
 
