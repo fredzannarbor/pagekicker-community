@@ -714,6 +714,7 @@ fi
 
 if [ -n "$content_collections" ] ; then
 	. includes/search-content-collections.sh
+#	"$PYTHON_BIN" bin/PKsum-clean.py -l "$summary_length" -o "$TMPDIR$uuid/content_collections/summary.md" "$TMPDIR$uuid/content_collections/content_collections_results.md"
 else
 	echo "not searching content collections"
 	touch "$TMPDIR$uuid/content_collections/content-collections-results.md"
@@ -877,8 +878,6 @@ cp  "$TMPDIR"$uuid/cover/bordercover.png  "$TMPDIR"$uuid/ebookcover.jpg
 
 . includes/abstracts.sh
 
-# parses list of chapters into simple ToC and runon sentence
-
 . includes/listofpages.sh
 
 . includes/topics_covered_runon.sh
@@ -887,11 +886,14 @@ cp  "$TMPDIR"$uuid/cover/bordercover.png  "$TMPDIR"$uuid/ebookcover.jpg
 
 . includes/changelog.sh
 
-# move cover files into position
+	# assemble  text so that I can run acronyms, programmatic summary, nerv3
+	# against all retrieved content
 
-	cat "$TMPDIR"$uuid"/wiki/wiki4cloud.md"  >> $TMPDIR$uuid/tmpbody.md
+	cat "$TMPDIR$uuid/wiki/wiki4cloud.md" >> "$TMPDIR$uuid/tmpbody.md"
 
-	# convert text so that I can add acronyms, programmatic summary, named entity recognition
+	#cat "$TMPDIR$uuid/wiki/wiki4cloud.md" \
+	# "$TMPDIR$uuid/content_collections/content_collections_results.md" \
+	# >> "$TMPDIR$uuid/tmpbody.md"
 
 pandoc -S -o "$TMPDIR"$uuid/targetfile.txt -t plain -f markdown "$TMPDIR"$uuid/tmpbody.md
 
@@ -1075,27 +1077,31 @@ echo "publisher: \"$imprintname\""  >>  "$TMPDIR"$uuid/yaml-metadata.md
 echo "rights:  (c) \"$my_year $imprintname\"" >>  "$TMPDIR"$uuid/yaml-metadata.md
 echo "---" >>  "$TMPDIR"$uuid/yaml-metadata.md
 
+safe_product_name=$(echo "$booktitle" | sed -e 's/[^A-Za-z0-9._-]/_/g')
+bibliography_title=$(echo "$booktitle" | sed -e 's/[^A-Za-z0-9 :;,.?]//g')
 
-# select booktype, returns complete.md
+#always build complete book with all partsofthebook
+. includes/partsofthebook.sh
+
+# sometimes build additional booktypes
 
 case $booktype in
-reader)transect_summarize_ner
+reader)
 	# default
-  . includes/partsofthebook.sh
+  echo "assembled all parts of the book by default"
   ;;
 draft-report)
+	echo "assembling parts needed for $booktype"
   . includes/draft-report.sh
+	"$PANDOC_BIN" -o "$TMPDIR$uuid/draft-report-$safe_product_name.docx"   "$TMPDIR"$uuid/draft-report.md
+	# note that draft-report does not get SKU because it is not a completed product
   ;;
 *)
-  . includes/partsofthebook.sh
+  echo "assembled all parts of the book by default"
   ;;
 esac
 
-
 # build ebook in epub
-
-safe_product_name=$(echo "$booktitle" | sed -e 's/[^A-Za-z0-9._-]/_/g')
-bibliography_title=$(echo "$booktitle" | sed -e 's/[^A-Za-z0-9 :;,.?]//g')
 
 cd  "$TMPDIR"$uuid
 "$PANDOC_BIN" -o "$TMPDIR"$uuid/$sku"."$safe_product_name".epub" --epub-cover-image="$TMPDIR"$uuid/cover/$sku"ebookcover.jpg"  "$TMPDIR"$uuid/complete.md
@@ -1103,6 +1109,7 @@ cd  "$TMPDIR"$uuid
 "$PANDOC_BIN" -o "$TMPDIR"$uuid/$sku"."$safe_product_name".txt"   "$TMPDIR"$uuid/complete.md
 "$PANDOC_BIN" -o "$TMPDIR"$uuid/$sku"."$safe_product_name".mw" -t mediawiki -s -S  "$TMPDIR"$uuid/complete.md
 cp "$TMPDIR"$uuid/$sku"."$safe_product_name".txt" "$TMPDIR"$uuid/4stdout".txt"
+
 
 
 cd $scriptpath

@@ -34,7 +34,7 @@ cat \
 "$TMPDIR$uuid/sources.md" \
 "$TMPDIR$uuid/yaml-metadata.md" \
 "$TMPDIR$uuid/settings.md" \
-> "$TMPDIR$uuid/complete.md"
+> "$TMPDIR$uuid/draft-report.md"
 
 # "$TMPDIR$uuid/conclusion.md"
 # "$TMPDIR$uuid/appendices_front_page.md" \
