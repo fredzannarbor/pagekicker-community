@@ -1,6 +1,7 @@
 #!/bin/bash
 # recursively greps directory
-# for each file that contains matches, provides filename followed by matches
+# for each file that contains caseinsensitive matches
+# provides filename followed by matches
 
 afterKWIC=0
 beforeKWIC=0
