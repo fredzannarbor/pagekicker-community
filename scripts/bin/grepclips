@@ -1,0 +1,70 @@
+#!/bin/bash
+# recursively greps directory
+# for each file that contains caseinsensitive matches
+# provides filename followed by matches
+
+afterKWIC=0
+beforeKWIC=0
+path="."
+
+while :
+do
+case $1 in
+--help | -\?)
+usage:
+grepclips -p "search phrase" -P /path/to/dir -A "context lines after" -B "context lines before"
+exit 0  # This is not an error, the user requested help, so do not exit status 1.
+;;
+-p|--pattern)
+pattern=$2
+shift 2
+;;
+-p|--pattern=*)
+pattern=${1#*=}
+shift
+;;
+-P|--path)
+path=$2
+shift 2
+;;
+-P|--path=*)
+pattern=${1#*=}
+shift
+;;
+-A|--afterKWIC)
+afterKWIC=$2
+shift 2
+;;
+-A|--afterKWIC=*)
+afterKWIC=${1#*=}
+shift
+;;
+-B|--beforeKWIC)
+beforeKWIC=$2
+shift 2
+;;
+-B|--beforeKWIC=*)
+beforeKWIC=${1#*=}
+shift
+;;
+  --) # End of all options
+            shift
+            break
+            ;;
+        -*)
+            echo "WARN: Unknown option (ignored): $1" >&2
+            shift
+            ;;
+        *)  # no more options. Stop while loop
+            break
+            ;;
+
+esac
+done
+
+grep -r -l -i "$pattern" "$path" | while read fn
+do
+  echo "$fn:"
+  grep -i "$pattern" --no-group-separator -h -A "$afterKWIC" -B "$beforeKWIC"  "$fn"
+  echo " "
+done

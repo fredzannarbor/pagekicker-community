@@ -474,6 +474,7 @@ mkdir -p -m 777  "$TMPDIR$uuid/seeds"
 mkdir -p -m 777  "$TMPDIR$uuid/user"
 mkdir -p -m 777  "$TMPDIR$uuid/wiki"
 mkdir -p -m 777  "$TMPDIR$uuid/webseeds"
+
 mkdir -p -m 755 -p $LOCAL_DATA"jobprofile_builds/""$jobprofilename"
 
 if [ -z "$covercolor" ]; then
