@@ -11,8 +11,8 @@ while :
 do
 case $1 in
 --help | -\?)
-usage:
-grepclips -p "search phrase" -P /path/to/dir -A "context lines after" -B "context lines before"
+echo "usage:"
+echo 'grepclips -p "search phrase" -P /path/to/dir -A "context lines after" -B "context lines before"'
 exit 0  # This is not an error, the user requested help, so do not exit status 1.
 ;;
 -p|--pattern)
