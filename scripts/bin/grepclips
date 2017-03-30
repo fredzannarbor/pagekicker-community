@@ -3,6 +3,8 @@
 # for each file that contains caseinsensitive matches
 # provides filename followed by matches
 
+# sets defaults
+
 afterKWIC=0
 beforeKWIC=0
 path="."
@@ -66,6 +68,7 @@ if [ ! "$pattern" ]; then
    echo "ERROR: option '-p [pattern]' not given. See --help" >&2
   exit 1
 fi
+
 
 grep -r -l -i "$pattern" "$path" | while read fn
 do
