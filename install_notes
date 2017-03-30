@@ -67,6 +67,19 @@ By default, the WordCloud stopword file includes stop words that screen out most
 
 Handled in simple-install.sh via pip3 install -r requirements.txt
 
+#### WIKIPEDIA PYTHON LIBRARY"
+
+Annoying Beautiful Soup warning emanates from running wikifetcher.py using the python wikipedia library https://github.com/goldsmith/Wikipedia in builder.sh and create*.sh:
+
+```
+/usr/lib/python3/dist-packages/bs4/__init__.py:181: UserWarning: No parser was explicitly specified, so I'm using the best available HTML parser for this system ("lxml"). This usually isn't a problem, but if you run this code on another system, or in a different virtual environment, it may use a different parser and behave differently.
+```
+To fix this, the wikipedia python library must be edited in /usr/local/lib/python3.5/dist-packages/wikipedia/wikipedia.py
+
+by making line 389 read as follows:
+
+ lis = BeautifulSoup(html, *"html.parser"*).find_all('li')
+
 #### BITNAMI PYTHON
 
     On Bitnami export PYTHONPATH = $PYTHONPATH:/opt/bitnami/python/lib/python2.6/site-packages/flickrapi-1.4.2-py2.6.egg
