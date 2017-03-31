@@ -5,6 +5,8 @@
 
 # sets defaults
 
+mkdir -m 777 -p /tmp/grepclips
+
 afterKWIC=0
 beforeKWIC=0
 path="."
@@ -13,8 +15,8 @@ while :
 do
 case $1 in
 --help | -\?)
-usage:
-grepclips -p "search phrase" -P /path/to/dir -A "context lines after" -B "context lines before"
+echo "usage"
+echo 'grepclips -p "search phrase" -P /path/to/dir -A "context lines after" -B "context lines before" --word "yes"'
 exit 0  # This is not an error, the user requested help, so do not exit status 1.
 ;;
 -p|--pattern)
@@ -49,6 +51,22 @@ shift 2
 beforeKWIC=${1#*=}
 shift
 ;;
+--passuuid)
+passuuid=$2
+shift 2
+;;
+passuuid=*)
+passuuid=${1#*=}
+shift
+;;
+-w|--Word)
+word=$2
+shift 2
+;;
+-w|--word=*)
+word=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -69,10 +87,31 @@ if [ ! "$pattern" ]; then
   exit 1
 fi
 
+if [ ! "$passuuid" ] ; then
+	uuid=$(python -c 'import uuid; print(uuid.uuid1())')
+	echo "uuid is" $uuid
+else
+	uuid=$passuuid
+  echo "received uuid was $passuuid"
+fi
 
+safe_pattern=$(echo "$pattern" | sed -e 's/[^A-Za-z0-9._-]/_/g')
+echo "safe pattern was $safe_pattern"
 grep -r -l -i "$pattern" "$path" | while read fn
 do
-  echo "$fn:"
+  echo " " | tee --append "/tmp/grepclips/""$uuid-$safe_pattern.txt"
+  echo "## $fn:##" | tee --append "/tmp/grepclips/""$uuid-$safe_pattern.txt"
   grep -i "$pattern" --no-group-separator -h -A "$afterKWIC" -B "$beforeKWIC"  "$fn"
+  grep -i "$pattern" --no-group-separator -h -A "$afterKWIC" -B "$beforeKWIC"  "$fn" >> "/tmp/grepclips/""$uuid-$safe_pattern.txt"
   echo " "
 done
+
+# if word document requested build it
+
+if [ "$word" = "yes" ] ; then
+  pandoc -o "/tmp/grepclips"/$uuid-$safe_pattern.docx "/tmp/grepclips"/$uuid-$safe_pattern.txt
+else
+  true # not converting
+fi
+
+exit 0
