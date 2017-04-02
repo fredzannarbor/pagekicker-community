@@ -1,8 +1,12 @@
 #!/bin/bash
 
 # search all PDFs in directory for patterns provided in text file
+# usage:
+# bin/pdfgrepkicker.sh --singleseed "68002" --pdfdir "/home/fred/pagekicker-community/local-data/content_collections/wapacktest/"
 
 # assumes all PDFs are decrypted
+# requires pdftk, pandoc, pdfgrep, imagemagick
+# needs config file sensing
 
 # default values
 
@@ -10,14 +14,12 @@
 
 outdir="/tmp/pagekicker/out`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 4 | head -n 1`"
 csv="n"
-pdforiginals="y"
 reporttitle="search on term:"
 pdfdir="." # run file from within decrypted dir
 singleseed="no" #default don't use
 patternfile="patternfile"
 
 # command line processing
-
 
 while :
 do
@@ -58,22 +60,6 @@ shift 2
 --reporttitle=*)
 reporttitle=${1#*=}
 shift 2
-;;
---pdforiginals)
-pdforiginals=$2
-shift 2
-;;
---pdforiginals=*)
-pdforiginals=${1#*=}
-shift
-;;
---decrypt)
-decrypt=$2
-shift 2
-;;
---decrypt=*)
-decrypt=${1#*=}
-shift
 ;;
 --csv)
 csv=$2
@@ -161,23 +147,12 @@ done<"$outdir/patternfile"
 
 # overly complicated for loop begins
 
-# for each file in pdfdir:
-# create filestamp
-# loop through search terms
-# create list of pages in each document that contain search terms
-# use pdftk to cat pages into one output file per doc searched
-# apply filename stamp to each output file
-# if csv is requested, create csv list of output files
-# for each search term append all output files to search term master file
-# for each search term create reference pages
-
 OLDIFS=$IFS
 IFS=$'\n'; for file in $(find "$pdfdir" -name '*.pdf')
 do
   #echo "$file"
 	# creating file name stamp
 
-#filestamp is flickering in and out of existence -- why?
 	convert \
 	-colorspace RGB \
 	-size 2550x3300 xc:transparent \
@@ -247,6 +222,7 @@ do
 
 	pattern_filename=`echo "$pattern"| tr -cd 'A-Za-z0-9_-'`
   cd "$outdir"
+  # concatenates stamped documents into full sheaf
 	pdftk ?.stamped.$pattern_filename.pdf cat output "$outdir/$pattern_filename.pages.pdf"
   cd /home/$USER/pagekicker-community/scripts
 	pattern_filename=`echo "$pattern"| tr -cd 'A-Za-z0-9_-'`
