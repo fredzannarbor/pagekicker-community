@@ -1,1 +1,1 @@
-bin/grepclips2 -p "Fancy Bear" -P "/home/fred/pagekicker-community/local-data/content_collections/wapackdata" -A 2 -B 2 -w "yes" -s "yes"
+bin/grepclips -p "Fancy Bear" -P "/home/$USER/pagekicker-community/local-data/content_collections/wapackdata" -A 2 -B 2 -w "yes" -s "yes"
