@@ -14,9 +14,10 @@ path="."
 while :
 do
 case $1 in
---help | -\?)
-echo "usage"
-echo 'grepclips -p "search phrase" -P /path/to/dir -A "context lines after" -B "context lines before" --word "yes"'
+-h|--help | -\?)
+echo "usage:"
+echo 'grepclips -p "search phrase" -P /path/to/dir -A "number of context lines after" -B "number of context lines before" --word "yes" --sheaves "yes"'
+echo "note: sheaves search is considerably slower, thus optional by default"
 exit 0  # This is not an error, the user requested help, so do not exit status 1.
 ;;
 -p|--pattern)
@@ -32,7 +33,7 @@ path=$2
 shift 2
 ;;
 -P|--path=*)
-pattern=${1#*=}
+path=${1#*=}
 shift
 ;;
 -A|--afterKWIC)
@@ -59,12 +60,20 @@ passuuid=*)
 passuuid=${1#*=}
 shift
 ;;
--w|--Word)
+-w|--word)
 word=$2
 shift 2
 ;;
 -w|--word=*)
 word=${1#*=}
+shift
+;;
+-s|--sheaves)
+sheaves=$2
+shift 2
+;;
+-s|--sheaves=*)
+sheaves=${1#*=}
 shift
 ;;
   --) # End of all options
@@ -82,6 +91,7 @@ shift
 esac
 done
 
+
 if [ ! "$pattern" ]; then
    echo "ERROR: option '-p [pattern]' not given. See --help" >&2
   exit 1
@@ -95,23 +105,106 @@ else
   echo "received uuid was $passuuid"
 fi
 
+#echo "$path"
+
+mkdir -m 755 -p "/tmp/pagekicker/$uuid/"
+mkdir -m 755 -p "/tmp/pagekicker/$uuid/filestamps"
+
 safe_pattern=$(echo "$pattern" | sed -e 's/[^A-Za-z0-9._-]/_/g')
-echo "safe pattern was $safe_pattern"
+echo "search term was $safe_pattern, grep results follow"
 grep -r -l -i "$pattern" "$path" | while read fn
 do
-  echo " " | tee --append "/tmp/grepclips/""$uuid-$safe_pattern.txt"
-  echo "## $fn:##" | tee --append "/tmp/grepclips/""$uuid-$safe_pattern.txt"
+  #echo "$fn"
+  echo " " | tee --append "/tmp/pagekicker/$uuid/$safe_pattern.txt"
+  echo "## $fn:##" | tee --append "/tmp/pagekicker/$uuid/$safe_pattern.txt"
   grep -i "$pattern" --no-group-separator -h -A "$afterKWIC" -B "$beforeKWIC"  "$fn"
-  grep -i "$pattern" --no-group-separator -h -A "$afterKWIC" -B "$beforeKWIC"  "$fn" >> "/tmp/grepclips/""$uuid-$safe_pattern.txt"
+  grep -i "$pattern" --no-group-separator -h -A "$afterKWIC" -B "$beforeKWIC"  "$fn" >> "/tmp/pagekicker/$uuid/$safe_pattern.txt"
   echo " "
 done
+
 
 # if word document requested build it
 
 if [ "$word" = "yes" ] ; then
-  pandoc -o "/tmp/grepclips"/$uuid-$safe_pattern.docx "/tmp/grepclips"/$uuid-$safe_pattern.txt
+  pandoc -o "/tmp/pagekicker/$uuid/$safe_pattern.docx" "/tmp/pagekicker/$uuid/$safe_pattern.txt"
+  echo "Word doc with all hits for each file is in"
+  echo "/tmp/pagekicker/$uuid/$safe_pattern.txt"
+  echo ""
 else
   true # not converting
+fi
+
+#ls -lat "/tmp/pagekicker/$uuid/"
+
+# if sheaves requested,  build them
+
+if [ "$sheaves" = "yes" ] ; then
+  echo "assembling sheaves of pages with hits"
+
+# loop through files for PDF clips
+
+  safe_pattern=$(echo "$pattern" | sed -e 's/[^A-Za-z0-9._-]/_/g')
+  echo "search term was $pattern, safe filename is $safe_pattern"
+find "$path" -name "*.pdf" | while read file
+  do
+    N=$((N+1))
+    #echo "current file is $file"
+    #echo "current pattern is $pattern"
+    if pdfgrep -q  "$pattern" "$file" 2> /dev/null; then
+
+      echo "hit on $pattern contained in document $N"
+      mkdir -p "/tmp/pagekicker/$uuid/doc$N"
+      # create filestamp for sheaves
+
+        convert \
+        -colorspace RGB \
+        -size 2550x3300 xc:transparent \
+        -fill grey \
+        -pointsize 96 \
+        -gravity North \
+        -annotate +0+50 "$(basename "$file")" \
+        "/tmp/pagekicker/$uuid/filestamps/doc$N-filestamp.pdf"
+
+      # create header for results file
+      echo -e "\n" >> "/tmp/pagekicker/$uuid/$safe_pattern-results.md"
+      echo -e '##' "$file" >> "/tmp/pagekicker/$uuid/$safe_pattern-results.md"
+
+      # save output to results file
+      # also save page numbers to pagelist file
+      pdfgrep -n -C line "$pattern" "$file" 2> /dev/null | \
+        tee --append "/tmp/pagekicker/$uuid/$safe_pattern-results.md" | echo $(cut -d: -f 1) \
+        | tr ' ' '\n' | uniq > "/tmp/pagekicker/$uuid/doc$N-$safe_pattern-pagelist"
+
+        # loop through page list
+
+        while read page
+        do
+
+          pdftk "$file" cat "$page" output "/tmp/pagekicker/$uuid/doc$N/$page.pdf"
+        done<"/tmp/pagekicker/$uuid/doc$N-$safe_pattern-pagelist"
+
+        # concatenates individual pages into a single document
+
+        pages=$(ls "/tmp/pagekicker/$uuid/doc$N/" | tr '\n' ' ' )
+        #echo $pages
+        cd /tmp/pagekicker/$uuid/doc$N
+        #pwd
+        pdftk *.pdf cat output "/tmp/pagekicker/$uuid/doc$N-all.pdf"
+        cd /home/$USER/pagekicker-community/scripts
+
+        # applies stamp to all pages in cumulative document
+
+        pdftk "/tmp/pagekicker/$uuid/doc$N-all.pdf" multistamp "/tmp/pagekicker/$uuid/filestamps/doc$N-filestamp.pdf" output "/tmp/pagekicker/$uuid/$N.stamped.$safe_pattern.pdf"
+    fi
+  done
+  # concatenates stamped documents into full sheaf
+  cd /tmp/pagekicker/$uuid/
+  pdftk *.stamped.$safe_pattern.pdf cat output "/tmp/pagekicker/$uuid/$safe_pattern-all-pages.pdf"
+  echo "complete sheaf of pages containing hits is in"
+  echo "/tmp/pagekicker/$uuid/$safe_pattern.pages.pdf"
+  cd /home/$USER/pagekicker-community/scripts
+else
+  true # not collecting sheaves
 fi
 
 exit 0
