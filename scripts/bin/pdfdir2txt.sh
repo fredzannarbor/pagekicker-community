@@ -2,6 +2,10 @@
 
 # convert all pdfs in current directory to txt
 
+# needs to be portabilized
+# needs native recursion
+
+
 for file in *.pdf
 do
 	pdftotext $file
