@@ -25,38 +25,42 @@ while :
 do
 case $1 in
 --help | -\?)
+echo "usage:"
+echo "bin/wordcloudwrapper.sh --txtinfile /path/to/file"
+echo "-c /path/to/config/file" -h "pixel height" -w "pixel width" -o "/path/to/outfile"
+echo "outfile should *not* have filetype extension (it is png by default)"
 echo "requires input text file name"
 exit 0  # This is not an error, the user requested help, so do not exit status 1.
 ;;
---txtinfile)
+-f|--txtinfile)
 txtinfile=$2
 shift 2
 ;;
---txtinfile=*)
+-f|--txtinfile=*)
 txtinfile=${1#*=}
 shift
 ;;
---wordcloud_width)
+-w|--wordcloud_width)
 wordcloud_width=$2
 shift 2
 ;;
---wordcloud_width=*)
+-w|--wordcloud_width=*)
 wordcloud_width=${1#*=}
 shift
 ;;
---wordcloud_height)
+-h|--wordcloud_height)
 wordcloud_height=$2
 shift 2
 ;;
---wordcloud_height=*)
+-h|--wordcloud_height=*)
 wordcloud_height=${1#*=}
 shift
 ;;
---configfile)
+-c|--configfile)
 configfile=$2
 shift 2
 ;;
---configfile=*)
+-c|--configfile=*)
 configfile=${1#*=}
 shift
 ;;
@@ -68,11 +72,11 @@ shift 2
 outfile=${1#*=}
 shift
 ;;
---stopfile)
+-T|--stopfile)
 stopwordfile=$2
 shift 2
 ;;
---stopfile=*)
+-T|--stopfile=*)
 stopwordfile=${1#*=}
 shift 2
 ;;
@@ -97,18 +101,26 @@ if [ ! "$txtinfile" ]; then
   echo "ERROR: option '--txtinfile[txtinfile]' not given. See --help" >&2
    exit 1
 fi
-echo "JAVA_BIN is" $JAVA_BIN
-echo "jar file is" $scriptpath"lib/IBMcloud/ibm-word-cloud.jar"
-echo "configfile is" $configfile
+#echo "JAVA_BIN is" $JAVA_BIN
+#echo "jar file is" $scriptpath"lib/IBMcloud/ibm-word-cloud.jar"
+#echo "configfile is" $configfile
 
 # rotate stopwordfile in and out
 
-echo "current stopfile is" $stopfile
-cp "$stopfile" $scriptpath"lib/IBMcloud/examples/pk-stopwords.txt"
-echo "running stopfile $stopfile"
+#echo "current stopfile is" $stopfile
+current=$(ls $stopfile)
+pk=$(ls $scriptpath"lib/IBMcloud/examples/pk-stopwords.txt")
+if [ "$current" = "$pk" ] ; then
+  true
+else
+  cp  "$stopfile" $scriptpath"lib/IBMcloud/examples/pk-stopwords.txt"
+fi
+#echo "running stopfile $stopfile"
 
-$JAVA_BIN -jar $scriptpath"lib/IBMcloud/ibm-word-cloud.jar" -c $configfile -h "$wordcloud_height" -w "$wordcloud_width" < $txtinfile > $outfile".png"
+$JAVA_BIN -jar $scriptpath"lib/IBMcloud/ibm-word-cloud.jar" -c $configfile -h "$wordcloud_height" -w "$wordcloud_width" < "$txtinfile" > $outfile".png" 2> /dev/null
 
-cp $scriptpath"lib/IBMcloud/examples/restore-pk-stopwords.txt"  $scriptpath"lib/IBMcloud/examples/pk-stopwords.txt"
+cp  $scriptpath"lib/IBMcloud/examples/restore-pk-stopwords.txt"  $scriptpath"lib/IBMcloud/examples/pk-stopwords.txt"
+
+echo "wordcloud from $txtinfile is at $outfile.png"
 
 exit 0
