@@ -21,7 +21,8 @@ mkdir -m 755 ~/magento  # stub directory for optional import/export to catalog
 # put default configuration file in place
 # inspect it to make sure paths are correct
 
-cp ~/pagekicker-community/conf/config_defaults.txt ~/.pagekicker/config.txt
+
+cp ~/pagekicker-community/conf/config_defaults.txt "$HOME"/.pagekicker/config.txt
 
 # installs ubuntu dependencies
 # takes 20-30 min on 12 MB download
