@@ -1096,8 +1096,19 @@ draft-report)
 	echo "assembling parts needed for $booktype"
   . includes/draft-report.sh
 	"$PANDOC_BIN" -o "$TMPDIR$uuid/draft-report-$safe_product_name.docx"   "$TMPDIR"$uuid/draft-report.md
+	cp "$TMPDIR$uuid/draft-report.md" "$TMPDIR$uuid/complete.md"
 	# note that draft-report does not get SKU because it is not a completed product
   ;;
+content-collections-first)
+		echo "assembling parts needed for $booktype"
+	  . includes/content-collections-first.sh
+		"$PANDOC_BIN" -o "$TMPDIR$uuid/ccf-$safe_product_name.docx"   "$TMPDIR"$uuid/content-collections-first.md
+		# note that content-collections-first does not get SKU because it is not a completed product
+	  ;;
+daily-email)
+				echo "assembling parts needed for $booktype"
+			  . includes/daily-email.sh
+			  ;;
 *)
   echo "assembled all parts of the book by default"
   ;;
