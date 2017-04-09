@@ -555,7 +555,7 @@ if [ -z "$booktitle" ] ; then
 	seedcount=`wc -l $TMPDIR$uuid/seeds/seedphrases | cut -f1 -d' '`
 	echo "$seedcount"
 	if [ "$seedcount" -gt "1" ] ; then
-		booktitle=$(head -n 1 "$TMPDIR$uuid/seeds/seedphrases")" ..."
+		booktitle=$(head -n 1 "$TMPDIR$uuid/seeds/seedphrases")" and more"
 			echo "arbitrary booktitle is $booktitle"
 	else
 		booktitle=$(head -n 1 "$TMPDIR$uuid/seeds/seedphrases")
