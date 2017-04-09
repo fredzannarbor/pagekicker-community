@@ -29,8 +29,20 @@ done < "$TMPDIR$uuid/seeds/filtered.pagehits"
 
 echo "# PageKicker Daily" >> "$TMPDIR$uuid/daily-email/daily-email.md"
 echo "  " >> "$TMPDIR$uuid/daily-email/daily-email.md"
+echo "## Random Quote" >> "$TMPDIR$uuid/daily-email/daily-email.md"
+echo '<blockquote>' >> "$TMPDIR$uuid/daily-email/daily-email.md"
+echo "$(fortune)" >> "$TMPDIR$uuid/daily-email/daily-email.md"
+echo '</blockquote>' >> "$TMPDIR$uuid/daily-email/daily-email.md"
+echo "  " >> "$TMPDIR$uuid/daily-email/daily-email.md"
+
+current_image=$(get_desktop_img | sed -e 's/file:\/\///'g -e "s/'//"g)
+echo "## Current Desktop Image" >> "$TMPDIR$uuid/daily-email/daily-email.md"
+echo "  " >> "$TMPDIR$uuid/daily-email/daily-email.md"
+echo '!['"Current Desktop Image"']'"(""$current_image"")" >> "$TMPDIR$uuid/daily-email/daily-email.md"
+echo "  " >> "$TMPDIR$uuid/daily-email/daily-email.md"
 cat "$TMPDIR$uuid/daily-email/postpend.md" >> "$TMPDIR$uuid/daily-email/daily-email.md"
-pandoc -o "$TMPDIR$uuid/daily-email/daily-email.html" "$TMPDIR$uuid/daily-email/daily-email.md"
+pandoc --self-contained -s -o "$TMPDIR$uuid/daily-email/daily-email.html" "$TMPDIR$uuid/daily-email/daily-email.md"
+
 #emailbody=$(<$TMPDIR$uuid/daily-email.md)
 sendemail -t "wfzimmerman@gmail.com" \
   -u "PageKicker Daily" \
