@@ -960,7 +960,7 @@ if [ "$summary" = "summaries_only" ] ; then
 else
 	echo "  " >> $TMPDIR$uuid/chapters.md
 	echo "  " >>  "$TMPDIR"$uuid/chapters.md
-	echo "# Algorithmic Content" >>  "$TMPDIR"$uuid/chapters.md
+	echo "# Encyclopedia Content" >>  "$TMPDIR"$uuid/chapters.md
 	cat "$TMPDIR"$uuid"/wiki/wiki4cloud.md" | sed -e 's/#/##/' >>  "$TMPDIR"$uuid/chapters.md
 	echo "  " >>  "$TMPDIR"$uuid/chapters.md
 	echo "  " >>  "$TMPDIR"$uuid/chapters.md
