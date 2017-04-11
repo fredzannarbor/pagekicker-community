@@ -677,8 +677,8 @@ both)
 			cp  "$TMPDIR"$uuid/wiki/wikisummaries.md  "$TMPDIR"$uuid/wiki/wiki4cloud.md
 			echo "body too big for wordcloud, using abstracts only"
 		else
-			cat  "$TMPDIR"$uuid/wiki/wikisummaries.md  "$TMPDIR"$uuid/wiki/wikipages.md >  "$TMPDIR"$uuid/wiki/wiki4cloud.md
-			echo "building wordcloud from body + summaries"
+			 cp "$TMPDIR$uuid/wiki/wikipages.md"  "$TMPDIR$uuid/wiki/wiki4cloud.md"
+			echo "building wordcloud from body"
 		fi
 ;;
 *)
