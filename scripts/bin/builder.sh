@@ -981,7 +981,7 @@ cp $TMPDIR$uuid/tmpacronyms.md $TMPDIR$uuid/acronyms.md
 ls  "$TMPDIR"$uuid/xtarget.*nouns* >  "$TMPDIR"$uuid/testnouns
 cat  "$TMPDIR"$uuid/xtarget.*nouns* >  "$TMPDIR"$uuid/all_nouns.txt
 
-sort --ignore-case  "$TMPDIR"$uuid/all_nouns.txt | uniq >  "$TMPDIR"$uuid/sorted_uniqs.txt
+sort --ignore-case  "$TMPDIR"$uuid/all_nouns.txt | sed 's/^#/[hashtag]/g' | uniq >  "$TMPDIR"$uuid/sorted_uniqs.txt
 sed -i '1i # Unique Proper Nouns and Key Terms'  "$TMPDIR"$uuid/sorted_uniqs.txt
 sed -i '1i \'  "$TMPDIR"$uuid/sorted_uniqs.txt
 sed -i G  "$TMPDIR"$uuid/sorted_uniqs.txt
@@ -1024,6 +1024,8 @@ fi
 		touch $TMPDIR$uuid/allflickr.md
 	fi
 
+# Build sources page fro
+
 	echo "# Sources" >>  "$TMPDIR$uuid/sources.md"
   echo "  "  >>  "$TMPDIR$uuid/sources.md"
 	while IFS= read -r line; do
@@ -1035,7 +1037,8 @@ fi
 	done < "$TMPDIR$uuid/seeds/filtered.pagehits"
 	# pipe other sources in here, either apppend with ## second-level heading or sort -u
 
-	cat $TMPDIR$uuid/wiki/wikisources.md >> $TMPDIR$uuid/sources.md
+cat "$TMPDIR$uuid/content_collections/content_sources.md" >> $TMPDIR$uuid/sources.md
+cat $TMPDIR$uuid/wiki/wikisources.md >> $TMPDIR$uuid/sources.md
 
  	cat includes/wikilicense.md >> "$TMPDIR/$uuid/sources.md"
 	echo "" >> "$TMPDIR$uuid/sources.md"

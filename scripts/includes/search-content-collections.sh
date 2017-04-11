@@ -18,7 +18,7 @@ while IFS= read -r collection; do
     echo "" >> "$TMPDIR$uuid/content_collections/content_collections_results.md"
 
   while IFS= read -r seed; do
-    echo "searching $collection on $seed"
+    echo "now searching $collection on $seed"
     echo "## **"$seed"**" >> "$TMPDIR$uuid/content_collections/content_collections_results.md"
     echo "" >> "$TMPDIR$uuid/content_collections/content_collections_results.md"
 
@@ -66,4 +66,6 @@ while IFS= read -r collection; do
   echo "  " >> "$TMPDIR$uuid/content_collections/content_collections_results.md"
   sed -i 's/----//g' "$TMPDIR$uuid/content_collections/content_collections_results.md" #hack to remove confusing markdown from gutenberg
   sed -i 's/<<<//g' "$TMPDIR$uuid/content_collections/content_collections_results.md" #hack to remove confusing markdown from gutenberg
+  echo "$content_collection_citation" >> "$TMPDIR$uuid/content_collections/content_sources.md"
+  echo "  " >> "$TMPDIR$uuid/content_collections/content_sources.md"
 done < "$TMPDIR$uuid/content_collections/content_collections_list"
