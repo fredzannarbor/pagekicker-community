@@ -24,13 +24,14 @@ while IFS= read -r collection; do
 
     case $content_collection_filetype in
     pdf)
-      echo "using pdfgrep against txt files in collection"
+      echo "ccf filetype is pdf"
       grep -h -r -l -w "$seed" "$LOCAL_DATA"content_collections/"$content_collection_dirname"   | while read fn
       do
-        echo "**$fn**" >> "$TMPDIR$uuid/content_collections/content_collections_results.md"
-        echo "  " >> "$TMPDIR$uuid/content_collections/content_collections_results.md"
-        pdfgrep "$seed" -r -h -C 120  "$fn" | uniq | sed G >> "$TMPDIR$uuid/content_collections/content_collections_results.md"
-        echo "  " >> "$TMPDIR$uuid/content_collections/content_collections_results.md"
+        #echo "**$fn**" >> "$TMPDIR$uuid/content_collections/content_collections_results.md"
+        #echo "  " >> "$TMPDIR$uuid/content_collections/content_collections_results.md"
+        #pdfgrep "$seed" -r -h -C 120  "$fn" | uniq | sed G >> "$TMPDIR$uuid/content_collections/content_collections_results.md"
+        #echo "  " >> "$TMPDIR$uuid/content_collections/content_collections_results.md"
+        echo "pdfgrep search not implemented in search-content-collections"
       done
     ;;
     txt)
