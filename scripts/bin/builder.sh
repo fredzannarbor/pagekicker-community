@@ -421,6 +421,14 @@ shift 2
 kindlegen_on=${1#*=}
 shift
 ;;
+--screen_numbered_seeds)
+screen_numbered_seeds=$2
+shift 2
+;;
+--screen_numbered_seeds=*)
+screen_numbered_seeds=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -615,8 +623,12 @@ else
 fi
 
 # creates sorted & screened list of seeds
-
-sort -u --ignore-case "$TMPDIR$uuid/seeds/seedphrases" | sed -e '/^$/d' -e '/^[0-9#@]/d' >  "$TMPDIR"$uuid/seeds/sorted.seedfile
+if [ "$screen_numbered_seeds" = "yes" ] ; then
+	sort -u --ignore-case "$TMPDIR$uuid/seeds/seedphrases" 	| sed -e '/^$/d' -e '/^[0-9#@]/d' >  "$TMPDIR"$uuid/seeds/sorted.seedfile
+	echo "screened out seeds beginning with 0-9, #, @"
+else
+	sort -u --ignore-case "$TMPDIR$uuid/seeds/seedphrases"  >  "$TMPDIR"$uuid/seeds/sorted.seedfile
+fi
 
 echo "---"
 echo "seeds are"
