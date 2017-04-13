@@ -687,9 +687,11 @@ both)
 	wordcountpages=$(wc -w "$TMPDIR"$uuid"/wiki/wikipages.md" | cut -f1 -d' ')
 		if [ "$wordcountpages" -gt 100000 ] ; then
 			cp  "$TMPDIR"$uuid/wiki/wikisummaries.md  "$TMPDIR"$uuid/wiki/wiki4cloud.md
+			cp  "$TMPDIR"$uuid/wiki/wikisummaries.md  "$TMPDIR"$uuid/wiki/wiki4chapters.md
 			echo "body too big for wordcloud, using abstracts only"
 		else
 			 cp "$TMPDIR$uuid/wiki/wikipages.md"  "$TMPDIR$uuid/wiki/wiki4cloud.md"
+			 cp  "$TMPDIR"$uuid/wiki/wikipages.md  "$TMPDIR"$uuid/wiki/wiki4chapters.md
 			echo "building wordcloud from body"
 		fi
 ;;
@@ -856,7 +858,7 @@ else
 	echo "  " >> $TMPDIR$uuid/chapters.md
 	echo "  " >>  "$TMPDIR"$uuid/chapters.md
 	echo "# Encyclopedia Content" >>  "$TMPDIR"$uuid/chapters.md
-	cat "$TMPDIR"$uuid"/wiki/wiki4cloud.md" | sed -e 's/#/##/' >>  "$TMPDIR"$uuid/chapters.md
+	cat "$TMPDIR"$uuid"/wiki/wiki4chapters.md" | sed -e 's/#/##/' >>  "$TMPDIR"$uuid/chapters.md
 	echo "  " >>  "$TMPDIR"$uuid/chapters.md
 	echo "  " >>  "$TMPDIR"$uuid/chapters.md
 fi
