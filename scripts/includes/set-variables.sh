@@ -130,6 +130,7 @@ rows=1
 sample_tweets="no"
 screen_numbered_seeds="no"
 seedfile=""
+seedfortheday=""
 seedsource="PageKicker"
 SEOmodule_status="off"
 seriesdescriptionfilename="default.html"

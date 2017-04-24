@@ -11,6 +11,10 @@
 
 summary_length="5"
 
+# optionally add seed for the day section of the book
+
+. includes/seedfortheday.sh
+
 echo "creating daily-email"
 mkdir -m 775 -p "$TMPDIR$uuid/daily-email"
 
@@ -37,16 +41,13 @@ echo "A random image from your personal stash is attached below, followed by a r
 echo "  " >> "$TMPDIR$uuid/daily-email/daily-email.md"
 echo "## Today's Dose of Samuel Johnson" >> "$TMPDIR$uuid/daily-email/daily-email.md"
 echo '<blockquote>' >> "$TMPDIR$uuid/daily-email/daily-email.md"
-echo "$(fortune)" >> "$TMPDIR$uuid/daily-email/daily-email.md"
+echo "$(/usr/games/fortune johnson)" >> "$TMPDIR$uuid/daily-email/daily-email.md"
 echo '</blockquote>' >> "$TMPDIR$uuid/daily-email/daily-email.md"
 echo "  " >> "$TMPDIR$uuid/daily-email/daily-email.md"
 
-cat "$TMPDIR$uuid/daily-email/postpend.md" >> "$TMPDIR$uuid/daily-email/daily-email.md"
+cat "$TMPDIR$uuid/daily-email/postpend.md"  "$TMPDIR$uuid/wiki/seedfortheday.md" >> "$TMPDIR$uuid/daily-email/daily-email.md"
 current_image=$(get_desktop_img | sed -e 's/file:\/\///'g -e "s/'//"g)
-# echo "## Current Desktop Image" >> "$TMPDIR$uuid/daily-email/daily-email.md"
-# echo "  " >> "$TMPDIR$uuid/daily-email/daily-email.md"
-# echo '!['"Current Desktop Image"']'"(""$current_image"")" >> "$TMPDIR$uuid/daily-email/daily-email.md"
-# echo "  " >> "$TMPDIR$uuid/daily-email/daily-email.md"
+
 
 pandoc -s -o "$TMPDIR$uuid/daily-email/daily-email.html" "$TMPDIR$uuid/daily-email/daily-email.md"
 
