@@ -429,6 +429,14 @@ shift 2
 screen_numbered_seeds=${1#*=}
 shift
 ;;
+--seedfortheday)
+seedfortheday=$2
+shift 2
+;;
+--seedfortheday=*)
+seedfortheday=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -699,6 +707,10 @@ both)
 	echo "unrecognized summary option"
 ;;
 esac
+
+# create placeholder seedfortheday file
+
+touch "$TMPDIR$uuid/wiki/seedfortheday.md"
 
 if [ "$add_this_content" = "none" ] ; then
 	echo "no added content"
