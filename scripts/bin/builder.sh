@@ -1025,6 +1025,7 @@ draft-report)
 	echo "assembling parts needed for $booktype"
   . includes/draft-report.sh
 	"$PANDOC_BIN" -o "$TMPDIR$uuid/draft-report-$safe_product_name.docx"   "$TMPDIR"$uuid/draft-report.md
+	"$PANDOC_BIN" -t mediawiki -o "$TMPDIR$uuid/draft-report-$safe_product_name.mw"   "$TMPDIR"$uuid/draft-report.md
 	cp "$TMPDIR$uuid/draft-report.md" "$TMPDIR$uuid/complete.md"
 	# note that draft-report does not get SKU because it is not a completed product
   ;;
