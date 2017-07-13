@@ -52,6 +52,7 @@ install_dependencies_mac(){
 brew install calibre
 brew install fdupes
 brew install imagemagick
+brew cask install java
 brew install mysql-client
 brew install pandoc
 brew install pdfgrep
@@ -62,6 +63,7 @@ brew cask install basictex
 # brew install of pdftk is problematic
 # see https://gist.github.com/jvenator/9672772a631c117da151
 brew install https://raw.githubusercontent.com/turforlag/homebrew-cervezas/master/pdftk.rb
+brew install wget # needed for Mac for install - replace with curl?
 brew install xmlstarlet
 
 brew tap caskroom/fonts
@@ -99,6 +101,8 @@ xmlstarlet
 
 cd ~/pagekicker-community
 sudo pip install -r requirements.txt
+
+# failing for Mac:
 sudo pip3 install -r requirements.txt
 
 # create local-data hierarchy
