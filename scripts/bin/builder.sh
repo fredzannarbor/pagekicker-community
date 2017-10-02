@@ -2,6 +2,8 @@
 
 # accepts book topic and book type definition, then builds book
 
+
+
 loguuid=$(python  -c 'import uuid; print(uuid.uuid1())')
 
 mkdir /tmp/pagekicker/"$loguuid"
@@ -451,6 +453,8 @@ shift
 
 esac
 done
+echo "loaded options"
+
 
 echo "LOCAL_DATA is $LOCAL_DATA"
 
