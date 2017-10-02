@@ -1,10 +1,18 @@
 for file in "$TMPDIR$uuid/xtarget."*
 do
-		"$PYTHON27_BIN" $scriptpath"bin/nerv3.py" $file $file"_nouns.txt" "$uuid"
-		echo "ran nerv3 on $file"
-		cat "$TMPDIR$uuid"/Places >> "$TMPDIR"$uuid"/"$sku"."$safe_product_name"_Places"
-	  cat "$TMPDIR$uuid"/People >>  "$TMPDIR"$uuid"/"$sku"."$safe_product_name"_People"
-	  cat "$TMPDIR$uuid"/Other >>  "$TMPDIR"$uuid"/"$sku"."$safe_product_name"_Other"
+		#"$PYTHON_BIN" $scriptpath"bin/nerv3.py" $file $file"_nouns.txt" "$uuid"
+		cd "$NER_BIN" && java -mx600m -cp "*:lib/*" edu.stanford.nlp.ie.crf.CRFClassifier \
+		 -loadClassifier classifiers/english.all.3class.distsim.crf.ser.gz -textFile "$file" \
+		 -outputFormat tabbedEntities > "$file"_ner.tsv
+		echo "ran NER on $file"
+		cd "$scriptpath"
+
+    # parse file
+
+
+		#cat "$TMPDIR$uuid"/Places >> "$TMPDIR"$uuid"/"$sku"."$safe_product_name"_Places"
+	  #cat "$TMPDIR$uuid"/People >>  "$TMPDIR"$uuid"/"$sku"."$safe_product_name"_People"
+	  #cat "$TMPDIR$uuid"/Other >>  "$TMPDIR"$uuid"/"$sku"."$safe_product_name"_Other"
 
 		echo -n "python_bin for running PKsum is" $PYTHON_BIN "and PYTHON_BIN actually is "
 		"$PYTHON_BIN" --version
