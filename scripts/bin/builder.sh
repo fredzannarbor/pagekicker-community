@@ -624,8 +624,9 @@ else
 		echo "$analyze_url is valid URI"
 		echo "analyze_url is set as $analyze_url"
 		"$PANDOC_BIN" -s -r html "$analyze_url" -o  "$TMPDIR"$uuid"/webpage.md"
-		"$PYTHON27_BIN" bin/nerv3.py  "$TMPDIR"$uuid"/webpage.md"  "$TMPDIR"$uuid"/webseeds" "$uuid"
-		echo "seeds have been extracted from analyze_url"
+		#"$PYTHON27_BIN" bin/nerv3.py  "$TMPDIR"$uuid"/webpage.md"  "$TMPDIR"$uuid"/webseeds" "$uuid"
+		cd "$NER_BIN" && java -mx600m -cp "*:lib/*" edu.stanford.nlp.ie.crf.CRFClassifier -loadClassifier classifiers/english.all.3class.distsim.crf.ser.gz -textFile "$TMPDIR"$uuid"/webpage.md" -outputFormat tabbedEntities > "$TMPDIR"$uuid"/webseeds"
+		cd $scriptpath && echo "seeds have been extracted from analyze_url"
 		head -n "$top_q"  "$TMPDIR"$uuid"/webseeds" | sed '/^\s*$/d' >  "$TMPDIR"$uuid"/webseeds.top_q"
 		cat  "$TMPDIR"$uuid"/webseeds.top_q" >  "$TMPDIR"$uuid"/webseeds"
 		comm -2 -3 <(sort  "$TMPDIR"$uuid"/webseeds") <(sort "locale/stopwords/webstopwords.en") >>  "$TMPDIR"$uuid/seeds/seedphrases
@@ -981,7 +982,9 @@ cat $TMPDIR$uuid/wiki/wikisources.md >> $TMPDIR$uuid/sources.md
 			echo "" >> "$TMPDIR"$uuid"/analyzed_webpage.md"
 			echo "" >> "$TMPDIR"$uuid"analyzed_webpage.md"
 			"$PANDOC_BIN" -s -r html "$analyze_url" -o  "$TMPDIR"$uuid"/analyzed_webpage.md"
-			"$PYTHON_BIN" bin/nerv3.py  "$TMPDIR"$uuid"/analyzed_webpage.md"  "$TMPDIR"$uuid"/analyzed_webseeds" "$uuid"
+			#"$PYTHON_BIN" bin/nerv3.py  "$TMPDIR"$uuid"/analyzed_webpage.md"  "$TMPDIR"$uuid"/analyzed_webseeds" "$uuid"
+			cd "$NER_BIN" && java -mx600m -cp "*:lib/*" edu.stanford.nlp.ie.crf.CRFClassifier -loadClassifier classifiers/english.all.3class.distsim.crf.ser.gz -textFile "$TMPDIR"$uuid"/webpage.md" -outputFormat tabbedEntities > "$TMPDIR"$uuid"/webseeds"
+			cd ""$scriptpath"
 			echo "# Webpage Analysis" >>  "$TMPDIR"$uuid/analyzed_webpage.md
 			echo "I analyzed this webpage $url. I found the following keywords on the page."  >> "$TMPDIR"$uuid/analyzed_webpage.md"
 			comm -2 -3 <(sort  "$TMPDIR"$uuid"/analyzed_webseeds") <(sort $scriptpath"locale/stopwords/webstopwords."$wikilang) >>  "$TMPDIR"$uuid"/analyzed_webpage.md
