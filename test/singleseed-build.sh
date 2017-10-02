@@ -16,14 +16,13 @@ fi
 if [ ! "$passuuid" ] ; then
 	echo "creating uuid"
 	uuid=$("$PYTHON_BIN"  -c 'import uuid; print(uuid.uuid1())')
-	echo "uuid is" $uuid | tee --append $xform_log
+	echo "uuid is" $uuid 
 	mkdir -p -m 777 $TMPDIR$uuid
 else
 	uuid=$passuuid
 	echo "received uuid " $uuid
 	mkdir -p -m 777 $TMPDIR$uuid
 fi
-
 
 $scriptpath"bin/builder.sh" --singleseed "$1"
 # tests begin here
