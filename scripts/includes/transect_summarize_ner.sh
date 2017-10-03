@@ -5,20 +5,25 @@ do
 		 -loadClassifier classifiers/english.all.3class.distsim.crf.ser.gz -textFile "$file" \
 		 -outputFormat tabbedEntities > "$file"_ner.tsv
 		echo "ran NER on $file"
-		cd "$scriptpath"
+
 
     # parse file
 
+		grep "LOCATION" "$file"_ner.tsv | cut -f1 | sort -u  >> "$TMPDIR$uuid"/Places
+		grep "PERSON" "$file"_ner.tsv | cut -f1 | sort -u  >> "$TMPDIR$uuid"/People
+		grep "ORGANIZATION" "$file"_ner.tsv  | cut -f1 | sort -u  >> "$TMPDIR$uuid"/Other
+	  cd "$scriptpath"
 
-		#cat "$TMPDIR$uuid"/Places >> "$TMPDIR"$uuid"/"$sku"."$safe_product_name"_Places"
-	  #cat "$TMPDIR$uuid"/People >>  "$TMPDIR"$uuid"/"$sku"."$safe_product_name"_People"
-	  #cat "$TMPDIR$uuid"/Other >>  "$TMPDIR"$uuid"/"$sku"."$safe_product_name"_Other"
+		cat "$TMPDIR$uuid"/Places >> "$TMPDIR"$uuid"/"$sku"."$safe_product_name"_Places"
+	  cat "$TMPDIR$uuid"/People >>  "$TMPDIR"$uuid"/"$sku"."$safe_product_name"_People"
+	  cat "$TMPDIR$uuid"/Other >>  "$TMPDIR"$uuid"/"$sku"."$safe_product_name"_Other"
 
 		echo -n "python_bin for running PKsum is" $PYTHON_BIN "and PYTHON_BIN actually is "
 		"$PYTHON_BIN" --version
 
 		"$PYTHON_BIN" bin/PKsum-clean.py -l "$summary_length" -o $file"_summary.txt" $file
-		sed -i 's/ \+ / /g' $file"_summary.txt"
+		sed -i '' 's/ \+ / /g' $file"_summary.txt"
+
 		cp $file"_summary.txt" $file"_pp_summary.txt"
 		echo "ran summarizer on $file"
 		awk 'length>=50' $file"_pp_summary.txt" >  "$TMPDIR"$uuid/awk.tmp && mv  "$TMPDIR"$uuid/awk.tmp $file"_pp_summary.txt"
