@@ -2,8 +2,6 @@
 
 # accepts book topic and book type definition, then builds book
 
-
-
 loguuid=$(python  -c 'import uuid; print(uuid.uuid1())')
 
 mkdir /tmp/pagekicker/"$loguuid"
@@ -568,6 +566,7 @@ else
 	  echo "path to seedfile was $seedfile"
 		cp $seedfile "$TMPDIR$uuid/seeds/seedphrases"
 fi
+echo "seedfile is $seedfile"
 
 if [ -z "$booktitle" ] ; then
 	echo "no booktitle provided by operator"
@@ -624,8 +623,9 @@ else
 		echo "$analyze_url is valid URI"
 		echo "analyze_url is set as $analyze_url"
 		"$PANDOC_BIN" -s -r html "$analyze_url" -o  "$TMPDIR"$uuid"/webpage.md"
-		"$PYTHON27_BIN" bin/nerv3.py  "$TMPDIR"$uuid"/webpage.md"  "$TMPDIR"$uuid"/webseeds" "$uuid"
-		echo "seeds have been extracted from analyze_url"
+		#"$PYTHON27_BIN" bin/nerv3.py  "$TMPDIR"$uuid"/webpage.md"  "$TMPDIR"$uuid"/webseeds" "$uuid"
+		cd "$NER_BIN" && java -mx600m -cp "*:lib/*" edu.stanford.nlp.ie.crf.CRFClassifier -loadClassifier classifiers/english.all.3class.distsim.crf.ser.gz -textFile "$TMPDIR"$uuid"/webpage.md" -outputFormat tabbedEntities > "$TMPDIR"$uuid"/webseeds"
+		cd $scriptpath && echo "seeds have been extracted from analyze_url"
 		head -n "$top_q"  "$TMPDIR"$uuid"/webseeds" | sed '/^\s*$/d' >  "$TMPDIR"$uuid"/webseeds.top_q"
 		cat  "$TMPDIR"$uuid"/webseeds.top_q" >  "$TMPDIR"$uuid"/webseeds"
 		comm -2 -3 <(sort  "$TMPDIR"$uuid"/webseeds") <(sort "locale/stopwords/webstopwords.en") >>  "$TMPDIR"$uuid/seeds/seedphrases
@@ -756,6 +756,7 @@ if [ -n "$content_collections" ] ; then
 else
 	echo "not searching content collections"
 	touch "$TMPDIR$uuid/content_collections/content-collections-results.md"
+	touch "$TMPDIR"$uuid/content_collections/content_sources.md
 fi
 
 cat "$TMPDIR$uuid/content_collections/content-collections-results.md" >> "$TMPDIR$uuid/wiki/wiki4cloud.md"
@@ -829,23 +830,24 @@ pandoc -S -o "$TMPDIR"$uuid/targetfile.txt -t plain -f markdown "$TMPDIR"$uuid/t
 
 . includes/transect_summarize_ner.sh
 
-
+   echo "after transect"
 # clean up both unprocessed and postprocessed summary text
 
   cp "$TMPDIR$uuid/pp_summary.txt" "$TMPDIR$uuid/clean_summary.txt"
-	sed -i '1i # Programmatically Generated Summary \'  "$TMPDIR"$uuid/pp_summary.txt
-	sed -i G  "$TMPDIR"$uuid/pp_summary.txt
-	sed -i '1i # Programmatically Generated Summary \'  "$TMPDIR"$uuid/summary.txt
-	sed -i G  "$TMPDIR"$uuid/summary.txt
-
-	sed -n 3p $TMPDIR$uuid/pp_summary.txt > $TMPDIR$uuid/pp_summary_all.txt # for tldr
-	echo '\pagenumbering{gobble}' > $TMPDIR$uuid/pp_summary_sky.txt
+	#sed -i '' '1i # Programmatically Generated Summary \'  "$TMPDIR"$uuid/pp_summary.txt
+	sed -i '' G  "$TMPDIR"$uuid/pp_summary.txt
+	# sed -i '' '1i # Programmatically Generated Summary \'  "$TMPDIR"$uuid/summary.txt
+	sed -i '' G  "$TMPDIR"$uuid/summary.txt
+  echo
+	sed -n 3p "$TMPDIR"$uuid/pp_summary.txt > "$TMPDIR"$uuid/pp_summary_all.txt # for tldr
+	echo '\pagenumbering{gobble}' > "$TMPDIR"$uuid/pp_summary_sky.txt
 	#echo "  " >>  $TMPDIR$uuid/pp_summary_sky.txt
 	#echo '\pagecolor{yellow!30}' >> $TMPDIR$uuid/pp_summary_sky.txt
-	echo "  "  >> $TMPDIR$uuid/pp_summary_sky.txt
-  sed -n 1,35p $TMPDIR$uuid/pp_summary.txt >> $TMPDIR$uuid/pp_summary_sky.txt # for skyscraper
-  cp $TMPDIR$uuid/pp_summary_sky.txt $TMPDIR$uuid/pp_summary_sky.md
+	echo "  "  >> "$TMPDIR"$uuid/pp_summary_sky.txt
+  sed -n 1,35p "$TMPDIR"$uuid/pp_summary.txt >> "$TMPDIR"$uuid/pp_summary_sky.txt # for skyscraper
+  cp "$TMPDIR"$uuid/pp_summary_sky.txt $TMPDIR$uuid/pp_summary_sky.md
 
+   echo "after sed block"
 	# throw away unpreprocessed summary text if zero size
 
 	if [ `wc -c <  "$TMPDIR"$uuid/pp_summary.txt` = "0" ] ; then
@@ -890,14 +892,14 @@ cat $TMPDIR$uuid/acronyms.md >> $TMPDIR$uuid/tmpacronyms.md
 cp $TMPDIR$uuid/tmpacronyms.md $TMPDIR$uuid/acronyms.md
 
 # Unique nouns
-
-ls  "$TMPDIR"$uuid/xtarget.*nouns* >  "$TMPDIR"$uuid/testnouns
-cat  "$TMPDIR"$uuid/xtarget.*nouns* >  "$TMPDIR"$uuid/all_nouns.txt
+cat "$TMPDIR"$uuid/Places "$TMPDIR"$uuid/People "$TMPDIR"$uuid/Other > "$TMPDIR"$uuid/all_nouns.txt
+#ls  "$TMPDIR"$uuid/xtarget.*nouns* >  "$TMPDIR"$uuid/testnouns
+# cat  "$TMPDIR"$uuid/xtarget.*nouns* >  "$TMPDIR"$uuid/all_nouns.txt
 
 sort --ignore-case  "$TMPDIR"$uuid/all_nouns.txt | sed 's/^#/[hashtag]/g' | uniq >  "$TMPDIR"$uuid/sorted_uniqs.txt
-sed -i '1i # Unique Proper Nouns and Key Terms'  "$TMPDIR"$uuid/sorted_uniqs.txt
-sed -i '1i \'  "$TMPDIR"$uuid/sorted_uniqs.txt
-sed -i G  "$TMPDIR"$uuid/sorted_uniqs.txt
+sed '1s/^/Unique Proper Nouns and Key terms/' "$TMPDIR"$uuid/sorted_uniqs.txt > $TMPDIR$uuid/tmpuniqs.txt
+cp "$TMPDIR"$uuid/tmpuniqs.txt "$TMPDIR"$uuid/sorted_uniqs.txt
+sed -i '' G  "$TMPDIR"$uuid/sorted_uniqs.txt
 echo '\pagenumbering{gobble}' > $TMPDIR$uuid/sorted_uniqs_sky.txt
 echo "  " >> $TMPDIR$uuid/sorted_uniqs_sky.txt
 sed -n 1,25p $TMPDIR$uuid/sorted_uniqs.txt >> $TMPDIR$uuid/sorted_uniqs_sky.txt
@@ -950,8 +952,8 @@ fi
 	done < "$TMPDIR$uuid/seeds/filtered.pagehits"
 	# pipe other sources in here, either apppend with ## second-level heading or sort -u
 
-cat "$TMPDIR$uuid/content_collections/content_sources.md" >> $TMPDIR$uuid/sources.md
-cat $TMPDIR$uuid/wiki/wikisources.md >> $TMPDIR$uuid/sources.md
+  cat "$TMPDIR"$uuid/content_collections/content_sources.md >> "$TMPDIR"$uuid/sources.md
+  cat "$TMPDIR"$uuid/wiki/wikisources.md >> "$TMPDIR"$uuid/sources.md
 
  	cat includes/wikilicense.md >> "$TMPDIR/$uuid/sources.md"
 	echo "" >> "$TMPDIR$uuid/sources.md"
@@ -963,6 +965,7 @@ cat $TMPDIR$uuid/wiki/wikisources.md >> $TMPDIR$uuid/sources.md
 	echo " ">>  "$TMPDIR"$uuid/builtby.md
 	echo " " >>  "$TMPDIR"$uuid/builtby.md
 
+echo "starting imprint biblio"
 
 	if [ "add_imprint_biblio" = "yes" ] ; then
 			echo "# Also from $imprintname" >>   "$TMPDIR"$uuid/byimprint.md
@@ -975,21 +978,26 @@ cat $TMPDIR$uuid/wiki/wikisources.md >> $TMPDIR$uuid/sources.md
 			# commenting out imprint bibliography because data is too messy right now
   fi
 
-		if [ -z  ${url+x} ] ; then
-			 touch "$TMPDIR"$uuid"/analyzed_webpage.md"
-		else
-			echo "" >> "$TMPDIR"$uuid"/analyzed_webpage.md"
-			echo "" >> "$TMPDIR"$uuid"analyzed_webpage.md"
-			"$PANDOC_BIN" -s -r html "$analyze_url" -o  "$TMPDIR"$uuid"/analyzed_webpage.md"
-			"$PYTHON_BIN" bin/nerv3.py  "$TMPDIR"$uuid"/analyzed_webpage.md"  "$TMPDIR"$uuid"/analyzed_webseeds" "$uuid"
-			echo "# Webpage Analysis" >>  "$TMPDIR"$uuid/analyzed_webpage.md
-			echo "I analyzed this webpage $url. I found the following keywords on the page."  >> "$TMPDIR"$uuid/analyzed_webpage.md"
-			comm -2 -3 <(sort  "$TMPDIR"$uuid"/analyzed_webseeds") <(sort $scriptpath"locale/stopwords/webstopwords."$wikilang) >>  "$TMPDIR"$uuid"/analyzed_webpage.md
-			echo "" >> "$TMPDIR"$uuid"/analyzed_webpage.md"
-			echo "" >> "$TMPDIR"$uuid"/analyzed_webpage.md"
-		fi
+echo "starting web page analyzer"
+		# if [ -z  ${url+x} ] ; then
+		# 	 touch "$TMPDIR"$uuid"/analyzed_webpage.md"
+		# 	 echo "no web page analyzed"
+		# else
+		# 	echo "" >> "$TMPDIR"$uuid"/analyzed_webpage.md"
+		# 	echo "" >> "$TMPDIR"$uuid/"analyzed_webpage.md"
+		# 	"$PANDOC_BIN" -s -r html "$analyze_url" -o  "$TMPDIR"$uuid"/analyzed_webpage.md"
+		# 	#"$PYTHON_BIN" bin/nerv3.py  "$TMPDIR"$uuid"/analyzed_webpage.md"  "$TMPDIR"$uuid"/analyzed_webseeds" "$uuid"
+		# 	cd "$NER_BIN" && java -mx600m -cp "*:lib/*" edu.stanford.nlp.ie.crf.CRFClassifier -loadClassifier classifiers/english.all.3class.distsim.crf.ser.gz -textFile "$TMPDIR"$uuid"/webpage.md" -outputFormat tabbedEntities > "$TMPDIR"$uuid"/webseeds"
+		# 	cd ""$scriptpath"
+		# 	echo "# Webpage Analysis" >>  "$TMPDIR"$uuid/analyzed_webpage.md
+		# 	echo "I analyzed this webpage $url. I found the following keywords on the page."  >> "$TMPDIR"$uuid/analyzed_webpage.md"
+		# 	comm -2 -3 <(sort  "$TMPDIR"$uuid"/analyzed_webseeds") <(sort $scriptpath"locale/stopwords/webstopwords."$wikilang) >>  "$TMPDIR"$uuid"/analyzed_webpage.md
+		# 	echo "" >> "$TMPDIR"$uuid"/analyzed_webpage.md"
+		# 	echo "" >> "$TMPDIR"$uuid"/analyzed_webpage.md"
+		# fi
 
 	touch "$TMPDIR"$uuid/imprint_mission_statement.md
+	echo "imprint is $imprint"
 	cat $confdir"jobprofiles/imprints/$imprint/""$imprint_mission_statement" >> "$TMPDIR"$uuid"/imprint_mission_statement.md"
 	echo '!['"$imprintname"']'"(""$imprintlogo"")" >>  "$TMPDIR"$uuid/imprint_mission_statement.md
 	echo "built back matter"
@@ -1011,11 +1019,11 @@ safe_product_name=$(echo "$booktitle" | sed -e 's/[^A-Za-z0-9._-]/_/g')
 bibliography_title=$(echo "$booktitle" | sed -e 's/[^A-Za-z0-9 :;,.?]//g')
 
 #always builds all partsofthebook
-
+echo "starting parts of the book assembler"
 . includes/partsofthebook.sh
 
 # always builds cover
-
+echo "starting cover builder"
 . includes/builder-cover.sh
 
 # sometimes build additional booktypes
@@ -1184,17 +1192,14 @@ else
         cp  "$TMPDIR"$uuid/seeds/filtered.pagehits "$TMPDIR"$batch_uuid/$sku.$safe_product_name"_filtered.pagehits"
         #ls -l "$TMPDIR""$batch_uuid"/* # debug
 fi
-
+echo "seedfile is $seedfile"
 
 if [ "$dontcleanupseeds" = "yes" ]; then
 	echo "leaving seed file in place $seedfile"
+	# default is "yes" in includes/set-variables
 else
-	if [ -v "$seedfile" ] ; then
-		echo "removing seedfile"
-		rm "$seedfile"
-	else
-		echo "no seedfile to remove"
-	fi
+  echo "cleaning up seed file [deprecated, for use with Magento script tool]"
+	rm "$seedfile"
 fi
 
 # increment sku
