@@ -14,7 +14,7 @@ fi
 . includes/set-variables.sh
 
 if [ ! "$passuuid" ] ; then
-	#echo "creating uuid"
+	echo "creating uuid"
 	uuid=$("$PYTHON_BIN"  -c 'import uuid; print(uuid.uuid1())')
 	#echo "uuid is" $uuid | tee --append $xform_log
 	mkdir -p -m 777 $TMPDIR$uuid
@@ -25,7 +25,7 @@ else
 fi
 
 
-$scriptpath"bin/builder.sh" --singleseed "$1"
+$scriptpath"bin/builder.sh" --singleseed "Paella"
 # tests begin here
 
 if [ ! -f "$TMPDIR$uuid/ebookcover.jpg" ]; then
