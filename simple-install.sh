@@ -27,7 +27,6 @@ cp ~/pagekicker-community/conf/config_defaults.txt "$HOME"/.pagekicker/config.tx
 # installs mac dependencies
 
 install_dependencies_mac(){
-    print_step "Installing 21 and its dependencies on your Mac..."
     if ! program_exists "brew"; then
         # from brew.sh
         print_step "Installing brew..."
