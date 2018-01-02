@@ -1196,7 +1196,9 @@ echo "seedfile is $seedfile"
 
 if [ "$dontcleanupseeds" = "yes" ]; then
 	echo "leaving seed file in place $seedfile"
+	# default is "yes" in includes/set-variables
 else
+  echo "cleaning up seed file [deprecated, for use with Magento script tool]"
 	rm "$seedfile"
 fi
 
