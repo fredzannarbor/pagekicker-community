@@ -40,6 +40,7 @@ scripts/lib/tika-app.jar
 scripts/lib/wikiquote-fortune/
 scripts/lib/xml2csv-conv.bat
 scripts/lib/xml2csv-conv.jar
+scripts/lib/stanford*
 #*wapack*
 conf/partsofthebook/Appendix_E_AGuideToWritingAnEffectiveExecutiveSummary.pdf
 conf/partsofthebook/USN_GuideToWritingAnEffectiveExecutiveSummaryp4-5.pdf
@@ -49,3 +50,4 @@ scripts/voice/chatbot_scenario1.jpg
 scripts/voice/chatbot_scenario2.jpg
 doc/booktype_creation.html
 doc/booktype_creation.pdf
+.DS_Store

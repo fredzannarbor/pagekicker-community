@@ -26,10 +26,10 @@ else
 	cp "$stopfile" "$scriptpath""lib/IBMcloud/examples/pk-stopwords.txt"
 fi
 
+# wordcloud is retired
+#	"$JAVA_BIN" -jar $scriptpath"lib/IBMcloud/ibm-word-cloud.jar" -c $scriptpath"lib/IBMcloud/examples/configuration.txt" -w "1800" -h "1800" <  "$TMPDIR"$uuid/wiki/wiki4cloud.md >  "$TMPDIR"$uuid/cover/wordcloudcover.png 2> /dev/null
 
-	"$JAVA_BIN" -jar $scriptpath"lib/IBMcloud/ibm-word-cloud.jar" -c $scriptpath"lib/IBMcloud/examples/configuration.txt" -w "1800" -h "1800" <  "$TMPDIR"$uuid/wiki/wiki4cloud.md >  "$TMPDIR"$uuid/cover/wordcloudcover.png 2> /dev/null
-
-
+# convert -size 1800x2400 "$TMPDIR"$uuid/cover/wordcloudcover.png
 
 #copying old stopfile backup  to overwrite rotated stopfile
 
@@ -74,11 +74,10 @@ convert -size 1800x200 xc:$covercolor   "$TMPDIR"$uuid/cover/bottomlabel.png
 
 # underlay canvas
 
-composite -gravity Center  "$TMPDIR"$uuid/cover/wordcloudcover.png   "$TMPDIR"$uuid/cover/canvas.png  "$TMPDIR"$uuid/cover/canvas.png
 
 # build top label
 
-convert -background "$covercolor" -fill "$coverfontcolor" -gravity center -size 1800x400 -font "$coverfont" caption:"$booktitle"  "$TMPDIR"$uuid/cover/topcanvas.png +swap -gravity center -composite  "$TMPDIR"$uuid/cover/toplabel.png
+convert -background "$covercolor" -fill "$coverfontcolor" -gravity center -size 1800x2400 -font "$coverfont" caption:"$booktitle"  "$TMPDIR"$uuid/cover/topcanvas.png +swap -gravity center -composite  "$TMPDIR"$uuid/cover/toplabel.png
 
 #build bottom label
 
@@ -100,7 +99,7 @@ convert  "$TMPDIR"$uuid/cover/"$imprintlogo" -resize x200  "$TMPDIR"$uuid/cover/
 
 # lay the labels on top of the target canvas
 
-composite -geometry +0+0  "$TMPDIR"$uuid/cover/toplabel.png  "$TMPDIR"$uuid/cover/canvas.png  "$TMPDIR"$uuid/cover/step1.png
+composite -gravity center "$TMPDIR"$uuid/cover/toplabel.png  "$TMPDIR"$uuid/cover/canvas.png  "$TMPDIR"$uuid/cover/step1.png
 composite  -geometry +0+1800  "$TMPDIR"$uuid/cover/bottomlabel.png  "$TMPDIR"$uuid/cover/step1.png  "$TMPDIR"$uuid/cover/step2.png
 composite  -gravity south -geometry +0+0  "$TMPDIR"$uuid/cover/"$imprintlogo"  "$TMPDIR"$uuid/cover/step2.png  "$TMPDIR"$uuid/cover/cover.png
 convert "$TMPDIR$uuid/cover/cover.png" -border 36 -bordercolor white  "$TMPDIR$uuid/cover/bordercover.png"
