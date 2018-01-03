@@ -27,7 +27,6 @@ cp ~/pagekicker-community/conf/config_defaults.txt "$HOME"/.pagekicker/config.tx
 # installs mac dependencies
 
 install_dependencies_mac(){
-    print_step "Installing 21 and its dependencies on your Mac..."
     if ! program_exists "brew"; then
         # from brew.sh
         print_step "Installing brew..."
@@ -125,6 +124,8 @@ mkdir KindleGen
 cd KindleGen
 wget http://kindlegen.s3.amazonaws.com/kindlegen_linux_2.6_i386_v2_9.tar.gz
 tar -xvf kindlegen_linux_2.6_i386_v2_9.tar.gz
+wget https://nlp.stanford.edu/software/stanford-ner-2017-06-09.zip
+unzip stanford-ner-2017-06-09.zip
 
 # fix hard-coded IBMcloud configuration file
 
