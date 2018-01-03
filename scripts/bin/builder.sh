@@ -1106,6 +1106,11 @@ echo "checking that buildtarget exists"
 
 esac
 
+cp "$TMPDIR"$uuid/$sku"."$safe_product_name".txt" "$HOSTDIR"
+cp "$TMPDIR"$uuid/$sku.$safe_product_name".epub" "$HOSTDIR"
+cp "$TMPDIR"$uuid/$sku.$safe_product_name".docx" "$HOSTDIR"
+
+
 if [ "$two1" = "yes" ] ; then
 	echo "moving files so 21 script does not need to know uuid"
 	cp "$TMPDIR"$uuid/$sku"."$safe_product_name".txt" "$TMPDIR"4stdout".txt"
