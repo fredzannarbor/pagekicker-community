@@ -16,7 +16,7 @@ echo "creating executive summary"
 echo By "$editedby" >> "$TMPDIR$uuid/titletop.md"
 echo " " >> "$TMPDIR$uuid/titletop.md"
 
-echo "# EXECUTIVE SUMMARY" >> "$TMPDIR$uuid/executive_summary.md"
+echo "# Candidate Sentences for Executive Summary" >> "$TMPDIR$uuid/executive_summary.md"
 echo "  " >> "$TMPDIR$uuid/executive_summary.md"
 cat "$TMPDIR$uuid/exec_summary.txt" >> "$TMPDIR$uuid/executive_summary.md"
 
