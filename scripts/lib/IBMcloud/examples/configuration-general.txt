@@ -227,7 +227,7 @@ stopwords: English
 # indicate the speaker
 
 
-# USER MUST CUSTOMIZE THIS PATH
+# USER MUST CUSTOMIZE THIS PATH AND SAVE AS ./configuration.txt
 
 #stopwordsfile: /home/[USER]/pagekicker-community/scripts/lib/IBMcloud/examples/pk-stopwords.txt
 
