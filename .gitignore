@@ -51,3 +51,4 @@ scripts/voice/chatbot_scenario2.jpg
 doc/booktype_creation.html
 doc/booktype_creation.pdf
 .DS_Store
+scripts/lib/IBMCloud/examples/configuration.txt
