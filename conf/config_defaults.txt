@@ -48,4 +48,4 @@ sfb_log=$logdir"sfb_log.txt"
 xformlog=$logdir$uuid"/xformlog.txt"
 todaysarchivefolder=$(date +"%Y%m%d")
 sfb_log_archive=$LOCAL_DATA"logs/sfb_log_archive.log"
-NER_DIR="$scriptpath/lib/stanford-ner-2017-06-09"
+NER_BIN="$scriptpath/lib/stanford-ner-2018-02-27"

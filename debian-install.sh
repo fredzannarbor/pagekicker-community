@@ -75,8 +75,9 @@ mkdir KindleGen
 cd KindleGen
 wget http://kindlegen.s3.amazonaws.com/kindlegen_linux_2.6_i386_v2_9.tar.gz
 tar -xvf kindlegen_linux_2.6_i386_v2_9.tar.gz
-wget https://nlp.stanford.edu/software/stanford-ner-2017-06-09.zip
-unzip stanford-ner-2017-06-09.zip
+cd ..
+wget https://nlp.stanford.edu/software/stanford-ner-2018-02-27.zip
+unzip https://nlp.stanford.edu/software/stanford-ner-2018-02-27.zip
 
 # fix hard-coded IBMcloud configuration file
 
@@ -90,5 +91,5 @@ cd ~/pagekicker-community
 echo "changed directory successfully"
 cp conf/colors.xml ~/.magick/colors.xml
 cat conf/imagemagick-fonts.pl > ~/.magick/fonts.xml
-sleep 5
+sleep 2
 echo "install script finished running"
