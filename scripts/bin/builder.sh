@@ -826,23 +826,22 @@ pandoc -S -o "$TMPDIR"$uuid/targetfile.txt -t plain -f markdown "$TMPDIR"$uuid/t
 
 #split into chunks that can be handled in memory
 
-	split -C 50K  "$TMPDIR"$uuid/targetfile.txt "$TMPDIR"$uuid"/xtarget."
+split -C 50K  "$TMPDIR"$uuid/targetfile.txt "$TMPDIR"$uuid"/xtarget."
 
 . includes/transect_summarize_ner.sh
 
-   echo "after transect"
+echo "after transect"
 # clean up both unprocessed and postprocessed summary text
 
   cp "$TMPDIR$uuid/pp_summary.txt" "$TMPDIR$uuid/clean_summary.txt"
-	#sed -i '' '1i # Programmatically Generated Summary \'  "$TMPDIR"$uuid/pp_summary.txt
-	sed -i '' G  "$TMPDIR"$uuid/pp_summary.txt
-	# sed -i '' '1i # Programmatically Generated Summary \'  "$TMPDIR"$uuid/summary.txt
-	sed -i '' G  "$TMPDIR"$uuid/summary.txt
+
+	sed -i G  "$TMPDIR"$uuid/pp_summary.txt
+
+	sed -i G  "$TMPDIR"$uuid/summary.txt
   echo
 	sed -n 3p "$TMPDIR"$uuid/pp_summary.txt > "$TMPDIR"$uuid/pp_summary_all.txt # for tldr
 	echo '\pagenumbering{gobble}' > "$TMPDIR"$uuid/pp_summary_sky.txt
-	#echo "  " >>  $TMPDIR$uuid/pp_summary_sky.txt
-	#echo '\pagecolor{yellow!30}' >> $TMPDIR$uuid/pp_summary_sky.txt
+
 	echo "  "  >> "$TMPDIR"$uuid/pp_summary_sky.txt
   sed -n 1,35p "$TMPDIR"$uuid/pp_summary.txt >> "$TMPDIR"$uuid/pp_summary_sky.txt # for skyscraper
   cp "$TMPDIR"$uuid/pp_summary_sky.txt $TMPDIR$uuid/pp_summary_sky.md
@@ -897,9 +896,9 @@ cat "$TMPDIR"$uuid/Places "$TMPDIR"$uuid/People "$TMPDIR"$uuid/Other > "$TMPDIR"
 # cat  "$TMPDIR"$uuid/xtarget.*nouns* >  "$TMPDIR"$uuid/all_nouns.txt
 
 sort --ignore-case  "$TMPDIR"$uuid/all_nouns.txt | sed 's/^#/[hashtag]/g' | uniq >  "$TMPDIR"$uuid/sorted_uniqs.txt
-sed '1s/^/Unique Proper Nouns and Key terms/' "$TMPDIR"$uuid/sorted_uniqs.txt > $TMPDIR$uuid/tmpuniqs.txt
+sed '1s/^/# Unique Proper Nouns and Key terms\n/' "$TMPDIR"$uuid/sorted_uniqs.txt > $TMPDIR$uuid/tmpuniqs.txt
 cp "$TMPDIR"$uuid/tmpuniqs.txt "$TMPDIR"$uuid/sorted_uniqs.txt
-sed -i '' G  "$TMPDIR"$uuid/sorted_uniqs.txt
+sed -i G  "$TMPDIR"$uuid/sorted_uniqs.txt
 echo '\pagenumbering{gobble}' > $TMPDIR$uuid/sorted_uniqs_sky.txt
 echo "  " >> $TMPDIR$uuid/sorted_uniqs_sky.txt
 sed -n 1,25p $TMPDIR$uuid/sorted_uniqs.txt >> $TMPDIR$uuid/sorted_uniqs_sky.txt
@@ -1117,11 +1116,6 @@ echo "checking that buildtarget exists"
 *)
 
 esac
-
-cp "$TMPDIR"$uuid/$sku"."$safe_product_name".txt" "$HOSTDIR"
-cp "$TMPDIR"$uuid/$sku.$safe_product_name".epub" "$HOSTDIR"
-cp "$TMPDIR"$uuid/$sku.$safe_product_name".docx" "$HOSTDIR"
-
 
 if [ "$two1" = "yes" ] ; then
 	echo "moving files so 21 script does not need to know uuid"
