@@ -22,7 +22,7 @@ do
 		"$PYTHON_BIN" --version
 
 		"$PYTHON_BIN" bin/PKsum-clean.py -l "$summary_length" -o $file"_summary.txt" $file
-		sed -i '' 's/ \+ / /g' $file"_summary.txt"
+		sed -i 's/ \+ / /g' $file"_summary.txt"
 
 		cp $file"_summary.txt" $file"_pp_summary.txt"
 		echo "ran summarizer on $file"

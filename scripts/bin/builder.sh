@@ -832,7 +832,6 @@ split -C 50K  "$TMPDIR"$uuid/targetfile.txt "$TMPDIR"$uuid"/xtarget."
 
 . includes/transect_summarize_ner.sh
 
-echo "after transect"
 # clean up both unprocessed and postprocessed summary text
 
   cp "$TMPDIR$uuid/pp_summary.txt" "$TMPDIR$uuid/clean_summary.txt"
@@ -848,7 +847,6 @@ echo "after transect"
   sed -n 1,35p "$TMPDIR"$uuid/pp_summary.txt >> "$TMPDIR"$uuid/pp_summary_sky.txt # for skyscraper
   cp "$TMPDIR"$uuid/pp_summary_sky.txt $TMPDIR$uuid/pp_summary_sky.md
 
-   echo "after sed block"
 	# throw away unpreprocessed summary text if zero size
 
 	if [ `wc -c <  "$TMPDIR"$uuid/pp_summary.txt` = "0" ] ; then
