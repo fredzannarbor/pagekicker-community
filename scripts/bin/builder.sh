@@ -616,6 +616,8 @@ cp $confdir"jobprofiles"/imprints/"$imprint"/"$imprintlogo"  "$TMPDIR""$uuid"
 cp $confdir"jobprofiles"/signatures/"$sigfile" "$TMPDIR""$uuid"
 cp $confdir"jobprofiles"/imprints/"$imprint"/"$imprintlogo" "$TMPDIR"$uuid"/cover"
 
+# extracts seeds from analyzed webpage
+
 if [ -z  ${analyze_url+x} ] ; then
 	echo "$analyze_url not set as analyze_url"
 else
@@ -750,16 +752,16 @@ fi
 cat "$TMPDIR$uuid/googler-news.md" >> "$TMPDIR$uuid/wiki/wiki4cloud.md"
 
 if [ -n "$content_collections" ] ; then
+	echo "content collections has value"
 	. includes/search-content-collections.sh
+	cat "$TMPDIR$uuid/content_collections/content_collections_results.md" >> "$TMPDIR$uuid/wiki/wiki4cloud.md"
 
 #	"$PYTHON_BIN" bin/PKsum-clean.py -l "$summary_length" -o "$TMPDIR$uuid/content_collections/summary.md" "$TMPDIR$uuid/content_collections/content_collections_results.md"
 else
 	echo "not searching content collections"
-	touch "$TMPDIR$uuid/content_collections/content-collections-results.md"
+	touch "$TMPDIR"$uuid/content_collections/content_collections_results.md
 	touch "$TMPDIR"$uuid/content_collections/content_sources.md
 fi
-
-cat "$TMPDIR$uuid/content_collections/content-collections-results.md" >> "$TMPDIR$uuid/wiki/wiki4cloud.md"
 
 echo "summary is" $summary  #summary should be on for cover building
 wikilocale="en" # hard code for testing
@@ -978,29 +980,33 @@ echo "starting imprint biblio"
 			# commenting out imprint bibliography because data is too messy right now
   fi
 
-echo "starting web page analyzer"
-		# if [ -z  ${url+x} ] ; then
-		# 	 touch "$TMPDIR"$uuid"/analyzed_webpage.md"
-		# 	 echo "no web page analyzed"
-		# else
-		# 	echo "" >> "$TMPDIR"$uuid"/analyzed_webpage.md"
-		# 	echo "" >> "$TMPDIR"$uuid/"analyzed_webpage.md"
-		# 	"$PANDOC_BIN" -s -r html "$analyze_url" -o  "$TMPDIR"$uuid"/analyzed_webpage.md"
-		# 	#"$PYTHON_BIN" bin/nerv3.py  "$TMPDIR"$uuid"/analyzed_webpage.md"  "$TMPDIR"$uuid"/analyzed_webseeds" "$uuid"
-		# 	cd "$NER_BIN" && java -mx600m -cp "*:lib/*" edu.stanford.nlp.ie.crf.CRFClassifier -loadClassifier classifiers/english.all.3class.distsim.crf.ser.gz -textFile "$TMPDIR"$uuid"/webpage.md" -outputFormat tabbedEntities > "$TMPDIR"$uuid"/webseeds"
-		# 	cd ""$scriptpath"
-		# 	echo "# Webpage Analysis" >>  "$TMPDIR"$uuid/analyzed_webpage.md
-		# 	echo "I analyzed this webpage $url. I found the following keywords on the page."  >> "$TMPDIR"$uuid/analyzed_webpage.md"
-		# 	comm -2 -3 <(sort  "$TMPDIR"$uuid"/analyzed_webseeds") <(sort $scriptpath"locale/stopwords/webstopwords."$wikilang) >>  "$TMPDIR"$uuid"/analyzed_webpage.md
-		# 	echo "" >> "$TMPDIR"$uuid"/analyzed_webpage.md"
-		# 	echo "" >> "$TMPDIR"$uuid"/analyzed_webpage.md"
-		# fi
+# builds analyzed webpage info for back matter"
 
-	touch "$TMPDIR"$uuid/imprint_mission_statement.md
-	echo "imprint is $imprint"
-	cat $confdir"jobprofiles/imprints/$imprint/""$imprint_mission_statement" >> "$TMPDIR"$uuid"/imprint_mission_statement.md"
-	echo '!['"$imprintname"']'"(""$imprintlogo"")" >>  "$TMPDIR"$uuid/imprint_mission_statement.md
-	echo "built back matter"
+echo "$analyze_url is analyze_url"
+touch "$TMPDIR"$uuid"/analyzed_webpage.md"
+
+# if [ -z  ${analyze_url+x} ] ; then
+#
+# 			 echo "no web page was analyzed"
+# else
+# 			echo "" >> "$TMPDIR"$uuid"/analyzed_webpage.md"
+# 			echo "" >> "$TMPDIR"$uuid/"analyzed_webpage.md"
+# 			"$PANDOC_BIN" -s -r html "$analyze_url" -o  "$TMPDIR"$uuid"/analyzed_webpage.md"
+# 			#"$PYTHON_BIN" bin/nerv3.py  "$TMPDIR"$uuid"/analyzed_webpage.md"  "$TMPDIR"$uuid"/analyzed_webseeds" "$uuid"
+# 			cd "$NER_BIN" && java -mx600m -cp "*:lib/*" edu.stanford.nlp.ie.crf.CRFClassifier -loadClassifier classifiers/english.all.3class.distsim.crf.ser.gz -textFile "$TMPDIR"$uuid"/webpage.md" -outputFormat tabbedEntities > "$TMPDIR"$uuid"/webseeds"
+# 			cd ""$scriptpath"
+# 			echo "# Webpage Analysis" >>  "$TMPDIR"$uuid/analyzed_webpage.md
+# 			echo "I analyzed this webpage $analyze_url. I found the following keywords on the page."  >> "$TMPDIR"$uuid/analyzed_webpage.md"
+# 			comm -2 -3 <(sort  "$TMPDIR"$uuid"/analyzed_webseeds") <(sort $scriptpath"locale/stopwords/webstopwords."$wikilang) >>  "$TMPDIR"$uuid"/analyzed_webpage.md
+# 			echo "" >> "$TMPDIR"$uuid"/analyzed_webpage.md"
+# 			echo "" >> "$TMPDIR"$uuid"/analyzed_webpage.md"
+# fi
+
+touch "$TMPDIR"$uuid/imprint_mission_statement.md
+echo "imprint is $imprint"
+cat $confdir"jobprofiles/imprints/$imprint/""$imprint_mission_statement" >> "$TMPDIR"$uuid"/imprint_mission_statement.md"
+echo '!['"$imprintname"']'"(""$imprintlogo"")" >>  "$TMPDIR"$uuid/imprint_mission_statement.md
+echo "built back matter"
 
 my_year=`date +'%Y'`
 

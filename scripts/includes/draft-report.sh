@@ -8,6 +8,7 @@
 
 # tweak pp_summary to create Executive_summary
 
+echo "assembling draft report"
 
 summary_length="5"
 echo "creating executive summary"
