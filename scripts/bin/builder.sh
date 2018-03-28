@@ -825,7 +825,7 @@ fi
 
 cat "$TMPDIR$uuid/wiki/wiki4cloud.md" >> "$TMPDIR$uuid/tmpbody.md"
 
-pandoc -o "$TMPDIR"$uuid/targetfile.txt -t plain -f markdown+smart "$TMPDIR"$uuid/tmpbody.md
+"$PANDOC_BIN" -o "$TMPDIR"$uuid/targetfile.txt -t plain -f markdown+smart "$TMPDIR"$uuid/tmpbody.md
 
 #split into chunks that can be handled in memory
 
