@@ -571,8 +571,8 @@ echo "seedfile is $seedfile"
 if [ -z "$booktitle" ] ; then
 	echo "no booktitle provided by operator"
 
-	seedcount=`wc -l $TMPDIR$uuid/seeds/seedphrases | cut -f1 -d' '`
-	echo "$seedcount"
+  seedcount=`cat $TMPDIR$uuid/seeds/seedphrases | tr '\n' ' ' | wc -l | tr -d ' '`
+	echo "seedcount is $seedcount"
 	if [ "$seedcount" -gt "1" ] ; then
 		booktitle=$(head -n 1 "$TMPDIR$uuid/seeds/seedphrases")" and more"
 			echo "arbitrary booktitle is $booktitle"
@@ -698,7 +698,9 @@ both)
 	sed -e s/\=\=\=\=\=/JQJQJQJQJQ/g -e s/\=\=\=\=/JQJQJQJQ/g -e s/\=\=\=/JQJQJQ/g -e s/\=\=/JQJQ/g -e s/Edit\ /\ /g -e s/JQJQJQJQJQ/\#\#\#\#\#/g -e s/JQJQJQJQ/\#\#\#\#/g -e s/JQJQJQ/\#\#\#/g -e s/JQJQ/\#\#/g  "$TMPDIR"$uuid"/wiki/wikipages1.md" | sed G >  "$TMPDIR"$uuid/wiki/wikipages.md
 
 wordcountpages=1
-	wordcountpages=$(wc -w "$TMPDIR"$uuid"/wiki/wikipages.md" | cut -f1 -d' ')
+	#wordcountpages=$(wc -w "$TMPDIR"$uuid"/wiki/wikipages.md" | cut -f1 -d' ')
+  wordcountpages=$(cat "$TMPDIR"$uuid"/wiki/wikipages.md" | tr '\n' ' ' | wc -w | tr -d ' ')
+	echo "Wordcount pages is" $wordcountpages
 		if [ "$wordcountpages" -gt 100000 ] ; then
 			cp  "$TMPDIR"$uuid/wiki/wikisummaries.md  "$TMPDIR"$uuid/wiki/wiki4cloud.md
 			cp  "$TMPDIR"$uuid/wiki/wikisummaries.md  "$TMPDIR"$uuid/wiki/wiki4chapters.md
@@ -824,7 +826,7 @@ fi
 
 cat "$TMPDIR$uuid/wiki/wiki4cloud.md" >> "$TMPDIR$uuid/tmpbody.md"
 
-pandoc -S -o "$TMPDIR"$uuid/targetfile.txt -t plain -f markdown "$TMPDIR"$uuid/tmpbody.md
+pandoc -o "$TMPDIR"$uuid/targetfile.txt -t plain -f markdown+smart "$TMPDIR"$uuid/tmpbody.md
 
 #split into chunks that can be handled in memory
 
@@ -1065,7 +1067,7 @@ cd  "$TMPDIR"$uuid
 "$PANDOC_BIN" -o "$TMPDIR"$uuid/$sku"."$safe_product_name".epub" --epub-cover-image="$TMPDIR"$uuid/cover/$sku"ebookcover.jpg"  "$TMPDIR"$uuid/complete.md
 "$PANDOC_BIN" -o "$TMPDIR"$uuid/$sku"."$safe_product_name".docx"   "$TMPDIR"$uuid/complete.md
 "$PANDOC_BIN" -o "$TMPDIR"$uuid/$sku"."$safe_product_name".txt"   "$TMPDIR"$uuid/complete.md
-"$PANDOC_BIN" -o "$TMPDIR"$uuid/$sku"."$safe_product_name".mw" -t mediawiki -s -S  "$TMPDIR"$uuid/complete.md
+"$PANDOC_BIN" -o "$TMPDIR"$uuid/$sku"."$safe_product_name".mw" -t mediawiki -s  "$TMPDIR"$uuid/complete.md
 cp "$TMPDIR"$uuid/$sku"."$safe_product_name".txt" "$TMPDIR"$uuid/4stdout".txt"
 
 
