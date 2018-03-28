@@ -199,7 +199,7 @@ bin/wordcloudwrapper.sh --txtinfile $TMPDIR$uuid/targetfile.txt --wordcloud_widt
 
 # 3-5 summary slides
 
-split -C 100K $TMPDIR$uuid/targetfile.txt $TMPDIR$uuid/xtarget.
+split -b 100000 $TMPDIR$uuid/targetfile.txt $TMPDIR$uuid/xtarget.
 echo $PYTHON_BIN
 
 for file in $TMPDIR$uuid/xtarget.*

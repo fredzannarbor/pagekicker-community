@@ -65,7 +65,7 @@ echo "chunksize is" $chunksize
 
 for file in *.txt
 do
-  split -C $chunksize $file "$file."
+  split -b $chunksize $file "$file."
   echo "split " $file
 done
 

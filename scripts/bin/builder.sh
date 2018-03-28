@@ -757,8 +757,7 @@ if [ -n "$content_collections" ] ; then
 	echo "content collections has value"
 	. includes/search-content-collections.sh
 	cat "$TMPDIR$uuid/content_collections/content_collections_results.md" >> "$TMPDIR$uuid/wiki/wiki4cloud.md"
-
-#	"$PYTHON_BIN" bin/PKsum-clean.py -l "$summary_length" -o "$TMPDIR$uuid/content_collections/summary.md" "$TMPDIR$uuid/content_collections/content_collections_results.md"
+  "$PYTHON_BIN" bin/PKsum-clean.py -l "$summary_length" -o "$TMPDIR$uuid/content_collections/summary.md" "$TMPDIR$uuid/content_collections/content_collections_results.md"
 else
 	echo "not searching content collections"
 	touch "$TMPDIR"$uuid/content_collections/content_collections_results.md
@@ -830,7 +829,7 @@ pandoc -o "$TMPDIR"$uuid/targetfile.txt -t plain -f markdown+smart "$TMPDIR"$uui
 
 #split into chunks that can be handled in memory
 
-split -C 50K  "$TMPDIR"$uuid/targetfile.txt "$TMPDIR"$uuid"/xtarget."
+split -b 50000  "$TMPDIR"$uuid/targetfile.txt "$TMPDIR"$uuid"/xtarget."
 
 . includes/transect_summarize_ner.sh
 
@@ -1144,7 +1143,7 @@ fi
 
 # housekeeping
 
-unique_seed_string=$(sed -e 's/[^A-Za-z0-9._-]//g' <  "$TMPDIR"$uuid/seeds/sorted.seedfile | tr --delete '\n')
+unique_seed_string=$(sed -e 's/[^A-Za-z0-9._-]//g' <  "$TMPDIR"$uuid/seeds/sorted.seedfile | tr -d '\n')
 
 #checking if seedstring already in imprint corpus
 

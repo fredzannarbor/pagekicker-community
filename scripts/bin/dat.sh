@@ -462,7 +462,7 @@ $scriptpath/bin/acronym-filter.sh --txtinfile $TMPDIR$uuid/targetfile.txt > $TMP
 
 # external loop to run NER and summarizer on split file
 
-split -C 50K $TMPDIR$uuid/targetfile.txt "$TMPDIR$uuid/xtarget."
+split -b 50000 $TMPDIR$uuid/targetfile.txt "$TMPDIR$uuid/xtarget."
 
 for file in "$TMPDIR$uuid/xtarget."*
 do
