@@ -11,7 +11,8 @@ php (for Magento -- should be installed with Magento stack)
 imagemagick 6.8.9 or more
 sendemail # note middle "e", this is lightweight version that is very portable
           # sendemail has issue with TLS/SSL in Ubuntu 14.04, needs to be fixed
-pandoc
+
+pandoc 2+ 
 
 pdftk, fdupes, pdfimages # for montageur.sh
 
