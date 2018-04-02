@@ -59,6 +59,6 @@ else
 fi
 
 
-# sed 's/[[:space:]]\+/\n/g' $txtinfile  | sort -u | egrep '[[:upper:]].*[[:upper:]]' | sed 's/[\(\),]//g' | uniq
-sed 's/[[:space:]]\+/\n/g' $txtinfile  | sort -u | [A-Z][a-zA-Z0-9+\.\&]*[A-Z0-9] | sed 's/[\(\),]//g' | uniq
+#sed 's/[[:space:]]\+/\n/g' $txtinfile  | sort -u | egrep '[[:upper:]].*[[:upper:]]' | sed 's/[\(\),]//g' | uniq
+sed 's/[[:space:]]\+/\n/g' $txtinfile  | sort -u | egrep [A-Z][a-zA-Z0-9+\.\&]*[A-Z0-9] | sed 's/[\(\),]//g' | uniq 
 # more selective regex
