@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# filters text file looking for acronyms
+# shares text or markdown file to wordpress
 
 # input: text file as --txtinfile
-# output: sorted uniq stdout
+# output: wordpress draft
 # flags: --verbose "y" (stupidly requires y)
 
 
@@ -20,6 +20,30 @@ shift 2
 ;;
 --txtinfile=*)
 txtinfile=${1#*=}
+shift
+;;
+--title)
+title=$2
+shift 2
+;;
+--title=*)
+title=${1#*=}
+shift
+;;
+--WP_INSTALL)
+WP_INSTALL=$2
+shift 2
+;;
+--WP_INSTALL=*)
+WP_INSTALL=${1#*=}
+shift
+;;
+--WP_BIN)
+WP_BIN=$2
+shift 2
+;;
+--WP_BIN=*)
+WP_BIN=${1#*=}
 shift
 ;;
 --verbose|v)
@@ -51,6 +75,10 @@ if [ ! "$txtinfile" ]; then
   echo "ERROR: option '--txtinfile[txtinfile]' not given. See --help" >&2
    exit 1
 fi
+if [ ! "$title ]; then
+  echo "ERROR: option '--title[title]' not given. See --help" >&2
+   exit 1
+fi
 
 if [ "$verbose" = "y" ] ; then
 	echo "text infile is "$txtinfile
@@ -58,7 +86,4 @@ else
 	true
 fi
 
-
-#sed 's/[[:space:]]\+/\n/g' $txtinfile  | sort -u | egrep '[[:upper:]].*[[:upper:]]' | sed 's/[\(\),]//g' | uniq
-sed 's/[[:space:]]\+/\n/g' $txtinfile  | sort -u | egrep [A-Z][a-zA-Z0-9+\.\&]*[A-Z0-9] | sed 's/[\(\),]//g' | uniq 
-# more selective regex
+"$WP_BIN" post "$WP_INSTALL" create "$txtinfile" --post_type=post --post_status=draft --post_title='title'
