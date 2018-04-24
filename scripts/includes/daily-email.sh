@@ -21,6 +21,7 @@ mkdir -m 775 -p "$TMPDIR$uuid/daily-email"
 N=1
 while read -r line
 do
+   echo  "$PYTHON_BIN"  $scriptpath"bin/wikifetcher.py" | tee --append "$TMPDIR$uuid/daily-email/test"
     sed -n "$N"p "$TMPDIR$uuid/seeds/filtered.pagehits" > "$TMPDIR$uuid/daily-email/thisfile$N"
    "$PYTHON_BIN"  $scriptpath"bin/wikifetcher.py" \
   --infile "$TMPDIR$uuid/daily-email/thisfile$N" \
@@ -31,14 +32,14 @@ do
   ((N++))
 done < "$TMPDIR$uuid/seeds/filtered.pagehits"
 
-echo "# PageKicker Daily" >> "$TMPDIR$uuid/daily-email/daily-email.md"
+echo "# Algorithmic Publishing Daily Results" >> "$TMPDIR$uuid/daily-email/daily-email.md"
 echo "  " >> "$TMPDIR$uuid/daily-email/daily-email.md"
-echo "## Hi there!" >> "$TMPDIR$uuid/daily-email/daily-email.md"
+#echo "## Hi there!" >> "$TMPDIR$uuid/daily-email/daily-email.md"
 echo "  " >> "$TMPDIR$uuid/daily-email/daily-email.md"
-echo "Welcome to PageKicker Daily." >> "$TMPDIR$uuid/daily-email/daily-email.md"
+#echo "Welcome to my daily algorithmic publishing results." >> "$TMPDIR$uuid/daily-email/daily-email.md"
 echo "  " >> "$TMPDIR$uuid/daily-email/daily-email.md"
-echo "A random image from your personal stash is attached below, followed by a random definition from Samuel Johnson's Dictionary of the English Language, then background on your recent reading." >> "$TMPDIR$uuid/daily-email/daily-email.md"
-echo "  " >> "$TMPDIR$uuid/daily-email/daily-email.md"
+#echo "A random image from your personal stash is attached below, followed by a random definition from Samuel Johnson's Dictionary of the English Language, then background on your recent reading." >> "$TMPDIR$uuid/daily-email/daily-email.md"
+#echo "  " >> "$TMPDIR$uuid/daily-email/daily-email.md"
 echo "## Today's Dose of Samuel Johnson" >> "$TMPDIR$uuid/daily-email/daily-email.md"
 echo '<blockquote>' >> "$TMPDIR$uuid/daily-email/daily-email.md"
 echo "$(/usr/games/fortune johnson)" >> "$TMPDIR$uuid/daily-email/daily-email.md"
@@ -46,14 +47,18 @@ echo '</blockquote>' >> "$TMPDIR$uuid/daily-email/daily-email.md"
 echo "  " >> "$TMPDIR$uuid/daily-email/daily-email.md"
 
 cat "$TMPDIR$uuid/daily-email/postpend.md"  "$TMPDIR$uuid/wiki/seedfortheday.md" >> "$TMPDIR$uuid/daily-email/daily-email.md"
-current_image=$(get_desktop_img | sed -e 's/file:\/\///'g -e "s/'//"g)
+
+# need to make imagepicker platform-independent
+# need image management approach - symbolic linking
+
+# current_image=$(get_desktop_img | sed -e 's/file:\/\///'g -e "s/'//"g)
 
 
 pandoc -s -o "$TMPDIR$uuid/daily-email/daily-email.html" "$TMPDIR$uuid/daily-email/daily-email.md"
 
 #emailbody=$(<$TMPDIR$uuid/daily-email.md)
 sendemail -t "wfzimmerman@gmail.com" \
-  -u "PageKicker Daily" \
+  -u "Algorithmic Publishing Daily Results" \
   -f "$GMAIL_ID" \
   -cc "$GMAIL_ID" \
   -xu "$GMAIL_ID" \
