@@ -437,6 +437,24 @@ shift 2
 seedfortheday=${1#*=}
 shift
 ;;
+--daily_email_post_to_wp)
+daily_email_post_to_wp=$2
+shift 2
+;;
+--daily_email_post_to_wp=*)
+daily_email_post_to_wp=${1#*=}
+shift
+;;
+--daily_email_post_to_wp_status)
+daily_email_post_to_wp_status=$2
+shift 2
+;;
+--daily_email_post_to_wp_s=*)
+daily_email_post_to_wp_status=${1#*=}
+shift
+;;
+
+
   --) # End of all options
             shift
             break
@@ -886,7 +904,7 @@ fi
 echo "# Acronyms" > $TMPDIR$uuid/tmpacronyms.md
 echo " " >> $TMPDIR$uuid/tmpacronyms.md
 echo " " >> $TMPDIR$uuid/tmpacronyms.md
-$scriptpath/bin/acronym-filter.sh --txtinfile  "$TMPDIR"$uuid/targetfile.txt  > "$TMPDIR"$uuid/acronyms.txt
+$scriptpath/bin/acronym-filter.sh --txtinfile  "$TMPDIR"$uuid/targetfile.txt > "$TMPDIR"$uuid/acronyms.txt
 sed G $TMPDIR$uuid/acronyms.txt | sed 's/^#/[hashtag]/g' >> $TMPDIR$uuid/acronyms.md
 cat $TMPDIR$uuid/acronyms.md >> $TMPDIR$uuid/tmpacronyms.md
 cp $TMPDIR$uuid/tmpacronyms.md $TMPDIR$uuid/acronyms.md
@@ -895,7 +913,6 @@ cp $TMPDIR$uuid/tmpacronyms.md $TMPDIR$uuid/acronyms.md
 cat "$TMPDIR"$uuid/Places "$TMPDIR"$uuid/People "$TMPDIR"$uuid/Other > "$TMPDIR"$uuid/all_nouns.txt
 #ls  "$TMPDIR"$uuid/xtarget.*nouns* >  "$TMPDIR"$uuid/testnouns
 # cat  "$TMPDIR"$uuid/xtarget.*nouns* >  "$TMPDIR"$uuid/all_nouns.txt
-
 sort --ignore-case  "$TMPDIR"$uuid/all_nouns.txt | sed 's/^#/[hashtag]/g' | uniq >  "$TMPDIR"$uuid/sorted_uniqs.txt
 sed '1s/^/# Unique Proper Nouns and Key terms\n/' "$TMPDIR"$uuid/sorted_uniqs.txt > $TMPDIR$uuid/tmpuniqs.txt
 cp "$TMPDIR"$uuid/tmpuniqs.txt "$TMPDIR"$uuid/sorted_uniqs.txt
