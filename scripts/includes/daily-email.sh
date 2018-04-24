@@ -21,7 +21,7 @@ mkdir -m 775 -p "$TMPDIR$uuid/daily-email"
 N=1
 while read -r line
 do
-   echo  "$PYTHON_BIN"  $scriptpath"bin/wikifetcher.py" | tee --append "$TMPDIR$uuid/daily-email/test"
+   #echo  "$PYTHON_BIN"  $scriptpath"bin/wikifetcher.py" | tee --append "$TMPDIR$uuid/daily-email/test"
     sed -n "$N"p "$TMPDIR$uuid/seeds/filtered.pagehits" > "$TMPDIR$uuid/daily-email/thisfile$N"
    "$PYTHON_BIN"  $scriptpath"bin/wikifetcher.py" \
   --infile "$TMPDIR$uuid/daily-email/thisfile$N" \
@@ -32,8 +32,8 @@ do
   ((N++))
 done < "$TMPDIR$uuid/seeds/filtered.pagehits"
 
-echo "# Algorithmic Publishing Daily Results" >> "$TMPDIR$uuid/daily-email/daily-email.md"
-echo "  " >> "$TMPDIR$uuid/daily-email/daily-email.md"
+#echo "# $booktitle" >> "$TMPDIR$uuid/daily-email/daily-email.md"
+#echo "  " >> "$TMPDIR$uuid/daily-email/daily-email.md"
 #echo "## Hi there!" >> "$TMPDIR$uuid/daily-email/daily-email.md"
 echo "  " >> "$TMPDIR$uuid/daily-email/daily-email.md"
 #echo "Welcome to my daily algorithmic publishing results." >> "$TMPDIR$uuid/daily-email/daily-email.md"
@@ -69,3 +69,9 @@ sendemail -t "wfzimmerman@gmail.com" \
   -o message-content-type=html \
   -o message-file="$TMPDIR$uuid/daily-email/daily-email.html" \
   -a "$current_image"
+
+if [ "$daily_email_post_to_wp" = "yes" ] ; then
+  "$WP_BIN" post create "$TMPDIR$uuid/daily-email/daily-email.html" --post_type=post --post_status="$daily_email_post_to_wp_status" --post_title="$booktitle" --post_mime_type=html
+else
+  echo "not posting to wp"
+fi
