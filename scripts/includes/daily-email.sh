@@ -13,7 +13,7 @@ summary_length="5"
 
 # optionally add seed for the day section of the book
 
-. includes/seedfortheday.sh
+# . includes/seedfortheday.sh
 
 echo "creating daily-email"
 mkdir -m 775 -p "$TMPDIR$uuid/daily-email"
@@ -32,17 +32,17 @@ do
   ((N++))
 done < "$TMPDIR$uuid/seeds/filtered.pagehits"
 
-#echo "# $booktitle" >> "$TMPDIR$uuid/daily-email/daily-email.md"
-#echo "  " >> "$TMPDIR$uuid/daily-email/daily-email.md"
-#echo "## Hi there!" >> "$TMPDIR$uuid/daily-email/daily-email.md"
+echo "# $booktitle" >> "$TMPDIR$uuid/daily-email/daily-email.md"
 echo "  " >> "$TMPDIR$uuid/daily-email/daily-email.md"
+#echo "## Hi there!" >> "$TMPDIR$uuid/daily-email/daily-email.md"
+#echo "  " >> "$TMPDIR$uuid/daily-email/daily-email.md"
 #echo "Welcome to my daily algorithmic publishing results." >> "$TMPDIR$uuid/daily-email/daily-email.md"
 echo "  " >> "$TMPDIR$uuid/daily-email/daily-email.md"
 #echo "A random image from your personal stash is attached below, followed by a random definition from Samuel Johnson's Dictionary of the English Language, then background on your recent reading." >> "$TMPDIR$uuid/daily-email/daily-email.md"
 #echo "  " >> "$TMPDIR$uuid/daily-email/daily-email.md"
 echo "## Today's Dose of Samuel Johnson" >> "$TMPDIR$uuid/daily-email/daily-email.md"
 echo '<blockquote>' >> "$TMPDIR$uuid/daily-email/daily-email.md"
-echo "$(/usr/games/fortune johnson)" >> "$TMPDIR$uuid/daily-email/daily-email.md"
+echo "$(fortune johnson)" >> "$TMPDIR$uuid/daily-email/daily-email.md"
 echo '</blockquote>' >> "$TMPDIR$uuid/daily-email/daily-email.md"
 echo "  " >> "$TMPDIR$uuid/daily-email/daily-email.md"
 
