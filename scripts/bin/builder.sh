@@ -205,6 +205,14 @@ shift 2
 editedby=${1#*=}
 shift
 ;;
+-b|--byline)
+editedby=$2
+shift 2
+;;
+--byline=*)
+editedby=${1#*=}
+shift
+;;
 -Y|--yourname)
 yourname=$2
 shift 2
