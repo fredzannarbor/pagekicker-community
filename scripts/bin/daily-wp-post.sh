@@ -55,6 +55,7 @@ echo -e "\n" >> "$TMPDIR$uuid/wordpress/johnson_wotd.md"
 echo "## Recent references to $wotd_name on Twitter" >> "$TMPDIR$uuid/wordpress/johnson_wotd.md"
 
 t search all "$wotd_name lang:en -RT -$my_twitter_handle" >> "$TMPDIR$uuid/wordpress/johnson_wotd.md"
+#t search all "$wotd_name lang:en -RT -$my_twitter_handle" >> "$TMPDIR$uuid/wordpress/twitter_wotd.txt"
 
 echo -e "\n" >> "$TMPDIR$uuid/wordpress/johnson_wotd.md"
 
@@ -62,6 +63,7 @@ echo -e "\n" >> "$TMPDIR$uuid/wordpress/johnson_wotd.md"
 echo "## Recent references to $name on Twitter" >> "$TMPDIR$uuid/wordpress/johnson_wotd.md"
 
 t search all "Samuel Johnson lang:en -RT -$my_twitter_handle" >> "$TMPDIR$uuid/wordpress/johnson_wotd.md"
+#t search all "Samuel Johnson lang:en -RT -$my_twitter_handle" >> "$TMPDIR$uuid/wordpress/twsjtest.md"
 
 pandoc -f markdown -t html -o "$TMPDIR$uuid/wordpress/johnson_wotd.html" "$TMPDIR$uuid/wordpress/johnson_wotd.md"
 
