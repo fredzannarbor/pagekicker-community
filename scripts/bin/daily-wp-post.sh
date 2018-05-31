@@ -63,6 +63,6 @@ echo "## Recent references to $name on Twitter" >> "$TMPDIR$uuid/wordpress/johns
 
 t search all "Samuel Johnson lang:en -RT -$my_twitter_handle" >> "$TMPDIR$uuid/wordpress/johnson_wotd.md"
 
-pandoc -s -o "$TMPDIR$uuid/wordpress/johnson_wotd.html" "$TMPDIR$uuid/wordpress/johnson_wotd.md"
+pandoc -f markdown -t html -o "$TMPDIR$uuid/wordpress/johnson_wotd.html" "$TMPDIR$uuid/wordpress/johnson_wotd.md"
 
-"$WP_BIN" post create "$TMPDIR$uuid/wordpress/johnson_wotd.html"  --post_type=post --post_status="publish" --post_title="Daily Dose of Samuel Johnson: $wotd_name 2& c." --post_mime_type=html --post_category="words-language" --post_author="$postauthorid"
+"$WP_BIN" post create "$TMPDIR$uuid/wordpress/johnson_wotd.html"  --post_type=post --post_status="publish" --post_title="Daily Dose of Samuel Johnson: $wotd_name & more" --post_mime_type=html --post_category="words-language" --post_author="$postauthorid"
