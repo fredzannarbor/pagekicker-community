@@ -8,7 +8,11 @@ mkdir /tmp/pagekicker/"$loguuid"
 
 touch /tmp/pagekicker/"$loguuid"/log
 
-exec 3>&1 >> /tmp/pagekicker/"$loguuid"/startuplog
+# exec redirect below begins a rather convoluted process that is necessary to enable 
+# the operation of a --verbose flag
+
+exec 3>&1 >> /tmp/pagekicker/"$loguuid"/startuplog 
+
 
 echo "builder begins"
 echo ""
@@ -28,7 +32,7 @@ if shopt -q  login_shell ; then
 		echo "read config file from login shell $HOME""/.pagekicker/config.txt"
 	fi
 else
-	.  "$HOME"/.pagekicker/config.txt #hard-coding /home is a hack
+	.  "$HOME"/.pagekicker/config.txt #hard-code here to have a nonlogin shell run the script 
 	echo "read config file from nonlogin shell /home/$(whoami)/.pagekicker/config.txt"
 fi
 
