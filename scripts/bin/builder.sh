@@ -461,12 +461,18 @@ shift
 daily_email_post_to_wp_status=$2
 shift 2
 ;;
---daily_email_post_to_wp_s=*)
+--daily_email_post_to_wp_status=*)
 daily_email_post_to_wp_status=${1#*=}
 shift
 ;;
-
-
+--search_engine_registry)
+search_engine_registry=$2
+shift 2
+;;
+--search_engine_registry=*)
+search_engine_registry=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -518,12 +524,16 @@ mkdir -p -m 777  "$TMPDIR$uuid/flickr"
 mkdir -p -m 777  "$TMPDIR$uuid/images"
 mkdir -p -m 777  "$TMPDIR$uuid/mail"
 mkdir -p -m 777  "$TMPDIR$uuid/content_collections"
+mkdir -p -m 777  "$TMPDIR$uuid/search_engine_results"
 mkdir -p -m 777  "$TMPDIR$uuid/seeds"
 mkdir -p -m 777  "$TMPDIR$uuid/user"
 mkdir -p -m 777  "$TMPDIR$uuid/wiki"
 mkdir -p -m 777  "$TMPDIR$uuid/webseeds"
 
 mkdir -p -m 755 -p $LOCAL_DATA"jobprofile_builds/""$jobprofilename"
+
+echo "search engine registry is" "$search_engine_registry"
+
 
 if [ -z "$covercolor" ]; then
 	covercolor="RosyBrown"
@@ -692,6 +702,17 @@ echo "---"
 
 . "$confdir""$jobprofilename"/search_engines/manifest.json
 
+# loops over searches
+
+# adds search results to wiki4cloud
+
+if [ "$search_engine_results" = "none" ] ; then
+	echo "no search engine results to add to cover cloud"
+	touch "$TMPDIR"$uuid/earch_engine_results/all_results.md
+else
+	echo "adding search engine results to cover cloud"
+	cat "$TMPDIR$uuid/search_engine_results/all_results.md" >> "$TMPDIR$uuid/wiki/wiki4cloud.md"
+fi
 
 # adds user-provided content
 
@@ -780,10 +801,10 @@ fi
 
 . includes/acknowledgments.sh
 
-	# describe the key settings used in book
-	. includes/settings.sh
+# describe the key settings used in book
+. includes/settings.sh
 
-	# human-written abstracts
+# human-written abstracts
 
 . includes/abstracts.sh
 

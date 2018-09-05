@@ -131,6 +131,7 @@ robot_summary_length=10
 rows=1
 sample_tweets="no"
 screen_numbered_seeds="no"
+search_engine_registry="$confdir"jobprofiles/search_engines/default.csv"
 seedfile=""
 seedfortheday=""
 seedsource="PageKicker"
