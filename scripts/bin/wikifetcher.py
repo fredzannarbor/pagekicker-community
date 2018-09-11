@@ -2,8 +2,9 @@
 """
 wikipedia text fetcher
 Fred Zimmerman
-fred@pagekicker.com
-(c) PageKicker 2014
+wfzimmerman#gmail.com
+
+enhanced to allow pointing at any MediaWiki endpoint URL
 
 
 """
@@ -25,7 +26,7 @@ lang = args.lang
 summary = args.summary
 mediawiki_api_url = args.mediawiki_api_url
 
-test = 'mw url is' + 'mediawiki_api_url'
+test = 'mw url is ' + 'mediawiki_api_url'
 print(test)
 
 # request_type = args.request_type
