@@ -1,12 +1,11 @@
-# -*- codinwig: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 wikipedia text fetcher
 Fred Zimmerman
 fred@pagekicker.com
 (c) PageKicker 2014
 
-This temporary script file is located here:
-/home/fred/.spyder2/.temp.py
+
 """
 
 import argparse, wikipedia
@@ -17,12 +16,18 @@ parser.add_argument("--lang", help="wiki language bigram", default = 'en')
 #parser.add_argument("--request_type", help="request type", default = 'sum')
 parser.add_argument("--outfile", help = "path to outfile", default = 'outfile')
 parser.add_argument("--summary", help = "true or false", action = "store_true")
+parser.add_argument("--mediawiki_api_url", help = "true or false", default = 'http://en.wikipedia.org/w/api.php')
 args = parser.parse_args()
 
 input_file = args.infile
 output_file = args.outfile
 lang = args.lang
 summary = args.summary
+mediawiki_api_url = args.mediawiki_api_url
+
+test = 'mw url is' + 'mediawiki_api_url'
+print(test)
+
 # request_type = args.request_type
 wikipedia.set_lang(lang)
 
