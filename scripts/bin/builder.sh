@@ -473,6 +473,14 @@ shift 2
 search_engine_registry=${1#*=}
 shift
 ;;
+--mediawiki_api_url)
+mediawiki_api_url$2
+shift 2
+;;
+--mediawiki_api_url=*)
+mediawiki_api_url=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -693,25 +701,44 @@ echo "seeds are"
 cat "$TMPDIR$uuid/seeds/sorted.seedfile"
 echo "---"
 
+# look at $search_engine_registry
 
-# Wikipedia search is on by default
-
-. includes/wikipedia-default-loop.sh
 
 # decides what additional search engines will be used
 
-. "$confdir""$jobprofilename"/search_engines/manifest.json
-
 # loops over searches
+
+while IFS=, read -r search_engine_on search_plugin_path search_credentials
+do
+    echo "I got:" "$search_engine_on" "$search_plugin_path" "$search_credentials"
+		if [ "$search_engine_on" = "yes" ] ; then
+		   echo "test $search_plugin_path"
+			 "$search_plugin_path"
+	  else
+			"not running search plugin $search_plugin_path"
+		fi
+done < "$search_engine_registry"
+
+# Wikipedia search is on by default
+echo "PYTHON_BIN" is "$PYTHON_BIN"
+. includes/mediawiki-fetch-loop.sh
+#. includes/wikipedia-default-loop.sh
+
 
 # adds search results to wiki4cloud
 
+# testing with dummy data
+
+#cp ~/lorem "$TMPDIR$uuid/search_engine_results/cumulative.md"
+
+# end test
+
 if [ "$search_engine_results" = "none" ] ; then
 	echo "no search engine results to add to cover cloud"
-	touch "$TMPDIR"$uuid/earch_engine_results/all_results.md
+	touch "$TMPDIR"$uuid/search_engine_results/cumulative.md
 else
 	echo "adding search engine results to cover cloud"
-	cat "$TMPDIR$uuid/search_engine_results/all_results.md" >> "$TMPDIR$uuid/wiki/wiki4cloud.md"
+	cat "$TMPDIR$uuid/search_engine_results/cumulative.md" >> "$TMPDIR"$uuid/wiki/wiki4cloud.md
 fi
 
 # adds user-provided content
@@ -877,6 +904,20 @@ else
 	echo "  " >>  "$TMPDIR"$uuid/chapters.md
 fi
 
+# assemble section for search engine content
+# placeholder for testing
+
+cp ~/lorem "$TMPDIR"$uuid"/search_engine_results/cumulative.md"
+
+# end test
+
+echo "  " >> $TMPDIR$uuid/search_engine_content.md
+echo "  " >>  "$TMPDIR"$uuid/search_engine_content.md
+echo "# Search Engine Content" >>  "$TMPDIR"$uuid/search_engine_content.md
+cat "$TMPDIR"$uuid"/search_engine_results/cumulative.md" >>  "$TMPDIR"$uuid/search_engine_content.md
+echo "  " >>  "$TMPDIR"$uuid/search_engine_content.md
+echo "  " >>  "$TMPDIR"$uuid/search_engine_content.md
+
 # acronyms
 
 echo "# Acronyms" > $TMPDIR$uuid/tmpacronyms.md
@@ -945,7 +986,18 @@ fi
   echo "  "  >>  "$TMPDIR"$uuid/wiki/wikisources.md
 	echo "  "  >>  "$TMPDIR"$uuid/wiki/wikisources.md
 	done < "$TMPDIR$uuid/seeds/filtered.pagehits"
-	# pipe other sources in here, either apppend with ## second-level heading or sort -u
+
+# add search engine results to sources section
+'''
+while IFS= read -r line; do
+
+safeline=$(echo $line | sed -e 's/[ ]/_/g')
+echo "$search_plugin_name", $line, Wikipedia, The Free Encyclopedia, https://en.wikipedia.org/w/index.php?title=$safeline, accessed $(date +"%m-%d-%Y")."  >>  "$TMPDIR$uuid/wiki/wikisources.md"
+echo "  "  >>  "$TMPDIR"$uuid/wiki/wikisources.md
+echo "  "  >>  "$TMPDIR"$uuid/wiki/wikisources.md
+done < "$TMPDIR$uuid/seeds/filtered.pagehits"
+'''
+# pipe other sources in here, either apppend with ## second-level heading or sort -u
 
   cat "$TMPDIR"$uuid/content_collections/content_sources.md >> "$TMPDIR"$uuid/sources.md
   cat "$TMPDIR"$uuid/wiki/wikisources.md >> "$TMPDIR"$uuid/sources.md
