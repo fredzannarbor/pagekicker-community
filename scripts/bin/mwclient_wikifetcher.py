@@ -24,12 +24,13 @@ logging.basicConfig(level=logging.WARNING)
 parser = argparse.ArgumentParser()
 parser.add_argument("--infile", help = "seed file", default = 'test')
 parser.add_argument("--lang", help="wiki language bigram", default = 'en')
-#parser.add_argument("--request_type", help="request type", default = 'sum')
+parser.add_argument("--request_type", help="request type", default = 'sum')
 parser.add_argument("--outfile", help = "path to outfile", default = 'outfile')
-parser.add_argument("--summary", help = "true or false", action = "store_true")
+parser.add_argument("--summary", help = "true or false", action = "store_false")
 parser.add_argument("--logging", help = "true or false", action = "store_true")
-parser.add_argument("--mediawiki_api_url", help = "true or false", default = 'http://en.wikipedia.org/w/api.php')
-parser.add_argument("--client_certificate", help = "path to SSL certificate", default = None)
+#parser.add_argument("--mediawiki_api_url", help = "true or false", default = 'en.wikipedia.org')
+#parser.add_argument("--wikipath", help = "mediawiki default is /w/api.php", default = '/w/')
+#parser.add_argument("--client_certificate", help = "path to SSL certificate", default = None)
 args = parser.parse_args()
 
 input_file = args.infile
@@ -37,17 +38,34 @@ output_file = args.outfile
 lang = args.lang
 summary = args.summary
 logging = args.logging
-mediawiki_api_url = args.mediawiki_api_url
-client_certificate = args.client_certificate
-print(client_certificate)
+# mediawiki_api_url = args.mediawiki_api_url
+# wikipath = args.wikipath
+path = 'path=' 
+print(path)
+ep = "/w/"
+print(ep)
+#site = mwclient.Site(('http', 'test.wikipedia.org'), path)
+p2 = path  + "'" + ep + "'"
+print('p2 is ' + p2)
+site = mwclient.Site(('http', 'en.wikipedia.org'), path='/w/')
+#client_certificate = args.client_certificate
+
+"""
+providing client certificate option
+needs testing on ssl + cert environment
 
 if client_certificate is None:
-    site = mwclient.Site(mediawiki_api_url)
-    print(site)
+    foo = mwclient.Site(mediawiki_api_url)
+    print(foo)
 else:
-    site = mwclient.Site(mediawiki_api_url, client_certificate=(client_certificate))
-    print(site)
-
+    print('client certificate is ' + client_certificate )
+    ssl_site1 = mediawiki_api_url + ', ' + 'client_certificate' + '='
+    print('ssl site 1 is' + ssl_site1)
+    ssl_site2 = ssl_site1 + client_certificate
+    print(ssl_site2)
+"""
+#site = mwclient.Site(mediawiki_api_url, 'path='wikipath)
+print(site)
 file = open(input_file, 'r').read().splitlines()
 file2 = open(output_file, 'wb')
 for line in file:
