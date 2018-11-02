@@ -25,8 +25,9 @@ cat \
 "$TMPDIR$uuid/titletop.md" \
 "$TMPDIR$uuid/executive_summary.md" \
 "$TMPDIR$uuid/add_this_content.md" \
-"$TMPDIR$uuid/chapters.md" \
 "$TMPDIR$uuid/content_collections/content_collections_results.md" \
+"$TMPDIR$uuid/chapters.md" \
+"$TMPDIR$uuid/search_engine_content.md" \
 "$TMPDIR$uuid/googler.md" \
 "$TMPDIR$uuid/googler-news.md" \
 "$TMPDIR$uuid/sorted_uniqs.md" \
