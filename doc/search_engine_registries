@@ -1,5 +1,34 @@
-## Search Engine Registries in PageKicker
+## Search Engine Registries & Plugins in PageKicker
 
 Search engine registry files contain a list of search engine(s) that the *builder.sh* program will use when it builds a book.
 
-By default, the system searches only a single search engine, the public Wikipedia.  The default registry file resides at conf/jobprofiles/search_engines/default.csv.
+By default, the system searches only a single search engine, the public Wikipedia.  The default registry file resides at conf/jobprofiles/search_engines/default.csv.  The default value of $search_engine_registry is set in scripts/includes/set-variables.sh.
+
+ Alternate search engine registry files may be specified at the command line via the flag --search_engine_registry "/path/to/file".  Search engine registry files may be either .csv or .json.
+
+
+
+### Sample Search Registry File
+
+default.csv
+
+```
+
+```
+
+### Plugin Responsibilities
+
+1. Loop over "$TMPDIR"$uuid"/seeds/sorted.seedfile" sending one query for each seed to the target search engine;
+2. Process result documents.
+  a. Separate the results from each target search engine with markdown level 2 heading, e.g. "## Wapackpedia Search".
+  b. Transform each result document into markdown.
+  c. Separate each result document with markdown level 3 heading.
+3. Create a cumulative file containing the complete results of step (2) -=-= all results from all seeds -- in  "$TMPDIR"$uuid"/search_engine_results/cumulative.md.
+
+
+### Builder responsibilities (done)
+
+1. Check whether "$TMPDIR"$uuid"/search_engine_results/cumulative.md exists. If it does not, create a zero file size version of that file using *touch "$TMPDIR"$uuid"/search_engine_results/cumulative.md."  This is necessary as the booktype script will look for this chapter name and the book build will fail if it is not found.
+2. Append "$TMPDIR"$uuid"/search_engine_results/cumulative.md to "$TMPDIR$uuid/wiki/wiki4cloud.md" so that the file will be included in the word cloud. [done]
+3.  In each --booktype script (reader, draft-report, etc.) include "$TMPDIR"$uuid"/search_engine_results/cumulative.md in the appropriate location in the cat statement that creates "$TMPDIR"$uuid"/conplete.md [done] If .../cumulative.md is not included in the --booktype file, it will not appear in the final book.
+4
