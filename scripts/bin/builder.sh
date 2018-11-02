@@ -481,6 +481,22 @@ shift 2
 mediawiki_api_url=${1#*=}
 shift
 ;;
+--url_prefix)
+url_prefix$2
+shift 2
+;;
+--url_prefix=*)
+url_prefix=${1#*=}
+shift
+;;
+--wikipath)
+wikipath$2
+shift 2
+;;
+--wikipath=*)
+wikipath=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
