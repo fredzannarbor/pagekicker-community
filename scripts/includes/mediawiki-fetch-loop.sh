@@ -58,4 +58,3 @@ both)
 	echo "unrecognized summary option"
 ;;
 esac
-exit
