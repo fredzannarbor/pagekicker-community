@@ -1,6 +1,5 @@
 # -*- codinwig: utf-8 -*-
 """
-wikipedia text fetcher
 Fred Zimmerman
 fred@pagekicker.com
 (c) PageKicker 2014
@@ -12,7 +11,7 @@ import codecs
 import sys
 import time
 import wikipedia
-
+import mwclient
 parser = argparse.ArgumentParser()
 parser.add_argument("--infile", help = "seed file", default = 'test')
 parser.add_argument("--lang", help="wiki language bigram", default = 'en')
