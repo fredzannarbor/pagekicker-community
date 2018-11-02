@@ -8,10 +8,10 @@ mkdir /tmp/pagekicker/"$loguuid"
 
 touch /tmp/pagekicker/"$loguuid"/log
 
-# exec redirect below begins a rather convoluted process that is necessary to enable 
+# exec redirect below begins a rather convoluted process that is necessary to enable
 # the operation of a --verbose flag
 
-exec 3>&1 >> /tmp/pagekicker/"$loguuid"/startuplog 
+exec 3>&1 >> /tmp/pagekicker/"$loguuid"/startuplog
 
 
 echo "builder begins"
@@ -32,7 +32,7 @@ if shopt -q  login_shell ; then
 		echo "read config file from login shell $HOME""/.pagekicker/config.txt"
 	fi
 else
-	.  "$HOME"/.pagekicker/config.txt #hard-code here to have a nonlogin shell run the script 
+	.  "$HOME"/.pagekicker/config.txt #hard-code here to have a nonlogin shell run the script
 	echo "read config file from nonlogin shell /home/$(whoami)/.pagekicker/config.txt"
 fi
 
@@ -461,12 +461,42 @@ shift
 daily_email_post_to_wp_status=$2
 shift 2
 ;;
---daily_email_post_to_wp_s=*)
+--daily_email_post_to_wp_status=*)
 daily_email_post_to_wp_status=${1#*=}
 shift
 ;;
-
-
+--search_engine_registry)
+search_engine_registry=$2
+shift 2
+;;
+--search_engine_registry=*)
+search_engine_registry=${1#*=}
+shift
+;;
+--mediawiki_api_url)
+mediawiki_api_url$2
+shift 2
+;;
+--mediawiki_api_url=*)
+mediawiki_api_url=${1#*=}
+shift
+;;
+--url_prefix)
+url_prefix$2
+shift 2
+;;
+--url_prefix=*)
+url_prefix=${1#*=}
+shift
+;;
+--wikipath)
+wikipath$2
+shift 2
+;;
+--wikipath=*)
+wikipath=${1#*=}
+shift
+;;
   --) # End of all options
             shift
             break
@@ -518,12 +548,16 @@ mkdir -p -m 777  "$TMPDIR$uuid/flickr"
 mkdir -p -m 777  "$TMPDIR$uuid/images"
 mkdir -p -m 777  "$TMPDIR$uuid/mail"
 mkdir -p -m 777  "$TMPDIR$uuid/content_collections"
+mkdir -p -m 777  "$TMPDIR$uuid/search_engine_results"
 mkdir -p -m 777  "$TMPDIR$uuid/seeds"
 mkdir -p -m 777  "$TMPDIR$uuid/user"
 mkdir -p -m 777  "$TMPDIR$uuid/wiki"
 mkdir -p -m 777  "$TMPDIR$uuid/webseeds"
 
 mkdir -p -m 755 -p $LOCAL_DATA"jobprofile_builds/""$jobprofilename"
+
+echo "search engine registry is" "$search_engine_registry"
+
 
 if [ -z "$covercolor" ]; then
 	covercolor="RosyBrown"
@@ -646,6 +680,10 @@ cp $confdir"jobprofiles"/imprints/"$imprint"/"$imprintlogo"  "$TMPDIR""$uuid"
 cp $confdir"jobprofiles"/signatures/"$sigfile" "$TMPDIR""$uuid"
 cp $confdir"jobprofiles"/imprints/"$imprint"/"$imprintlogo" "$TMPDIR"$uuid"/cover"
 
+# create placeholder seedfortheday file
+
+touch "$TMPDIR$uuid/wiki/seedfortheday.md"
+
 # extracts seeds from analyzed webpage
 
 if [ -z  ${analyze_url+x} ] ; then
@@ -679,76 +717,46 @@ echo "seeds are"
 cat "$TMPDIR$uuid/seeds/sorted.seedfile"
 echo "---"
 
-#expand seeds to valid wiki pages
+# look at $search_engine_registry
 
-if [ "$expand_seeds_to_pages" = "yes" ] ; then
-		echo "$expand_seeds_to_pages"
-		"$PYTHON27_BIN" bin/wiki_seeds_2_pages.py --infile "$TMPDIR"$uuid"/seeds/sorted.seedfile" --pagehits "$TMPDIR"$uuid"/seeds/pagehits"
+
+# decides what additional search engines will be used
+
+# loops over searches
+
+while IFS=, read -r search_engine_on search_plugin_path search_credentials
+do
+    echo "I got:" "$search_engine_on" "$search_plugin_path" "$search_credentials"
+		if [ "$search_engine_on" = "yes" ] ; then
+		   echo "test $search_plugin_path"
+			 "$search_plugin_path"
+	  else
+			"not running search plugin $search_plugin_path"
+		fi
+done < "$search_engine_registry"
+
+# Wikipedia search is on by default
+echo "PYTHON_BIN" is "$PYTHON_BIN"
+. includes/mediawiki-fetch-loop.sh
+
+
+# adds search results to wiki4cloud
+
+# testing with dummy data
+
+#cp ~/lorem "$TMPDIR$uuid/search_engine_results/cumulative.md"
+
+# end test
+
+if [ "$search_engine_results" = "none" ] ; then
+	echo "no search engine results to add to cover cloud"
+	touch "$TMPDIR"$uuid/search_engine_results/cumulative.md
 else
-		echo "not expanding seeds to pages"
-		cp "$TMPDIR"$uuid"/seeds/sorted.seedfile" "$TMPDIR"$uuid"/seeds/pagehits"
+	echo "adding search engine results to cover cloud"
+	cat "$TMPDIR$uuid/search_engine_results/cumulative.md" >> "$TMPDIR"$uuid/wiki/wiki4cloud.md
 fi
 
-# filter pagehits
-
-sort -u  "$TMPDIR"$uuid/seeds/pagehits >  "$TMPDIR"$uuid/seeds/filtered.pagehits
-
-echo "--- filtered pagehits are ---"
-cat  "$TMPDIR"$uuid/seeds/filtered.pagehits
-
-echo "--- end of pagehits ---"
-
-# fetch by pagehits
-
-
-case "$summary" in
-summaries_only)
-	echo "fetching page summaries only"
-	"$PYTHON_BIN"  $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR$uuid /seeds/filtered.pagehits" --outfile "$TMPDIR"$uuid/"wiki/wikisummariesraw.md" --lang "$wikilocale" --summary  1> /dev/null
-	sed -e s/\=\=\=\=\=/JQJQJQJQJQ/g -e s/\=\=\=\=/JQJQJQJQ/g -e s/\=\=\=/JQJQJQ/g -e s/\=\=/JQJQ/g -e s/Edit\ /\ /g -e s/JQJQJQJQJQ/\#\#\#\#\#/g -e s/JQJQJQJQ/\#\#\#\#/g -e s/JQJQJQ/\#\#\#/g -e s/JQJQ/\#\#/g  "$TMPDIR"$uuid/wiki/wikisummariesraw.md | sed G >  "$TMPDIR"$uuid/wiki/wikisummaries.md
-	cp  "$TMPDIR"$uuid/wiki/wikisummaries.md  "$TMPDIR"$uuid/wiki/wikiall.md
-	wordcountsummaries=$(wc -w "$TMPDIR"$uuid/wiki/wikisummaries.md | cut -f1 -d' ')
-	cp "$TMPDIR"$uuid"/wiki/wikisummaries.md" "$TMPDIR"$uuid"/wiki/wiki4cloud.md"
-;;
-complete_pages_only)
-	echo "fetching complete pages only"
-	"$PYTHON_BIN" $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR"$uuid"/seeds/filtered.pagehits" --outfile "$TMPDIR"$uuid"/wiki/wikipagesraw.md" --lang "$wikilocale"  1> /dev/null
-	sed -e s/\=\=\=\=\=/JQJQJQJQJQ/g -e s/\=\=\=\=/JQJQJQJQ/g -e s/\=\=\=/JQJQJQ/g -e s/\=\=/JQJQ/g -e s/Edit\ /\ /g -e s/JQJQJQJQJQ/\#\#\#\#\#/g -e s/JQJQJQJQ/\#\#\#\#/g -e s/JQJQJQ/\#\#\#/g -e s/JQJQ/\#\#/g  "$TMPDIR"$uuid/wiki/wikipagesraw.md | sed G >  "$TMPDIR"$uuid"/wiki/wikipages.md"
-	wordcountpages=$(wc -w "$TMPDIR"$uuid"/wiki/wikipages.md" | cut -f1 -d' ')
-	cp "$TMPDIR"$uuid"/wiki/wikipages.md" "$TMPDIR"$uuid"/wiki/wiki4cloud.md"
-	cp  "$TMPDIR"$uuid/wiki/wikipages.md  "$TMPDIR"$uuid/wiki/wikiall.md
-;;
-both)
-	echo "fetching both summaries and complete pages"
-	echo "fetching page summaries now"
-	"$PYTHON_BIN"  $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR"$uuid"/seeds/filtered.pagehits" --outfile "$TMPDIR"$uuid"/wiki/wikisummaries1.md" --lang "$wikilocale" --summary
-	echo "fetching complete pages now"
-	"$PYTHON_BIN" $scriptpath"bin/wikifetcher.py" --infile "$TMPDIR"$uuid"/seeds/filtered.pagehits" --outfile "$TMPDIR"$uuid"/wiki/wikipages1.md" --lang "$wikilocale"
-	sed -e s/\=\=\=\=\=/JQJQJQJQJQ/g -e s/\=\=\=\=/JQJQJQJQ/g -e s/\=\=\=/JQJQJQ/g -e s/\=\=/JQJQ/g -e s/Edit\ /\ /g -e s/JQJQJQJQJQ/\#\#\#\#\#/g -e s/JQJQJQJQ/\#\#\#\#/g -e s/JQJQJQ/\#\#\#/g -e s/JQJQ/\#\#/g  "$TMPDIR"$uuid"/wiki/wikisummaries1.md" | sed G >  "$TMPDIR"$uuid/wiki/wikisummaries.md
-	sed -e s/\=\=\=\=\=/JQJQJQJQJQ/g -e s/\=\=\=\=/JQJQJQJQ/g -e s/\=\=\=/JQJQJQ/g -e s/\=\=/JQJQ/g -e s/Edit\ /\ /g -e s/JQJQJQJQJQ/\#\#\#\#\#/g -e s/JQJQJQJQ/\#\#\#\#/g -e s/JQJQJQ/\#\#\#/g -e s/JQJQ/\#\#/g  "$TMPDIR"$uuid"/wiki/wikipages1.md" | sed G >  "$TMPDIR"$uuid/wiki/wikipages.md
-
-wordcountpages=1
-	#wordcountpages=$(wc -w "$TMPDIR"$uuid"/wiki/wikipages.md" | cut -f1 -d' ')
-  wordcountpages=$(cat "$TMPDIR"$uuid"/wiki/wikipages.md" | tr '\n' ' ' | wc -w | tr -d ' ')
-	echo "Wordcount pages is" $wordcountpages
-		if [ "$wordcountpages" -gt 100000 ] ; then
-			cp  "$TMPDIR"$uuid/wiki/wikisummaries.md  "$TMPDIR"$uuid/wiki/wiki4cloud.md
-			cp  "$TMPDIR"$uuid/wiki/wikisummaries.md  "$TMPDIR"$uuid/wiki/wiki4chapters.md
-			echo "body too big for wordcloud, using abstracts only"
-		else
-			 cp "$TMPDIR$uuid/wiki/wikipages.md"  "$TMPDIR$uuid/wiki/wiki4cloud.md"
-			 cp  "$TMPDIR"$uuid/wiki/wikipages.md  "$TMPDIR"$uuid/wiki/wiki4chapters.md
-			echo "building wordcloud from body"
-		fi
-;;
-*)
-	echo "unrecognized summary option"
-;;
-esac
-
-# create placeholder seedfortheday file
-
-touch "$TMPDIR$uuid/wiki/seedfortheday.md"
+# adds user-provided content
 
 if [ "$add_this_content" = "none" ] ; then
 	echo "no added content"
@@ -835,10 +843,10 @@ fi
 
 . includes/acknowledgments.sh
 
-	# describe the key settings used in book
-	. includes/settings.sh
+# describe the key settings used in book
+. includes/settings.sh
 
-	# human-written abstracts
+# human-written abstracts
 
 . includes/abstracts.sh
 
@@ -911,6 +919,20 @@ else
 	echo "  " >>  "$TMPDIR"$uuid/chapters.md
 fi
 
+# assemble section for search engine content
+# placeholder for testing
+
+cp ~/lorem "$TMPDIR"$uuid"/search_engine_results/cumulative.md"
+
+# end test
+
+echo "  " >> $TMPDIR$uuid/search_engine_content.md
+echo "  " >>  "$TMPDIR"$uuid/search_engine_content.md
+echo "# Search Engine Content" >>  "$TMPDIR"$uuid/search_engine_content.md
+cat "$TMPDIR"$uuid"/search_engine_results/cumulative.md" >>  "$TMPDIR"$uuid/search_engine_content.md
+echo "  " >>  "$TMPDIR"$uuid/search_engine_content.md
+echo "  " >>  "$TMPDIR"$uuid/search_engine_content.md
+
 # acronyms
 
 echo "# Acronyms" > $TMPDIR$uuid/tmpacronyms.md
@@ -979,7 +1001,17 @@ fi
   echo "  "  >>  "$TMPDIR"$uuid/wiki/wikisources.md
 	echo "  "  >>  "$TMPDIR"$uuid/wiki/wikisources.md
 	done < "$TMPDIR$uuid/seeds/filtered.pagehits"
-	# pipe other sources in here, either apppend with ## second-level heading or sort -u
+
+# add search engine results to sources section
+
+while IFS= read -r line; do
+	safeline=$(echo $line | sed -e 's/[ ]/_/g')
+	echo "$search_plugin_name", $line, Wikipedia, The Free Encyclopedia, https://en.wikipedia.org/w/index.php?title=$safeline, accessed $(date +"%m-%d-%Y").  >>  "$TMPDIR$uuid/wiki/wikisources.md"
+	echo "  "  >>  "$TMPDIR"$uuid/wiki/wikisources.md
+	echo "  "  >>  "$TMPDIR"$uuid/wiki/wikisources.md
+done < "$TMPDIR$uuid/seeds/filtered.pagehits"
+
+# pipe other sources in here, either apppend with ## second-level heading or sort -u
 
   cat "$TMPDIR"$uuid/content_collections/content_sources.md >> "$TMPDIR"$uuid/sources.md
   cat "$TMPDIR"$uuid/wiki/wikisources.md >> "$TMPDIR"$uuid/sources.md
