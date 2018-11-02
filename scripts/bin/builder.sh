@@ -736,7 +736,7 @@ do
 done < "$search_engine_registry"
 
 # Wikipedia search is on by default
-echo "PYTHON_BIN" is "$PYTHON_BIN"
+
 . includes/mediawiki-fetch-loop.sh
 
 
@@ -922,16 +922,16 @@ fi
 # assemble section for search engine content
 # placeholder for testing
 
-cp ~/lorem "$TMPDIR"$uuid"/search_engine_results/cumulative.md"
+#cp ~/lorem "$TMPDIR"$uuid"/search_engine_results/cumulative.md"
 
 # end test
 
-echo "  " >> $TMPDIR$uuid/search_engine_content.md
-echo "  " >>  "$TMPDIR"$uuid/search_engine_content.md
-echo "# Search Engine Content" >>  "$TMPDIR"$uuid/search_engine_content.md
-cat "$TMPDIR"$uuid"/search_engine_results/cumulative.md" >>  "$TMPDIR"$uuid/search_engine_content.md
-echo "  " >>  "$TMPDIR"$uuid/search_engine_content.md
-echo "  " >>  "$TMPDIR"$uuid/search_engine_content.md
+#echo "  " >> $TMPDIR$uuid/search_engine_content.md
+#echo "  " >>  "$TMPDIR"$uuid/search_engine_content.md
+#echo "# Search Engine Content" >>  "$TMPDIR"$uuid/search_engine_content.md
+#cat "$TMPDIR"$uuid"/search_engine_results/cumulative.md" >>  "$TMPDIR"$uuid/search_engine_content.md
+#echo "  " >>  "$TMPDIR"$uuid/search_engine_content.md
+#echo "  " >>  "$TMPDIR"$uuid/search_engine_content.md
 
 # acronyms
 
