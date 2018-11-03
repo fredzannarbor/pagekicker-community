@@ -361,14 +361,6 @@ shift 2
 content_collections=${1#*=}
 shift
 ;;
---two1)
-two1=$2
-shift 2
-;;
---two1=*)
-two1=${1#*=}
-shift
-;;
 --expand_seeds_to_pages)
 expand_seeds_to_pages=$2
 shift 2
@@ -1183,14 +1175,6 @@ echo "checking that buildtarget exists"
 
 esac
 
-if [ "$two1" = "yes" ] ; then
-	echo "moving files so 21 script does not need to know uuid"
-	cp "$TMPDIR"$uuid/$sku"."$safe_product_name".txt" "$TMPDIR"4stdout".txt"
-	cp "$TMPDIR"$uuid/$sku.$safe_product_name".epub" /tmp/pagekicker/delivery.epub
-	cp "$TMPDIR"$uuid/$sku.$safe_product_name".docx" /tmp/pagekicker/delivery.docx
-else
-	echo "files not requested from 21"
-fi
 
 # build skyscraper image
 

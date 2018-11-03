@@ -166,7 +166,6 @@ top_q="20" # number of nerv lines used divided by 2
 toplabelfont="Utopia" #  #Decimator must be available font
 toplabelfontname="Utopia" #Decimator
 twitter_announcement="no"
-two1="no"
 txtformatname=".txt"
 txtwildcard="*.txt"
 type="downloadable"

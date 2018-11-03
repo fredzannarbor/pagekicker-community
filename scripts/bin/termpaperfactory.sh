@@ -24,7 +24,7 @@ else
 	mkdir -p -m 777 $TMPDIR$uuid
 fi
 
-$scriptpath"bin/builder.sh" --singleseed "$1" --ebook_format "docx" --two1 "yes"
+$scriptpath"bin/builder.sh" --singleseed "$1" --ebook_format "docx" 
 
 exit 0
 
