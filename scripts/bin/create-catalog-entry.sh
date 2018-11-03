@@ -477,14 +477,6 @@ shift 2
 add_dat_run=${1#*=}
 shift
 ;;
---two1)
-two1=$2
-shift 2
-;;
---two1=*)
-two1=${1#*=}
-shift
-;;
 --expand_seeds_to_pages)
 expand_seeds_to_pages=$2
 shift 2

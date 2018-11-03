@@ -59,6 +59,5 @@ COMPLETE LIST OF OPTIONS
 --summary 
 --tldr
 --truncate_seed
---two1 # for 21.co environment
 --wikilang 
 --yourname

@@ -1,25 +1,11 @@
 
 # How to Rebuild This Book
 
-## On the 21.co Network
-
-Simply re-run the command that you used to create it in the first place.
 
 ## On PageKicker.com
 To rebuild this book with the benefit of our latest content and software, go to [My Downloadable Products](https://www.pagekicker.com/index.php/downloadable/customer/products) in your PageKicker account, find the book, and click "Update". In about 20 minutes a new version of this file will be ready for download.
 
 # Build A New Book
-
-## On the 21.co Network
-
-Use PageKicker's **Book Builder** app, which is available at https://21.co/pagekicker/app/book-builder/.
-
-The format for the "quick buy" command is:
-
-```
-21 buy "pagekicker/phrase2ebook/bookbuild?key1=Neil+Armstrong" > ~/myneilarmstrongbook.epub
-```
-Where you substitute your desired key phrase for "Neil+Armstrong", with the plus sign replacing spaces.  Do not use reserved special characters.
 
 ## On PageKicker.com
 
