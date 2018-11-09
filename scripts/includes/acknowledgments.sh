@@ -11,6 +11,8 @@ echo "  " >>  "$TMPDIR"$uuid/robo_ack.md
 
 # modify acknowledgments based on source -- should become case rather than if
 
+# no active mod options
+
 # complete building acknowledgments
 
 echo "  " >>  "$TMPDIR$uuid/robo_ack.md"
