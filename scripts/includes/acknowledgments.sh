@@ -11,11 +11,7 @@ echo "  " >>  "$TMPDIR"$uuid/robo_ack.md
 
 # modify acknowledgments based on source -- should become case rather than if
 
-if [ "$two1" = "yes" ] ; then
-  echo "This book was purchased via the machine-payable web on the 21.co platform. The app is available at " 'https://21.co/pagekicker/app/term-paper-factory/'"." >>  "$TMPDIR$uuid/robo_ack.md"
-else
-  true
-fi
+# no active mod options
 
 # complete building acknowledgments
 
