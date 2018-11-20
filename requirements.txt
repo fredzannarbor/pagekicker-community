@@ -1,4 +1,14 @@
-#assumes Python 3.5.2
+
+#assumes Python 3.6.4
+
+# NOT checked with latest version of PageKicker
+
+# NOT checked for latest versions, run 
+
+# pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
+
+# found at https://stackoverflow.com/questions/2720014/upgrading-all-packages-with-pip
+
 arrow==0.8.0
 base58==0.2.3
 beautifulsoup4==4.5.1
@@ -18,6 +28,7 @@ jsonschema==2.5.1
 MarkupSafe==0.23
 mccabe==0.5.2
 mnemonic==0.13
+mwclient=0.9.2
 networkx==1.11
 nltk==3.2.1
 numpy==1.11.1
@@ -44,7 +55,6 @@ six==1.10.0
 sklearn==0.0
 stevedore==1.17.1
 tabulate==0.7.5
-two1==3.9.1
 virtualenv==15.0.3
 virtualenv-clone==0.2.6
 virtualenvwrapper==4.7.2
