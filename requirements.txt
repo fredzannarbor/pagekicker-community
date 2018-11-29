@@ -28,7 +28,7 @@ jsonschema==2.5.1
 MarkupSafe==0.23
 mccabe==0.5.2
 mnemonic==0.13
-mwclient=0.9.2
+mwclient=0.9.3
 networkx==1.11
 nltk==3.2.1
 numpy==1.11.1
