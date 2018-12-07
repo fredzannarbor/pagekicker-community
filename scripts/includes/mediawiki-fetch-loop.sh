@@ -2,13 +2,23 @@
 
 echo "starting mediawiki looP"
 
-# page expansion temporarily disabled
+# page expansion restored here
 
-cp "$TMPDIR$uuid/seeds/sorted.seedfile" "$TMPDIR$uuid/seeds/filtered.pagehits"
+if [ "$expand_seeds_to_pages" = "y" ]; then
+    echo "expand is $expand_seeds_to_pages"
+    "$PYTHON_BIN" $scriptpath"bin/mwclient_seeds_to_pages_v2.py" --infile "$TMPDIR$uuid/seeds/sorted.seedfile" --outfile "$TMPDIR$uuid/seeds/filtered.pagehits"
+    echo "expanded pages are:"
+    cat "$TMPDIR$uuid/seeds/filtered.pagehits"
+
+else
+  echo "expand is $expand_seeds_to_pages"
+	cp "$TMPDIR$uuid/seeds/sorted.seedfile" "$TMPDIR$uuid/seeds/filtered.pagehits"
+
+fi
+
 # fetch by pagehits
 echo "wikipath is $wikipath"
-sleep 5
-#exit
+
 case "$summary" in
 summaries_only)
 	echo "fetching page summaries only"
