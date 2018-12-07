@@ -58,7 +58,7 @@ with open(output_file, 'a+') as f2:
         for line in f1:
             print('seed is ' + line)
             hits = site.search(line)
-            print(*hits, file=open(output_file, "w"))
+            print(*hits, file=open(output_file, "w+"))
         f1.close()
     f2.close()
    
