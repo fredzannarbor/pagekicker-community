@@ -12,6 +12,8 @@
 
 # create 4-character UUID for outbound directory
 
+echo "setting initial values"
+
 outdir="/tmp/pagekicker/out`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 4 | head -n 1`"
 csv="n"
 reporttitle="search on term:"
@@ -20,6 +22,9 @@ singleseed="no" #default don't use
 patternfile="patternfile"
 
 # command line processing
+
+echo "beginning main loop"
+
 
 while :
 do
@@ -109,7 +114,7 @@ esac
 done
 
 # Suppose some options are required. Check that we got them.
-
+echo 'making outdir' $outdir
 mkdir -p -m 755 "$outdir"
 
 # creating one report stub for each search pattern
@@ -150,7 +155,7 @@ done<"$outdir/patternfile"
 OLDIFS=$IFS
 IFS=$'\n'; for file in $(find "$pdfdir" -name '*.pdf')
 do
-  #echo "$file"
+  echo "$file"
 	# creating file name stamp
 
 	convert \
@@ -168,21 +173,21 @@ do
 	do
 		N=$((N+1))
 		pattern_filename=`echo "$pattern"|tr -cd 'A-Za-z0-9_-'`
-    # echo "searching for $pattern in $file"
-      # pdfgrep -q  "$pattern" "$file"
+     echo "searching for $pattern in $file"
+       # pdfgrep -q  "$pattern" "$file"
 
 			if pdfgrep -q  "$pattern" "$file" 2> /dev/null; then
         # create header for results file
 				echo -e "\n" >> "$outdir/$pattern_filename-results.md"
 				echo -e '##' "$file" >> "$outdir/$pattern_filename-results.md"
-
+				echo 'test'
         # save output to results file
         # also save page numbers to pagelist file
 				pdfgrep -n -C line "$pattern" "$file" 2> /dev/null | \
           tee --append "$outdir/$pattern_filename-results.md" | echo $(cut -d: -f 1) \
           | tr ' ' '\n' | uniq > "$outdir/doc$N-$pattern_filename-pagelist"
-
-          # echo "pagelist is `cat "$outdir/$pattern_filename-pagelist"`"
+		 
+          echo "pagelist is `cat "$outdir/$pattern_filename-pagelist"`"
 
           # loop through page list and create one page for each hit
           # page in current file
@@ -192,7 +197,7 @@ do
             mkdir -p "$outdir/doc$N"
             pdftk "$file" cat "$page" output "$outdir/doc$N/$page.pdf"
           done<"$outdir/doc$N-$pattern_filename-pagelist"
-
+			
           # concatenates individual pages into a single document
           # containing all the excerpt pages for this file
           pages=$(ls "$outdir/doc$N/" | tr '\n' ' ' )
@@ -200,7 +205,7 @@ do
           cd $outdir/doc$N
           #pwd
           pdftk *.pdf cat output "$outdir/doc$N-all.pdf"
-          cd /home/$USER/pagekicker-community/scripts
+          cd /Users/fred/bin/pagekicker-community/scripts/
 
           # applies stamp to all pages in cumulative document
 
@@ -219,15 +224,15 @@ done
 
 while read pattern
 do
-
+   echo "inside pattern"
 	pattern_filename=`echo "$pattern"| tr -cd 'A-Za-z0-9_-'`
   cd "$outdir"
   # concatenates stamped documents into full sheaf
 	pdftk ?.stamped.$pattern_filename.pdf cat output "$outdir/$pattern_filename.pages.pdf"
-  cd /home/$USER/pagekicker-community/scripts
+  cd /Users/fred/bin/pagekicker-community/scripts/
 	pattern_filename=`echo "$pattern"| tr -cd 'A-Za-z0-9_-'`
 	sed 's/$/    /' $outdir/$pattern_filename-results.md | sed G > $outdir/$pattern_filename".md"
-	pandoc --latex-engine=xelatex -o "$outdir/$pattern-results.pdf" $outdir/$pattern_filename-results".md"
+	pandoc --pdf-engine=xelatex -o "$outdir/$pattern-results.pdf" $outdir/$pattern_filename-results".md"
 	pandoc -o "$outdir/$pattern_filename-results.html" $outdir/$pattern_filename-results".md"
 	echo "completed searching files for search term $pattern"
 
