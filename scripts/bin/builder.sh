@@ -724,6 +724,7 @@ do
 			 "$search_plugin_path"
 	  else
 			"not running search plugin $search_plugin_path"
+			touch "$TMPDIR$uuid/search_engine_content.md"
 		fi
 done < "$search_engine_registry"
 
@@ -740,12 +741,12 @@ done < "$search_engine_registry"
 
 # end test
 
-if [ "$search_engine_results" = "none" ] ; then
-	echo "no search engine results to add to cover cloud"
-	touch "$TMPDIR"$uuid/search_engine_results/cumulative.md
-else
+if [ "$search_engine_on" = "yes" ] ; then
 	echo "adding search engine results to cover cloud"
 	cat "$TMPDIR$uuid/search_engine_results/cumulative.md" >> "$TMPDIR"$uuid/wiki/wiki4cloud.md
+else
+	echo "no search engine results to add to cover cloud"
+	touch "$TMPDIR"$uuid/search_engine_results/cumulative.md
 fi
 
 # adds user-provided content
@@ -912,11 +913,6 @@ else
 fi
 
 # assemble section for search engine content
-# placeholder for testing
-
-#cp ~/lorem "$TMPDIR"$uuid"/search_engine_results/cumulative.md"
-
-# end test
 
 #echo "  " >> $TMPDIR$uuid/search_engine_content.md
 #echo "  " >>  "$TMPDIR"$uuid/search_engine_content.md
