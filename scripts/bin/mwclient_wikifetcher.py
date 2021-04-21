@@ -40,16 +40,18 @@ parser.add_argument("--cats_file", help = "path to outfile", default = 'cats')
 parser.add_argument("--extlinks_file", help = "path to outfile", default = 'extlinks')
 parser.add_argument("--images_file", help = "path to outfile", default = 'images')
 parser.add_argument("--backlinks_file", help = "path to outfile", default = 'backlinks')
-
+parser.add_argument("--outdir", help = "path to outfile", default = '/tmp/pagekicker') 
 
 args = parser.parse_args()
 
+outdir = args.outdir
+print('outdir is', outdir)
 input_file = args.infile
-output_file = args.outfile
-cats_file = args.cats_file
-extlinks_file = args.extlinks_file
-backlinks_file = args.backlinks_file
-images_file = args.images_file
+output_file = outdir + '/' + args.outfile
+cats_file = outdir + '/' + args.cats_file
+extlinks_file = outdir + '/' + args.extlinks_file
+backlinks_file = outdir + '/' + args.backlinks_file
+images_file = outdir + '/' + args.images_file
 lang = args.lang
 summary = args.summary
 logging = args.logging
@@ -60,31 +62,30 @@ wikipath = args.wikipath
 site = mwclient.Site('en.wikipedia.org', scheme='https')
 print('site is', site)
 file1 = open(input_file, 'r').read().splitlines()
-"""
+
 file2 = open(output_file, 'w')
 file3 = open(cats_file, 'w')
 file4 = open(extlinks_file, 'w')
 file5 = open(backlinks_file, 'w')
-file6 = open(images_file, 'w') 
-"""
+file6 = open(images_file, 'w')
+
 for line in file1:
     try:
 
         page = site.pages[line]
         print('fetching page', page)
         text = page.text()
-        print(text, sep='\n', file=open(output_file, "w"))
-        cats = page.categories()
-        print(ecats, sep='\n', file=open(extlinks_file, "w"))
+        print(text, sep='\n', file=open(output_file, "a"))
+        cats = list(page.categories())
+        print(cats, sep='\n', file=open(cats_file, "a"))
         
+        extlinks = list(page.extlinks())
+        print(extlinks, sep='\n', file=open(extlinks_file, "a"))
 
-        extlinks = page.extlinks()
-
-        print(extlinks, sep='\n', file=open(extlinks_file, "w"))
-        backlinks = page.backlinks()
-        print(backlinks, sep='\n', file=open(backlinks_file, "w"))
-        images = page.images()
-        print(images, sep='\n', file=open(images_file, "w"))
+        backlinks = list(page.backlinks())
+        print(backlinks, sep='\n', file=open(backlinks_file, "a"))
+        images = list(page.images)
+        print(images, sep='\n', file=open(images_file, "a"))
     except:
         mwclient.errors.InvalidPageTitle
         continue
