@@ -52,9 +52,7 @@ summary = args.summary
 logging = args.logging
 mediawiki_api_url = args.mediawiki_api_url
 url_prefix = args.url_prefix
-wiki_tuple = (url_prefix, mediawiki_api_url)
-printline = "wiki_tuple value is{}".format(wiki_tuple)
-print(printline)
+
 
 def recursive_items(dictionary):
     for key, value in dictionary.items():
@@ -66,7 +64,7 @@ def recursive_items(dictionary):
             yield (key, value)
 
 wikipath = args.wikipath
-site = mwclient.Site(wiki_tuple, path=wikipath)
+site = mwclient.Site('en.wikipedia.org', scheme="https")
 print(site)
 file1 = open(input_file, 'r').read().splitlines()
 

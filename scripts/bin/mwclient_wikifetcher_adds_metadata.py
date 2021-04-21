@@ -49,41 +49,36 @@ summary = args.summary
 logging = args.logging
 mediawiki_api_url = args.mediawiki_api_url
 url_prefix = args.url_prefix
-wiki_tuple = (url_prefix, mediawiki_api_url)
-printline = "wiki_tuple value is{}".format(wiki_tuple)
-print(printline)
+
 
 wikipath = args.wikipath
-site = mwclient.Site(wiki_tuple, path=wikipath)
+site = mwclient.Site('en.wikipedia.org', scheme="https")
 print(site)
 file1 = open(input_file, 'r').read().splitlines()
 file2 = open(output_file, 'w')
 file3 = open(cats_file, 'w')
-#file4 = open(extlinks_file, 'a+')
+file4 = open(extlinks_file, 'a+')
 for line in file1:
     try:
         print('seed is ' + line)
         page = site.pages[line]
-        #print(page)
         text = page.text()
-        #print(text)
-        #cats = page.categories('True', '!hidden')
         #print('\n'+ 'categories are' + '\n')
        #print(*cats, sep='\n')
         cats = list(page.categories())
-        print(*cats)
-        extlinks = page.extlinks()
+        print(cats)
+        extlinks = list(page.extlinks())
         print('\n'+ 'external links are '+ '\n')
-        print(*extlinks, sep='\n', file=open(extlinks_file, "w"))
-        #backlinks = page.backlinks()
-        #print(*backlinks)
-        images = page.images()
-        print(*images)
+        print(extlinks)
+        print(extlinks, sep='\n', file=open(extlinks_file, "w"))
+        backlinks = page.backlinks()
+        print(*backlinks)
+        images = list(page.images())
+        print(images)
     except:
         mwclient.errors.InvalidPageTitle
         continue
     file2.write('\n')
-    #print(text)
     file2.write('\n')
     file2.write('# ' )
     file2.write(line)
@@ -97,12 +92,13 @@ for line in file1:
     file3.write('\n')
     file3.write(str(cats))
     
-#    file4.write('\n')
-#    file4.write('\n')
-#    file4.write('# ' )
-#    file4.write(line)
-#    file4.write('\n')
-# file4.write(str(extlinks))
+    file4.write('\n')
+    file4.write('\n')
+    file4.write('# ' )
+    file4.write(line)
+    file4.write('\n')
+    file4.write(str(extlinks))
     
 file2.close
 file3.close
+file4.close

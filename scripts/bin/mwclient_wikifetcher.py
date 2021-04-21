@@ -23,6 +23,7 @@ import argparse
 import mwclient
 
 
+
 logging.basicConfig(level=logging.WARNING)
 
 parser = argparse.ArgumentParser()
@@ -37,6 +38,9 @@ parser.add_argument("--url_prefix", help = "default wiki ssl value is https", de
 parser.add_argument("--wikipath", help = "mediawiki default is /w/api.php", default = '/w/')
 parser.add_argument("--cats_file", help = "path to outfile", default = 'cats')
 parser.add_argument("--extlinks_file", help = "path to outfile", default = 'extlinks')
+parser.add_argument("--images_file", help = "path to outfile", default = 'images')
+parser.add_argument("--backlinks_file", help = "path to outfile", default = 'backlinks')
+
 
 args = parser.parse_args()
 
@@ -44,51 +48,52 @@ input_file = args.infile
 output_file = args.outfile
 cats_file = args.cats_file
 extlinks_file = args.extlinks_file
+backlinks_file = args.backlinks_file
+images_file = args.images_file
 lang = args.lang
 summary = args.summary
 logging = args.logging
 mediawiki_api_url = args.mediawiki_api_url
 url_prefix = args.url_prefix
-wiki_tuple = (url_prefix, mediawiki_api_url)
-printline = "wiki_tuple value is{}".format(wiki_tuple)
-print(printline)
 
 wikipath = args.wikipath
-site = mwclient.Site(wiki_tuple, path=wikipath)
-print(site)
+site = mwclient.Site('en.wikipedia.org', scheme='https')
+print('site is', site)
 file1 = open(input_file, 'r').read().splitlines()
+"""
 file2 = open(output_file, 'w')
 file3 = open(cats_file, 'w')
-#file4 = open(extlinks_file, 'a+')
+file4 = open(extlinks_file, 'w')
+file5 = open(backlinks_file, 'w')
+file6 = open(images_file, 'w') 
+"""
 for line in file1:
     try:
-        print('seed is ' + line)
+
         page = site.pages[line]
-        #print(page)
+        print('fetching page', page)
         text = page.text()
-        #print(text)
-        #cats = page.categories('True', '!hidden')
-        #print('\n'+ 'categories are' + '\n')
-       #print(*cats, sep='\n')
-        cats = list(page.categories())
-        print(*cats)
+        print(text, sep='\n', file=open(output_file, "w"))
+        cats = page.categories()
+        print(ecats, sep='\n', file=open(extlinks_file, "w"))
+        
+
         extlinks = page.extlinks()
-        print('\n'+ 'external links are '+ '\n')
-        print(*extlinks, sep='\n', file=open(extlinks_file, "w"))
-        #backlinks = page.backlinks()
-        #print(*backlinks)
+
+        print(extlinks, sep='\n', file=open(extlinks_file, "w"))
+        backlinks = page.backlinks()
+        print(backlinks, sep='\n', file=open(backlinks_file, "w"))
         images = page.images()
-        print(*images)
+        print(images, sep='\n', file=open(images_file, "w"))
     except:
         mwclient.errors.InvalidPageTitle
         continue
     file2.write('\n')
-    #print(text)
     file2.write('\n')
     file2.write('# ' )
-    file2.write(line)
+    file2.write(str(line))
     file2.write('\n')
-    file2.write(text)
+    file2.write(str(text))
     
     file3.write('\n')
     file3.write('\n')
@@ -97,12 +102,29 @@ for line in file1:
     file3.write('\n')
     file3.write(str(cats))
     
-#    file4.write('\n')
-#    file4.write('\n')
-#    file4.write('# ' )
-#    file4.write(line)
-#    file4.write('\n')
-# file4.write(str(extlinks))
-    
+    file4.write('\n')
+    file4.write('\n')
+    file4.write('# ' )
+    file4.write(line)
+    file4.write('\n')
+    file4.write(str(extlinks))
+
+    file5.write('\n')
+    file5.write('\n')
+    file5.write('# ' )
+    file5.write(line)
+    file5.write('\n')
+    file5.write(str(backlinks))
+
+    file6.write('\n')
+    file6.write('\n')
+    file6.write('# ' )
+    file6.write(line)
+    file6.write('\n')
+    file6.write(str(images))
+   
 file2.close
 file3.close
+file4.close
+file5.close
+file6.close
