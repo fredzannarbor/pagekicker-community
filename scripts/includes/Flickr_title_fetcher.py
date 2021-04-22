@@ -8,14 +8,14 @@
 #2) TitleImage_X.jpg - downloaded image
 #3) TitleImage_X.txt - image metadata 
 
-import os, sys, json, flickrapi, codecs, urllib 
+import os, sys, json, flickrapi, codecs, urllib.request, urllib.parse, urllib.error 
 
 #=================================================
 def callTheApi(api_key, seed, per_page_num):
 	#This calls the API with a search term or 'seed'
 	flickr = flickrapi.FlickrAPI(api_key)
 	json_photos = json.loads(flickr.photos_search(text=seed, per_page=str(per_page_num), format = 'json', nojsoncallback=1, license = '4,6' ));
-	print json_photos
+	print(json_photos)
 	return json_photos
 
 #=================================================
@@ -60,7 +60,7 @@ def parser(json_photos, per_page_num, api_key, seed, index):
 		
 		f = codecs.open('title_url_list.txt', encoding = 'utf-8', mode = 'a')
 		for pic in range(per_page_num):
-			f2 = codecs.open('TitleImage_'+unicode(index+1)+'.txt', encoding = 'utf-8', mode = 'a')
+			f2 = codecs.open('TitleImage_'+str(index+1)+'.txt', encoding = 'utf-8', mode = 'a')
 			pic_title = json_photos["photos"]['photo'][int(pic)]['title']
 			pic_owner = json_photos['photos']['photo'][int(pic)]['owner']
 			pic_id = json_photos['photos']['photo'][int(pic)]['id']
@@ -72,12 +72,12 @@ def parser(json_photos, per_page_num, api_key, seed, index):
 			if username == None:
 				username = pic_owner
 				
-			url = "https://farm" + unicode(pic_farm) + ".static.flickr.com/"\
+			url = "https://farm" + str(pic_farm) + ".static.flickr.com/"\
 			+ pic_server + "/" + pic_id + "_" + pic_secret + ".jpg"
-			print seed.encode('utf-8')
-			print pic_title.encode('utf-8')
-			print username.encode('utf-8')
-			print url.encode('utf-8')
+			print(seed.encode('utf-8'))
+			print(pic_title.encode('utf-8'))
+			print(username.encode('utf-8'))
+			print(url.encode('utf-8'))
 			
 			f2.write('Seed: '+ seed + '\n' +'Title: ' + pic_title + '\n' \
 			+ 'User: ' + username + '\n' +'URL: ' + str(url) + '\n' + 'Tags: ')
@@ -91,7 +91,7 @@ def parser(json_photos, per_page_num, api_key, seed, index):
 #=================================================
 def imageDownloader(url, index):
 	if url != None:
-		urllib.urlretrieve(url, 'TitleImage_'+str(index+1) + '.jpg')
+		urllib.request.urlretrieve(url, 'TitleImage_'+str(index+1) + '.jpg')
 
 #=================================================
 def main():
@@ -104,7 +104,7 @@ def main():
 		for index, line in enumerate(f):
 			line = line.strip()
 			if line: 
-				print line
+				print(line)
 				json_photos = callTheApi(api_key, line, per_page_num);
 				
 				url = parser(json_photos, per_page_num, api_key, line, index)

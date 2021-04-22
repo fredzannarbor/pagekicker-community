@@ -76,9 +76,10 @@ for line in file1:
         print('fetching page', page)
         text = page.text()
         print(text, sep='\n', file=open(output_file, "a"))
+
         cats = list(page.categories())
         print(cats, sep='\n', file=open(cats_file, "a"))
-        
+
         extlinks = list(page.extlinks())
         print(extlinks, sep='\n', file=open(extlinks_file, "a"))
 

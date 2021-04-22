@@ -19,6 +19,8 @@ fi
 # fetch by pagehits
 echo "wikipath is $wikipath"
 
+echo "$PYTHON_BIN"
+
 case "$summary" in
 summaries_only)
 	echo "fetching page summaries only"
