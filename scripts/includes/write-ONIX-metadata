@@ -1,2 +1,0 @@
-# write ONIX metadata for Google Play
-echo "onixtest" > $publisher"_"$YYYYMMDD".xml"
