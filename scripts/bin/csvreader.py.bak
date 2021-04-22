@@ -41,5 +41,5 @@ destinations= [folder+dest for dest in ('/csv/row.editedby',
 with multi_file_manager(destinations, mode='w') as files:
     row = csv_read_row(f, target_row)
     #editedby, booktitle, seeds, imprint = row[0], row[2], row[3], row[4]
-    for i,j in zip(list(range(5)), (0, 2, 3, 4, 5)):
+    for i,j in zip(range(5), (0, 2, 3, 4, 5)):
         files[i].write(row[j]+'\n')

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+from __future__ import print_function
 
 '''Post a message to twitter'''
 
@@ -9,7 +9,7 @@ __author__ = 'dewitt@google.com'
 try:
     import configparser
 except ImportError as _:
-    import configparser as configparser
+    import ConfigParser as configparser
 
 import getopt
 import os
@@ -46,7 +46,27 @@ USAGE = '''Usage: tweet [options] message
     access_key: *access_key*
     access_secret: *access_password*
 '''
+parser = argparse.ArgumentParser()
+#parser.add_argument("-h", "--help", help="print this help")
+parser.add_argument("-k", "--consumerkey", help="the twitter consumer key")
+parser.add_argument("-s", "--consumersecret", help="the twitter consumer secret")
+parser.add_argument("-a", "--accesskey", help="the Twitter access token key")
+parser.add_argument("-c","--accesssecret", help="the twitter access token secret")
+parser.add_argument("-e", "--encoding", help="the character set encoding used in input strings, e.g. utf-8. [optional]")
+parser.add_argument("-f", "--file", help="path to text file containing < 280 characters")
+parser.add_argument("-i", "--image", help="path to image attachment file")
+parser.add_argument("-m", "--message", help="text of message")
 
+args = parser.parse_args()
+
+consumer_key = args.consumerkey
+consumer_secret = args.consumersecret
+access_key = args.accesskey
+access_secret = args.accesssecret
+encoding = args.encoding
+file = args.file
+image = args.image
+message= args.message
 
 def PrintUsageAndExit():
     print(USAGE)
@@ -99,34 +119,15 @@ class TweetRc(object):
 
 
 def main():
-    try:
-        shortflags = 'h'
-        longflags = ['help', 'consumer-key=', 'consumer-secret=',
-                     'access-key=', 'access-secret=', 'encoding=']
-        opts, args = getopt.gnu_getopt(sys.argv[1:], shortflags, longflags)
-    except getopt.GetoptError:
-        PrintUsageAndExit()
+        
     consumer_keyflag = None
     consumer_secretflag = None
     access_keyflag = None
     access_secretflag = None
-    encoding = None
-    for o, a in opts:
-        if o in ("-h", "--help"):
-            PrintUsageAndExit()
-        if o in ("--consumer-key"):
-            consumer_keyflag = a
-        if o in ("--consumer-secret"):
-            consumer_secretflag = a
-        if o in ("--access-key"):
-            access_keyflag = a
-        if o in ("--access-secret"):
-            access_secretflag = a
-        if o in ("--encoding"):
-            encoding = a
-    message = ' '.join(args)
+    
     if not message:
         PrintUsageAndExit()
+
     rc = TweetRc()
     consumer_key = consumer_keyflag or GetConsumerKeyEnv() or rc.GetConsumerKey()
     consumer_secret = consumer_secretflag or GetConsumerSecretEnv() or rc.GetConsumerSecret()
