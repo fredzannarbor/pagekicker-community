@@ -8,6 +8,6 @@ for fileName in os.listdir('.'):
         input1 = PdfFileReader(file(fileName, "rb"))
    
         # print the title of document1.pdf
-        print '##1', fileName, '##2', input1.getDocumentInfo().title
+        print('##1', fileName, '##2', input1.getDocumentInfo().title)
     except:
-        print '##1', fileName, '##2'
+        print('##1', fileName, '##2')
