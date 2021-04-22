@@ -76,16 +76,9 @@ for line in file1:
         print('fetching page', page)
         text = page.text()
         print(text, sep='\n', file=open(output_file, "a"))
-<<<<<<< HEAD
-        cats = list(page.categories())
-        print(cats, sep='\n', file=open(cats_file, "a"))
-        
-=======
 
         cats = list(page.categories())
         print(cats, sep='\n', file=open(cats_file, "a"))
-
->>>>>>> 02c3d39556dd37836a5933188a7b2798d3eada36
         extlinks = list(page.extlinks())
         print(extlinks, sep='\n', file=open(extlinks_file, "a"))
 
