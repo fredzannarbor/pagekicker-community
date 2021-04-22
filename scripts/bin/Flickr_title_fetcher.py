@@ -15,7 +15,7 @@ def callTheApi(api_key, seed, per_page_num):
 	#This calls the API with a search term or 'seed'
 	flickr = flickrapi.FlickrAPI(api_key)
 	json_photos = json.loads(flickr.photos_search(text=seed, per_page=str(per_page_num), format = 'json', nojsoncallback=1, license = '4,6' ));
-	print json_photos
+	print(json_photos)
 	return json_photos
 
 #=================================================
@@ -74,10 +74,10 @@ def parser(json_photos, per_page_num, api_key, seed, index):
 				
 			url = "https://farm" + unicode(pic_farm) + ".static.flickr.com/"\
 			+ pic_server + "/" + pic_id + "_" + pic_secret + ".jpg"
-			print seed.encode('utf-8')
-			print pic_title.encode('utf-8')
-			print username.encode('utf-8')
-			print url.encode('utf-8')
+			print(seed.encode('utf-8'))
+			print(pic_title.encode('utf-8'))
+			print(username.encode('utf-8'))
+			print(url.encode('utf-8'))
 			
 			f2.write('Seed: '+ seed + '\n' +'Title: ' + pic_title + '\n' \
 			+ 'User: ' + username + '\n' +'URL: ' + str(url) + '\n' + 'Tags: ')
@@ -104,7 +104,7 @@ def main():
 		for index, line in enumerate(f):
 			line = line.strip()
 			if line: 
-				print line
+				print(line)
 				json_photos = callTheApi(api_key, line, per_page_num);
 				
 				url = parser(json_photos, per_page_num, api_key, line, index)
