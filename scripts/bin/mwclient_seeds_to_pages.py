@@ -78,7 +78,7 @@ for line in file:
         mwclient.errors.InvalidPageTitle
         continue
     file2.write(b'\n')
-    print((text.encode('utf-8')))
+    print(text.encode('utf-8'))
     file2.write(b'\n')
     file2.write(b'# ' )
     file2.write(line.encode('utf-8'))
