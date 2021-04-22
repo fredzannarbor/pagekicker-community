@@ -50,6 +50,7 @@ install_dependencies_mac(){
 
 brew install calibre
 brew install fdupes
+brew install gsed
 brew install imagemagick
 brew cask install java
 brew install mysql-client
