@@ -66,10 +66,10 @@ def parser(json_photos, per_page_num, api_key, seed, index):
 			username = getFlickrUsername(api_key, pic_owner)
 			url = "http://farm" + unicode(pic_farm) + ".static.flickr.com/"\
 			+ pic_server + "/" + pic_id + "_" + pic_secret + ".jpg"
-			print seed
-			print pic_title
-			print username
-			print url
+			print(seed)
+			print(pic_title)
+			print(username)
+			print(url)
 			
 			#I'm having some troubles with usernames here's a quick fix:
 			if username == None: 
