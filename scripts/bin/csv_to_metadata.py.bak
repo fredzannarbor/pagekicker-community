@@ -63,13 +63,13 @@ try:
         seeds = rows[row_no][3]
         imprint = rows[row_no][4]
         #catid = rows[row_no][7]
-        print(editedby)
+        print editedby
         #print price
-        print(description)
-        print(product_name)
+        print description
+        print product_name
         #print jobprofile
-        print(seeds)
-        print(imprint)
+        print seeds
+        print imprint
        # print catid
         f1.write(editedby)
        # f2.write(price)

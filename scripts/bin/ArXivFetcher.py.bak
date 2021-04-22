@@ -13,7 +13,7 @@
 #######
 
 
-import os, sys, codecs, urllib.request, urllib.parse, urllib.error
+import os, sys, codecs, urllib
 try:
     import xml.etree.cElementTree as ET
 except ImportError:
@@ -27,7 +27,7 @@ def main():
 	title = ''
 	pdf = ''
 	url = 'http://export.arxiv.org/api/query?search_query=all:'+seed+'&start=0&max_results='+results_num+'&sortBy=relevance&sortOrder=descending'
-	data = urllib.request.urlopen(url).read()
+	data = urllib.urlopen(url).read()
 	tree = ET.fromstring(data)
 	
 	title_list = []
@@ -48,8 +48,8 @@ def main():
 	#title = tree[7][3].text
 	if title != '':
 		for i in range(len(title_list)):
-			print((title_list[i]))
-			print((pdf_list[i]))
+			print(title_list[i])
+			print (pdf_list[i])
 	else:
 		print('No results found.')
 	#print data

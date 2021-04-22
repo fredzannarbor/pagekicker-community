@@ -4,45 +4,50 @@
 #1) a text file containing seeds for image calls and 
 #2) a uuid 
 #Outputs:
-#1) url_list.txt - a list of images that are retrieved from Flickr 
+#1) url_list.txt - a list of images that are retrieved from Flickr
+#2) TitleImage_X.jpg - downloaded image
+#3) TitleImage_X.txt - image metadata 
 
-import os, sys, json, flickrapi, codecs, urllib.request, urllib.parse, urllib.error 
+import os, sys, json, flickrapi, codecs, urllib 
 
 #=================================================
 def callTheApi(api_key, seed, per_page_num):
 	#This calls the API with a search term or 'seed'
 	flickr = flickrapi.FlickrAPI(api_key)
-	json_photos = json.loads(flickr.photos_search(text=seed, \
-	per_page=str(per_page_num), format = 'json', nojsoncallback=1, \
-	license = '4,6' ));
-	#print json_photos
+	json_photos = json.loads(flickr.photos_search(text=seed, per_page=str(per_page_num), format = 'json', nojsoncallback=1, license = '4,6' ));
+	print json_photos
 	return json_photos
 
 #=================================================
-def getFlickrUsername(api_key, pic_owner):
+def getFlickrInfo(api_key, pic_id):
 	#calls API to retrieve username for photo
 	flickr = flickrapi.FlickrAPI(api_key)
-	user_info = json.loads(flickr.people_getInfo(user_id = pic_owner, \
+	info = json.loads(flickr.photos_getInfo(photo_id = pic_id, \
 	format = 'json', nojsoncallback = 1))
-	#print user_info['person']
+
 	#Filters out those users who don't have their real name available
 	#and uses their username instead
-	username = None;
-	if 'realname' in user_info['person']:
+	
+	if 'photo' in info:
+		if 'realname' in info['photo']['owner']:
+			username = info['photo']['owner']['realname']
+			if username == '':
+				username = info['photo']['owner']['username']
+				#if username == None:
+				#	username = user_info['person']['username']['_content']
+	
+		tag_list = []
+		if 'tags' in info['photo']:
+			if 'tag' in info['photo']['tags']:
+				tags = info['photo']['tags']['tag']
+				for tag in range(len(tags)):
+					tag_list.append(tags[int(tag)]['raw'])
+		return username, tag_list
 		
-		username = user_info['person']['realname']['_content']
-		if username == '':
-			username = user_info['person']['path_alias']
-			if username == None:
-				username = user_info['person']['username']['_content']
-			
-	elif user_info['person']['path_alias'] != None:
-		username = user_info['person']['path_alias']
-	else:
-		username = user_info['person']['username']['_content']
-	return username
-
-
+	elif 'username' in info:
+		username = info['username']['_content']
+		tag_list = []
+		return username, tag_list
 
 
 #=================================================
@@ -55,7 +60,7 @@ def parser(json_photos, per_page_num, api_key, seed, index):
 		
 		f = codecs.open('title_url_list.txt', encoding = 'utf-8', mode = 'a')
 		for pic in range(per_page_num):
-			f2 = codecs.open('TitleImage_'+str(index+1)+'.txt', encoding = 'utf-8', mode = 'a')
+			f2 = codecs.open('TitleImage_'+unicode(index+1)+'.txt', encoding = 'utf-8', mode = 'a')
 			pic_title = json_photos["photos"]['photo'][int(pic)]['title']
 			pic_owner = json_photos['photos']['photo'][int(pic)]['owner']
 			pic_id = json_photos['photos']['photo'][int(pic)]['id']
@@ -63,27 +68,30 @@ def parser(json_photos, per_page_num, api_key, seed, index):
 			pic_server = json_photos['photos']['photo'][int(pic)]['server']
 			pic_secret = json_photos['photos']['photo'][int(pic)]['secret']
 	
-			username = getFlickrUsername(api_key, pic_owner)
-			url = "http://farm" + str(pic_farm) + ".static.flickr.com/"\
+			[username, tags] = getFlickrInfo(api_key, pic_id)
+			if username == None:
+				username = pic_owner
+				
+			url = "https://farm" + unicode(pic_farm) + ".static.flickr.com/"\
 			+ pic_server + "/" + pic_id + "_" + pic_secret + ".jpg"
-			print(seed)
-			print(pic_title)
-			print(username)
-			print(url)
+			print seed.encode('utf-8')
+			print pic_title.encode('utf-8')
+			print username.encode('utf-8')
+			print url.encode('utf-8')
 			
-			#I'm having some troubles with usernames here's a quick fix:
-			if username == None: 
-				continue
-			f2.write('Seed: '+ seed + '\n' +'Title: ' + pic_title + '\n' + 'User: ' + username + '\n' +'URL: ' + str(url) )
-			f.write(seed + ': "' + pic_title + '", An image by Flickr user: ' + username + ' : ' + url + '\n')
-			
+			f2.write('Seed: '+ seed + '\n' +'Title: ' + pic_title + '\n' \
+			+ 'User: ' + username + '\n' +'URL: ' + str(url) + '\n' + 'Tags: ')
+			f2.writelines("%s; " % item for item in tags)
 			f2.close()
+			f.write(seed + ': "' + pic_title + '", An image by Flickr user: ' + username + ' : ' + url + '\n')
+			imageDownloader(url, index)
+			index += 1
 		f.close()
 		return url
 #=================================================
 def imageDownloader(url, index):
 	if url != None:
-		urllib.request.urlretrieve(url, 'TitleImage_'+str(index+1) + '.jpg')
+		urllib.urlretrieve(url, 'TitleImage_'+str(index+1) + '.jpg')
 
 #=================================================
 def main():
@@ -96,7 +104,7 @@ def main():
 		for index, line in enumerate(f):
 			line = line.strip()
 			if line: 
-				#print line
+				print line
 				json_photos = callTheApi(api_key, line, per_page_num);
 				
 				url = parser(json_photos, per_page_num, api_key, line, index)

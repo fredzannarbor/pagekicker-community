@@ -44,7 +44,7 @@ class SimpleSummarizer:
 		
 		# now create a set of the most frequent words
 		most_frequent_words = [pair[0] for pair in 
-			list(word_frequencies.items())[:100]]
+			word_frequencies.items()[:100]]
 		
 		# break the input up into sentences.  working_sentences is used 
 		# for the analysis, but actual_sentences is used in the results

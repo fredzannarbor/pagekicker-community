@@ -37,7 +37,7 @@ try:
 	mendeley.load_keys()
 except IOError:
 	mendeley.get_required_keys()
- 	mendeley.save_keys()
+	mendeley.save_keys()
 
 
 folders = mendeley.group_folders(groupId)
