@@ -1,0 +1,249 @@
+#!/bin/bash
+
+# search all PDFs in directory for patterns provided in text file
+# usage:
+# bin/pdfgrepkicker.sh --singleseed "68002" --pdfdir "/home/fred/pagekicker-community/local-data/content_collections/wapacktest/"
+
+# assumes all PDFs are decrypted
+# requires pdftk, pandoc, pdfgrep, imagemagick
+# needs config file sensing
+
+# default values
+
+# create 4-character UUID for outbound directory
+
+echo "setting initial values"
+
+outdir="/tmp/pagekicker/out`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 4 | head -n 1`"
+csv="n"
+reporttitle="search on term:"
+pdfdir="." # run file from within decrypted dir
+singleseed="no" #default don't use
+patternfile="patternfile"
+
+# command line processing
+
+echo "beginning main loop"
+
+
+while :
+do
+case $1 in
+--help | -\?)
+echo "usage:"
+echo "requires user to provide path to directory containing one or more txt files"
+exit 0  # This is not an error, the user requested help, so do not exit status 1.
+;;
+--pdfdir)
+pdfdir=$2
+shift 2
+;;
+--pdfdir=*)
+pdfdir=${1#*=}
+shift
+;;
+--outdir)
+outdir=$2
+shift 2
+;;
+--outdir=*)
+outdir=${1#*=}
+shift
+;;
+--patternfile)
+patternfile=$2
+shift 2
+;;
+--patternfile=*)
+patternfile=${1#*=}
+shift
+;;
+--reporttitle)
+reporttitle=$2
+shift 2
+;;
+--reporttitle=*)
+reporttitle=${1#*=}
+shift 2
+;;
+--csv)
+csv=$2
+shift 2
+;;
+--csv=*)
+csv=${1#*=}
+shift
+;;
+--singleseed)
+singleseed=$2
+shift 2
+;;
+--singleseed=*)
+singleseed=${1#*=}
+shift
+;;
+--seedfile)
+seedfile=$2
+shift 2
+;;
+--seedfile=*)
+seedfile=${1#*=}
+shift
+;;
+-q|--quiet)
+quiet=$2
+shift 2
+;;
+-q|--quiet=*)
+quiet=${1#*=}
+shift
+;;
+  --) # End of all options
+	    shift
+	    break
+	    ;;
+	-*)
+	    echo "WARN: Unknown option (ignored): $1" >&2
+	    shift
+	    ;;
+	*)  # no more options. Stop while loop
+	    break
+	    ;;
+
+esac
+done
+
+# Suppose some options are required. Check that we got them.
+echo 'making outdir' $outdir
+mkdir -p -m 755 "$outdir"
+
+# creating one report stub for each search pattern
+# in directory outdir***
+
+if [ "$quiet" ] ; then
+  quiet="yes"
+else
+  true
+fi
+
+if [ ! "$pdfdir" ]; then
+  echo "ERROR: option '--pdfdir[pdfdir]' not given. See --help" >&2
+   exit 1
+fi
+
+if [ "$singleseed" = "no" ]; then
+
+	echo "singleseed is not in use"
+
+else
+	#echo "search term is $singleseed"
+	echo "$singleseed" > "$outdir"/patternfile
+fi
+
+# file processing begins
+
+
+while read pattern
+do
+	pattern_filename=`echo "$pattern"|tr -cd 'A-Za-z0-9_-'`
+	echo -e \#  "$reporttitle $pattern" > $outdir/"$pattern_filename"
+
+done<"$outdir/patternfile"
+
+# overly complicated for loop begins
+
+OLDIFS=$IFS
+IFS=$'\n'; for file in $(find "$pdfdir" -name '*.pdf')
+do
+  echo "$file"
+	# creating file name stamp
+
+	convert \
+	-colorspace RGB \
+	-size 2550x3300 xc:transparent \
+	-fill grey \
+	-pointsize 96 \
+	-gravity North \
+	-annotate +0+50 "$file" \
+  "$outdir"/filestamp.pdf
+
+	# loop through all search terms, one file at a time
+
+	while read pattern
+	do
+		N=$((N+1))
+		pattern_filename=`echo "$pattern"|tr -cd 'A-Za-z0-9_-'`
+     echo "searching for $pattern in $file"
+       # pdfgrep -q  "$pattern" "$file"
+
+			if pdfgrep -q  "$pattern" "$file" 2> /dev/null; then
+        # create header for results file
+				echo -e "\n" >> "$outdir/$pattern_filename-results.md"
+				echo -e '##' "$file" >> "$outdir/$pattern_filename-results.md"
+				echo 'test'
+        # save output to results file
+        # also save page numbers to pagelist file
+				pdfgrep -n -C line "$pattern" "$file" 2> /dev/null | \
+          tee --append "$outdir/$pattern_filename-results.md" | echo $(cut -d: -f 1) \
+          | tr ' ' '\n' | uniq > "$outdir/doc$N-$pattern_filename-pagelist"
+		 
+          echo "pagelist is `cat "$outdir/$pattern_filename-pagelist"`"
+
+          # loop through page list and create one page for each hit
+          # page in current file
+
+          while read page
+          do
+            mkdir -p "$outdir/doc$N"
+            pdftk "$file" cat "$page" output "$outdir/doc$N/$page.pdf"
+          done<"$outdir/doc$N-$pattern_filename-pagelist"
+			
+          # concatenates individual pages into a single document
+          # containing all the excerpt pages for this file
+          pages=$(ls "$outdir/doc$N/" | tr '\n' ' ' )
+          #echo $pages
+          cd $outdir/doc$N
+          #pwd
+          pdftk *.pdf cat output "$outdir/doc$N-all.pdf"
+          cd /Users/fred/bin/pagekicker-community/scripts/
+
+          # applies stamp to all pages in cumulative document
+
+          pdftk "$outdir/doc$N-all.pdf" multistamp "$outdir/filestamp.pdf" output "$outdir/$N.stamped.$pattern_filename.pdf"
+          #sleep 20
+
+				if [ "$csv" = "y" ] ; then
+					pdfgrep -n -H -C line "$pattern" "$file" 2> /dev/null | tee --append $outdir/$pattern_filename".csv"
+				else
+					true
+				fi
+			fi
+	echo "$file" >> "$outdir"/"$pattern_filename".files_searched.txt
+done<"$outdir/$patternfile"
+done
+
+while read pattern
+do
+   echo "inside pattern"
+	pattern_filename=`echo "$pattern"| tr -cd 'A-Za-z0-9_-'`
+  cd "$outdir"
+  # concatenates stamped documents into full sheaf
+	pdftk ?.stamped.$pattern_filename.pdf cat output "$outdir/$pattern_filename.pages.pdf"
+  cd /Users/fred/bin/pagekicker-community/scripts/
+	pattern_filename=`echo "$pattern"| tr -cd 'A-Za-z0-9_-'`
+	sed 's/$/    /' $outdir/$pattern_filename-results.md | sed G > $outdir/$pattern_filename".md"
+	pandoc --pdf-engine=xelatex -o "$outdir/$pattern-results.pdf" $outdir/$pattern_filename-results".md"
+	pandoc -o "$outdir/$pattern_filename-results.html" $outdir/$pattern_filename-results".md"
+	echo "completed searching files for search term $pattern"
+
+done<"$outdir/$patternfile"
+
+
+  echo "completed searching files in directory"
+  echo "$pdfdir"
+  #echo "for all search files in $outdir/$pattern_file"
+  echo "results in $outdir"
+  echo "*results.pdf and results.html contain hit lines"
+  echo "*pages.pdf contains a sheaf of all pages including hits"
+
+exit

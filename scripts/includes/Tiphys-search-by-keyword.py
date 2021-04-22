@@ -40,7 +40,7 @@ except IOError:
 
 
 
-searchterm = input('Enter search term: ')
+searchterm = raw_input('Enter search term: ')
 pprint(searchterm)
 
 documents = mendeley.search(searchterm, items=20)

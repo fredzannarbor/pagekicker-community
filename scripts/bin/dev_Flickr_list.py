@@ -58,7 +58,7 @@ def parser(json_photos, per_page_num, api_key, seed):
 	
 			username = getFlickrUsername(api_key, pic_owner)
 	
-			url = "http://farm" + str(pic_farm) + ".static.flickr.com/"\
+			url = "http://farm" + unicode(pic_farm) + ".static.flickr.com/"\
 			+ pic_server + "/" + pic_id + "_" + pic_secret + ".jpg"
 			f.write(seed + ': "' + pic_title + '", An image by Flickr user: ' + username + ' : ' + url + '\n')
 	

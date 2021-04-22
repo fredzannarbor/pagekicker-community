@@ -1,5 +1,5 @@
 
-import urllib.request, urllib.parse, urllib.error
+import urllib
 import sys
 
 from xml.etree import ElementTree as etree
@@ -26,25 +26,25 @@ class AlchemyAPI_Params(object):
     return self._mode
   def setOutputMode(self, mode):
     if mode != "xml":
-      raise Exception('Error setting output mode.')
+      raise Exception, 'Error setting output mode.'
     self._outputMode = mode
   def getCustomParameters(self):
     return self._customParameters
   def setCustomParameters(self, *values):
     self._customParameters = ""
     for i in len(values):
-      self._customParameters += "&" + values[i] + "=" + urllib.parse.quote(values[i + 1])
+      self._customParameters += "&" + values[i] + "=" + urllib.quote(values[i + 1])
       i = i + 1
   def getParameterString(self):
     retString = ""
     if self._url != "":
-      retString += "&url=" + urllib.parse.quote(self._url)
+      retString += "&url=" + urllib.quote(self._url)
     if self._html != "":
-      retString += "&html=" + urllib.parse.quote(self._html)
+      retString += "&html=" + urllib.quote(self._html)
     if self._text != "":
-      retString += "&text=" + urllib.parse.quote(self._text)
+      retString += "&text=" + urllib.quote(self._text)
     if self._outputMode != "":
-      retString += "&outputMode=" + urllib.parse.quote(self._outputMode)
+      retString += "&outputMode=" + urllib.quote(self._outputMode)
     if self._customParameters != "":
       retString += self._customParameters
     return retString
@@ -67,35 +67,35 @@ class AlchemyAPI_NamedEntityParams(AlchemyAPI_Params):
   def setDisambiguate(self, setting):
     if setting != 1:
       if setting != 0:
-        raise Exception('Error setting Disambiguate.')
+        raise Exception, 'Error setting Disambiguate.'
     self._disambiguate = setting
   def getLinkedData(self):
     return self._linkedData
   def setLinkedData(self, setting):
     if setting != 1:
       if setting != 0:
-        raise Exception('Error setting LinkedData.')
+        raise Exception, 'Error setting LinkedData.'
     self._linkedData = setting
   def getCoreference(self):
     return self._coreference
   def setCoreference(self, setting):
     if setting != 1:
       if setting != 0:
-        raise Exception('Error setting Coreference.')
+        raise Exception, 'Error setting Coreference.'
     self._coreference = setting
   def getQuotations(self):
     return self._quotations
   def setQuotations(self, setting):
     if setting != 1:
       if setting != 0:
-        raise Exception('Error setting Quotations.')
+        raise Exception, 'Error setting Quotations.'
     self._quotations = setting
   def getShowSourceText(self):
     return self._showSourceText
   def setShowSourceText(self, setting):
     if setting != 1:
       if setting != 0:
-        raise Exception('Error setting ShowSourceText.')
+        raise Exception, 'Error setting ShowSourceText.'
     self._showSourceText = setting
   def getSourceText(self):
     return self._quotations
@@ -105,7 +105,7 @@ class AlchemyAPI_NamedEntityParams(AlchemyAPI_Params):
         if setting != 'raw':
           if setting != 'cquery':
             if setting != 'xpath':
-              raise Exception('Error setting SourceText.')
+              raise Exception, 'Error setting SourceText.'
     self._sourceText = setting
   def getMaxRetrieve(self):
     return self._maxRetrieve
@@ -128,7 +128,7 @@ class AlchemyAPI_NamedEntityParams(AlchemyAPI_Params):
   def setSentiment(self, setting):
     if setting != 1:
       if setting != 0:
-        raise Exception('Error setting Sentiment.')
+        raise Exception, 'Error setting Sentiment.'
     self._sentiment = setting
   def getParameterString(self):
     retString = super(AlchemyAPI_NamedEntityParams, self).getParameterString()
@@ -141,17 +141,17 @@ class AlchemyAPI_NamedEntityParams(AlchemyAPI_Params):
     if self._quotations != "":
       retString += "&quotations=" + str(self._quotations)
     if self._sourceText != "":
-      retString += "&sourceText=" + urllib.parse.quote(self._sourceText)
+      retString += "&sourceText=" + urllib.quote(self._sourceText)
     if self._showSourceText != "":
       retString += "&showSourceText=" + str(self._showSourceText)
     if self._maxRetrieve != "":
       retString += "&maxRetrieve=" + str(self._maxRetrieve)
     if self._baseUrl != "":
-      retString += "&baseUrl=" + urllib.parse.quote(self._baseUrl)
+      retString += "&baseUrl=" + urllib.quote(self._baseUrl)
     if self._cQuery != "":
-      retString += "&cquery=" + urllib.parse.quote(self._cQuery)
+      retString += "&cquery=" + urllib.quote(self._cQuery)
     if self._xPath != "":
-      retString += "&xpath=" + urllib.parse.quote(self._xPath)
+      retString += "&xpath=" + urllib.quote(self._xPath)
     if self._sentiment != "":
       retString += "&sentiment=" + str(self._sentiment)
     return retString
@@ -168,7 +168,7 @@ class AlchemyAPI_CategoryParams(AlchemyAPI_Params):
     if setting != 'cleaned_or_raw':
       if setting != 'cquery':
         if setting != 'xpath':
-          raise Exception('Error setting SourceText.')
+          raise Exception, 'Error setting SourceText.'
     self._sourceText = setting
   def getBaseUrl(self):
     return self._baseUrl
@@ -185,13 +185,13 @@ class AlchemyAPI_CategoryParams(AlchemyAPI_Params):
   def getParameterString(self):
     retString = super(AlchemyAPI_CategoryParams, self).getParameterString()
     if self._sourceText != "":
-      retString += "&sourceText=" + urllib.parse.quote(self._sourceText)
+      retString += "&sourceText=" + urllib.quote(self._sourceText)
     if self._baseUrl != "":
-      retString += "&baseUrl=" + urllib.parse.quote(self._baseUrl)
+      retString += "&baseUrl=" + urllib.quote(self._baseUrl)
     if self._cQuery != "":
-      retString += "&cquery=" + urllib.parse.quote(self._cQuery)
+      retString += "&cquery=" + urllib.quote(self._cQuery)
     if self._xPath != "":
-      retString += "&xpath=" + urllib.parse.quote(self._xPath)
+      retString += "&xpath=" + urllib.quote(self._xPath)
     return retString
 
 
@@ -207,7 +207,7 @@ class AlchemyAPI_LanguageParams(AlchemyAPI_Params):
         if setting != 'raw':
           if setting != 'cquery':
             if setting != 'xpath':
-              raise Exception('Error setting SourceText.')
+              raise Exception, 'Error setting SourceText.'
     self._sourceText = setting
   def getConstraintQuery(self):
     return self._cQuery
@@ -220,11 +220,11 @@ class AlchemyAPI_LanguageParams(AlchemyAPI_Params):
   def getParameterString(self):
     retString = super(AlchemyAPI_LanguageParams, self).getParameterString()
     if self._sourceText != "":
-      retString += "&sourceText=" + urllib.parse.quote(self._sourceText)
+      retString += "&sourceText=" + urllib.quote(self._sourceText)
     if self._cQuery != "":
-      retString += "&cquery=" + urllib.parse.quote(self._cQuery)
+      retString += "&cquery=" + urllib.quote(self._cQuery)
     if self._xPath != "":
-      retString += "&xpath=" + urllib.parse.quote(self._xPath)
+      retString += "&xpath=" + urllib.quote(self._xPath)
     return retString
 
 
@@ -241,14 +241,14 @@ class AlchemyAPI_ConceptParams(AlchemyAPI_Params):
     if setting != 'cleaned_or_raw':
       if setting != 'cquery':
         if setting != 'xpath':
-          raise Exception('Error setting SourceText.')
+          raise Exception, 'Error setting SourceText.'
     self._sourceText = setting
   def getShowSourceText(self):
     return self._showSourceText
   def setShowSourceText(self, setting):
     if setting != 1:
       if setting != 0:
-        raise Exception('Error setting ShowSourceText.')
+        raise Exception, 'Error setting ShowSourceText.'
     self._showSourceText = setting
   def getMaxRetrieve(self):
     return self._maxRetrieve
@@ -259,7 +259,7 @@ class AlchemyAPI_ConceptParams(AlchemyAPI_Params):
   def setLinkedData(self, setting):
     if setting != 1:
       if setting != 0:
-        raise Exception('Error setting LinkedData.')
+        raise Exception, 'Error setting LinkedData.'
     self._linkedData = setting
   def getConstraintQuery(self):
     return self._cQuery
@@ -272,7 +272,7 @@ class AlchemyAPI_ConceptParams(AlchemyAPI_Params):
   def getParameterString(self):
     retString = super(AlchemyAPI_ConceptParams, self).getParameterString()
     if self._sourceText != "":
-      retString += "&sourceText=" + urllib.parse.quote(self._sourceText)
+      retString += "&sourceText=" + urllib.quote(self._sourceText)
     if self._showSourceText != "":
       retString += "&showSourceText=" + str(self._showSourceText)
     if self._maxRetrieve != "":
@@ -280,9 +280,9 @@ class AlchemyAPI_ConceptParams(AlchemyAPI_Params):
     if self._linkedData != "":
       retString += "&linkedData=" + str(self._linkedData)
     if self._cQuery != "":
-      retString += "&cquery=" + urllib.parse.quote(self._cQuery)
+      retString += "&cquery=" + urllib.quote(self._cQuery)
     if self._xPath != "":
-      retString += "&xpath=" + urllib.parse.quote(self._xPath)
+      retString += "&xpath=" + urllib.quote(self._xPath)
     return retString
 
 
@@ -301,21 +301,21 @@ class AlchemyAPI_KeywordParams(AlchemyAPI_Params):
     if setting != 'cleaned_or_raw':
       if setting != 'cquery':
         if setting != 'xpath':
-          raise Exception('Error setting SourceText.')
+          raise Exception, 'Error setting SourceText.'
     self._sourceText = setting
   def getShowSourceText(self):
     return self._showSourceText
   def setShowSourceText(self, setting):
     if setting != 1:
       if setting != 0:
-        raise Exception('Error setting ShowSourceText.')
+        raise Exception, 'Error setting ShowSourceText.'
     self._showSourceText = setting
   def getSentiment(self):
     return self._sentiment
   def setSentiment(self, setting):
     if setting != 1:
       if setting != 0:
-        raise Exception('Error setting Sentiment.')
+        raise Exception, 'Error setting Sentiment.'
     self._sentiment = setting
   def getMaxRetrieve(self):
     return self._maxRetrieve
@@ -339,24 +339,24 @@ class AlchemyAPI_KeywordParams(AlchemyAPI_Params):
     if setting != 'strict':
       if setting != 'normal':
         if setting != '':
-          raise Exception('Error setting KeywordExtractMode.')
+          raise Exception, 'Error setting KeywordExtractMode.'
     self._keywordExtractMode = setting
   def getParameterString(self):
     retString = super(AlchemyAPI_KeywordParams, self).getParameterString()
     if self._sourceText != "":
-      retString += "&sourceText=" + urllib.parse.quote(self._sourceText)
+      retString += "&sourceText=" + urllib.quote(self._sourceText)
     if self._showSourceText != "":
       retString += "&showSourceText=" + str(self._showSourceText)
     if self._maxRetrieve != "":
       retString += "&maxRetrieve=" + str(self._maxRetrieve)
     if self._baseUrl != "":
-      retString += "&baseUrl=" + urllib.parse.quote(self._baseUrl)
+      retString += "&baseUrl=" + urllib.quote(self._baseUrl)
     if self._cQuery != "":
-      retString += "&cquery=" + urllib.parse.quote(self._cQuery)
+      retString += "&cquery=" + urllib.quote(self._cQuery)
     if self._xPath != "":
-      retString += "&xpath=" + urllib.parse.quote(self._xPath)
+      retString += "&xpath=" + urllib.quote(self._xPath)
     if self._keywordExtractMode != "":
-      retString += "&keywordExtractMode=" + urllib.parse.quote(self._keywordExtractMode)
+      retString += "&keywordExtractMode=" + urllib.quote(self._keywordExtractMode)
     if self._sentiment != "":
       retString += "&sentiment=" + str(self._sentiment)
     return retString
@@ -381,49 +381,49 @@ class AlchemyAPI_RelationParams(AlchemyAPI_Params):
   def setDisambiguate(self, setting):
     if setting != 1:
       if setting != 0:
-        raise Exception('Error setting Disambiguate.')
+        raise Exception, 'Error setting Disambiguate.'
     self._disambiguate = setting
   def getLinkedData(self):
     return self._linkedData
   def setLinkedData(self, setting):
     if setting != 1:
       if setting != 0:
-        raise Exception('Error setting LinkedData.')
+        raise Exception, 'Error setting LinkedData.'
     self._linkedData = setting
   def getCoreference(self):
     return self._coreference
   def setCoreference(self, setting):
     if setting != 1:
       if setting != 0:
-        raise Exception('Error setting Coreference.')
+        raise Exception, 'Error setting Coreference.'
     self._coreference = setting
   def getEntities(self):
     return self._entities
   def setEntities(self, setting):
     if setting != 1:
       if setting != 0:
-        raise Exception('Error setting Entities.')
+        raise Exception, 'Error setting Entities.'
     self._entities = setting
   def getSentimentExcludeEntities(self):
     return self._sentimentExcludeEntities
   def setSentimentExcludeEntities(self, setting):
     if setting != 1:
       if setting != 0:
-        raise Exception('Error setting SentimentExcludeEntities.')
+        raise Exception, 'Error setting SentimentExcludeEntities.'
     self._sentimentExcludeEntities = setting
   def getRequireEntities(self):
     return self._requireEntities
   def setRequireEntities(self, setting):
     if setting != 1:
       if setting != 0:
-        raise Exception('Error setting RequireEntities.')
+        raise Exception, 'Error setting RequireEntities.'
     self._requireEntities = setting
   def getShowSourceText(self):
     return self._showSourceText
   def setShowSourceText(self, setting):
     if setting != 1:
       if setting != 0:
-        raise Exception('Error setting ShowSourceText.')
+        raise Exception, 'Error setting ShowSourceText.'
     self._showSourceText = setting
   def getSourceText(self):
     return self._quotations
@@ -433,7 +433,7 @@ class AlchemyAPI_RelationParams(AlchemyAPI_Params):
         if setting != 'raw':
           if setting != 'cquery':
             if setting != 'xpath':
-              raise Exception('Error setting SourceText.')
+              raise Exception, 'Error setting SourceText.'
     self._sourceText = setting
   def getMaxRetrieve(self):
     return self._maxRetrieve
@@ -456,7 +456,7 @@ class AlchemyAPI_RelationParams(AlchemyAPI_Params):
   def setSentiment(self, setting):
     if setting != 1:
       if setting != 0:
-        raise Exception('Error setting Sentiment.')
+        raise Exception, 'Error setting Sentiment.'
     self._sentiment = setting
   def getParameterString(self):
     retString = super(AlchemyAPI_RelationParams, self).getParameterString()
@@ -473,17 +473,17 @@ class AlchemyAPI_RelationParams(AlchemyAPI_Params):
     if self._requireEntities != "":
       retString += "&requireEntities=" + str(self._requireEntities)
     if self._sourceText != "":
-      retString += "&sourceText=" + urllib.parse.quote(self._sourceText)
+      retString += "&sourceText=" + urllib.quote(self._sourceText)
     if self._showSourceText != "":
       retString += "&showSourceText=" + str(self._showSourceText)
     if self._maxRetrieve != "":
       retString += "&maxRetrieve=" + str(self._maxRetrieve)
     if self._baseUrl != "":
-      retString += "&baseUrl=" + urllib.parse.quote(self._baseUrl)
+      retString += "&baseUrl=" + urllib.quote(self._baseUrl)
     if self._cQuery != "":
-      retString += "&cquery=" + urllib.parse.quote(self._cQuery)
+      retString += "&cquery=" + urllib.quote(self._cQuery)
     if self._xPath != "":
-      retString += "&xpath=" + urllib.parse.quote(self._xPath)
+      retString += "&xpath=" + urllib.quote(self._xPath)
     if self._sentiment != "":
       retString += "&sentiment=" + str(self._sentiment)
     return retString
@@ -496,14 +496,14 @@ class AlchemyAPI_TextParams(AlchemyAPI_Params):
   def setUseMetaData(self, setting):
     if setting != 1:
       if setting != 0:
-        raise Exception('Error setting UseMetaData.')
+        raise Exception, 'Error setting UseMetaData.'
     self._useMetaData = setting
   def getExtractLinks(self):
     return self._extractLinks
   def setExtractLinks(self, setting):
     if setting != 1:
       if setting != 0:
-        raise Exception('Error setting ExtractLinks.')
+        raise Exception, 'Error setting ExtractLinks.'
     self._extractLinks = setting
   def getParameterString(self):
     retString = super(AlchemyAPI_TextParams, self).getParameterString()
@@ -523,7 +523,7 @@ class AlchemyAPI_ConstraintQueryParams(AlchemyAPI_Params):
   def getParameterString(self):
     retString = super(AlchemyAPI_ConstraintQueryParams, self).getParameterString()
     if self._cQuery != "":
-      retString += "&cquery=" + urllib.parse.quote(self._cQuery)
+      retString += "&cquery=" + urllib.quote(self._cQuery)
     return retString
 
 class AlchemyAPI_TargetedSentimentParams(AlchemyAPI_Params):
@@ -534,7 +534,7 @@ class AlchemyAPI_TargetedSentimentParams(AlchemyAPI_Params):
   def setShowSourceText(self, setting):
     if setting != 1:
       if setting != 0:
-        raise Exception('Error setting showSourceText.')
+        raise Exception, 'Error setting showSourceText.'
     self._showSourceText = setting
   def getTarget(self):
     return self._target
@@ -554,17 +554,17 @@ class AlchemyAPI:
   def setAPIHost(self, apiHost):
     self._hostPrefix = apiHost;
     if len(self._hostPrefix) < 2:
-      raise Exception('Error setting API host.')
+      raise Exception, 'Error setting API host.'
   def setAPIKey(self, apiKey):
     self._apiKey = apiKey;
     if len(self._apiKey) < 5:
-      raise Exception('Error setting API key.')
+      raise Exception, 'Error setting API key.'
   def loadAPIKey(self, filename):
     file = open(filename, 'r')
     line = file.readline()
     self._apiKey = line.strip();
     if len(self._apiKey) < 5:
-      raise Exception('Error loading API key.')
+      raise Exception, 'Error loading API key.'
   def URLGetRankedNamedEntities(self, url, namedEntityParams=None):
     self.CheckURL(url)
     if namedEntityParams == None:
@@ -728,7 +728,7 @@ class AlchemyAPI:
   def URLGetConstraintQuery(self, url, query, cQueryParams=None):
     self.CheckURL(url)
     if len(query) < 2:
-      raise Exception('Invalid constraint query specified.')
+      raise Exception, 'Invalid constraint query specified.'
     if cQueryParams == None:
       cQueryParams = AlchemyAPI_ConstraintQueryParams()
     cQueryParams.setUrl(url)
@@ -737,7 +737,7 @@ class AlchemyAPI:
   def HTMLGetConstraintQuery(self, html, url, query, cQueryParams=None):
     self.CheckHTML(html, url)
     if len(query) < 2:
-      raise Exception('Invalid constraint query specified.')
+      raise Exception, 'Invalid constraint query specified.'
     if cQueryParams == None:
       cQueryParams = AlchemyAPI_ConstraintQueryParams()
     cQueryParams.setUrl(url)
@@ -819,40 +819,40 @@ class AlchemyAPI:
     return self.PostRequest("HTMLGetAuthor", "html", baseParams)
   def CheckText(self, text):
     if len(self._apiKey) < 5:
-      raise Exception('Please load an API key.')
+      raise Exception, 'Please load an API key.'
     if len(text) < 5:
-      raise Exception('Please specify some text to analyze.')
+      raise Exception, 'Please specify some text to analyze.'
   def CheckHTML(self, html, url):
     if len(self._apiKey) < 5:
-      raise Exception('Please load an API key.')
+      raise Exception, 'Please load an API key.'
     if len(html) < 10:
-      raise Exception('Please specify a HTML document to analyze.')
+      raise Exception, 'Please specify a HTML document to analyze.'
     if len(url) < 10:
-      raise Exception('Please specify a URL to analyze.')
+      raise Exception, 'Please specify a URL to analyze.'
   def CheckURL(self, url):
     if len(self._apiKey) < 5:
-      raise Exception('Please load an API key.')
+      raise Exception, 'Please load an API key.'
     if len(url) < 10:
-      raise Exception('Please specify a URL to analyze.')
+      raise Exception, 'Please specify a URL to analyze.'
   def PostRequest(self, apiCall, apiPrefix, paramObject):
     endpoint = 'http://' + self._hostPrefix + '.alchemyapi.com/calls/' + apiPrefix + '/' + apiCall
     argText = 'apikey=' + self._apiKey + paramObject.getParameterString()
-    handle = urllib.request.urlopen(endpoint, argText)
+    handle = urllib.urlopen(endpoint, argText)
     result = handle.read()
     handle.close()
     xpathQuery = './/status'
     nodes = etree.fromstring(result).find(xpathQuery)
     if nodes.text != "OK":
-      raise Exception('Error making API call.')
+      raise Exception, 'Error making API call.'
     return result
   def GetRequest(self, apiCall, apiPrefix, paramObject):
     endpoint = 'http://' + self._hostPrefix + '.alchemyapi.com/calls/' + apiPrefix + '/' + apiCall
     endpoint += '?apikey=' + self._apiKey + paramObject.getParameterString()
-    handle = urllib.request.urlopen(endpoint)
+    handle = urllib.urlopen(endpoint)
     result = handle.read()
     handle.close()
     xpathQuery = './/status'
     nodes = etree.fromstring(result).find(xpathQuery)
     if nodes.text != "OK":
-      raise Exception('Error making API call.')
+      raise Exception, 'Error making API call.'
     return result

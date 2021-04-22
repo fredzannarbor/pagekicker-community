@@ -106,7 +106,7 @@ class TDM:
 		try:
 			term_matrix = count_vec.fit_transform(corpus)
 		except ValueError:
-			print("This document isn't summarizable.")
+			print "This document isn't summarizable."
 			sys.exit()
 		normalized = sklearn.feature_extraction.text.TfidfTransformer(norm=norm_opt).fit_transform(term_matrix)
 		return term_matrix, normalized
@@ -121,7 +121,7 @@ class TDM:
 		try:
 			term_matrix = count_vec.fit_transform(corpus)
 		except ValueError:
-			print("This document isn't summarizable.")
+			print "This document isn't summarizable."
 			sys.exit()
 		term_matrix_seedless = term_matrix.tocsr()[2:,:]
 		pos_seed_vector = term_matrix.getrow(0)
@@ -220,7 +220,7 @@ def print_summary(sentences, scores, out_file, length):
 #=================================================
 def output_checker(output_file):
 	if output_file == None:
-		print("Output file name not supplied. Please run again with -o option supplied")
+		print "Output file name not supplied. Please run again with -o option supplied"
 		from sys import exit
 		exit()
 
@@ -259,7 +259,7 @@ def main():
 
 	if pos_seed == None and neg_seed == None:
 		LR_method = 'unbiased'
-		print(LR_method)
+		print LR_method
 		[term_matrix, normalized] = TDM(corpus, pos_seed, neg_seed, stopfile, norm_flag, ngram).matrix
 		pos_seed_vector = []
 		neg_seed_vector = []

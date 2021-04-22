@@ -36,8 +36,8 @@ mendeley = MendeleyClient('13a47f20711f5d5ffe8e8f4db1df1daa04f8bd9b6', '394d64a2
 try:
     mendeley.load_keys()
 except IOError:
-	mendeley.get_required_keys()
-	mendeley.save_keys()
+    mendeley.get_required_keys()
+    mendeley.save_keys()
 
 
 folders = mendeley.group_folders(groupId)

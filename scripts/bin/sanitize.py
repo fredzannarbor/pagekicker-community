@@ -47,7 +47,7 @@ def sanitize(html):
             tag.attrs = []
 
     # stringify back again
-    safe_html = str(soup)
+    safe_html = unicode(soup)
 
     # HTML comments can contain executable scripts, depending on the browser,
     # so we'll

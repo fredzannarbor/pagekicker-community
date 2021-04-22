@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE ONIXMessage SYSTEM "http://www.editeur.org/onix/2.1/reference/onix-international.dtd">
+<ONIXMessage>
+  <Header>
+    <FromCompany>PageKicker</FromCompany>
+    <FromPerson>fred@PageKicker.com</FromPerson>
+    <SentDate>$YYYYMMDDHHMM</SentDate>
+    <DefaultLanguageOfText>eng</DefaultLanguageOfText>
+  </Header>
+  <Product>
+    <RecordReference>$uuid"/"$SKU$filetype</RecordReference>
+    <NotificationType>03</NotificationType>
+<ProductIdentifier>
+    <ProductIDType>15</ProductIDType>
+    <IDValue>$ISBN</IDValue>
+ </ProductIdentifier>
+<ProductForm>DG</ProductForm>

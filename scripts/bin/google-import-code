@@ -1,0 +1,13 @@
+#if [ "$google_nonISBN_import" = "yes" -a "$epubchecksuccess" = "0" ] ; then
+
+#	cp $mediatargetpath/$uuid/$sku"plaintxt.epub" $APACHE_ROOT"ebooks-nonISBN/"$googlecollectioncode"/"$safecovertitle".epub"
+
+#	scp -C -i ~/Documents/certificates/restorepk.pem $APACHE_ROOT"ebooks-nonISBN/"$googlecollectioncode"/"$safecovertitle".epub" bitnami@www.pagekicker.com:/opt/bitnami/apache2/htdocs/ebooks-nonISBN/HNXTBK0
+
+
+#	echo "scopied valid epub to google books upload queue at PageKicker.com"
+
+#else 
+#	true
+
+#fi

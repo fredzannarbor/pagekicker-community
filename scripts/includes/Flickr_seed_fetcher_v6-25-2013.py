@@ -6,7 +6,7 @@
 #Outputs:
 #1) url_list.txt - a list of images that are retrieved from Flickr 
 
-import os, sys, json, flickrapi, codecs, urllib.request, urllib.parse, urllib.error
+import os, sys, json, flickrapi, codecs, urllib
 
 #=================================================
 def callTheApi(api_key, seed, per_page_num):
@@ -40,7 +40,7 @@ def getFlickrUsername(api_key, pic_owner):
 #=================================================
 def imageDownloader(url, index):
 	if url != None:
-		urllib.request.urlretrieve(url, 'SeedImage_'+str(index) + '.jpg')
+		urllib.urlretrieve(url, 'SeedImage_'+str(index) + '.jpg')
 		
 
 
@@ -62,13 +62,13 @@ def parser(json_photos, per_page_num, api_key, seed):
 			pic_server = json_photos['photos']['photo'][int(pic)]['server']
 			pic_secret = json_photos['photos']['photo'][int(pic)]['secret']
 			username = getFlickrUsername(api_key, pic_owner)
-			url = "http://farm" + str(pic_farm) + ".static.flickr.com/"\
+			url = "http://farm" + unicode(pic_farm) + ".static.flickr.com/"\
 			+ pic_server + "/" + pic_id + "_" + pic_secret + ".jpg"
-			print(seed)
-			print(pic_title)
-			print(username)
-			print(url)
-			f2 = codecs.open('SeedImage_'+str(index)+'.txt', encoding = 'utf-8', mode = 'a')
+			print seed
+			print pic_title
+			print username
+			print url
+			f2 = codecs.open('SeedImage_'+unicode(index)+'.txt', encoding = 'utf-8', mode = 'a')
 			f2.write('Seed: '+ seed + '\n' +'Title: ' + pic_title + '\n' + 'User: ' + username + '\n' +'URL: ' + str(url) )
 			f2.close()
 			f.write(seed + ': "' + pic_title + '", An image by Flickr user: ' + username + ' : ' + url + '\n')
