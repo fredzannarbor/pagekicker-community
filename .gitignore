@@ -53,3 +53,4 @@ doc/booktype_creation.pdf
 .DS_Store
 scripts/lib/IBMCloud/examples/configuration.txt
 scripts/bin/AlchemyAPI.py
+scripts/stanford-ner-4.2.0.zip

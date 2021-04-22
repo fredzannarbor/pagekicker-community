@@ -16,7 +16,11 @@ url = 'https://www.axios.com/these-are-the-trumpworld-players-we-know-have-had-r
 # 'bananas'], language='english'), indent=2))
 
 # print(json.dumps(alchemy_language.author(url=url), indent=2))
+<<<<<<< HEAD
 print(json.dumps(alchemy_language.concepts(max_items=7, url=url), indent=2))
+=======
+print((json.dumps(alchemy_language.concepts(max_items=7, url=url), indent=2)))
+>>>>>>> 02c3d39556dd37836a5933188a7b2798d3eada36
 # print(json.dumps(alchemy_language.dates(url=url, anchor_date='2016-03-22
 # 00:00:00'), indent=2))
 # print(json.dumps(alchemy_language.emotion(url=url), indent=2))
@@ -36,9 +40,15 @@ print(json.dumps(alchemy_language.concepts(max_items=7, url=url), indent=2))
 # print(json.dumps(alchemy_language.taxonomy(url=url), indent=2))
 combined_operations = ['page-image', 'entity', 'keyword', 'title', 'author',
                        'taxonomy', 'concept', 'doc-emotion']
+<<<<<<< HEAD
 print(
     json.dumps(alchemy_language.combined(url=url, extract=combined_operations),
                indent=2))
+=======
+print((
+    json.dumps(alchemy_language.combined(url=url, extract=combined_operations),
+               indent=2)))
+>>>>>>> 02c3d39556dd37836a5933188a7b2798d3eada36
 
 # Get sentiment and emotion information results for detected entities/keywords:
 # print(json.dumps(alchemy_language.entities(url=url, sentiment=True,

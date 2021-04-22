@@ -1,5 +1,9 @@
 #!/usr/bin/env python
+<<<<<<< HEAD
 from __future__ import print_function
+=======
+
+>>>>>>> 02c3d39556dd37836a5933188a7b2798d3eada36
 
 '''Post a message to twitter'''
 
@@ -9,7 +13,11 @@ __author__ = 'dewitt@google.com'
 try:
     import configparser
 except ImportError as _:
+<<<<<<< HEAD
     import ConfigParser as configparser
+=======
+    import configparser as configparser
+>>>>>>> 02c3d39556dd37836a5933188a7b2798d3eada36
 
 import getopt
 import os
