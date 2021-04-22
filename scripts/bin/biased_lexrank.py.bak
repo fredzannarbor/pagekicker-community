@@ -77,7 +77,7 @@ def b_lexrank(G, baseline_score, alpha = 0.85, personalization=None, max_iter=10
 	elif personalization is 'biased':
 		nodelist = G.nodes()
 	else:  # use personalization "vector" ordering
-		nodelist=list(personalization.keys())
+		nodelist=personalization.keys()
 	M=nx.to_scipy_sparse_matrix(G,nodelist=nodelist,weight=weight,dtype='f')
 	(n,m)=M.shape # should be square
 	S=scipy.array(M.sum(axis=1)).flatten()
@@ -113,7 +113,7 @@ def b_lexrank(G, baseline_score, alpha = 0.85, personalization=None, max_iter=10
 	    # check convergence, l1 norm
 	    err=scipy.absolute(x-xlast).sum()
 	    if err < n*tol:
-	        return dict(list(zip(nodelist,list(map(float,x)))))
+	        return dict(zip(nodelist,map(float,x)))
 	    i+=1
 	raise NetworkXError('pagerank_scipy: power iteration failed to converge'
 	                    'in %d iterations.'%(i+1))

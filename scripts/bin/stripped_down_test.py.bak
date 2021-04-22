@@ -66,25 +66,25 @@ class MPub(object):
         return not self.__eq__(other)        
 
 
-print("""
+print """
 
 -----------------------------------------------------
 List folders
------------------------------------------------------""")
+-----------------------------------------------------"""
 folders = mendeley.folders()
 pprint(folders)
 
-folderid = input('Enter folder id: ')
+folderid = raw_input('Enter folder id: ')
 pprint(folderid)
 
 response = mendeley.create_folder(folder=json.dumps({'name': 'Recent Docs to Review', 'parent':folderid}))
 # pprint(response)
-print("Created Review Child Folder")
+print "Created Review Child Folder"
 reviewchildfolderid = response['folder_id']
 
 docs = mendeley.folder_documents(folderid)
 pprint(docs)
-print("Retrieving documents from selected folder")
+print "Retrieving documents from selected folder"
 pub_list = []
 pprint(pub_list)
 
@@ -95,8 +95,8 @@ related_doc_dict = dict()
 
 details = mendeley.document_details(documents['document_ids'][0])
 
-print("Looking up suggestions for related docs.")
-print("")
+print "Looking up suggestions for related docs."
+print ""
 for pub_item in pub_list:
     pprint(pub_item)
     related_docs = mendeley.related(pub_item.uuid, items=10)
@@ -113,21 +113,21 @@ for pub_item in pub_list:
             rel_doc_info['count'] = 1
         related_doc_dict[uuid] = rel_doc_info
 
-related_list = sorted(list(related_doc_dict.values()), key = lambda doc:doc['count'])
+related_list = sorted(related_doc_dict.values(), key = lambda doc:doc['count'])
 related_list.reverse()
 
-print("Related Papers")
-print("--------------")
+print "Related Papers"
+print "--------------"
 count = 0
 for pub_item in pub_list:
-    print("%d: %s - %d" % ((count+1), pub_item.title, pub_item.year))
+    print "%d: %s - %d" % ((count+1), pub_item.title, pub_item.year)
     count += 1
-print("")
+print ""
 
-print("Found %d related papers to suggest." % len(related_list))
+print "Found %d related papers to suggest." % len(related_list)
 
-print("Suggested Related Papers")
-print("------------------------")
+print "Suggested Related Papers"
+print "------------------------"
 count = 0
 for item in related_list:
     year = float(item['year'])
@@ -135,13 +135,13 @@ for item in related_list:
     #if (count < 20):
     #get recent docs instead
     if (year > 2009):
-        print("%d: %s - %d | Score: %f" % ((count + 1), item['title'], item['year'], score))
+        print "%d: %s - %d | Score: %f" % ((count + 1), item['title'], item['year'], score)
     count += 1
     score = float(item['count'])/len(related_list)
     if (score >= 0.5) and (count < 10):
-        print("%d: %s - %d | Score: %f" % ((count+1), item['title'], item['year'], score))
+        print "%d: %s - %d | Score: %f" % ((count+1), item['title'], item['year'], score)
         count += 1
-print("")
+print ""
 
 # then upload suggested drelated papersto for Review folder
 
