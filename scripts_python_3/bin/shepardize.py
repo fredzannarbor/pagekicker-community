@@ -34,7 +34,7 @@ from pprint import pprint
 from mendeley_client import MendeleyClient
 mendeley = MendeleyClient('13a47f20711f5d5ffe8e8f4db1df1daa04f8bd9b6', '394d64a2907f23c7f6ea5d94fb386865')
 try:
-	mendeley.load_keys()
+    mendeley.load_keys()
 except IOError:
 	mendeley.get_required_keys()
 	mendeley.save_keys()
@@ -42,5 +42,3 @@ except IOError:
 
 folders = mendeley.group_folders(groupId)
 pprint(folders)
-
-
