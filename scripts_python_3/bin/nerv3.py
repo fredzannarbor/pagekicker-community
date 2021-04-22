@@ -81,15 +81,15 @@ def main():
 		listwrite(o, People_s)
 		listwrite(o, Places_s)
 		listwrite(o, Other_s)
-  	out_file = os.path.join(folder, 'People')
+	out_file = os.path.join(folder, 'People')
 	with codecs.open(out_file, mode= 'w', encoding='utf-8') as o:
-          listwrite(o, People_s)
-  	out_file = os.path.join(folder, 'Places')
-    	with codecs.open(out_file, mode= 'w', encoding='utf-8') as o:
-         listwrite(o, Places_s)
-  	out_file = os.path.join(folder, 'Other')
+            listwrite(o, People_s)
+	out_file = os.path.join(folder, 'Places')
 	with codecs.open(out_file, mode= 'w', encoding='utf-8') as o:
-          listwrite(o, Other_s)
+		listwrite(o, Places_s)
+	out_file = os.path.join(folder, 'Other')
+	with codecs.open(out_file, mode= 'w', encoding='utf-8') as o:
+		listwrite(o, Other_s)
 #=================================================
 if __name__ == '__main__':
     main()
